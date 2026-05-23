@@ -1,0 +1,29 @@
+{
+  "page": {
+    "dashboard": "Tổng quan",
+    "phieu": "Phiếu bảo hành",
+    "taoPhieu": "Tạo phiếu",
+    "khachHang": "Thông tin khách hàng",
+    "nhanVien": "Nhân viên",
+    "nhaCungCap": "Nhà cung cấp",
+    "thongKe": "Thống kê",
+    "importExport": "Nhập / Xuất",
+    "traCuu": "Tra cứu bảo hành"
+  },
+  "menu": {
+    "dashboard": "Tổng quan",
+    "phieu": "Phiếu bảo hành",
+    "taoPhieu": "Tạo phiếu",
+    "khachHang": "Thông tin khách hàng",
+    "nhanVien": "Nhân viên",
+    "nhaCungCap": "Nhà cung cấp",
+    "thongKe": "Thống kê",
+    "importExport": "Nhập / Xuất",
+    "traCuu": "Tra cứu"
+  },
+  "action": {
+    "doiNhanVien": "Đổi nhân viên",
+    "moMenu": "Mở menu",
+    "phimTat": "Phím tắt"
+  }
+}

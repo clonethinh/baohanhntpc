@@ -1,0 +1,41 @@
+.infoList {
+  display: grid;
+  gap: 0;
+}
+
+.infoRow {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: var(--ant-padding-sm);
+  align-items: start;
+  padding: var(--ant-padding-xs) var(--ant-padding-xxs);
+  border-bottom: 1px solid var(--adm-border-color);
+}
+
+.infoRow:last-child {
+  border-bottom: 0;
+}
+
+.infoLabel {
+  min-width: 0;
+  color: var(--ant-color-text-secondary);
+  font-size: var(--ant-font-size-sm);
+  line-height: 1.3;
+}
+
+.infoValue {
+  min-width: 0;
+  color: var(--ant-color-text);
+  font-size: var(--ant-font-size-lg);
+  font-weight: var(--ant-font-weight-strong);
+  line-height: 1.3;
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.infoValueLong {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}

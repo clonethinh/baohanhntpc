@@ -1,0 +1,23 @@
+{
+  "success": {
+    "taoPhieu": "Tạo phiếu bảo hành thành công",
+    "capNhat": "Cập nhật thành công",
+    "xoa": "Xóa thành công",
+    "traHang": "Đã trả hàng cho khách",
+    "saoChep": "Đã sao chép"
+  },
+  "error": {
+    "taiDuLieu": "Không thể tải dữ liệu. Vui lòng thử lại.",
+    "luu": "Có lỗi khi lưu. Vui lòng thử lại.",
+    "khongTimThay": "Không tìm thấy bản ghi",
+    "saoChep": "Không thể sao chép"
+  },
+  "confirm": {
+    "xoa": "Bạn có chắc muốn xóa mục này không?",
+    "traHang": "Xác nhận trả hàng cho khách?",
+    "huyPhieu": "Xác nhận hủy phiếu này?"
+  },
+  "phieu": {
+    "taoThanhCong": "Phiếu {{so}} đã được tạo thành công"
+  }
+}

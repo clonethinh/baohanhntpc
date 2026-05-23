@@ -1,0 +1,16 @@
+{
+  "batBuoc": "Trường này là bắt buộc",
+  "khachHangBatBuoc": "Khách hàng không được để trống",
+  "tenHangBatBuoc": "Tên hàng không được để trống",
+  "soSeriBatBuoc": "Số seri không được để trống",
+  "loiLucNhanBatBuoc": "Lỗi lúc nhận không được để trống",
+  "baoHanhBatBuoc": "Thời hạn bảo hành không được để trống",
+  "ngayHenTraBatBuoc": "Ngày hẹn trả không được để trống",
+  "nhanVienBatBuoc": "Nhân viên không được để trống",
+  "soDienThoaiSai": "Số điện thoại không hợp lệ",
+  "soChungTuTonTai": "Số chứng từ đã tồn tại trong hệ thống",
+  "ngayKhongHopLe": "Ngày không hợp lệ",
+  "chiPhiPhaiLaSo": "Chi phí phải là số dương",
+  "chiPhiKhongAm": "Chi phí phải >= 0",
+  "emailSai": "Email không hợp lệ"
+}

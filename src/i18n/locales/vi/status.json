@@ -1,0 +1,25 @@
+{
+  "trangThai": {
+    "da_nhan": "Đã nhận",
+    "dang_xu_ly": "Đang xử lý",
+    "da_tra": "Đã xong",
+    "huy": "Đã hủy",
+    "cho_xu_ly": "Đã nhận",
+    "cho_lien_he": "Đang xử lý"
+  },
+  "loaiXuLy": {
+    "bao_hanh": "Bảo hành",
+    "sua_dv": "Sửa dịch vụ",
+    "doi_moi": "Đổi mới",
+    "khac": "Khác"
+  },
+  "baoHanh": {
+    "motThang": "1 tháng",
+    "baThang": "3 tháng",
+    "muoiHaiThang": "12 tháng",
+    "haiMuoiBonThang": "24 tháng",
+    "baMuoiSauThang": "36 tháng",
+    "sauMuoiThang": "60 tháng",
+    "khac": "Khác"
+  }
+}

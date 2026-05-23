@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>PHIẾU GỬI BẢO HÀNH - SỬA CHỮA - ${escapeHtml(documentCode)}</title>
+  <style>
+    /* Reset & Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --a4-width: 210mm;
+      --half-a4-height: 148.5mm; /* Chính xác 1 nửa chiều dọc tờ A4 */
+    }
+    body { 
+      background: #e5e5e5; 
+      padding: 20px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 15px; 
+      font-family: Tahoma, "Segoe UI", Arial, "Helvetica Neue", sans-serif; 
+      -webkit-print-color-adjust: exact; 
+      print-color-adjust: exact; 
+    }
+    
+    /* Button Style */
+    .btn { 
+      background: #111; 
+      color: #fff; 
+      border: none; 
+      padding: 8px 20px; 
+      font-size: 13px; 
+      letter-spacing: 1px; 
+      text-transform: uppercase; 
+      font-weight: bold; 
+      cursor: pointer; 
+      border-radius: 4px; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .btn:hover { background: #333; }
+
+    /* Main Slip Container - Kích thước 1 nửa A4 */
+    .slip { 
+      width: var(--a4-width); 
+      height: var(--half-a4-height); 
+      background: #fff; 
+      padding: 10mm 7mm; /* Căn lề trong */
+      box-shadow: 0 4px 15px rgba(0,0,0,.15); 
+      color: #000; 
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* Đảm bảo không bị tràn khỏi nửa tờ */
+    }
+
+    /* Đường kẻ đứt báo hiệu cắt giấy */
+    .cut-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px dashed #999;
+    }
+
+    /* Header */
+    .hd { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: flex-start; 
+      padding-bottom: 8px; 
+      border-bottom: 2px solid #000; 
+      margin-bottom: 8px; 
+    }
+    .hd-l { display: flex; gap: 10px; align-items: flex-start; }
+    .logo { width: 80px; height: auto; max-height: 40px; object-fit: contain; filter: grayscale(1) contrast(1.35); }
+    .co-name { font-weight: 900; font-size: 13px; text-transform: uppercase; margin-bottom: 3px; }
+    .co-info { font-size: 10px; line-height: 1.5; font-weight: 600; }
+    
+    .hd-r { text-align: right; font-size: 10px; font-weight: 600; }
+    .doc-code { font-family: Consolas, monospace; font-size: 13px; font-weight: 900; display: block; margin-top: 3px; }
+
+    /* Title */
+    .ttl { text-align: center; margin: 5px 0 10px; }
+    .ttl h1 { 
+      display: inline-block; 
+      font-weight: 900; 
+      font-size: 15px; 
+      text-transform: uppercase; 
+      padding: 3px 20px; 
+    }
+
+    /* Supplier Info */
+    .sup { 
+      display: grid; 
+      grid-template-columns: 1.2fr 0.8fr 1.5fr; 
+      border: 1px solid #000; 
+      margin-bottom: 8px; 
+      font-size: 11px; 
+    }
+    .sf { padding: 5px 8px; border-right: 1px solid #000; font-weight: 700; line-height: 1.4; }
+    .sf:last-child { border-right: none; }
+    .sl { display: block; font-size: 8px; font-weight: 900; text-transform: uppercase; color: #444; margin-bottom: 2px; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; margin-bottom: 5px; }
+    thead th { 
+      background: #f8f8f8; 
+      font-weight: 900; 
+      font-size: 10px; 
+      text-transform: uppercase; 
+      padding: 5px 4px; 
+      border: 1px solid #000; 
+    }
+    tbody td { 
+      border: 1px solid #000; 
+      padding: 5px; 
+      vertical-align: middle; 
+      font-weight: 600; 
+      word-break: break-word; 
+    }
+    tbody td:nth-child(2) { font-weight: 800; }
+    td.serial-cell { white-space: nowrap; overflow: hidden; }
+    .sn { font-family: Consolas, monospace; font-size: 10px; display: inline-block; font-weight: 800; transform-origin: left center; }
+    .note-cell { font-size: 10.2px; line-height: 1.28; overflow-wrap: anywhere; word-break: break-word; }
+    .note-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .tot td { border-top: 2px solid #000 !important; font-weight: 900; font-size: 11px; text-transform: uppercase; }
+    .c { text-align: center; }
+    .r { text-align: right; }
+
+    /* Signatures - Đẩy xuống dưới cùng của thẻ slip */
+    .sigs { 
+      display: flex; 
+      justify-content: space-around; 
+      margin-top: auto; /* Tự động đẩy xuống đáy khoảng trống còn lại */
+      padding-top: 10px;
+    }
+    .sig { text-align: center; padding-bottom: 30px; } /* Khoảng trống để ký */
+    .sig-t { font-weight: 900; font-size: 11px; text-transform: uppercase; }
+    .sig-s { font-size: 9px; font-style: italic; font-weight: 600; margin-top: 3px; }
+
+    /* Print Settings */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .btn { display: none; }
+      .slip { 
+        box-shadow: none; 
+        border: none;
+        /* Giữ nguyên kích thước 1 nửa A4 khi in */
+        width: var(--a4-width); 
+        height: var(--half-a4-height);
+      }
+      .cut-line { border-bottom: 1px dashed #ccc; } /* Làm mờ đường cắt khi in */
+      
+      /* Cấu hình khổ giấy in là A4, margin 0 để sát lề */
+      @page { 
+        size: A4 portrait; 
+        margin: 0; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="btn no-print" onclick="window.print()">⎙ &nbsp;In Phiếu Gửi Bảo Hành</button>
+  
+  <div class="slip">
+    <div class="hd">
+      <div class="hd-l">
+        <!-- Thay src bằng đường dẫn logo của bạn -->
+        <img class="logo" src="/logo.png" alt="Logo" onerror="this.style.display='none'"> 
+        <div>
+          <div class="co-name">${escapeHtml(companyName)}</div>
+          <div class="co-info">${escapeHtml(companyAddress)}<br>ĐT/Zalo: ${escapeHtml(companyPhone)}<br>Website: https://nguyentanpc.com/<br>Fanpage: https://www.fb.com/vitinhnguyentan.vn</div>
+        </div>
+      </div>
+      <div class="hd-r">
+        <div>Ngày in: &nbsp;<strong style="color:#000; font-size:11px">${escapeHtml(printedAt)}</strong></div>
+        <div style="margin-top:4px; font-size:8px; text-transform:uppercase">Số chứng từ</div>
+        <span class="doc-code">${escapeHtml(documentCode)}</span>
+      </div>
+    </div>
+
+    <div class="ttl"><h1>PHIẾU GỬI BẢO HÀNH - SỬA CHỮA</h1></div>
+
+    <div class="sup">
+      <div class="sf"><span class="sl">Nhà cung cấp</span>${escapeHtml(supplierInfo.name)}</div>
+      <div class="sf"><span class="sl">Điện thoại</span>${escapeHtml(supplierInfo.phone || '—')}</div>
+      <div class="sf"><span class="sl">Địa chỉ</span>${escapeHtml(supplierInfo.address || '—')}</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28px">STT</th>
+          <th>Tên Hàng Hóa / Linh Kiện</th>
+          <th style="width:120px">Số Seri</th>
+          <th>Mô Tả Lỗi</th>
+          <th style="width:95px">Ghi Chú</th>
+          <th style="width:28px">SL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dữ liệu mẫu thay thế cho ${productRowsHtml} để bạn dễ hình dung lúc Review -->
+        ${productRowsHtml}
+        
+        <tr class="tot">
+          <td colspan="5" class="r" style="padding-right:15px">Tổng số lượng nhận:</td>
+          <td class="c">${escapeHtml(totalQuantity)}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sigs">
+      <div class="sig">
+        <div class="sig-t">Khách Hàng</div>
+        <div class="sig-s">(Ký, ghi rõ họ tên)</div>
+      </div>
+      <div class="sig">
+        <div class="sig-t">Người Lập Phiếu</div>
+        <div class="sig-s">(Ký, ghi rõ họ tên)</div>
+      </div>
+    </div>
+    
+    <!-- Đường kẻ báo hiệu cắt giấy nằm ở mép dưới -->
+    <div class="cut-line"></div>
+  </div>
+
+  <script>
+    // Script tự động co giãn Serial nếu dài quá ô
+    (function () {
+      function fitSerial() {
+        document.querySelectorAll('.serial-cell .sn').forEach(function (el) {
+          var cell = el.closest('.serial-cell');
+          if (!cell) return;
+          el.style.transform = '';
+          var available = cell.clientWidth - 10;
+          if (el.scrollWidth > available && el.scrollWidth > 0) {
+            // Giới hạn thu nhỏ tối đa 0.65 để vẫn đọc được
+            el.style.transform = 'scaleX(' + Math.max(0.65, available / el.scrollWidth) + ')';
+          }
+        });
+      }
+      window.addEventListener('load', fitSerial);
+      window.addEventListener('resize', fitSerial); // Thêm event resize để chuẩn hơn trên web
+      window.addEventListener('beforeprint', fitSerial);
+      fitSerial();
+    })();
+  </script>
+</body>
+</html>
