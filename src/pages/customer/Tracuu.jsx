@@ -1,4 +1,21 @@
 import { useEffect, useState } from 'react';
+
+const ZALO_WEB_URL = 'https://zalo.me/0937632000';
+const ZALO_APP_URL = 'zalo://chat?phone=0937632000';
+
+function openZaloApp(event) {
+  event?.preventDefault?.();
+  const ua = navigator.userAgent || '';
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+  if (!isMobile) {
+    window.open(ZALO_WEB_URL, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  window.location.href = ZALO_APP_URL;
+  setTimeout(() => {
+    window.location.href = ZALO_WEB_URL;
+  }, 800);
+}
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Card, Col, Empty, Grid, Input, List, Row, Skeleton, Space, Tag, Typography } from 'antd';
@@ -377,6 +394,38 @@ export default function Tracuu() {
         </Col>
       </Row>
     </main>
+    <style>{`@keyframes zalo-bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}60%{transform:translateY(-3px)}}`}</style>
+    <a
+      href={ZALO_WEB_URL}
+      onClick={openZaloApp}
+      aria-label="Chat Zalo 0937 63 2000"
+      style={{
+        position: 'fixed',
+        right: 16,
+        bottom: 16,
+        width: 56,
+        height: 56,
+        borderRadius: '50%',
+        background: '#fff',
+        color: '#0068ff',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textDecoration: 'none',
+        boxShadow: '0 10px 24px rgba(0,104,255,0.32)',
+        border: '2px solid #0068ff',
+        zIndex: 1200,
+        animation: 'zalo-bounce 2s infinite',
+      }}
+    >
+      <img
+        src="/zalo.png"
+        alt="Zalo"
+        width="34"
+        height="34"
+        style={{ borderRadius: '50%', objectFit: 'cover', display: 'block' }}
+      />
+    </a>
     </>
   );
 }

@@ -12,8 +12,10 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { useAuth } from '../../contexts/AuthContext';
+import { useState } from 'react';
 import NotificationBell from './NotificationBell';
 import GlobalSearch from './GlobalSearch';
+import StaffPickerModal from '../common/StaffPickerModal';
 
 const { Header } = Layout;
 
@@ -31,11 +33,12 @@ const routeLabelKeys = {
 export default function AppHeader({ onHamburger }) {
   const { t } = useTranslation(['nav', 'ui']);
   const { isDark, toggle } = useTheme();
-  const { currentStaff, setCurrentStaff, setAdminUnlocked } = useAuth();
+  const { currentStaff, setAdminUnlocked } = useAuth();
   const location = useLocation();
   const staffInitial = (currentStaff?.tenNV || 'NV').slice(0, 1).toUpperCase();
   const themeLabel = isDark ? t('ui:common.cheDoSang') : t('ui:common.cheDoToi');
   const staffLabel = t('ui:field.nhanVien');
+  const [staffPickerOpen, setStaffPickerOpen] = useState(false);
 
   const items = [{ title: 'Admin', href: '/admin' }];
   const pathParts = location.pathname.split('/').filter(Boolean);
@@ -46,8 +49,7 @@ export default function AppHeader({ onHamburger }) {
   const currentLabel = routeLabelKeys[location.pathname] ? t(routeLabelKeys[location.pathname]) : 'Admin';
 
   const changeStaff = () => {
-    setCurrentStaff(null);
-    setAdminUnlocked(false);
+    setStaffPickerOpen(true);
   };
 
   const staffMenu = {
@@ -127,6 +129,15 @@ export default function AppHeader({ onHamburger }) {
           </Tooltip>
         </Space>
       </Header>
+      <StaffPickerModal
+        open={staffPickerOpen}
+        mode="switchStaff"
+        onClose={() => setStaffPickerOpen(false)}
+        onPicked={() => {
+          setAdminUnlocked(false);
+          setStaffPickerOpen(false);
+        }}
+      />
     </>
   );
 }

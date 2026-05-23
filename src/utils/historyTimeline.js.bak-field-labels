@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { normalizeVietnameseText } from './vietnameseText.js';
 import { mapLoaiXuLyValue } from './historyDisplay.js';
-import { getFieldLabel } from './fieldLabels.js';
 
 export const INTERNAL_HISTORY_ACTIONS = new Set([
   'create',
@@ -37,6 +36,33 @@ const STATUS_LABELS = {
   huy: 'Đã hủy',
   cho_xu_ly: 'Đã nhận',
   cho_lien_he: 'Đang xử lý',
+};
+
+const FIELD_LABELS = {
+  khachHang: 'Khách hàng',
+  tenKhach: 'Tên khách hàng',
+  soDienThoai: 'Số điện thoại',
+  sdt: 'Số điện thoại',
+  diaChi: 'Địa chỉ',
+  tenHang: 'Tên sản phẩm',
+  tenSanPham: 'Tên sản phẩm',
+  soSeri: 'Số serial',
+  serial: 'Serial',
+  imei: 'IMEI',
+  cauHinh: 'Cấu hình',
+  loiLucNhan: 'Lỗi lúc nhận',
+  phuKien: 'Phụ kiện',
+  chiPhi: 'Chi phí',
+  baoHanh: 'Bảo hành',
+  loaiXuLy: 'Loại xử lý',
+  ghiChu: 'Ghi chú',
+  ngayNhan: 'Ngày nhận',
+  ngayMua: 'Ngày mua',
+  ngayHenTra: 'Ngày hẹn trả',
+  ngayTra: 'Ngày trả',
+  maNhanVien: 'Nhân viên',
+  trangThai: 'Trạng thái',
+  uuTien: 'Ưu tiên',
 };
 
 const PUBLIC_BLOCKED_FIELDS = new Set([
@@ -89,7 +115,7 @@ export function formatHistoryChanges(changes = {}, { publicMode = false } = {}) 
           return `Ảnh đính kèm: ${fromNum}`;
         }
       }
-      const label = getFieldLabel(field);
+      const label = FIELD_LABELS[field] || field;
       const fromValue = formatFieldValue(field, value?.from);
       const toValue = formatFieldValue(field, value?.to);
       if (!fromValue && toValue) return `${label}: ${toValue}`;
@@ -110,47 +136,6 @@ function customerDetail(entry) {
   if (entry?.action === 'customer_transfer') return `Khách hàng: ${fromLabel} → ${toLabel}${note ? `\n${note}` : ''}`;
   if (entry?.action === 'customer_detached') return `Khách hàng: ${fromLabel} → Chưa có khách hàng${note ? `\n${note}` : ''}`;
   return note;
-}
-
-function resolveSupplierHistoryNote(entry, warranty = {}, fallbackNote = '') {
-  const supplierLogs = Array.isArray(warranty.supplierLogs) ? warranty.supplierLogs : [];
-  if (!supplierLogs.length) return fallbackNote;
-
-  const targetAction = entry.action === 'supplier_sent' ? 'sent' : entry.action === 'supplier_returned' ? 'returned' : '';
-  if (!targetAction) return fallbackNote;
-
-  const linkedLogId = String(entry?.changes?.supplierLogs?.logId || '').trim();
-  if (linkedLogId) {
-    const direct = supplierLogs.find((log) => String(log?.id || '') === linkedLogId);
-    if (direct) {
-      const supplierName = String(direct.supplierName || direct.supplier || '').trim();
-      const note = String(direct.note || '').trim();
-      const prefix = targetAction === 'sent' ? 'Đã gửi bảo hành nhà cung cấp' : 'Đã nhận lại từ nhà cung cấp';
-      return `${prefix}: ${supplierName || '-'}${note ? ` | ${note}` : ''}`;
-    }
-  }
-
-  const by = String(entry.by || '').trim();
-  const atTs = dayjs(entry.at).valueOf();
-  const candidates = supplierLogs
-    .filter((log) => log?.action === targetAction)
-    .map((log) => ({ ...log, ts: dayjs(log.at).valueOf() }))
-    .filter((log) => Number.isFinite(log.ts))
-    .sort((a, b) => b.ts - a.ts);
-
-  if (!candidates.length) return fallbackNote;
-
-  const byMatch = by ? candidates.filter((log) => String(log.createdBy || log.updatedBy || '').trim() === by) : [];
-  const pool = byMatch.length ? byMatch : candidates;
-  const picked = Number.isFinite(atTs)
-    ? pool.find((log) => log.ts <= atTs) || pool[0]
-    : pool[0];
-
-  if (!picked) return fallbackNote;
-  const supplierName = String(picked.supplierName || picked.supplier || '').trim();
-  const note = String(picked.note || '').trim();
-  const prefix = targetAction === 'sent' ? 'Đã gửi bảo hành nhà cung cấp' : 'Đã nhận lại từ nhà cung cấp';
-  return `${prefix}: ${supplierName || '-'}${note ? ` | ${note}` : ''}`;
 }
 
 function timelineColor(action) {
@@ -201,10 +186,10 @@ export function toHistoryTimelineItem(entry, warranty = {}, { publicMode = false
     detail = note;
   } else if (action === 'supplier_sent') {
     title = 'Gửi nhà cung cấp';
-    detail = resolveSupplierHistoryNote(entry, warranty, note || 'Đã gửi bảo hành nhà cung cấp');
+    detail = note || 'Đã gửi bảo hành nhà cung cấp';
   } else if (action === 'supplier_returned') {
     title = 'Nhận lại từ nhà cung cấp';
-    detail = resolveSupplierHistoryNote(entry, warranty, note || 'Đã nhận lại từ nhà cung cấp');
+    detail = note || 'Đã nhận lại từ nhà cung cấp';
   } else if (action === 'customer_transfer') {
     title = 'Chuyển khách hàng';
     detail = customerDetail(entry);

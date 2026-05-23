@@ -660,6 +660,18 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     );
   };
 
+  const refreshWarrantyDetail = async () => {
+    if (!warrantyId) return null;
+    const detailRes = await warrantyService.getById(warrantyId);
+    if (detailRes.data?.success) {
+      const next = detailRes.data.data;
+      lastWarrantyRef.current = next;
+      setWarranty(next);
+      return next;
+    }
+    return null;
+  };
+
   const openSupplierLogNoteEdit = (log) => {
     setSupplierLogEditing(log);
     setSupplierLogNote(log?.note || '');
@@ -678,6 +690,12 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       if (res.data?.success) {
         markChanged();
         setSupplierLogs((rows) => rows.map((row) => (row.id === supplierLogEditing.id ? { ...row, ...res.data.data } : row)));
+        const refreshed = await refreshWarrantyDetail();
+        try {
+          await Promise.resolve(onSaved?.(refreshed || null));
+        } catch (callbackErr) {
+          console.error('onSaved after updateSupplierLogNote failed:', callbackErr);
+        }
         setSupplierLogEditOpen(false);
         setSupplierLogEditing(null);
         setSupplierLogNote('');

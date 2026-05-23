@@ -437,9 +437,6 @@ router.post('/', async (req, res) => {
         };
 
     await addToCollection('warranties', newWarranty);
-    const warrantiesAfterCreate = await getCollection('warranties');
-    const customersAfterCreate = buildCustomerMasterFromWarranties(warrantiesAfterCreate, await getCollection('customers'));
-    await setCollection('customers', customersAfterCreate);
     res.status(201).json({ success: true, data: newWarranty });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
@@ -473,8 +470,6 @@ router.put('/:id', async (req, res) => {
     }
 
     await setCollection('warranties', warranties);
-    const customersAfterUpdate = buildCustomerMasterFromWarranties(warranties, await getCollection('customers'));
-    await setCollection('customers', customersAfterUpdate);
     res.json({ success: true, data: warranties[idx] });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
@@ -493,8 +488,7 @@ router.patch('/:id/customer', async (req, res) => {
     if (idx === -1) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'KhÃ´ng tÃ¬m tháº¥y phiáº¿u.' } });
 
     const targetKey = String(customerKey).trim();
-    const customers = await getCollection('customers');
-    const customer = findCustomerByKey(customers, targetKey);
+    const customer = getCustomerRows(warranties).find((row) => row.key === targetKey);
     if (!customer) {
       return res.status(404).json({ success: false, error: { code: 'CUSTOMER_NOT_FOUND', message: 'KhÃ´ng tÃ¬m tháº¥y khÃ¡ch hÃ ng trong danh sÃ¡ch.' } });
     }
@@ -534,8 +528,6 @@ router.patch('/:id/customer', async (req, res) => {
     };
 
     await setCollection('warranties', warranties);
-    const customersAfterTransfer = buildCustomerMasterFromWarranties(warranties, await getCollection('customers'));
-    await setCollection('customers', customersAfterTransfer);
     res.json({ success: true, data: withDefaultDueDate(warranties[idx]) });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lá»—i mÃ¡y chá»§, thá»­ láº¡i sau.' } });
@@ -894,55 +886,13 @@ router.patch('/:id/supplier-logs/:logId', async (req, res) => {
     if (supplier.isActive === false) return res.status(400).json({ success: false, error: { code: 'SUPPLIER_INACTIVE', message: 'Nhà cung cấp đang ngừng hoạt động' } });
 
     const now = dayjs().format('YYYY-MM-DDTHH:mm:ss');
-    const nextNote = String(req.body?.note || '');
     db.supplierLogs[logIdx] = {
       ...oldLog,
       supplierId: newSupplierId,
-      note: nextNote,
+      note: String(req.body?.note || ''),
       updatedAt: now,
       updatedBy: by,
     };
-
-    const updatedLog = db.supplierLogs[logIdx];
-    const historyAction = updatedLog.action === 'returned' ? 'supplier_returned' : 'supplier_sent';
-    const historyPrefix = updatedLog.action === 'returned' ? 'Đã nhận lại từ nhà cung cấp' : 'Đã gửi bảo hành nhà cung cấp';
-    const rebuiltNote = `${historyPrefix}: ${supplier?.name || '-'}${nextNote ? ` | ${nextNote}` : ''}`;
-
-    const historyRows = Array.isArray(db.warranties[wIdx]?.history) ? db.warranties[wIdx].history : [];
-    let linkedHistoryIndex = historyRows.findIndex((h) =>
-      h?.action === historyAction && String(h?.changes?.supplierLogs?.logId || '') === String(updatedLog.id || '')
-    );
-
-    // Backward-compatible fallback for old history rows that do not store supplierLogs.logId.
-    if (linkedHistoryIndex < 0) {
-      const supplierName = String(supplier?.name || '').trim();
-      const legacyPrefix = `${historyPrefix}: ${supplierName}`;
-      for (let i = historyRows.length - 1; i >= 0; i -= 1) {
-        const row = historyRows[i];
-        if (row?.action !== historyAction) continue;
-        const rowNote = String(row?.note || '');
-        if (!supplierName || rowNote.startsWith(legacyPrefix)) {
-          linkedHistoryIndex = i;
-          break;
-        }
-      }
-    }
-
-    if (linkedHistoryIndex >= 0) {
-      historyRows[linkedHistoryIndex] = {
-        ...historyRows[linkedHistoryIndex],
-        note: rebuiltNote,
-        changes: {
-          ...(historyRows[linkedHistoryIndex]?.changes || {}),
-          supplierLogs: {
-            ...(historyRows[linkedHistoryIndex]?.changes?.supplierLogs || {}),
-            logId: updatedLog.id,
-            action: updatedLog.action,
-          },
-        },
-      };
-      db.warranties[wIdx].history = historyRows;
-    }
 
     const sentLogs = (db.supplierLogs || [])
       .filter(x => x.warrantyId === req.params.id && x.action === 'sent')
@@ -963,9 +913,9 @@ router.patch('/:id/supplier-logs/:logId', async (req, res) => {
           },
         ],
       };
+      await setCollection('warranties', db.warranties);
     }
 
-    await setCollection('warranties', db.warranties);
     await setCollection('supplierLogs', db.supplierLogs);
     res.json({ success: true, data: { ...db.supplierLogs[logIdx], supplierName: supplier?.name || '-' } });
   } catch {
@@ -1054,10 +1004,7 @@ router.post('/:id/supplier-send', async (req, res) => {
           at: now,
           by,
           action: 'supplier_sent',
-          changes: {
-            supplierIdCurrent: { from: db.warranties[wIdx].supplierIdCurrent || null, to: supplier.id },
-            supplierLogs: { logId: log.id, action: 'sent' },
-          },
+          changes: { supplierIdCurrent: { from: db.warranties[wIdx].supplierIdCurrent || null, to: supplier.id } },
           note: `Đã gửi bảo hành nhà cung cấp: ${supplier.name}${parsed.data.note ? ` | ${parsed.data.note}` : ''}`,
         },
       ],
@@ -1111,10 +1058,7 @@ router.post('/:id/supplier-return', async (req, res) => {
           at: now,
           by,
           action: 'supplier_returned',
-          changes: {
-            supplierStatus: { from: 'sent', to: 'returned' },
-            supplierLogs: { logId: log.id, action: 'returned' },
-          },
+          changes: { supplierStatus: { from: 'sent', to: 'returned' } },
           note: `Đã nhận lại từ nhà cung cấp: ${supplier?.name || '-'}${parsed.data.note ? ` | ${parsed.data.note}` : ''}`,
         },
       ],
@@ -1235,8 +1179,6 @@ router.post('/import', async (req, res) => {
 
     const allWarranties = [...warranties, ...inserted];
     await setCollection('warranties', allWarranties);
-    const customersAfterImport = buildCustomerMasterFromWarranties(allWarranties, await getCollection('customers'));
-    await setCollection('customers', customersAfterImport);
     res.json({ success: true, data: { inserted: inserted.length, skipped: skipped.length, errors } });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });

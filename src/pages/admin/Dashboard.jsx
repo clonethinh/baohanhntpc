@@ -233,7 +233,7 @@ export default function Dashboard() {
       <MobileCard title={t('adminDashboard.latestHistory')} className="admin-mobile-card">
         <div className="admin-mobile-history">
           {insights.latestEvents.map((ev, idx) => {
-            const note = normalizeHistoryNote(normalizeHistoryText(ev.note));
+            const note = normalizeHistoryNote(ev.note);
             const updateDetail = ev.action === 'update' ? formatUpdateChanges(ev.changes) : '';
             const detail = updateDetail || note;
             return (

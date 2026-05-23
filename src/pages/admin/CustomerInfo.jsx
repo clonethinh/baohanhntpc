@@ -447,7 +447,7 @@ export default function CustomerInfo() {
             <div style={{ padding: 24, textAlign: 'center', color: colorTextSecondary }}>{t('adminCustomer.emptyCustomers')}</div>
           ) : (
             <div style={{ display: 'grid', gap: 10 }}>
-              <div className="customer-table-header-row" style={{ display: 'grid', gridTemplateColumns: '110px minmax(220px, 1.1fr) 145px minmax(260px, 1.3fr) 210px 102px', gap: 14, alignItems: 'center', padding: '10px 14px', borderRadius: 10, background: colorFillTertiary, color: colorTextSecondary, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: .2 }}>
+              <div className="customer-table-header-row" style={{ display: 'grid', gridTemplateColumns: '110px minmax(220px, 1.1fr) 145px minmax(260px, 1.3fr) 210px 102px', gap: 12, alignItems: 'center', padding: '8px 12px', borderRadius: 10, background: colorFillTertiary, color: colorTextSecondary, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: .15 }}>
                 <div>Mã khách hàng</div>
                 <div>{t('field.khachHang')}</div>
                 <div>{t('field.soDienThoai')}</div>
@@ -458,12 +458,12 @@ export default function CustomerInfo() {
               {customerRows.map(row => {
                 const active = selectedCustomerKey === row.key;
                 return (
-                  <div key={row.key} style={{ border: active ? `1px solid ${colorPrimary}` : `1px solid ${colorBorderSecondary}`, borderRadius: 12, background: active ? colorPrimaryBg : colorBgContainer, boxShadow: active ? '0 6px 18px rgba(22,119,255,.10)' : 'var(--ant-box-shadow-tertiary, 0 2px 10px rgba(15,23,42,.04))', overflow: 'hidden' }}>
-                    <div role="button" tabIndex={0} onClick={() => handleSelectCustomerRow(row)} onKeyDown={(e) => { if (e.key === 'Enter') handleSelectCustomerRow(row); }} style={{ width: '100%', border: 0, background: 'transparent', padding: '12px 14px', textAlign: 'left', cursor: 'pointer', display: 'grid', gridTemplateColumns: '110px minmax(220px, 1.1fr) 145px minmax(260px, 1.3fr) 210px 102px', gap: 14, alignItems: 'center' }}>
+                  <div key={row.key} style={{ border: active ? `1px solid ${colorPrimary}` : `1px solid ${colorBorderSecondary}`, borderRadius: 12, background: active ? colorPrimaryBg : colorBgContainer, boxShadow: active ? '0 4px 12px rgba(22,119,255,.08)' : 'var(--ant-box-shadow-tertiary, 0 1px 6px rgba(15,23,42,.04))', overflow: 'hidden' }}>
+                    <div role="button" tabIndex={0} onClick={() => handleSelectCustomerRow(row)} onKeyDown={(e) => { if (e.key === 'Enter') handleSelectCustomerRow(row); }} style={{ width: '100%', border: 0, background: 'transparent', padding: '9px 12px', textAlign: 'left', cursor: 'pointer', display: 'grid', gridTemplateColumns: '110px minmax(220px, 1.1fr) 145px minmax(260px, 1.3fr) 210px 102px', gap: 12, alignItems: 'center' }}>
                       <div><Tag color="geekblue" style={{ marginInlineEnd: 0 }}>{row.maKhachHang || '-'}</Tag></div>
                       <div style={{ minWidth: 0 }}>
                         <div style={{ fontWeight: 700, fontSize: 15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: colorText }}>{row.khachHang || '-'}</div>
-                        <div style={{ color: colorTextSecondary, fontSize: 12, marginTop: 3 }}>{t('adminCustomer.latest', { date: formatDate(row.lastNgayNhan) || '-' })}</div>
+                        <div style={{ color: colorTextSecondary, fontSize: 11, fontWeight: 400, opacity: 0.78, marginTop: 1 }}>{t('adminCustomer.latest', { date: formatDate(row.lastNgayNhan) || '-' })}</div>
                       </div>
 
                       <div style={{ color: colorText, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.soDienThoai || t('adminCustomer.noPhone')}</div>

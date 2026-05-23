@@ -1,6 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
 import { App, Button, Card, DatePicker, Form, Input, Modal, Popconfirm, Select, Space, Switch, Table, Tag, Typography, Grid, Row, Col, theme } from 'antd';
-import { SearchOutlined, EditOutlined, StopOutlined, CheckOutlined, HistoryOutlined } from '@ant-design/icons';
+import { SearchOutlined, EditOutlined, StopOutlined, CheckOutlined, HistoryOutlined, FormOutlined } from '@ant-design/icons';
 import { Button as MobileButton, Card as MobileCard, DatePicker as MobileDatePicker, Dialog, Input as MobileInput, List, Popup, Space as MobileSpace, Switch as MobileSwitch, Tag as MobileTag, TextArea as MobileTextArea, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { nhanVienService, supplierService, warrantyService } from '../../services/warrantyService';
@@ -49,8 +49,12 @@ export default function Suppliers() {
   const [mobileFormOpen, setMobileFormOpen] = useState(false);
   const [mobileForm, setMobileForm] = useState({ name: '', phone: '', email: '', address: '', contactPerson: '', note: '', isActive: true, code: '' });
   const [mobileReceiveOpen, setMobileReceiveOpen] = useState(false);
-  const [mobileReturnedAt, setMobileReturnedAt] = useState(new Date());
+  const [mobileReturnedAt, setMobileReturnedAt] = useState('');
   const [mobileReceiveNote, setMobileReceiveNote] = useState('');
+  const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const [noteSaving, setNoteSaving] = useState(false);
+  const [noteEditTarget, setNoteEditTarget] = useState(null);
+  const [noteDraft, setNoteDraft] = useState('');
 
   const fetchData = async () => {
     setLoading(true);
@@ -203,6 +207,29 @@ export default function Suppliers() {
     fetchData();
   };
 
+  const openEditNote = (warrantyRecord, historyRecord) => {
+    setNoteEditTarget({ warrantyId: warrantyRecord.id, logId: historyRecord.id });
+    setNoteDraft(historyRecord.note || '');
+    setNoteModalOpen(true);
+  };
+
+  const submitEditNote = async () => {
+    if (!noteEditTarget?.warrantyId || !noteEditTarget?.logId) return;
+    setNoteSaving(true);
+    try {
+      await warrantyService.updateSupplierLogNote(noteEditTarget.warrantyId, noteEditTarget.logId, { note: noteDraft || '' });
+      message.success('Đã cập nhật ghi chú');
+      setNoteModalOpen(false);
+      setNoteEditTarget(null);
+      setNoteDraft('');
+      refreshTracking();
+    } catch (err) {
+      message.error(err?.response?.data?.error?.message || 'Không thể cập nhật ghi chú');
+    } finally {
+      setNoteSaving(false);
+    }
+  };
+
   const renderTrackingTable = (row) => (
     <Card className="supplier-tracking-level1" size="small" title={<Space><HistoryOutlined />{t('adminSuppliers.trackingTitle', { code: row.code, name: row.name })}</Space>} styles={{ body: { padding: 8 } }}>
       <Table
@@ -225,7 +252,7 @@ export default function Suppliers() {
                 { title: t('adminSuppliers.expectedReturnAt'), dataIndex: 'expectedReturnAt', key: 'expectedReturnAt', width: 140, render: formatDateTime },
                 { title: t('adminSuppliers.returnedAt'), dataIndex: 'returnedAt', key: 'returnedAt', width: 140, render: formatDateTime },
                 { title: t('field.nhanVien'), dataIndex: 'createdBy', key: 'createdBy', width: 160, render: getStaffName },
-                { title: t('field.ghiChu'), dataIndex: 'note', key: 'note' },
+                { title: t('field.ghiChu'), dataIndex: 'note', key: 'note', render: (value, historyRecord) => (<div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}><span style={{ whiteSpace: 'normal', wordBreak: 'break-word', flex: 1 }}>{value || '-'}</span><Button type="text" size="small" icon={<FormOutlined />} aria-label="Sửa ghi chú" onClick={() => openEditNote(record, historyRecord)} style={{ flex: '0 0 auto', marginTop: -2 }} /></div>) },
               ]}
             />
           ),
@@ -461,6 +488,27 @@ export default function Suppliers() {
             <Input.TextArea rows={2} placeholder={t('adminSuppliers.receiveNotePlaceholder')} />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title="Sửa ghi chú"
+        open={noteModalOpen}
+        confirmLoading={noteSaving}
+        onOk={submitEditNote}
+        onCancel={() => {
+          setNoteModalOpen(false);
+          setNoteEditTarget(null);
+          setNoteDraft('');
+        }}
+        okText={t('button.xacNhan')}
+        cancelText={t('button.huy')}
+      >
+        <Input.TextArea
+          rows={4}
+          value={noteDraft}
+          onChange={(e) => setNoteDraft(e.target.value)}
+          placeholder="Nhập ghi chú"
+        />
       </Modal>
     </>
   );

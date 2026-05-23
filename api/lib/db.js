@@ -16,7 +16,7 @@ function processReadQueue() {
     const { resolve, reject } = readQueue.shift();
     try {
       if (!fs.existsSync(DB_PATH)) {
-        fs.writeFileSync(DB_PATH, JSON.stringify({ warranties: [], nhanVien: [], suppliers: [], supplierLogs: [] }, null, 2), 'utf-8');
+        fs.writeFileSync(DB_PATH, JSON.stringify({ warranties: [], nhanVien: [], suppliers: [], supplierLogs: [], customers: [] }, null, 2), 'utf-8');
       }
       const raw = fs.readFileSync(DB_PATH, 'utf-8');
       resolve(JSON.parse(raw));
