@@ -8,28 +8,62 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+try {
+  const envPath = path.join(__dirname, '..', '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf-8');
+    envContent.split(/\r?\n/).forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const parts = trimmed.split('=');
+      if (parts.length >= 2) {
+        const key = parts[0].trim();
+        const value = parts.slice(1).join('=').trim().replace(/^['"]|['"]$/g, '');
+        if (key) process.env[key] = value;
+      }
+    });
+  }
+} catch (err) {
+  console.warn('[ENV] Khong doc duoc file .env:', err.message);
+}
+
 const { readDb, writeDb } = await import('./lib/db.js');
+const { attachUser, ensureAuthState, requireAuth, requireRole } = await import('./lib/auth.js');
 const { warranties: seedWarranties, nhanVien: seedNhanVien } = await import('./seedData.js');
 
+const warrantiesRoutes = (await import('./routes/warranties.js')).default;
+const nhanVienRoutes = (await import('./routes/nhanVien.js')).default;
+const authRoutes = (await import('./routes/auth.js')).default;
+const statsRoutes = (await import('./routes/stats.js')).default;
+const customersRoutes = (await import('./routes/customers.js')).default;
+const publicRoutes = (await import('./routes/public.js')).default;
+const suppliersRoutes = (await import('./routes/suppliers.js')).default;
+const backupsRoutes = (await import('./routes/backups.js')).default;
+const { startBackupScheduler } = await import('./lib/backup.js');
+
 const app = express();
-const PORT = process.env.API_PORT || 3003;
+const PORT = process.env.API_PORT || 3004;
+app.set('trust proxy', 1);
 const allowedOrigins = [
   'http://localhost:5175',
   'http://127.0.0.1:5175',
   'http://192.168.1.146:5175',
+  'http://localhost:8888',
+  'http://127.0.0.1:8888',
 ];
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+    ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
     : allowedOrigins,
+  credentials: true,
 }));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '50mb' }));
+
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));
-
 
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -58,42 +92,35 @@ async function seedIfEmpty() {
     db.nhanVien = seedNhanVien;
   }
 
+  ensureAuthState(db);
   await writeDb(db);
   if (process.env.NODE_ENV !== 'production' && seeded) {
     console.log(`[SEED] Da tao ${seedWarranties.length} phieu bao hanh va ${seedNhanVien.length} nhan vien.`);
   }
 }
 
-const warrantiesRoutes = (await import('./routes/warranties.js')).default;
-const nhanVienRoutes = (await import('./routes/nhanVien.js')).default;
-const adminSecurityRoutes = (await import('./routes/adminSecurity.js')).default;
-const statsRoutes = (await import('./routes/stats.js')).default;
-const customersRoutes = (await import('./routes/customers.js')).default;
-const publicRoutes = (await import('./routes/public.js')).default;
-const suppliersRoutes = (await import('./routes/suppliers.js')).default;
-const backupsRoutes = (await import('./routes/backups.js')).default;
-const { startBackupScheduler } = await import('./lib/backup.js');
-
-app.use('/api/warranties', warrantiesRoutes);
-app.use('/api/nhan-vien', nhanVienRoutes);
-app.use('/api/admin-security', adminSecurityRoutes);
-app.use('/api/stats', statsRoutes);
-app.use('/api/customers', customersRoutes);
-app.use('/api/public', publicRoutes);
-app.use('/api/suppliers', suppliersRoutes);
-app.use('/api/admin/backups', backupsRoutes);
-
 app.get('/api/health', (req, res) => {
   res.json({ success: true, data: { status: 'ok', time: new Date().toISOString() } });
 });
 
-seedIfEmpty().then(() => {
-  startBackupScheduler();
-  app.listen(PORT, () => {
-    console.log(`[API] Server chay tai http://localhost:${PORT}`);
-  });
-}).catch(err => {
-  console.error('[API] Loi seed data:', err);
-  process.exit(1);
-});
+app.use('/api/public', publicRoutes);
+app.use(attachUser);
+app.use('/api/auth', authRoutes);
+app.use(requireAuth);
+app.use('/api/warranties', warrantiesRoutes);
+app.use('/api/nhan-vien', requireRole('admin'), nhanVienRoutes);
+app.use('/api/stats', statsRoutes);
+app.use('/api/customers', customersRoutes);
+app.use('/api/suppliers', suppliersRoutes);
+app.use('/api/admin/backups', requireRole('admin'), backupsRoutes);
 
+app.listen(PORT, () => {
+  console.log(`[API] Server chay tai http://localhost:${PORT}`);
+  seedIfEmpty()
+    .then(() => {
+      startBackupScheduler();
+    })
+    .catch((err) => {
+      console.error('[API] Loi seed data bat dong bo:', err.message);
+    });
+});

@@ -1,40 +1,66 @@
-﻿import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { authService } from '../services/warrantyService';
 
 const AuthContext = createContext({
   currentStaff: null,
   setCurrentStaff: () => {},
-  adminUnlocked: false,
-  setAdminUnlocked: () => {},
+  authLoading: true,
+  isAdmin: false,
+  login: async () => {},
+  logout: async () => {},
+  refreshAuth: async () => {},
 });
 
 export function AuthProvider({ children }) {
-  const [currentStaff, setCurrentStaff] = useState(() => {
+  const [currentStaff, setCurrentStaff] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  const refreshAuth = async () => {
     try {
-      const saved = localStorage.getItem('ntpc-staff');
-      return saved ? JSON.parse(saved) : null;
+      const res = await authService.me();
+      setCurrentStaff(res.data?.data || null);
+      return res.data?.data || null;
     } catch {
+      setCurrentStaff(null);
       return null;
+    } finally {
+      setAuthLoading(false);
     }
-  });
-
-  const [adminUnlocked, setAdminUnlocked] = useState(() => localStorage.getItem('ntpc-admin-unlocked') === '1');
+  };
 
   useEffect(() => {
-    if (currentStaff) {
-      localStorage.setItem('ntpc-staff', JSON.stringify(currentStaff));
-    } else {
-      localStorage.removeItem('ntpc-staff');
-      setAdminUnlocked(false);
-    }
-  }, [currentStaff]);
+    localStorage.removeItem('ntpc-staff');
+    localStorage.removeItem('ntpc-admin-unlocked');
+    refreshAuth();
+  }, []);
 
-  useEffect(() => {
-    if (adminUnlocked) localStorage.setItem('ntpc-admin-unlocked', '1');
-    else localStorage.removeItem('ntpc-admin-unlocked');
-  }, [adminUnlocked]);
+  const login = async (maNV, matKhau) => {
+    const res = await authService.login(maNV, matKhau);
+    const staff = res.data?.data || null;
+    setCurrentStaff(staff);
+    return staff;
+  };
+
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } finally {
+      setCurrentStaff(null);
+    }
+  };
+
+  const value = {
+    currentStaff,
+    setCurrentStaff,
+    authLoading,
+    isAdmin: currentStaff?.role === 'admin',
+    login,
+    logout,
+    refreshAuth,
+  };
 
   return (
-    <AuthContext.Provider value={{ currentStaff, setCurrentStaff, adminUnlocked, setAdminUnlocked }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,8 +3,10 @@ import { readDb, writeDb } from '../lib/db.js';
 import { customerLabel, getCustomerRows, getWarrantyCustomerKey, hasCustomer, buildCustomerNameSuggestions, findCustomerByQuery, findCustomerByKey } from '../lib/customers.js';
 import { buildCustomerMasterFromWarranties } from '../lib/customerMaster.js';
 import dayjs from 'dayjs';
+import { requireRole } from '../lib/auth.js';
 
 const router = express.Router();
+const requireAdmin = requireRole('admin');
 
 function ensureCustomers(db) {
   if (!Array.isArray(db.customers)) db.customers = [];
@@ -49,10 +51,18 @@ router.get('/suggest', async (req, res) => {
 router.get('/lookup', async (req, res) => {
   try {
     const q = String(req.query?.q || '');
-    if (!q) return res.json({ success: true, data: null });
+    const key = String(req.query?.key || '').trim();
+    if (!q && !key) return res.json({ success: true, data: null });
     const db = await readDb();
     ensureCustomers(db);
-    const customer = findCustomerByQuery(db.customers, q);
+    const rows = getCustomerRows(db.warranties || [], db.customers || []);
+    const customer = key
+      ? rows.find((row) => String(row.key || '') === key)
+      : (
+        rows.find((row) => String(row.maKhachHang || '').toLowerCase() === q.toLowerCase()) ||
+        rows.find((row) => String(row.soDienThoai || '').includes(q)) ||
+        findCustomerByQuery(rows, q)
+      );
     if (!customer) return res.json({ success: true, data: null });
 
     const matched = (db.warranties || []).filter((w) => !w.deletedAt && getWarrantyCustomerKey(w) === customer.key);
@@ -61,7 +71,7 @@ router.get('/lookup', async (req, res) => {
       .sort((a, b) => new Date(b.ngayNhan || 0) - new Date(a.ngayNhan || 0))
       .map((w) => ({ id: w.id, soChungTu: w.soChungTu, ngayNhan: w.ngayNhan, tenHang: w.tenHang, soSeri: w.soSeri, loiLucNhan: w.loiLucNhan, trangThai: w.trangThai, ngayHenTra: w.ngayHenTra, ngayTra: w.ngayTra, loaiXuLy: w.loaiXuLy, chiPhi: w.chiPhi, baoHanh: w.baoHanh }));
 
-    res.json({ success: true, data: { khachHang: customer.khachHang, soDienThoai: customer.soDienThoai || '', diaChi: customer.diaChi || latest.diaChi || '', totalWarranties: matched.length, history } });
+    res.json({ success: true, data: { key: customer.key, maKhachHang: customer.maKhachHang || '', khachHang: customer.khachHang, soDienThoai: customer.soDienThoai || '', diaChi: customer.diaChi || latest.diaChi || '', totalWarranties: matched.length, history } });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
   }
@@ -94,7 +104,7 @@ router.put('/update', async (req, res) => {
   }
 });
 
-router.post('/delete', async (req, res) => {
+router.post('/delete', requireAdmin, async (req, res) => {
   try {
     const { key } = req.body || {};
     if (!key || !String(key).trim()) return res.status(400).json({ success: false, error: { code: 'VALIDATION_ERROR', message: 'Thiếu khóa khách hàng.' } });
@@ -131,7 +141,7 @@ router.post('/delete', async (req, res) => {
   }
 });
 
-router.post('/backfill', async (req, res) => {
+router.post('/backfill', requireAdmin, async (req, res) => {
   try {
     const db = await readDb();
     ensureCustomers(db);

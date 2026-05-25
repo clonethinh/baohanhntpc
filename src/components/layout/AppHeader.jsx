@@ -6,6 +6,8 @@ import {
   QuestionCircleOutlined,
   UserOutlined,
   UserSwitchOutlined,
+  LogoutOutlined,
+  LockOutlined,
 } from '@ant-design/icons';
 import { NavBar } from 'antd-mobile';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +18,7 @@ import { useState } from 'react';
 import NotificationBell from './NotificationBell';
 import GlobalSearch from './GlobalSearch';
 import StaffPickerModal from '../common/StaffPickerModal';
+import ChangePasswordModal from '../common/ChangePasswordModal';
 
 const { Header } = Layout;
 
@@ -33,12 +36,13 @@ const routeLabelKeys = {
 export default function AppHeader({ onHamburger }) {
   const { t } = useTranslation(['nav', 'ui']);
   const { isDark, toggle } = useTheme();
-  const { currentStaff, setAdminUnlocked } = useAuth();
+  const { currentStaff, logout } = useAuth();
   const location = useLocation();
   const staffInitial = (currentStaff?.tenNV || 'NV').slice(0, 1).toUpperCase();
   const themeLabel = isDark ? t('ui:common.cheDoSang') : t('ui:common.cheDoToi');
   const staffLabel = t('ui:field.nhanVien');
   const [staffPickerOpen, setStaffPickerOpen] = useState(false);
+  const [passwordOpen, setPasswordOpen] = useState(false);
 
   const items = [{ title: 'Admin', href: '/admin' }];
   const pathParts = location.pathname.split('/').filter(Boolean);
@@ -70,6 +74,18 @@ export default function AppHeader({ onHamburger }) {
         icon: <UserSwitchOutlined />,
         label: t('action.doiNhanVien'),
         onClick: changeStaff,
+      },
+      {
+        key: 'password',
+        icon: <LockOutlined />,
+        label: 'Đổi mật khẩu',
+        onClick: () => setPasswordOpen(true),
+      },
+      {
+        key: 'logout',
+        icon: <LogoutOutlined />,
+        label: 'Đăng xuất',
+        onClick: logout,
       },
     ],
   };
@@ -134,10 +150,10 @@ export default function AppHeader({ onHamburger }) {
         mode="switchStaff"
         onClose={() => setStaffPickerOpen(false)}
         onPicked={() => {
-          setAdminUnlocked(false);
           setStaffPickerOpen(false);
         }}
       />
+      <ChangePasswordModal open={passwordOpen} onClose={() => setPasswordOpen(false)} />
     </>
   );
 }

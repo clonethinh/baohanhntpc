@@ -31,19 +31,9 @@ export const customerService = {
   unassigned: () => api.get('/customers/unassigned'),
   suggest: (q) => api.get('/customers/suggest', { params: { q } }),
   lookup: (q) => api.get('/customers/lookup', { params: { q } }),
+  lookupByKey: (key) => api.get('/customers/lookup', { params: { key } }),
   update: (data) => api.put('/customers/update', data),
   deleteCustomer: (key) => api.post('/customers/delete', { key }),
-};
-
-export const nhanVienService = {
-  getList: () => api.get('/nhan-vien'),
-  create: (data) => api.post('/nhan-vien', data),
-  remove: (maNV) => api.delete(`/nhan-vien/${maNV}`),
-};
-
-export const adminSecurityService = {
-  verify: (password) => api.post('/admin-security/verify', { password }),
-  changePassword: (currentPassword, newPassword) => api.post('/admin-security/change-password', { currentPassword, newPassword }),
 };
 
 export const statsService = {
@@ -65,4 +55,19 @@ export const supplierService = {
   update: (id, data) => api.put(`/suppliers/${id}`, data),
   setStatus: (id, isActive) => api.patch(`/suppliers/${id}/status`, { isActive }),
   getWarranties: (id, params) => api.get(`/suppliers/${id}/warranties`, { params }),
+};
+
+export const nhanVienService = {
+  getList: () => api.get('/nhan-vien'),
+  create: (data) => api.post('/nhan-vien', data),
+  resetPassword: (maNV, newPassword) => api.patch(`/nhan-vien/${maNV}/password`, { newPassword }),
+  remove: (maNV) => api.delete(`/nhan-vien/${maNV}`),
+  verifyPassword: (maNV, matKhau) => api.post('/auth/login', { maNV, matKhau }),
+};
+
+export const authService = {
+  login: (maNV, matKhau) => api.post('/auth/login', { maNV, matKhau }),
+  logout: () => api.post('/auth/logout'),
+  me: () => api.get('/auth/me'),
+  changePassword: (currentPassword, newPassword) => api.post('/auth/change-password', { currentPassword, newPassword }),
 };

@@ -1,6 +1,6 @@
 import { Suspense, lazy, useState, useCallback, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { ConfigProvider, App as AntdApp } from 'antd';
+import { ConfigProvider, App as AntdApp, Result } from 'antd';
 import { ConfigProvider as MobileConfigProvider } from 'antd-mobile';
 import viVN from 'antd/locale/vi_VN';
 import viVNMob from 'antd-mobile/es/locales/vi-VN';
@@ -10,7 +10,6 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import SkeletonCard from './components/common/SkeletonCard';
 import StaffPickerModal from './components/common/StaffPickerModal';
-import AdminPasswordModal from './components/common/AdminPasswordModal';
 import ShortcutsModal from './components/common/ShortcutsModal';
 import AdminLayout from './components/layout/AdminLayout';
 import CustomerLayout from './components/layout/CustomerLayout';
@@ -31,23 +30,40 @@ const TrackingResult = lazy(() => import('./pages/customer/TrackingResult'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function RequireStaff({ children }) {
-  const { currentStaff } = useAuth();
+  const { currentStaff, authLoading } = useAuth();
+  if (authLoading) return <SkeletonCard />;
   if (!currentStaff) return <StaffPickerModal />;
   return children;
 }
 
-function RequireAdminPassword({ children }) {
-  const { adminUnlocked } = useAuth();
-  if (!adminUnlocked) return <AdminPasswordModal />;
+function RequireAdminRole({ children }) {
+  const { isAdmin } = useAuth();
+  if (!isAdmin) {
+    return (
+      <Result
+        status="403"
+        title="403"
+        subTitle="Tài khoản hiện tại không có quyền quản trị."
+      />
+    );
+  }
   return children;
 }
 
 function AdminRoute({ children }) {
   return (
     <RequireStaff>
-      <RequireAdminPassword>
-        <AdminLayout>{children}</AdminLayout>
-      </RequireAdminPassword>
+      <AdminLayout>{children}</AdminLayout>
+    </RequireStaff>
+  );
+}
+
+function AdminOnlyRoute({ children }) {
+  return (
+    <RequireStaff>
+      <AdminLayout>
+        <RequireAdminRole>{children}</RequireAdminRole>
+      </AdminLayout>
     </RequireStaff>
   );
 }
@@ -100,10 +116,10 @@ export default function App() {
                     <Route path="/admin/phieu/:id/in" element={<AdminRoute><WarrantyPrint /></AdminRoute>} />
                     <Route path="/admin/tao-phieu" element={<AdminRoute><CreateWarranty /></AdminRoute>} />
                     <Route path="/admin/khach-hang" element={<AdminRoute><CustomerInfo /></AdminRoute>} />
-                    <Route path="/admin/nhan-vien" element={<AdminRoute><StaffManagement /></AdminRoute>} />
+                    <Route path="/admin/nhan-vien" element={<AdminOnlyRoute><StaffManagement /></AdminOnlyRoute>} />
                     <Route path="/admin/nha-cung-cap" element={<AdminRoute><Suppliers /></AdminRoute>} />
                     <Route path="/admin/thong-ke" element={<AdminRoute><Statistics /></AdminRoute>} />
-                    <Route path="/admin/import-export" element={<AdminRoute><ImportExport /></AdminRoute>} />
+                    <Route path="/admin/import-export" element={<AdminOnlyRoute><ImportExport /></AdminOnlyRoute>} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

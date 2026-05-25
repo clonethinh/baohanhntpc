@@ -1,0 +1,106 @@
+// -------------------------------------------------------------
+// LƯỢC ĐỒ CƠ SỞ DỮ LIỆU PRISMA CHO HỆ THỐNG BẢO HÀNH NTPC
+// -------------------------------------------------------------
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+// 1. Bảng quản lý Nhân Viên
+model NhanVien {
+  maNV      String   @id @map("ma_nv") // Khóa chính là mã nhân viên viết tắt (ví dụ: NV001)
+  tenNV     String   @map("ten_nv")
+  matKhau   String   @map("mat_khau")
+  quyen     String   @default("staff") // 'admin' hoặc 'staff'
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("nhan_vien")
+}
+
+// 2. Bảng quản lý Nhà Cung Cấp
+model Supplier {
+  id            String   @id @default(uuid())
+  code          String   @default("") @map("code")
+  name          String   @map("name")
+  phone         String   @default("") @map("phone")
+  email         String   @default("") @map("email")
+  address       String   @default("") @map("address")
+  contactPerson String   @default("") @map("contact_person")
+  note          String   @default("") @map("note")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("suppliers")
+}
+
+// 3. Bảng quản lý Nhật ký gửi/nhận bảo hành Nhà Cung Cấp
+model SupplierLog {
+  id               String   @id @default(uuid())
+  supplierId       String   @map("supplier_id")
+  supplierName     String   @map("supplier_name")
+  warrantyId       String   @map("warranty_id")
+  action           String   @map("action") // 'sent' hoặc 'returned'
+  sentAt           String   @default("") @map("sent_at")
+  expectedReturnAt String   @default("") @map("expected_return_at")
+  returnedAt       String   @default("") @map("returned_at")
+  note             String   @default("") @map("note")
+  createdBy        String   @default("") @map("created_by")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@map("supplier_logs")
+}
+
+// 4. Bảng quản lý Phiếu Bảo Hành (Trọng tâm)
+model Warranty {
+  id                       String   @id @default(uuid())
+  stt                      Int      @default(0) // Số thứ tự dòng
+  soChungTu                String   @unique @map("so_chung_tu") // Số chứng từ tìm kiếm chính (ví dụ: 25052026NBHSC1)
+  khachHang                String   @map("khach_hang")
+  soDienThoai              String   @default("") @map("so_dien_thoai")
+  diaChi                   String   @default("") @map("dia_chi")
+  tenHang                  String   @map("ten_hang")
+  soSeri                   String   @map("so_seri")
+  cauHinh                  String   @default("") @map("cau_hinh")
+  loiLucNhan               String   @map("loi_luc_nhan")
+  phuKien                  String   @default("") @map("phu_kien")
+  chiPhi                   Float    @default(0.0) @map("chi_phi")
+  baoGiaSau                Boolean  @default(false) @map("bao_gia_sau")
+  loaiPhieu                String   @default("nhan_bao_hanh") @map("loai_phieu") // 'nhan_bao_hanh' hoặc 'bien_nhan'
+  baoHanh                  String   @map("bao_hanh") // Thời gian BH
+  loaiXuLy                 String   @default("bao_hanh") @map("loai_xu_ly") // 'bao_hanh', 'sua_dv', 'doi_moi', 'khac'
+  loaiXuLyKhac             String   @default("") @map("loai_xu_ly_khac")
+  ghiChu                   String   @default("") @map("ghi_chu")
+  ngayMua                  String   @default("") @map("ngay_mua")
+  ngayNhan                 String   @map("ngay_nhan")
+  ngayHenTra               String   @map("ngay_hen_tra")
+  ngayTra                  String   @default("") @map("ngay_tra")
+  maNhanVien               String   @map("ma_nhan_vien")
+  trangThai                String   @default("dang_xu_ly") @map("trang_thai") // 'cho_xu_ly', 'dang_xu_ly', 'cho_lien_he', 'da_tra', 'huy'
+  uuTien                   Boolean  @default(false) @map("uu_tien")
+  createdAt                String   @map("created_at")
+  updatedAt                String   @map("updated_at")
+  deletedAt                String   @default("") @map("deleted_at")
+
+  // Lưu trữ các cấu trúc mảng phức tạp và động dưới dạng JSON của Postgres để bảo mật và giữ nguyên logic code Express cũ
+  doiTra                   Json?    @map("doi_tra") // Chứa chi tiết đổi hàng / trả hàng dạng đối tượng
+  attachments              Json?    @map("attachments") // Mảng danh sách file ảnh đính kèm
+  history                  Json?    @map("history") // Mảng lịch sử hoạt động và các thay đổi của phiếu
+  supplierLogs             Json?    @map("supplier_logs_local") // Mảng lịch sử gửi nhận NCC dạng nhúng (như bản JSON DB cũ)
+
+  // Theo dõi trạng thái gửi NCC hiện tại (để tối ưu truy vấn)
+  supplierStatus           String   @default("none") @map("supplier_status") // 'none', 'sent', 'returned'
+  supplierIdCurrent        String?  @map("supplier_id_current")
+  sentSupplierAt           String   @default("") @map("sent_supplier_at")
+  expectedReturnSupplierAt String   @default("") @map("expected_return_supplier_at")
+
+  @@map("warranties")
+}

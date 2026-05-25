@@ -24,6 +24,8 @@ const MAX_FILES = { minute: 360, hourly: 168, daily: 365, monthly: 60, manual: 1
 
 let lastMinuteHash = null;
 let schedulerStarted = false;
+let backupsCache = null;
+const shaCache = new Map();
 let schedulerState = {
   enabled: false,
   lastMinuteBackupAt: null,
@@ -240,6 +242,7 @@ export async function createBackup(type = 'manual', options = {}) {
     };
     if (type === 'minute') lastMinuteHash = hash;
     await appendHistory({ action: 'backup', type, status: 'success', ...item, message: `Tạo backup ${type} thành công` });
+    backupsCache = null;
     return item;
   } catch (err) {
     await appendHistory({ action: 'backup', type, status: 'failed', message: err.message });
@@ -248,8 +251,10 @@ export async function createBackup(type = 'manual', options = {}) {
 }
 
 export function listBackups() {
+  if (backupsCache) return backupsCache;
   ensureDirs();
   const rows = [];
+  const metadata = readMetadata();
   for (const type of TYPES) {
     const dir = path.join(BACKUP_ROOT, type);
     for (const file of fs.readdirSync(dir)) {
@@ -257,12 +262,21 @@ export function listBackups() {
       const full = path.join(dir, file);
       const stat = fs.statSync(full);
       let sha256 = null;
-      const shaPath = `${full}.sha256`;
-      if (fs.existsSync(shaPath)) sha256 = fs.readFileSync(shaPath, 'utf-8').trim().split(/\s+/)[0];
-      rows.push(enrichWithMetadata({ type, filename: file, relativePath: `${type}/${file}`, size: stat.size, sha256, createdAt: stat.mtime.toISOString() }));
+      const cacheKey = `${type}/${file}-${stat.mtimeMs}`;
+      if (shaCache.has(cacheKey)) {
+        sha256 = shaCache.get(cacheKey);
+      } else {
+        const shaPath = `${full}.sha256`;
+        if (fs.existsSync(shaPath)) {
+          sha256 = fs.readFileSync(shaPath, 'utf-8').trim().split(/\s+/)[0];
+          shaCache.set(cacheKey, sha256);
+        }
+      }
+      rows.push(enrichWithMetadata({ type, filename: file, relativePath: `${type}/${file}`, size: stat.size, sha256, createdAt: stat.mtime.toISOString() }, metadata));
     }
   }
-  return rows.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  backupsCache = rows.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return backupsCache;
 }
 
 export function getBackupFile(relativePath) {
@@ -290,6 +304,7 @@ export async function restoreBackup(relativePath, confirm) {
     await atomicWriteJsonFile(DB_PATH, data);
     const result = { restoredFrom: relativePath, safetyBackup: safety.relativePath, sha256: checksum || sha256File(full), restoredAt: new Date().toISOString() };
     await appendHistory({ action: 'restore', type: 'existing', status: 'success', sourcePath: relativePath, safetyBackupPath: safety.relativePath, message: 'Khôi phục dữ liệu thành công' });
+    backupsCache = null;
     return result;
   } catch (err) {
     await appendHistory({ action: 'restore', type: 'existing', status: 'failed', sourcePath: relativePath, message: err.message });
@@ -312,6 +327,7 @@ export async function restoreUploadedBackup(data, confirm, originalName = 'uploa
     await atomicWriteJsonFile(DB_PATH, normalized);
     const result = { restoredFrom: `uploaded/${filename}`, safetyBackup: safety.relativePath, sha256: sha, restoredAt: new Date().toISOString() };
     await appendHistory({ action: 'upload_restore', type: 'uploaded', status: 'success', sourcePath: result.restoredFrom, safetyBackupPath: safety.relativePath, message: 'Upload và khôi phục dữ liệu thành công' });
+    backupsCache = null;
     return result;
   } catch (err) {
     await appendHistory({ action: 'upload_restore', type: 'uploaded', status: 'failed', message: err.message });
@@ -326,11 +342,17 @@ export async function deleteBackup(relativePath) {
   if (metadata[safePath]?.pinned) throw new Error('Backup đang được giữ lại, hãy bỏ giữ lại trước khi xóa');
   if (type === 'restore-safety') throw new Error('Không cho xóa restore-safety từ UI');
   if (!fs.existsSync(full)) throw new Error('Không tìm thấy backup');
+  try {
+    const file = path.basename(full);
+    const stat = fs.statSync(full);
+    shaCache.delete(`${type}/${file}-${stat.mtimeMs}`);
+  } catch { /* ignore */ }
   fs.unlinkSync(full);
   if (fs.existsSync(`${full}.sha256`)) fs.unlinkSync(`${full}.sha256`);
   delete metadata[safePath];
   await writeMetadata(metadata);
   await appendHistory({ action: 'delete_backup', type, status: 'success', deletedPath: safePath, message: 'Xóa backup thành công' });
+  backupsCache = null;
 }
 
 export async function updateBackupMetadata(relativePath, { pinned, note } = {}) {
@@ -345,6 +367,7 @@ export async function updateBackupMetadata(relativePath, { pinned, note } = {}) 
   };
   await writeMetadata(metadata);
   await appendHistory({ action: 'metadata', status: 'success', sourcePath: safePath, message: metadata[safePath].pinned ? 'Đã giữ lại backup' : 'Đã cập nhật ghi chú backup' });
+  backupsCache = null;
   return enrichWithMetadata(listBackups().find(x => x.relativePath === safePath) || { relativePath: safePath });
 }
 
@@ -390,6 +413,9 @@ export async function cleanupOldBackups() {
       const overAge = now - item.mtimeMs > age;
       const overCount = files.filter(x => !metadata[x.relativePath]?.pinned).indexOf(item) >= (MAX_FILES[type] || Infinity);
       if (!metadata[item.relativePath]?.pinned && (overAge || overCount)) {
+        try {
+          shaCache.delete(`${type}/${item.file}-${item.mtimeMs}`);
+        } catch { /* ignore */ }
         fs.unlinkSync(item.full);
         if (fs.existsSync(`${item.full}.sha256`)) fs.unlinkSync(`${item.full}.sha256`);
         delete metadata[item.relativePath];
@@ -399,6 +425,7 @@ export async function cleanupOldBackups() {
   }
   if (deletedCount) await writeMetadata(metadata);
   if (deletedCount) await appendHistory({ action: 'cleanup', status: 'success', deletedCount, message: `Đã xóa ${deletedCount} backup cũ` });
+  if (deletedCount) backupsCache = null;
   return deletedCount;
 }
 

@@ -8,11 +8,13 @@ import dayjs from 'dayjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { requireRole } from '../lib/auth.js';
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const UPLOAD_ROOT = path.join(__dirname, '..', 'uploads', 'warranties');
+const requireAdmin = requireRole('admin');
 
 const STATUS_TRANSITIONS = {
   da_nhan: ['dang_xu_ly', 'huy'],
@@ -191,6 +193,15 @@ function statusPriority(status) {
   if (status === 'da_tra') return 1;
   return 0;
 }
+
+router.use((req, res, next) => {
+  const isAdminOnly =
+    req.method === 'DELETE' ||
+    (req.method === 'POST' && req.path === '/import') ||
+    (req.method === 'GET' && (req.path === '/export' || req.path === '/template'));
+  if (isAdminOnly) return requireAdmin(req, res, next);
+  return next();
+});
 
 router.get('/', async (req, res) => {
   try {

@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.gitignore
+*.log
+.claude
+.gemini
+tests
+vitest.config.js
+C:\Users\PC\.gemini
+C:\Users\PC\AppData
+C:\Users\PC\Desktop\baohanh3ant5\api\backups\*
+C:\Users\PC\Desktop\baohanh3ant5\api\uploads\*

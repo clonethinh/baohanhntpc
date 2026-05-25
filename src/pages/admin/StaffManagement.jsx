@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Card, Typography, Form, Input, Button, Space, Table, Popconfirm, message, Tag } from 'antd';
+import { Card, Typography, Form, Input, Button, Space, Table, Popconfirm, message, Tag, Modal } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { adminSecurityService, nhanVienService } from '../../services/warrantyService';
+import { authService, nhanVienService } from '../../services/warrantyService';
 
 const { Title } = Typography;
 
@@ -9,8 +9,10 @@ export default function StaffManagement() {
   const { t } = useTranslation();
   const [staffs, setStaffs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [resetTarget, setResetTarget] = useState(null);
   const [addForm] = Form.useForm();
   const [pwdForm] = Form.useForm();
+  const [resetForm] = Form.useForm();
 
   const loadStaff = async () => {
     setLoading(true);
@@ -57,7 +59,7 @@ export default function StaffManagement() {
       return;
     }
     try {
-      const res = await adminSecurityService.changePassword(values.currentPassword, values.newPassword);
+      const res = await authService.changePassword(values.currentPassword, values.newPassword);
       if (res.data.success) {
         message.success(t('adminStaff.passwordSuccess'));
         pwdForm.resetFields();
@@ -67,19 +69,38 @@ export default function StaffManagement() {
     }
   };
 
+  const handleResetPassword = async (values) => {
+    if (!resetTarget) return;
+    if (values.newPassword !== values.confirmPassword) {
+      message.error(t('adminStaff.passwordMismatch'));
+      return;
+    }
+    try {
+      const res = await nhanVienService.resetPassword(resetTarget.maNV, values.newPassword);
+      if (res.data.success) {
+        message.success('Đã đặt lại mật khẩu nhân viên');
+        resetForm.resetFields();
+        setResetTarget(null);
+        loadStaff();
+      }
+    } catch (err) {
+      message.error(err?.response?.data?.error?.message || 'Không đặt lại được mật khẩu');
+    }
+  };
+
   return (
     <Space direction="vertical" size={16} style={{ width: '100%' }}>
       <Card>
-        <Title level={4}>{t('adminStaff.changeAdminPassword')}</Title>
+        <Title level={4}>Đổi mật khẩu tài khoản hiện tại</Title>
         <Form form={pwdForm} layout="vertical" onFinish={handleChangePassword}>
           <Form.Item label={t('adminStaff.currentPassword')} name="currentPassword" rules={[{ required: true, message: t('adminStaff.currentPasswordRequired') }]}>
-            <Input.Password />
+            <Input.Password autoComplete="current-password" />
           </Form.Item>
           <Form.Item label={t('adminStaff.newPassword')} name="newPassword" rules={[{ required: true, message: t('adminStaff.newPasswordRequired') }, { min: 8, message: t('adminStaff.minPassword') }]}>
-            <Input.Password />
+            <Input.Password autoComplete="new-password" />
           </Form.Item>
           <Form.Item label={t('adminStaff.confirmPassword')} name="confirmPassword" rules={[{ required: true, message: t('adminStaff.confirmPasswordRequired') }]}>
-            <Input.Password />
+            <Input.Password autoComplete="new-password" />
           </Form.Item>
           <Button type="primary" htmlType="submit">{t('adminStaff.changePassword')}</Button>
         </Form>
@@ -94,8 +115,11 @@ export default function StaffManagement() {
           <Form.Item name="tenNV" rules={[{ required: true, message: t('adminStaff.staffNameRequired') }]}>
             <Input placeholder={t('adminStaff.staffNamePlaceholder')} />
           </Form.Item>
+          <Form.Item name="matKhau" rules={[{ required: true, message: 'Nhập mật khẩu nhân viên' }, { min: 8, message: t('adminStaff.minPassword') }]}>
+            <Input.Password placeholder="Mật khẩu" style={{ width: 160 }} autoComplete="new-password" />
+          </Form.Item>
           <Form.Item name="role" initialValue="staff">
-            <Input placeholder="Role: staff/admin" />
+            <Input placeholder="Role: staff/admin" style={{ width: 120 }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">{t('adminStaff.add')}</Button>
@@ -121,14 +145,40 @@ export default function StaffManagement() {
             {
               title: t('adminStaff.action'),
               render: (_, row) => (
-                <Popconfirm title={t('adminStaff.deleteConfirm', { code: row.maNV })} onConfirm={() => handleDelete(row.maNV)}>
-                  <Button danger size="small">{t('button.xoa')}</Button>
-                </Popconfirm>
+                <Space>
+                  {row.role !== 'admin' ? (
+                    <Button size="small" onClick={() => setResetTarget(row)}>Đặt lại mật khẩu</Button>
+                  ) : null}
+                  <Popconfirm title={t('adminStaff.deleteConfirm', { code: row.maNV })} onConfirm={() => handleDelete(row.maNV)}>
+                    <Button danger size="small">{t('button.xoa')}</Button>
+                  </Popconfirm>
+                </Space>
               ),
             },
           ]}
         />
       </Card>
+
+      <Modal
+        open={!!resetTarget}
+        title={`Đặt lại mật khẩu ${resetTarget?.maNV || ''}`}
+        onCancel={() => {
+          resetForm.resetFields();
+          setResetTarget(null);
+        }}
+        footer={null}
+        destroyOnClose
+      >
+        <Form form={resetForm} layout="vertical" onFinish={handleResetPassword}>
+          <Form.Item name="newPassword" label="Mật khẩu mới" rules={[{ required: true, message: t('adminStaff.newPasswordRequired') }, { min: 8, message: t('adminStaff.minPassword') }]}>
+            <Input.Password autoComplete="new-password" />
+          </Form.Item>
+          <Form.Item name="confirmPassword" label="Xác nhận mật khẩu" rules={[{ required: true, message: t('adminStaff.confirmPasswordRequired') }]}>
+            <Input.Password autoComplete="new-password" />
+          </Form.Item>
+          <Button type="primary" htmlType="submit" block>Đặt lại mật khẩu</Button>
+        </Form>
+      </Modal>
     </Space>
   );
 }

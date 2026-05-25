@@ -66,6 +66,19 @@ export default function CustomerInfo() {
     }).finally(() => setLoading(false));
   }, []);
 
+  const lookupCustomerByKey = useCallback((key) => {
+    if (!key) {
+      setCustomerInfo(null);
+      setSelectedCustomerKey('');
+      return;
+    }
+    setLoading(true);
+    customerService.lookupByKey(key).then(res => {
+      if (res.data.success && res.data.data) setCustomerInfo(res.data.data);
+      else setCustomerInfo(null);
+    }).finally(() => setLoading(false));
+  }, []);
+
   useEffect(() => {
     if (search && search.length >= 2) {
       customerService.suggest(search).then(res => {
@@ -98,14 +111,13 @@ export default function CustomerInfo() {
   };
 
   const handleSelectCustomerRow = (row) => {
-    const q = row.soDienThoai || row.khachHang || '';
     const nextKey = row.key || `${String(row.khachHang || '').trim().toLowerCase()}|${String(row.soDienThoai || '').trim()}`;
 
     setSuggestions([]);
 
     if (selectedCustomerKey !== nextKey) {
       setSelectedCustomerKey(nextKey);
-      lookupCustomer(q);
+      lookupCustomerByKey(nextKey);
     } else {
       setSelectedCustomerKey('');
       setCustomerInfo(null);

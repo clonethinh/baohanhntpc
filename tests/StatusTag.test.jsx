@@ -13,6 +13,6 @@ describe('StatusTag', () => {
 
   it('renders default status for unknown status', () => {
     render(<StatusTag status="unknown" />);
-    expect(screen.getByText('Chờ xử lý')).toBeInTheDocument();
+    expect(screen.getByText(STATUS.da_nhan.label)).toBeInTheDocument();
   });
 });
