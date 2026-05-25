@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card, Result, Button, Tag, Descriptions, Steps, Alert, Typography, Space, Timeline, Row, Col, Divider, Image, Collapse, List as DesktopList } from 'antd';
@@ -363,7 +363,7 @@ export default function TrackingResult() {
 
       {relatedByPhone.length > 0 && (
         <MobileCard className="ntpc-mobile-card tracking-related-card">
-          <MobileCollapse defaultActiveKey={["related"]}>
+          <MobileCollapse defaultActiveKey={[]}>
             <MobileCollapse.Panel key="related" title="Chứng từ khác cùng số điện thoại">
               <List>
                 {relatedByPhone.map((item, i) => (
@@ -599,7 +599,7 @@ export default function TrackingResult() {
           {relatedByPhone.length > 0 && (
             <Collapse
               style={{ marginBottom: 16 }}
-              defaultActiveKey={["related"]}
+              defaultActiveKey={[]}
               items={[
                 {
                   key: 'related',

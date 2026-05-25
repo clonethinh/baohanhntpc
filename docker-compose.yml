@@ -18,6 +18,11 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - ntpc-network
 
@@ -41,11 +46,17 @@ services:
       - CORS_ORIGIN=${CORS_ORIGIN}
       - TZ=Asia/Ho_Chi_Minh
     depends_on:
-      - postgres-db
+      postgres-db:
+        condition: service_healthy
     # Ánh xạ các thư mục ảnh uploads và file backups để lưu trữ bền vững vật lý
     volumes:
       - ./api/uploads:/app/api/uploads
       - ./api/backups:/app/api/backups
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3003/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
     networks:
       - ntpc-network
 
@@ -61,7 +72,13 @@ services:
     ports:
       - "8888:80"  # Ánh xạ cổng 80 của Nginx ra cổng 8888 ngoài máy thật để kiểm thử an toàn
     depends_on:
-      - backend-api
+      backend-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
     networks:
       - ntpc-network
 

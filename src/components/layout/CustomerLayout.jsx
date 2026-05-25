@@ -2,18 +2,20 @@ import { Layout, Typography, Button, Space, Tooltip } from 'antd';
 import { MoonOutlined, SunOutlined, PhoneOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks/useTheme';
+import { useNavigate } from 'react-router-dom';
 
 const { Header, Footer, Content } = Layout;
 
 export default function CustomerLayout({ children }) {
   const { t } = useTranslation();
   const { isDark, toggle } = useTheme();
+  const navigate = useNavigate();
   const themeLabel = isDark ? t('common.cheDoSang') : t('common.cheDoToi');
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header className="customer-header" style={{ background: isDark ? '#1F1F1F' : '#fff', padding: '0 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
-        <div className="brand-wrap brand-left">
+        <div className="brand-wrap brand-left" style={{ cursor: 'pointer' }} onClick={() => navigate('/tra-cuu')}>
           <img src={isDark ? "/white.png" : "/logo.png"} alt="Nguyễn Tân PC" className="brand-logo" />
         </div>
 

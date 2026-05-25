@@ -3,7 +3,14 @@ import path from 'path';
 import crypto from 'crypto';
 import { execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
 import { DB_PATH, readDb, atomicWriteJsonFile } from './db.js';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,9 +51,7 @@ function ensureDirs() {
 }
 
 function stamp() {
-  const d = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  return dayjs().tz('Asia/Ho_Chi_Minh').format('YYYYMMDD-HHmmss');
 }
 
 function sha256Buffer(buf) {
@@ -168,7 +173,7 @@ function assetInfoForBackup(full, relativePath) {
     size: stat.size,
     count: Number.isFinite(Number(manifest.count)) ? Number(manifest.count) : null,
     sha256,
-    createdAt: stat.mtime.toISOString(),
+    createdAt: dayjs(stat.mtime).tz('Asia/Ho_Chi_Minh').format(),
     format: 'tgz',
   };
 }
@@ -231,7 +236,7 @@ function createAssetBundle(snapshot, backupFull, backupRelativePath) {
     sha256: sha,
     assetKey: key,
     reusedFrom: reused?.manifest?.relativePath || null,
-    createdAt: stat.mtime.toISOString(),
+    createdAt: dayjs(stat.mtime).tz('Asia/Ho_Chi_Minh').format(),
   };
   writeAssetManifest(assetFull, manifest);
   return manifest;
@@ -267,7 +272,7 @@ function extractAssetBundle(assetFull) {
     count: entries.filter(entry => !entry.endsWith('/')).length,
     size: stat.size,
     filename: path.basename(assetFull),
-    restoredAt: new Date().toISOString(),
+    restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format(),
   };
 }
 
@@ -339,7 +344,7 @@ function createApplicationSnapshot(db) {
   const khachHang = buildCustomerRows(phieu);
   return {
     backupVersion: 3,
-    createdAt: new Date().toISOString(),
+    createdAt: dayjs().tz('Asia/Ho_Chi_Minh').format(),
     source: 'baohanh3ant5',
     appData: { phieu, khachHang, nhaCungCap, nhanVien, supplierLogs },
   };
@@ -416,7 +421,7 @@ async function appendHistory(entry) {
     }
     history.unshift({
       id: `hist_${stamp()}_${crypto.randomBytes(3).toString('hex')}`,
-      createdAt: new Date().toISOString(),
+      createdAt: dayjs().tz('Asia/Ho_Chi_Minh').format(),
       ...entry,
     });
     const cutoff = Date.now() - 180 * 24 * 60 * 60 * 1000;
@@ -450,13 +455,16 @@ export async function createBackup(type = 'manual', options = {}) {
     fs.writeFileSync(`${full}.sha256`, `${sha}  ${filename}\n`, 'utf-8');
     const stat = fs.statSync(full);
     let assets = { exists: false, count: 0, size: 0 };
-    try {
-      assets = createAssetBundle(snapshot, full, `${type}/${filename}`);
-    } catch (assetErr) {
-      try { fs.unlinkSync(full); } catch { /* ignore */ }
-      try { fs.unlinkSync(`${full}.sha256`); } catch { /* ignore */ }
-      deleteAssetFilesForBackup(full);
-      throw new Error(`Tao goi anh backup that bai: ${assetErr.message}`);
+    const shouldSkipAssets = type === 'minute' || type === 'hourly';
+    if (!shouldSkipAssets) {
+      try {
+        assets = createAssetBundle(snapshot, full, `${type}/${filename}`);
+      } catch (assetErr) {
+        try { fs.unlinkSync(full); } catch { /* ignore */ }
+        try { fs.unlinkSync(`${full}.sha256`); } catch { /* ignore */ }
+        deleteAssetFilesForBackup(full);
+        throw new Error(`Tao goi anh backup that bai: ${assetErr.message}`);
+      }
     }
     const item = {
       type,
@@ -465,7 +473,7 @@ export async function createBackup(type = 'manual', options = {}) {
       size: stat.size,
       sha256: sha,
       assets,
-      createdAt: stat.mtime.toISOString(),
+      createdAt: dayjs(stat.mtime).tz('Asia/Ho_Chi_Minh').format(),
     };
     if (type === 'minute') lastMinuteHash = hash;
     await appendHistory({ action: 'backup', type, status: 'success', ...item, message: `Tạo backup ${type} thành công` });
@@ -507,7 +515,7 @@ export function listBackups() {
         size: stat.size,
         sha256,
         assets: assetInfoForBackup(full, relativePath),
-        createdAt: stat.mtime.toISOString(),
+        createdAt: dayjs(stat.mtime).tz('Asia/Ho_Chi_Minh').format(),
       }, metadata));
     }
   }
@@ -548,7 +556,7 @@ export async function restoreBackup(relativePath, confirm) {
     const safety = await createBackup('restore-safety');
     await atomicWriteJsonFile(DB_PATH, data);
     const assets = extractAssetBundle(assetFullPathForBackup(full));
-    const result = { restoredFrom: safePath, safetyBackup: safety.relativePath, sha256: checksum || sha256File(full), assets, restoredAt: new Date().toISOString() };
+    const result = { restoredFrom: safePath, safetyBackup: safety.relativePath, sha256: checksum || sha256File(full), assets, restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format() };
     await appendHistory({
       action: 'restore',
       type: 'existing',
@@ -579,7 +587,7 @@ export async function restoreUploadedBackup(data, confirm, originalName = 'uploa
     fs.writeFileSync(`${full}.sha256`, `${sha}  ${filename}\n`, 'utf-8');
     const safety = await createBackup('restore-safety');
     await atomicWriteJsonFile(DB_PATH, normalized);
-    const result = { restoredFrom: `uploaded/${filename}`, safetyBackup: safety.relativePath, sha256: sha, restoredAt: new Date().toISOString() };
+    const result = { restoredFrom: `uploaded/${filename}`, safetyBackup: safety.relativePath, sha256: sha, restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format() };
     await appendHistory({ action: 'upload_restore', type: 'uploaded', status: 'success', sourcePath: result.restoredFrom, safetyBackupPath: safety.relativePath, message: 'Upload và khôi phục dữ liệu thành công' });
     backupsCache = null;
     return result;
@@ -617,7 +625,7 @@ export async function restoreUploadedAssets(buffer, confirm, originalName = 'ass
       sha256: sha,
       assetKey: null,
       reusedFrom: null,
-      createdAt: new Date().toISOString(),
+      createdAt: dayjs().tz('Asia/Ho_Chi_Minh').format(),
     };
     writeAssetManifest(full, manifest);
 
@@ -630,7 +638,7 @@ export async function restoreUploadedAssets(buffer, confirm, originalName = 'ass
       message: 'Upload va khoi phuc goi anh thanh cong',
     });
     backupsCache = null;
-    return { restoredFrom: relativePath, sha256: sha, assets: { ...assets, relativePath }, restoredAt: new Date().toISOString() };
+    return { restoredFrom: relativePath, sha256: sha, assets: { ...assets, relativePath }, restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format() };
   } catch (err) {
     if (full) {
       try { fs.unlinkSync(full); } catch { /* ignore */ }
@@ -672,7 +680,7 @@ export async function updateBackupMetadata(relativePath, { pinned, note } = {}) 
     ...(metadata[safePath] || {}),
     pinned: !!pinned,
     note: String(note || '').slice(0, 500),
-    updatedAt: new Date().toISOString(),
+    updatedAt: dayjs().tz('Asia/Ho_Chi_Minh').format(),
   };
   await writeMetadata(metadata);
   await appendHistory({ action: 'metadata', status: 'success', sourcePath: safePath, message: metadata[safePath].pinned ? 'Đã giữ lại backup' : 'Đã cập nhật ghi chú backup' });
@@ -746,7 +754,7 @@ export function getBackupStatus() {
   return {
     dbPath: 'api/db.json',
     dbSize: dbStat?.size || 0,
-    dbUpdatedAt: dbStat?.mtime?.toISOString() || null,
+    dbUpdatedAt: dbStat?.mtime ? dayjs(dbStat.mtime).tz('Asia/Ho_Chi_Minh').format() : null,
     latestBackup: listBackups()[0] || null,
     scheduler: schedulerState,
   };
@@ -758,9 +766,7 @@ export function startBackupScheduler() {
   schedulerState.enabled = true;
   ensureDirs();
 
-  setTimeout(() => createBackup('minute', { onlyIfChanged: true }).then(r => { if (r) schedulerState.lastMinuteBackupAt = r.createdAt; }).catch(err => console.error('[BACKUP] minute:', err.message)), 5000);
-
-  setInterval(() => createBackup('minute', { onlyIfChanged: true }).then(r => { if (r) schedulerState.lastMinuteBackupAt = r.createdAt; }).catch(err => console.error('[BACKUP] minute:', err.message)), 60 * 1000);
+  // Chỉ chạy backup tự động ở mức hourly, daily, monthly để tránh đầy dung lượng ổ cứng. Bỏ qua backup tự động mỗi phút.
   setInterval(() => createBackup('hourly').then(r => { schedulerState.lastHourlyBackupAt = r.createdAt; }).catch(err => console.error('[BACKUP] hourly:', err.message)), 60 * 60 * 1000);
   setInterval(() => createBackup('daily').then(r => { schedulerState.lastDailyBackupAt = r.createdAt; }).catch(err => console.error('[BACKUP] daily:', err.message)), 24 * 60 * 60 * 1000);
   setInterval(() => {

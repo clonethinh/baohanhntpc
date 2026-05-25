@@ -1,9 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import helmet from 'helmet';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import dayjs from 'dayjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,7 +29,7 @@ try {
   console.warn('[ENV] Khong doc duoc file .env:', err.message);
 }
 
-const { readDb, writeDb, prisma } = await import('./lib/db.js');
+const { readDb, writeDb, autoSelfHealingSync, prisma } = await import('./lib/db.js');
 const { attachUser, ensureAuthState, requireAuth, requireRole } = await import('./lib/auth.js');
 const { warranties: seedWarranties, nhanVien: seedNhanVien } = await import('./seedData.js');
 
@@ -52,6 +54,19 @@ const allowedOrigins = [
   'http://127.0.0.1:8888',
 ];
 
+app.use(helmet({
+  contentSecurityPolicy: process.env.HELMET_CSP === 'true'
+    ? {
+        useDefaults: true,
+        directives: {
+          "default-src": ["'self'"],
+          "img-src": ["'self'", 'data:', 'blob:', ...(process.env.CSP_IMG_SRC || '').split(',').map((v) => v.trim()).filter(Boolean)],
+          "connect-src": ["'self'", ...(process.env.CSP_CONNECT_SRC || '').split(',').map((v) => v.trim()).filter(Boolean)],
+        },
+      }
+    : false,
+  crossOriginResourcePolicy: { policy: 'same-site' },
+}));
 app.use(cors({
   origin: process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
@@ -84,11 +99,13 @@ app.use((req, res, next) => {
 async function seedIfEmpty() {
   const maxRetries = 5;
   const delayMs = 2000;
+  let isPostgresOnline = false;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       await prisma.$queryRaw`SELECT 1`;
       console.log(`[DB] Kết nối PostgreSQL thành công (Lần thứ ${attempt})`);
+      isPostgresOnline = true;
       break;
     } catch (err) {
       if (attempt === maxRetries) {
@@ -98,6 +115,10 @@ async function seedIfEmpty() {
         await new Promise((resolve) => setTimeout(resolve, delayMs));
       }
     }
+  }
+
+  if (isPostgresOnline) {
+    await autoSelfHealingSync();
   }
 
   const db = await readDb();
@@ -117,8 +138,41 @@ async function seedIfEmpty() {
   }
 }
 
-app.get('/api/health', (req, res) => {
-  res.json({ success: true, data: { status: 'ok', time: new Date().toISOString() } });
+app.get('/api/health', async (req, res) => {
+  const health = {
+    status: 'ok',
+    timestamp: dayjs().format(),
+    database: 'disconnected',
+    filesystem: 'unknown',
+  };
+
+  try {
+    // 1. Kiểm tra kết nối Database PostgreSQL
+    await prisma.$queryRaw`SELECT 1`;
+    health.database = 'connected';
+  } catch (err) {
+    health.status = 'error';
+    health.database = `error: ${err.message}`;
+  }
+
+  try {
+    // 2. Kiểm tra quyền ghi vào thư mục uploads
+    const testFile = path.join(uploadsDir, '.health_write_test');
+    fs.writeFileSync(testFile, 'write_test', 'utf-8');
+    if (fs.existsSync(testFile)) {
+      fs.unlinkSync(testFile);
+      health.filesystem = 'writable';
+    } else {
+      health.status = 'error';
+      health.filesystem = 'read-only';
+    }
+  } catch (err) {
+    health.status = 'error';
+    health.filesystem = `error: ${err.message}`;
+  }
+
+  const statusCode = health.status === 'ok' ? 200 : 503;
+  res.status(statusCode).json({ success: health.status === 'ok', data: health });
 });
 
 app.use('/api/public', publicRoutes);

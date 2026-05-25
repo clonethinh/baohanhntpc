@@ -1,16 +1,20 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/vi';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.locale('vi');
 
 export function formatDate(dateStr, format = 'DD/MM/YYYY') {
   if (!dateStr) return '';
-  return dayjs(dateStr).format(format);
+  return dayjs(dateStr).tz('Asia/Ho_Chi_Minh').format(format);
 }
 
 export function formatDateTime(dateStr) {
   if (!dateStr) return '';
-  return dayjs(dateStr).format('DD/MM/YYYY HH:mm');
+  return dayjs(dateStr).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm');
 }
 
 export function parseExcelDate(serial) {

@@ -1,21 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 function d(daysAgo) {
-  const date = new Date();
-  date.setDate(date.getDate() - daysAgo);
-  return date.toISOString().slice(0, 19);
+  return dayjs().tz('Asia/Ho_Chi_Minh').subtract(daysAgo, 'day').format('YYYY-MM-DDTHH:mm:ss');
 }
 
 function future(daysFromNow) {
-  const date = new Date();
-  date.setDate(date.getDate() + daysFromNow);
-  return date.toISOString().slice(0, 10);
+  return dayjs().tz('Asia/Ho_Chi_Minh').add(daysFromNow, 'day').format('YYYY-MM-DD');
 }
 
 function past(daysAgo) {
-  const date = new Date();
-  date.setDate(date.getDate() - daysAgo);
-  return date.toISOString().slice(0, 10);
+  return dayjs().tz('Asia/Ho_Chi_Minh').subtract(daysAgo, 'day').format('YYYY-MM-DD');
 }
 
 function historyEntry(by, action, changes = {}, note = '') {

@@ -53,7 +53,7 @@ export default function AppSider({ collapsed, onToggle, mobile = false }) {
   if (mobile) {
     return (
       <div className="admin-mobile-sider">
-        <div className="admin-mobile-brand">
+        <div className="admin-mobile-brand" style={{ cursor: 'pointer' }} onClick={() => navigate('/admin/dashboard')}>
           <div className="admin-mobile-brand-mark">NTPC</div>
           <div>
             <strong>{t('ui:app.brandShort')}</strong>
@@ -83,7 +83,7 @@ export default function AppSider({ collapsed, onToggle, mobile = false }) {
 
   return (
     <aside className={`admin-desktop-sider ${collapsed ? 'is-collapsed' : ''}`}>
-      <div className="admin-desktop-brand">
+      <div className="admin-desktop-brand" style={{ cursor: 'pointer' }} onClick={() => navigate('/admin/dashboard')}>
         <div className="admin-desktop-brand-mark">NT</div>
         {!collapsed && (
           <div>

@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import dayjs from 'dayjs';
 import { readDb, writeDb } from './db.js';
 
 const COOKIE_NAME = 'ntpc_session';
@@ -199,7 +200,7 @@ async function authenticateStaff(req, res, maNV, password) {
   if (result.needsRehash) {
     const idx = (db.nhanVien || []).findIndex((x) => String(x.maNV).toLowerCase() === String(maNV).toLowerCase());
     if (idx >= 0) {
-      db.nhanVien[idx] = { ...db.nhanVien[idx], matKhau: hashPassword(password), updatedAt: new Date().toISOString() };
+      db.nhanVien[idx] = { ...db.nhanVien[idx], matKhau: hashPassword(password), updatedAt: dayjs().format() };
       await writeDb(db);
     }
   }
@@ -261,12 +262,12 @@ function ensureAuthState(db) {
       const targetHash = hashPassword(bootstrapPassword);
       if (next.matKhau !== targetHash) {
         next.matKhau = targetHash;
-        next.passwordBootstrappedAt = new Date().toISOString();
+        next.passwordBootstrappedAt = dayjs().format();
         changed = true;
       }
     } else if (!next.matKhau && bootstrapPassword) {
       next.matKhau = hashPassword(bootstrapPassword);
-      next.passwordBootstrappedAt = new Date().toISOString();
+      next.passwordBootstrappedAt = dayjs().format();
       changed = true;
     }
     if ((staff.role || staff.quyen || 'staff') !== role || staff.quyen !== role || staff.role !== role) changed = true;

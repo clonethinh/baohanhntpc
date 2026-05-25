@@ -5,7 +5,13 @@
 import fs from 'fs';
 import path from 'path';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
 import { fileURLToPath } from 'url';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('Asia/Ho_Chi_Minh');
 import pkg from '@prisma/client';
 const { PrismaClient } = pkg;
 
@@ -102,115 +108,111 @@ async function writeDb(data) {
 
   try {
     await prisma.$transaction(async (tx) => {
+      // 1. Xóa toàn bộ dữ liệu theo thứ tự chuẩn quan hệ (bảng phụ thuộc trước)
+      await tx.supplierLog.deleteMany();
+      await tx.warranty.deleteMany();
+      await tx.nhanVien.deleteMany();
+      await tx.supplier.deleteMany();
+
+      // 2. Thêm mới dữ liệu theo thứ tự chuẩn quan hệ (bảng độc lập trước)
+
       // a. Đồng bộ bảng Nhân Viên
-      if (Array.isArray(data.nhanVien)) {
-        await tx.nhanVien.deleteMany();
-        if (data.nhanVien.length > 0) {
-          await tx.nhanVien.createMany({
-            data: data.nhanVien.map(nv => ({
-              maNV: String(nv.maNV || '').trim(),
-              tenNV: String(nv.tenNV || '').trim(),
-              matKhau: String(nv.matKhau || '').trim(),
-              quyen: String(nv.quyen || nv.role || 'staff').trim(),
-              active: nv.active !== false,
-              createdAt: nv.createdAt ? new Date(nv.createdAt) : new Date(),
-              updatedAt: nv.updatedAt ? new Date(nv.updatedAt) : new Date(),
-            }))
-          });
-        }
+      if (Array.isArray(data.nhanVien) && data.nhanVien.length > 0) {
+        await tx.nhanVien.createMany({
+          data: data.nhanVien.map(nv => ({
+            maNV: String(nv.maNV || '').trim(),
+            tenNV: String(nv.tenNV || '').trim(),
+            matKhau: String(nv.matKhau || '').trim(),
+            quyen: String(nv.quyen || nv.role || 'staff').trim(),
+            active: nv.active !== false,
+            createdAt: nv.createdAt ? new Date(nv.createdAt) : new Date(),
+            updatedAt: nv.updatedAt ? new Date(nv.updatedAt) : new Date(),
+          }))
+        });
       }
 
       // b. Đồng bộ bảng Nhà Cung Cấp
-      if (Array.isArray(data.suppliers)) {
-        await tx.supplier.deleteMany();
-        if (data.suppliers.length > 0) {
-          await tx.supplier.createMany({
-            data: data.suppliers.map(s => ({
-              id: String(s.id || '').trim(),
-              code: String(s.code || '').trim(),
-              name: String(s.name || '').trim(),
-              phone: String(s.phone || '').trim(),
-              email: String(s.email || '').trim(),
-              address: String(s.address || '').trim(),
-              contactPerson: String(s.contactPerson || '').trim(),
-              note: String(s.note || '').trim(),
-              isActive: s.isActive !== false,
+      if (Array.isArray(data.suppliers) && data.suppliers.length > 0) {
+        await tx.supplier.createMany({
+          data: data.suppliers.map(s => ({
+            id: String(s.id || '').trim(),
+            code: String(s.code || '').trim(),
+            name: String(s.name || '').trim(),
+            phone: String(s.phone || '').trim(),
+            email: String(s.email || '').trim(),
+            address: String(s.address || '').trim(),
+            contactPerson: String(s.contactPerson || '').trim(),
+            note: String(s.note || '').trim(),
+            isActive: s.isActive !== false,
+          }))
+        });
+      }
+
+      // c. Đồng bộ bảng Phiếu Bảo Hành (Batch insert đề phòng vượt giới hạn tham số Postgres)
+      if (Array.isArray(data.warranties) && data.warranties.length > 0) {
+        const batchSize = 100;
+        for (let i = 0; i < data.warranties.length; i += batchSize) {
+          const batch = data.warranties.slice(i, i + batchSize);
+          await tx.warranty.createMany({
+            data: batch.map(w => ({
+              id: String(w.id || '').trim(),
+              stt: Number(w.stt || 0),
+              soChungTu: String(w.soChungTu || '').trim(),
+              khachHang: String(w.khachHang || '').trim(),
+              soDienThoai: String(w.soDienThoai || '').trim(),
+              diaChi: String(w.diaChi || '').trim(),
+              tenHang: String(w.tenHang || '').trim(),
+              soSeri: String(w.soSeri || '').trim(),
+              cauHinh: String(w.cauHinh || '').trim(),
+              loiLucNhan: String(w.loiLucNhan || '').trim(),
+              phuKien: String(w.phuKien || '').trim(),
+              chiPhi: Number(w.chiPhi || 0.0),
+              baoGiaSau: w.baoGiaSau === true,
+              loaiPhieu: String(w.loaiPhieu || 'nhan_bao_hanh').trim(),
+              baoHanh: String(w.baoHanh || '').trim(),
+              loaiXuLy: String(w.loaiXuLy || 'bao_hanh').trim(),
+              loaiXuLyKhac: String(w.loaiXuLyKhac || '').trim(),
+              ghiChu: String(w.ghiChu || '').trim(),
+              ngayMua: String(w.ngayMua || '').trim(),
+              ngayNhan: String(w.ngayNhan || '').trim(),
+              ngayHenTra: String(w.ngayHenTra || '').trim(),
+              ngayTra: String(w.ngayTra || '').trim(),
+              maNhanVien: String(w.maNhanVien || '').trim(),
+              trangThai: String(w.trangThai || 'dang_xu_ly').trim(),
+              uuTien: w.uuTien === true,
+              createdAt: String(w.createdAt || dayjs.tz().format()),
+              updatedAt: String(w.updatedAt || dayjs.tz().format()),
+              deletedAt: String(w.deletedAt || ''),
+              doiTra: w.doiTra || null,
+              attachments: w.attachments || null,
+              history: w.history || null,
+              supplierLogs: w.supplierLogs || null,
+              supplierStatus: String(w.supplierStatus || 'none').trim(),
+              supplierIdCurrent: w.supplierIdCurrent ? String(w.supplierIdCurrent).trim() : null,
+              sentSupplierAt: String(w.sentSupplierAt || '').trim(),
+              expectedReturnSupplierAt: String(w.expectedReturnSupplierAt || '').trim(),
             }))
           });
         }
       }
 
-      // c. Đồng bộ bảng Nhật Ký Nhà Cung Cấp
-      if (Array.isArray(data.supplierLogs)) {
-        await tx.supplierLog.deleteMany();
-        if (data.supplierLogs.length > 0) {
-          await tx.supplierLog.createMany({
-            data: data.supplierLogs.map(l => ({
-              id: String(l.id || '').trim(),
-              supplierId: String(l.supplierId || '').trim(),
-              supplierName: String(l.supplierName || l.supplier || '').trim(),
-              warrantyId: String(l.warrantyId || '').trim(),
-              action: String(l.action || '').trim(),
-              sentAt: String(l.sentAt || '').trim(),
-              expectedReturnAt: String(l.expectedReturnAt || '').trim(),
-              returnedAt: String(l.returnedAt || '').trim(),
-              note: String(l.note || '').trim(),
-              createdBy: String(l.createdBy || '').trim(),
-              createdAt: l.at ? new Date(l.at) : new Date(),
-            }))
-          });
-        }
-      }
-
-      // d. Đồng bộ bảng Phiếu Bảo Hành (Batch insert đề phòng vượt giới hạn tham số Postgres)
-      if (Array.isArray(data.warranties)) {
-        await tx.warranty.deleteMany();
-        if (data.warranties.length > 0) {
-          const batchSize = 100;
-          for (let i = 0; i < data.warranties.length; i += batchSize) {
-            const batch = data.warranties.slice(i, i + batchSize);
-            await tx.warranty.createMany({
-              data: batch.map(w => ({
-                id: String(w.id || '').trim(),
-                stt: Number(w.stt || 0),
-                soChungTu: String(w.soChungTu || '').trim(),
-                khachHang: String(w.khachHang || '').trim(),
-                soDienThoai: String(w.soDienThoai || '').trim(),
-                diaChi: String(w.diaChi || '').trim(),
-                tenHang: String(w.tenHang || '').trim(),
-                soSeri: String(w.soSeri || '').trim(),
-                cauHinh: String(w.cauHinh || '').trim(),
-                loiLucNhan: String(w.loiLucNhan || '').trim(),
-                phuKien: String(w.phuKien || '').trim(),
-                chiPhi: Number(w.chiPhi || 0.0),
-                baoGiaSau: w.baoGiaSau === true,
-                loaiPhieu: String(w.loaiPhieu || 'nhan_bao_hanh').trim(),
-                baoHanh: String(w.baoHanh || '').trim(),
-                loaiXuLy: String(w.loaiXuLy || 'bao_hanh').trim(),
-                loaiXuLyKhac: String(w.loaiXuLyKhac || '').trim(),
-                ghiChu: String(w.ghiChu || '').trim(),
-                ngayMua: String(w.ngayMua || '').trim(),
-                ngayNhan: String(w.ngayNhan || '').trim(),
-                ngayHenTra: String(w.ngayHenTra || '').trim(),
-                ngayTra: String(w.ngayTra || '').trim(),
-                maNhanVien: String(w.maNhanVien || '').trim(),
-                trangThai: String(w.trangThai || 'dang_xu_ly').trim(),
-                uuTien: w.uuTien === true,
-                createdAt: String(w.createdAt || new Date().toISOString()),
-                updatedAt: String(w.updatedAt || new Date().toISOString()),
-                deletedAt: String(w.deletedAt || ''),
-                doiTra: w.doiTra || null,
-                attachments: w.attachments || null,
-                history: w.history || null,
-                supplierLogs: w.supplierLogs || null,
-                supplierStatus: String(w.supplierStatus || 'none').trim(),
-                supplierIdCurrent: w.supplierIdCurrent ? String(w.supplierIdCurrent).trim() : null,
-                sentSupplierAt: String(w.sentSupplierAt || '').trim(),
-                expectedReturnSupplierAt: String(w.expectedReturnSupplierAt || '').trim(),
-              }))
-            });
-          }
-        }
+      // d. Đồng bộ bảng Nhật Ký Nhà Cung Cấp
+      if (Array.isArray(data.supplierLogs) && data.supplierLogs.length > 0) {
+        await tx.supplierLog.createMany({
+          data: data.supplierLogs.map(l => ({
+            id: String(l.id || '').trim(),
+            supplierId: String(l.supplierId || '').trim(),
+            supplierName: String(l.supplierName || l.supplier || '').trim(),
+            warrantyId: String(l.warrantyId || '').trim(),
+            action: String(l.action || '').trim(),
+            sentAt: String(l.sentAt || '').trim(),
+            expectedReturnAt: String(l.expectedReturnAt || '').trim(),
+            returnedAt: String(l.returnedAt || '').trim(),
+            note: String(l.note || '').trim(),
+            createdBy: String(l.createdBy || '').trim(),
+            createdAt: l.at ? new Date(l.at) : new Date(),
+          }))
+        });
       }
     });
 
@@ -294,8 +296,8 @@ async function addToCollection(name, item) {
           maNhanVien: String(item.maNhanVien || ''),
           trangThai: String(item.trangThai || 'dang_xu_ly'),
           uuTien: item.uuTien === true,
-          createdAt: String(item.createdAt || new Date().toISOString()),
-          updatedAt: String(item.updatedAt || new Date().toISOString()),
+          createdAt: String(item.createdAt || dayjs.tz().format()),
+          updatedAt: String(item.updatedAt || dayjs.tz().format()),
           deletedAt: String(item.deletedAt || ''),
           doiTra: item.doiTra || null,
           attachments: item.attachments || null,
@@ -390,4 +392,161 @@ async function atomicWriteJsonFile(filePath, data) {
   }
 }
 
-export { readDb, writeDb, getCollection, setCollection, addToCollection, atomicWriteJsonFile, DB_PATH, prisma };
+// -------------------------------------------------------------
+// HÀNG ĐỢI GHI STANDBY FILE & CƠ CHẾ KHỬ DỘC (DEBOUNCE WRITE QUEUE)
+// -------------------------------------------------------------
+let writeQueueBuffer = null;
+let writeQueueDirty = false;
+let writeQueueTimer = null;
+const WRITE_DELAY_MS = 2500; // Trễ đệm đĩa cứng 2.5 giây
+
+/**
+ * 7. Hàm syncLocalBackup: Đồng bộ hóa trạng thái PostgreSQL ra file db.json dự phòng bất đồng bộ
+ * Tối ưu hóa đĩa cứng VPS bằng cơ chế Debounce ghi đĩa đệm.
+ */
+async function syncLocalBackup() {
+  try {
+    const db = await readDb();
+    
+    // Lưu trạng thái mới nhất vào RAM đệm
+    writeQueueBuffer = db;
+    writeQueueDirty = true;
+
+    // Nếu chưa có bộ hẹn giờ đếm ngược, khởi chạy hoãn ghi
+    if (!writeQueueTimer) {
+      writeQueueTimer = setTimeout(() => {
+        flushWriteQueue();
+      }, WRITE_DELAY_MS);
+    }
+  } catch (err) {
+    console.warn('[BACKUP] Lỗi đồng bộ db.json:', err.message);
+  }
+}
+
+/**
+ * Ghi bất đồng bộ dữ liệu đệm ra đĩa khi hết trễ
+ */
+function flushWriteQueue() {
+  if (writeQueueDirty && writeQueueBuffer) {
+    try {
+      const content = JSON.stringify(writeQueueBuffer, null, 2);
+      fs.writeFileSync(DB_PATH, content, 'utf-8');
+      writeQueueDirty = false;
+    } catch (err) {
+      console.error('[BACKUP] Lỗi ghi đĩa đệm db.json:', err.message);
+    }
+  }
+  writeQueueTimer = null;
+}
+
+/**
+ * Ghi đồng bộ cưỡng bức dữ liệu đệm ra đĩa khẩn cấp (Graceful Shutdown)
+ */
+function flushWriteQueueSync() {
+  if (writeQueueDirty && writeQueueBuffer) {
+    try {
+      const content = JSON.stringify(writeQueueBuffer, null, 2);
+      fs.writeFileSync(DB_PATH, content, 'utf-8');
+      console.log('[BACKUP] Đã ghi đệm Standby File db.json an toàn trước khi tắt máy chủ.');
+      writeQueueDirty = false;
+    } catch (err) {
+      console.error('[BACKUP] Lỗi ghi đè Standby File khẩn cấp khi tắt máy:', err.message);
+    }
+  }
+  if (writeQueueTimer) {
+    clearTimeout(writeQueueTimer);
+    writeQueueTimer = null;
+  }
+}
+
+// Lắng nghe tín hiệu tắt tiến trình từ OS để bảo toàn dữ liệu đệm
+if (typeof process !== 'undefined') {
+  process.on('SIGINT', () => {
+    flushWriteQueueSync();
+    process.exit(0);
+  });
+  process.on('SIGTERM', () => {
+    flushWriteQueueSync();
+    process.exit(0);
+  });
+}
+
+// Helper an toàn lấy timestamp từ chuỗi ngày tháng
+function getTimestamp(val) {
+  if (!val) return 0;
+  try {
+    const t = new Date(val).getTime();
+    return isNaN(t) ? 0 : t;
+  } catch {
+    return 0;
+  }
+}
+
+/**
+ * 8. Hàm autoSelfHealingSync: Kiểm tra trạng thái dữ liệu hai chiều và tự động phục hồi chéo
+ */
+async function autoSelfHealingSync() {
+  try {
+    console.log('[DB] Khởi chạy công cụ tự phục hồi và đồng bộ hóa hai chiều...');
+    
+    // 1. Đọc dữ liệu thô từ PostgreSQL
+    const [warranties, nhanVien, suppliers, supplierLogs] = await Promise.all([
+      prisma.warranty.findMany({ orderBy: { stt: 'asc' } }),
+      prisma.nhanVien.findMany({ orderBy: { maNV: 'asc' } }),
+      prisma.supplier.findMany({ orderBy: { name: 'asc' } }),
+      prisma.supplierLog.findMany({ orderBy: { createdAt: 'desc' } }),
+    ]);
+
+    // Tìm max updatedAt trong SQL
+    let maxSqlUpdatedAt = 0;
+    for (const w of warranties) {
+      const t = getTimestamp(w.updatedAt || w.createdAt);
+      if (t > maxSqlUpdatedAt) maxSqlUpdatedAt = t;
+    }
+
+    // 2. Đọc tệp tin db.json cục bộ
+    let dbJsonData = null;
+    let maxJsonUpdatedAt = 0;
+    if (fs.existsSync(DB_PATH)) {
+      try {
+        const raw = fs.readFileSync(DB_PATH, 'utf-8');
+        dbJsonData = JSON.parse(raw);
+      } catch { /* ignore */ }
+    }
+
+    if (dbJsonData && Array.isArray(dbJsonData.warranties)) {
+      for (const w of dbJsonData.warranties) {
+        const t = getTimestamp(w.updatedAt || w.createdAt);
+        if (t > maxJsonUpdatedAt) maxJsonUpdatedAt = t;
+      }
+    }
+
+    const sqlCount = warranties.length;
+    const jsonCount = dbJsonData && Array.isArray(dbJsonData.warranties) ? dbJsonData.warranties.length : 0;
+
+    console.log(`[DB] Chỉ số đồng bộ: PostgreSQL (Bản ghi: ${sqlCount}, MaxUpdate: ${new Date(maxSqlUpdatedAt || 0).toISOString()}) | db.json (Bản ghi: ${jsonCount}, MaxUpdate: ${new Date(maxJsonUpdatedAt || 0).toISOString()})`);
+
+    // 3. Thực thi kịch bản tự phục hồi và đồng bộ hóa chéo
+    if (maxJsonUpdatedAt > maxSqlUpdatedAt || (sqlCount === 0 && jsonCount > 0)) {
+      console.warn('[DB] PHÁT HIỆN LỆCH PHA: File db.json chứa dữ liệu mới hơn PostgreSQL. Bắt đầu tự động khôi phục ngược (Reverse Sync)...');
+      await writeDb(dbJsonData);
+      console.log('[DB] Khôi phục ngược thành công! Dữ liệu từ db.json đã được phục hồi toàn diện vào PostgreSQL.');
+    } else {
+      console.log('[DB] Trạng thái đồng nhất: PostgreSQL đã là nguồn dữ liệu chuẩn nhất. Đồng bộ xuôi ra db.json.');
+      const currentData = {
+        warranties,
+        nhanVien: normalizeNhanVienRows(nhanVien),
+        suppliers,
+        supplierLogs: normalizeSupplierLogs(supplierLogs),
+        adminConfig: dbJsonData?.adminConfig || null,
+        customers: []
+      };
+      const content = JSON.stringify(currentData, null, 2);
+      fs.writeFileSync(DB_PATH, content, 'utf-8');
+    }
+  } catch (err) {
+    console.error('[DB] Tiến trình tự động phục hồi dữ liệu startup gặp sự cố:', err.message);
+  }
+}
+
+export { readDb, writeDb, getCollection, setCollection, addToCollection, atomicWriteJsonFile, syncLocalBackup, autoSelfHealingSync, DB_PATH, prisma };

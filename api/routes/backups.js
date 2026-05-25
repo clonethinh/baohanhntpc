@@ -13,6 +13,7 @@ import {
   updateBackupMetadata,
   viewBackup,
 } from '../lib/backup.js';
+import { writeAuditLog } from '../lib/audit.js';
 
 const router = express.Router();
 
@@ -32,7 +33,11 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  try { ok(res, await createBackup(req.body?.type || 'manual')); } catch (err) { fail(res, err); }
+  try {
+    const result = await createBackup(req.body?.type || 'manual');
+    await writeAuditLog(req, { action: 'create', entity: 'backup', entityId: result?.path || '', summary: `Tạo backup ${req.body?.type || 'manual'}`, after: result });
+    ok(res, result);
+  } catch (err) { fail(res, err); }
 });
 
 router.get('/download', (req, res) => {
@@ -58,7 +63,11 @@ router.patch('/metadata', async (req, res) => {
 });
 
 router.post('/restore', async (req, res) => {
-  try { ok(res, await restoreBackup(req.body?.path, req.body?.confirm)); } catch (err) { fail(res, err); }
+  try {
+    const result = await restoreBackup(req.body?.path, req.body?.confirm);
+    await writeAuditLog(req, { action: 'restore', entity: 'backup', entityId: req.body?.path || '', summary: `Restore backup ${req.body?.path || ''}`, after: result });
+    ok(res, result);
+  } catch (err) { fail(res, err); }
 });
 
 router.post('/upload-restore', async (req, res) => {

@@ -1,6 +1,7 @@
 import express from 'express';
 import { authenticateStaff, clearSessionCookie, hashPassword, requireAuth, sanitizeStaff } from '../lib/auth.js';
 import { readDb, writeDb } from '../lib/db.js';
+import dayjs from 'dayjs';
 
 const router = express.Router();
 
@@ -55,7 +56,7 @@ router.post('/change-password', requireAuth, async (req, res) => {
       ...db.nhanVien[idx],
       matKhau: hashPassword(newPassword),
       passwordBootstrappedAt: null,
-      updatedAt: new Date().toISOString(),
+      updatedAt: dayjs().format(),
     };
     await writeDb(db);
     return res.json({ success: true, data: sanitizeStaff(db.nhanVien[idx]) });

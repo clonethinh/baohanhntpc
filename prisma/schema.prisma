@@ -22,7 +22,11 @@ model NhanVien {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  warranties Warranty[]
+
   @@map("nhan_vien")
+  @@index([quyen])
+  @@index([active])
 }
 
 // 2. Bảng quản lý Nhà Cung Cấp
@@ -39,7 +43,13 @@ model Supplier {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
+  supplierLogs      SupplierLog[]
+  currentWarranties Warranty[]
+
   @@map("suppliers")
+  @@index([code])
+  @@index([name])
+  @@index([isActive])
 }
 
 // 3. Bảng quản lý Nhật ký gửi/nhận bảo hành Nhà Cung Cấp
@@ -56,7 +66,14 @@ model SupplierLog {
   createdBy        String   @default("") @map("created_by")
   createdAt        DateTime @default(now()) @map("created_at")
 
+  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  warranty Warranty @relation(fields: [warrantyId], references: [id], onDelete: Cascade)
+
   @@map("supplier_logs")
+  @@index([supplierId])
+  @@index([warrantyId])
+  @@index([action])
+  @@index([createdAt])
 }
 
 // 4. Bảng quản lý Phiếu Bảo Hành (Trọng tâm)
@@ -102,5 +119,40 @@ model Warranty {
   sentSupplierAt           String   @default("") @map("sent_supplier_at")
   expectedReturnSupplierAt String   @default("") @map("expected_return_supplier_at")
 
+  // Relations
+  nhanVien                 NhanVien @relation(fields: [maNhanVien], references: [maNV], onDelete: Restrict)
+  supplierCurrent          Supplier? @relation(fields: [supplierIdCurrent], references: [id], onDelete: SetNull)
+  supplierLogsList         SupplierLog[]
+
   @@map("warranties")
+  @@index([trangThai])
+  @@index([maNhanVien])
+  @@index([ngayNhan])
+  @@index([ngayHenTra])
+  @@index([supplierStatus])
+  @@index([supplierIdCurrent])
+  @@index([deletedAt])
+  @@index([updatedAt])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String   @default("") @map("actor_id")
+  actorName  String   @default("") @map("actor_name")
+  action     String   @map("action")
+  entity     String   @map("entity")
+  entityId   String   @default("") @map("entity_id")
+  summary    String   @default("") @map("summary")
+  before     Json?    @map("before")
+  after      Json?    @map("after")
+  ip         String   @default("") @map("ip")
+  userAgent  String   @default("") @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("audit_logs")
+  @@index([actorId])
+  @@index([action])
+  @@index([entity])
+  @@index([entityId])
+  @@index([createdAt])
 }

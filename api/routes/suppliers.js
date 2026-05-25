@@ -1,8 +1,9 @@
 import express from 'express';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
-import { readDb, writeDb } from '../lib/db.js';
+import { prisma } from '../lib/db.js';
 import { supplierSchema } from '../lib/validators.js';
+import { writeAuditLog } from '../lib/audit.js';
 
 const router = express.Router();
 
@@ -14,7 +15,8 @@ function normalizeSupplier(item) {
   };
 }
 
-function generateSupplierCode(suppliers = []) {
+async function generateSupplierCode(tx = prisma) {
+  const suppliers = await tx.supplier.findMany({ select: { code: true } });
   const max = suppliers.reduce((acc, s) => {
     const m = String(s.code || '').match(/^NCC(\d{5})$/i);
     if (!m) return acc;
@@ -26,25 +28,25 @@ function generateSupplierCode(suppliers = []) {
 router.get('/', async (req, res) => {
   try {
     const { q = '', isActive = '', page = 1, limit = 50 } = req.query;
-    const db = await readDb();
-    let rows = (db.suppliers || []).map(normalizeSupplier).filter(x => !x.deletedAt);
+    const where = {};
+    if (isActive === '1') where.isActive = true;
+    if (isActive === '0') where.isActive = false;
     if (q) {
-      const s = String(q).toLowerCase();
-      rows = rows.filter(x =>
-        (x.code || '').toLowerCase().includes(s) ||
-        (x.name || '').toLowerCase().includes(s) ||
-        (x.phone || '').toLowerCase().includes(s)
-      );
+      const s = String(q);
+      where.OR = [
+        { code: { contains: s, mode: 'insensitive' } },
+        { name: { contains: s, mode: 'insensitive' } },
+        { phone: { contains: s, mode: 'insensitive' } },
+      ];
     }
-    if (isActive === '1') rows = rows.filter(x => x.isActive);
-    if (isActive === '0') rows = rows.filter(x => !x.isActive);
-    rows.sort((a, b) => dayjs(b.updatedAt || b.createdAt).valueOf() - dayjs(a.updatedAt || a.createdAt).valueOf());
-    const total = rows.length;
     const p = Number(page) || 1;
     const l = Number(limit) || 50;
-    const start = (p - 1) * l;
-    res.json({ success: true, data: { rows: rows.slice(start, start + l), total, page: p, limit: l } });
-  } catch {
+    const [rows, total] = await Promise.all([
+      prisma.supplier.findMany({ where, orderBy: { updatedAt: 'desc' }, skip: (p - 1) * l, take: l }),
+      prisma.supplier.count({ where }),
+    ]);
+    res.json({ success: true, data: { rows: rows.map(normalizeSupplier), total, page: p, limit: l } });
+  } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Loi may chu' } });
   }
 });
@@ -53,24 +55,34 @@ router.post('/', async (req, res) => {
   try {
     const parsed = supplierSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ success: false, error: { code: 'VALIDATION_ERROR', message: parsed.error.errors[0].message } });
-    const db = await readDb();
-    const now = dayjs().format('YYYY-MM-DDTHH:mm:ss');
-    const code = parsed.data.code?.trim() ? parsed.data.code.trim().toUpperCase() : generateSupplierCode(db.suppliers || []);
-    const exists = (db.suppliers || []).some(x => !x.deletedAt && (x.code || '').toLowerCase() === code.toLowerCase());
-    if (exists) return res.status(400).json({ success: false, error: { code: 'DUPLICATE_CODE', message: 'Ma nha cung cap da ton tai' } });
-    const item = {
-      id: uuidv4(),
-      ...parsed.data,
-      code,
-      createdAt: now,
-      updatedAt: now,
-      deletedAt: null,
-    };
-    db.suppliers = [...(db.suppliers || []), item];
-    await writeDb(db);
-    res.status(201).json({ success: true, data: item });
-  } catch {
-    res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Loi may chu' } });
+    const item = await prisma.$transaction(async (tx) => {
+      const code = parsed.data.code?.trim() ? parsed.data.code.trim().toUpperCase() : await generateSupplierCode(tx);
+      const exists = await tx.supplier.findFirst({ where: { code: { equals: code, mode: 'insensitive' } } });
+      if (exists) {
+        const err = new Error('Ma nha cung cap da ton tai');
+        err.status = 400;
+        err.code = 'DUPLICATE_CODE';
+        throw err;
+      }
+      const created = await tx.supplier.create({
+        data: {
+          id: uuidv4(),
+          code,
+          name: parsed.data.name,
+          phone: parsed.data.phone || '',
+          email: parsed.data.email || '',
+          address: parsed.data.address || '',
+          contactPerson: parsed.data.contactPerson || '',
+          note: parsed.data.note || '',
+          isActive: parsed.data.isActive !== false,
+        },
+      });
+      await writeAuditLog(req, { action: 'create', entity: 'supplier', entityId: created.id, summary: `Tạo NCC ${created.code}`, after: created }, tx);
+      return created;
+    });
+    res.status(201).json({ success: true, data: normalizeSupplier(item) });
+  } catch (err) {
+    res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Loi may chu' } });
   }
 });
 
@@ -78,43 +90,74 @@ router.put('/:id', async (req, res) => {
   try {
     const parsed = supplierSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ success: false, error: { code: 'VALIDATION_ERROR', message: parsed.error.errors[0].message } });
-    const db = await readDb();
-    const idx = (db.suppliers || []).findIndex(x => x.id === req.params.id && !x.deletedAt);
-    if (idx < 0) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Khong tim thay NCC' } });
-    const nextCode = parsed.data.code?.trim() ? parsed.data.code.trim().toUpperCase() : (db.suppliers[idx].code || '');
-    const exists = (db.suppliers || []).some(x => x.id !== req.params.id && !x.deletedAt && (x.code || '').toLowerCase() === nextCode.toLowerCase());
-    if (exists) return res.status(400).json({ success: false, error: { code: 'DUPLICATE_CODE', message: 'Ma nha cung cap da ton tai' } });
-    db.suppliers[idx] = { ...db.suppliers[idx], ...parsed.data, code: nextCode, updatedAt: dayjs().format('YYYY-MM-DDTHH:mm:ss') };
-    await writeDb(db);
-    res.json({ success: true, data: db.suppliers[idx] });
-  } catch {
-    res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Loi may chu' } });
+    const item = await prisma.$transaction(async (tx) => {
+      const current = await tx.supplier.findUnique({ where: { id: req.params.id } });
+      if (!current) {
+        const err = new Error('Khong tim thay NCC');
+        err.status = 404;
+        err.code = 'NOT_FOUND';
+        throw err;
+      }
+      const nextCode = parsed.data.code?.trim() ? parsed.data.code.trim().toUpperCase() : current.code;
+      const exists = await tx.supplier.findFirst({ where: { id: { not: req.params.id }, code: { equals: nextCode, mode: 'insensitive' } } });
+      if (exists) {
+        const err = new Error('Ma nha cung cap da ton tai');
+        err.status = 400;
+        err.code = 'DUPLICATE_CODE';
+        throw err;
+      }
+      const updated = await tx.supplier.update({
+        where: { id: req.params.id },
+        data: {
+          code: nextCode,
+          name: parsed.data.name,
+          phone: parsed.data.phone || '',
+          email: parsed.data.email || '',
+          address: parsed.data.address || '',
+          contactPerson: parsed.data.contactPerson || '',
+          note: parsed.data.note || '',
+          isActive: parsed.data.isActive !== false,
+        },
+      });
+      await writeAuditLog(req, { action: 'update', entity: 'supplier', entityId: updated.id, summary: `Cập nhật NCC ${updated.code}`, before: current, after: updated }, tx);
+      return updated;
+    });
+    res.json({ success: true, data: normalizeSupplier(item) });
+  } catch (err) {
+    res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Loi may chu' } });
   }
 });
 
 router.patch('/:id/status', async (req, res) => {
   try {
-    const db = await readDb();
-    const idx = (db.suppliers || []).findIndex(x => x.id === req.params.id && !x.deletedAt);
-    if (idx < 0) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Khong tim thay NCC' } });
-    db.suppliers[idx] = { ...db.suppliers[idx], isActive: Boolean(req.body?.isActive), updatedAt: dayjs().format('YYYY-MM-DDTHH:mm:ss') };
-    await writeDb(db);
-    res.json({ success: true, data: db.suppliers[idx] });
-  } catch {
-    res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Loi may chu' } });
+    const item = await prisma.$transaction(async (tx) => {
+      const current = await tx.supplier.findUnique({ where: { id: req.params.id } });
+      if (!current) {
+        const err = new Error('Khong tim thay NCC');
+        err.status = 404;
+        err.code = 'NOT_FOUND';
+        throw err;
+      }
+      const updated = await tx.supplier.update({ where: { id: req.params.id }, data: { isActive: Boolean(req.body?.isActive) } });
+      await writeAuditLog(req, { action: 'update_status', entity: 'supplier', entityId: updated.id, summary: `Đổi trạng thái NCC ${updated.code}`, before: current, after: updated }, tx);
+      return updated;
+    });
+    res.json({ success: true, data: normalizeSupplier(item) });
+  } catch (err) {
+    res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Loi may chu' } });
   }
 });
 
 router.get('/:id/warranties', async (req, res) => {
   try {
-    const db = await readDb();
-    const supplier = (db.suppliers || []).find(x => x.id === req.params.id && !x.deletedAt);
+    const supplier = await prisma.supplier.findUnique({ where: { id: req.params.id } });
     if (!supplier) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Khong tim thay NCC' } });
-    const logs = (db.supplierLogs || []).filter(x => x.supplierId === req.params.id);
-    const ids = new Set(logs.map(x => x.warrantyId));
-    const rows = (db.warranties || []).filter(x => !x.deletedAt && ids.has(x.id)).map(w => {
+    const logs = await prisma.supplierLog.findMany({ where: { supplierId: req.params.id }, orderBy: { createdAt: 'desc' } });
+    const ids = [...new Set(logs.map(x => x.warrantyId))];
+    const warranties = await prisma.warranty.findMany({ where: { id: { in: ids }, deletedAt: '' } });
+    const rows = warranties.map(w => {
       const warrantyLogs = logs.filter(l => l.warrantyId === w.id);
-      const latest = warrantyLogs.sort((a, b) => dayjs(b.at).valueOf() - dayjs(a.at).valueOf())[0];
+      const latest = warrantyLogs[0];
       const sentLogs = warrantyLogs.filter(l => l.action === 'sent');
       return {
         id: w.id,
@@ -124,21 +167,19 @@ router.get('/:id/warranties', async (req, res) => {
         trangThai: w.trangThai,
         supplierStatus: w.supplierStatus || 'none',
         latestSupplierAction: latest?.action || '',
-        latestSupplierAt: latest?.at || '',
+        latestSupplierAt: latest?.createdAt ? dayjs(latest.createdAt).format('YYYY-MM-DDTHH:mm:ss') : '',
         sentCount: sentLogs.length,
         hasSentHistory: sentLogs.length > 0,
-        lastSentAt: sentLogs.length > 0 ? sentLogs.sort((a, b) => dayjs(b.at).valueOf() - dayjs(a.at).valueOf())[0].at : '',
-        supplierHistory: warrantyLogs
-          .sort((a, b) => dayjs(b.at).valueOf() - dayjs(a.at).valueOf())
-          .map((l) => ({
-            action: l.action,
-            at: l.at,
-            sentAt: l.sentAt || '',
-            expectedReturnAt: l.expectedReturnAt || '',
-            returnedAt: l.returnedAt || '',
-            note: l.note || '',
-            createdBy: l.createdBy || '',
-          })),
+        lastSentAt: sentLogs[0]?.sentAt || '',
+        supplierHistory: warrantyLogs.map((l) => ({
+          action: l.action,
+          at: l.createdAt ? dayjs(l.createdAt).format('YYYY-MM-DDTHH:mm:ss') : '',
+          sentAt: l.sentAt || '',
+          expectedReturnAt: l.expectedReturnAt || '',
+          returnedAt: l.returnedAt || '',
+          note: l.note || '',
+          createdBy: l.createdBy || '',
+        })),
       };
     });
     res.json({ success: true, data: rows });

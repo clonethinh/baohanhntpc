@@ -321,25 +321,27 @@ export default function Dashboard() {
 
         <Col xs={24} lg={8}>
           <Card title={t('adminDashboard.latestHistory')} extra={<Button size="small" onClick={() => navigate('/admin/phieu')}>{t('adminDashboard.openTicket')}</Button>}>
-            <Timeline
-              items={insights.latestEvents.map((ev, idx) => {
-                const detail = normalizeHistoryNote(ev.detail || ev.note || '');
-                return {
-                  color: ev.color,
-                  children: (
-                    <div>
-                      <Text strong>{ev.title || mapHistoryAction(ev.actionType || ev.action, t)}</Text>
+            <div style={{ maxHeight: '480px', overflowY: 'auto', paddingTop: '12px', paddingRight: 8, paddingLeft: 4 }}>
+              <Timeline
+                items={insights.latestEvents.map((ev, idx) => {
+                  const detail = normalizeHistoryNote(ev.detail || ev.note || '');
+                  return {
+                    color: ev.color,
+                    children: (
                       <div>
-                        <Typography.Link onClick={() => openDetail(ev.id)}>{ev.soChungTu}</Typography.Link>
-                        <Text type="secondary"> · {ev.khachHang || t('adminDashboard.unknownCustomer')}</Text>
+                        <Text strong>{ev.title || mapHistoryAction(ev.actionType || ev.action, t)}</Text>
+                        <div>
+                          <Typography.Link onClick={() => openDetail(ev.id)}>{ev.soChungTu}</Typography.Link>
+                          <Text type="secondary"> · {ev.khachHang || t('adminDashboard.unknownCustomer')}</Text>
+                        </div>
+                        <div><Text type="secondary">{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</Text></div>
+                        {detail ? <div><Text style={{ whiteSpace: 'pre-line' }}>{detail}</Text></div> : null}
                       </div>
-                      <div><Text type="secondary">{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</Text></div>
-                      {detail ? <div><Text style={{ whiteSpace: 'pre-line' }}>{detail}</Text></div> : null}
-                    </div>
-                  ),
-                };
-              })}
-            />
+                    ),
+                  };
+                })}
+              />
+            </div>
           </Card>
         </Col>
       </Row>
