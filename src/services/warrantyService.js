@@ -23,7 +23,6 @@ export const warrantyService = {
   returnFromSupplier: (id, data) => api.post(`/warranties/${id}/supplier-return`, data),
   addAttachments: (id, attachmentsInput) => api.post(`/warranties/${id}/attachments`, { attachmentsInput }),
   deleteAttachment: (id, attachmentId) => api.delete(`/warranties/${id}/attachments/${attachmentId}`),
-  deleteHistoryEntry: (id, historyIndex) => api.delete(`/warranties/${id}/history/${historyIndex}`),
 };
 
 export const customerService = {

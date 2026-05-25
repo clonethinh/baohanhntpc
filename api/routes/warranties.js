@@ -206,8 +206,8 @@ router.use((req, res, next) => {
 router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 25, search = '', trangThai = '', maNhanVien = '', from = '', to = '', sortBy = 'trangThaiPriority', sortOrder = 'asc', loaiXuLy = '', dueType = '', uuTien = '' } = req.query;
-    let warranties = await getCollection('warranties');
-    warranties = warranties.filter(w => !w.deletedAt);
+    const db = await readDb();
+    let warranties = (db.warranties || []).filter(w => !w.deletedAt);
 
     if (search) {
       const s = search.toLowerCase();
@@ -282,9 +282,28 @@ router.get('/', async (req, res) => {
       return sortOrder === 'asc' ? cmp : -cmp;
     });
 
+    const supplierMap = new Map((db.suppliers || []).map(s => [s.id, s]));
+    const logsGroupedByWarranty = {};
+    for (const log of (db.supplierLogs || [])) {
+      if (!logsGroupedByWarranty[log.warrantyId]) {
+        logsGroupedByWarranty[log.warrantyId] = [];
+      }
+      logsGroupedByWarranty[log.warrantyId].push({
+        ...log,
+        supplierName: supplierMap.get(log.supplierId)?.name || '-'
+      });
+    }
+
     const total = warranties.length;
     const start = (parseInt(page) - 1) * parseInt(limit);
-    const rows = warranties.slice(start, start + parseInt(limit)).map(withDefaultDueDate);
+    const rows = warranties.slice(start, start + parseInt(limit)).map(w => {
+      const mapped = withDefaultDueDate(w);
+      const supplierLogs = logsGroupedByWarranty[w.id] || [];
+      return {
+        ...mapped,
+        supplierLogs: supplierLogs.sort((a, b) => dayjs(b.at).valueOf() - dayjs(a.at).valueOf())
+      };
+    });
 
     res.json({ success: true, data: { rows, total, page: parseInt(page), limit: parseInt(limit) } });
   } catch (err) {

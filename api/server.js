@@ -27,7 +27,7 @@ try {
   console.warn('[ENV] Khong doc duoc file .env:', err.message);
 }
 
-const { readDb, writeDb } = await import('./lib/db.js');
+const { readDb, writeDb, prisma } = await import('./lib/db.js');
 const { attachUser, ensureAuthState, requireAuth, requireRole } = await import('./lib/auth.js');
 const { warranties: seedWarranties, nhanVien: seedNhanVien } = await import('./seedData.js');
 
@@ -82,6 +82,24 @@ app.use((req, res, next) => {
 });
 
 async function seedIfEmpty() {
+  const maxRetries = 5;
+  const delayMs = 2000;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      console.log(`[DB] Kết nối PostgreSQL thành công (Lần thứ ${attempt})`);
+      break;
+    } catch (err) {
+      if (attempt === maxRetries) {
+        console.warn(`[DB] Không thể kết nối PostgreSQL sau ${maxRetries} lần thử. Tự động chuyển sang sử dụng file dự phòng db.json.`);
+      } else {
+        console.log(`[DB] Đang chờ database khởi động... Thử lại sau ${delayMs / 1000} giây (Lần thứ ${attempt}/${maxRetries})`);
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+    }
+  }
+
   const db = await readDb();
   if (!Array.isArray(db.suppliers)) db.suppliers = [];
   if (!Array.isArray(db.supplierLogs)) db.supplierLogs = [];

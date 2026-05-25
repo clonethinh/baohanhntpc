@@ -3,8 +3,10 @@ import {
   createBackup,
   listBackups,
   getBackupFile,
+  getBackupAssetFile,
   restoreBackup,
   restoreUploadedBackup,
+  restoreUploadedAssets,
   deleteBackup,
   getHistory,
   getBackupStatus,
@@ -40,6 +42,13 @@ router.get('/download', (req, res) => {
   } catch (err) { fail(res, err); }
 });
 
+router.get('/download-assets', (req, res) => {
+  try {
+    const asset = getBackupAssetFile(req.query.path);
+    res.download(asset.full);
+  } catch (err) { fail(res, err); }
+});
+
 router.get('/view', (req, res) => {
   try { ok(res, viewBackup(req.query.path, req.query.limit)); } catch (err) { fail(res, err); }
 });
@@ -56,6 +65,12 @@ router.post('/upload-restore', async (req, res) => {
   try {
     const { data, confirm, filename } = req.body || {};
     ok(res, await restoreUploadedBackup(data, confirm, filename));
+  } catch (err) { fail(res, err); }
+});
+
+router.post('/upload-assets', express.raw({ type: '*/*', limit: process.env.BACKUP_ASSET_UPLOAD_LIMIT || '500mb' }), async (req, res) => {
+  try {
+    ok(res, await restoreUploadedAssets(req.body, req.query.confirm, req.query.filename));
   } catch (err) { fail(res, err); }
 });
 

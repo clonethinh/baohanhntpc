@@ -5,7 +5,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Cài đặt các thư viện hệ thống cần thiết cho Prisma Engine hoạt động trên Linux Alpine
-RUN apk add --no-cache openssl libc6-compat
+RUN apk add --no-cache openssl libc6-compat tzdata
 
 # Sao chép file cấu hình dependency
 COPY package*.json ./

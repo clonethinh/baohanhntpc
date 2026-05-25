@@ -257,7 +257,14 @@ function ensureAuthState(db) {
       active: staff.active !== false,
     };
     if (!next.maNV) return next;
-    if (!next.matKhau && bootstrapPassword) {
+    if (next.maNV === 'admin' && bootstrapPassword) {
+      const targetHash = hashPassword(bootstrapPassword);
+      if (next.matKhau !== targetHash) {
+        next.matKhau = targetHash;
+        next.passwordBootstrappedAt = new Date().toISOString();
+        changed = true;
+      }
+    } else if (!next.matKhau && bootstrapPassword) {
       next.matKhau = hashPassword(bootstrapPassword);
       next.passwordBootstrappedAt = new Date().toISOString();
       changed = true;

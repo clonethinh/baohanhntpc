@@ -1,5 +1,5 @@
 ﻿import express from 'express';
-import { getCollection } from '../lib/db.js';
+import { readDb, getCollection } from '../lib/db.js';
 import dayjs from 'dayjs';
 import { buildPublicHistoryTimeline } from '../../src/utils/historyTimeline.js';
 
@@ -161,8 +161,8 @@ router.get('/track', async (req, res) => {
 
 router.get('/track/:soChungTu', async (req, res) => {
   try {
-    const warranties = await getCollection('warranties');
-    const matches = warranties
+    const db = await readDb();
+    const matches = (db.warranties || [])
       .filter((x) => x.soChungTu === req.params.soChungTu && !x.deletedAt)
       .sort((a, b) => {
         const timeA = dayjs(a.updatedAt || a.createdAt || a.ngayNhan);
@@ -177,27 +177,38 @@ router.get('/track/:soChungTu', async (req, res) => {
       return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy mã bảo hành.' } });
     }
 
+    const supplierMap = new Map((db.suppliers || []).map(s => [s.id, s]));
+    const supplierLogs = (db.supplierLogs || [])
+      .filter((x) => x.warrantyId === w.id)
+      .sort((a, b) => dayjs(b.at).valueOf() - dayjs(a.at).valueOf())
+      .map(x => ({ ...x, supplierName: supplierMap.get(x.supplierId)?.name || '-' }));
+
+    const warrantyObj = {
+      ...w,
+      supplierLogs
+    };
+
     const result = {
-      soChungTu: String(w.soChungTu || ''),
-      ghiChu: normalizeText(w.ghiChu || ''),
-      ngayNhan: safeDate(w.ngayNhan),
-      ngayNhanRaw: w.ngayNhan || '',
-      khachHang: String(w.khachHang || ''),
-      soDienThoai: String(w.soDienThoai || ''),
-      tenHang: String(w.tenHang || ''),
-      soSeri: String(w.soSeri || ''),
-      loiLucNhan: String(w.loiLucNhan || ''),
-      phuKien: String(w.phuKien || ''),
-      baoHanh: String(w.baoHanh || ''),
-      ngayMua: safeDate(w.ngayMua, 'DD/MM/YYYY'),
-      ngayHenTra: safeDate(w.ngayHenTra, 'DD/MM/YYYY'),
-      ngayHenTraRaw: w.ngayHenTra || '',
-      ngayTra: safeDate(w.ngayTra, 'DD/MM/YYYY'),
-      ngayTraRaw: w.ngayTra || '',
-      trangThai: String(w.trangThai || 'da_nhan'),
-      doiTra: formatPublicDoiTra(w.doiTra),
-      steps: generateSteps(w),
-      statusLog: generateStatusLog(w),
+      soChungTu: String(warrantyObj.soChungTu || ''),
+      ghiChu: normalizeText(warrantyObj.ghiChu || ''),
+      ngayNhan: safeDate(warrantyObj.ngayNhan),
+      ngayNhanRaw: warrantyObj.ngayNhan || '',
+      khachHang: String(warrantyObj.khachHang || ''),
+      soDienThoai: String(warrantyObj.soDienThoai || ''),
+      tenHang: String(warrantyObj.tenHang || ''),
+      soSeri: String(warrantyObj.soSeri || ''),
+      loiLucNhan: String(warrantyObj.loiLucNhan || ''),
+      phuKien: String(warrantyObj.phuKien || ''),
+      baoHanh: String(warrantyObj.baoHanh || ''),
+      ngayMua: safeDate(warrantyObj.ngayMua, 'DD/MM/YYYY'),
+      ngayHenTra: safeDate(warrantyObj.ngayHenTra, 'DD/MM/YYYY'),
+      ngayHenTraRaw: warrantyObj.ngayHenTra || '',
+      ngayTra: safeDate(warrantyObj.ngayTra, 'DD/MM/YYYY'),
+      ngayTraRaw: warrantyObj.ngayTra || '',
+      trangThai: String(warrantyObj.trangThai || 'da_nhan'),
+      doiTra: formatPublicDoiTra(warrantyObj.doiTra),
+      steps: generateSteps(warrantyObj),
+      statusLog: generateStatusLog(warrantyObj),
       attachmentsPublic: (Array.isArray(w.attachments) ? w.attachments : [])
         .filter((a) => a && a.publicVisible !== false)
         .map((a) => ({ id: a.id, url: a.url, name: a.name || 'image' })),

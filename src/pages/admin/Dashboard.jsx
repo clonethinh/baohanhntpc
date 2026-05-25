@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Row, Col, Card, Statistic, Table, Typography, Button, Skeleton, Space, Tag, Timeline } from 'antd';
 import { Button as MobileButton, Card as MobileCard, Grid as MobileGrid, List, Space as MobileSpace, Tag as MobileTag } from 'antd-mobile';
 import { SyncOutlined, CheckCircleOutlined, ClockCircleOutlined, AlertOutlined, StarOutlined } from '@ant-design/icons';
@@ -138,7 +138,7 @@ export default function Dashboard() {
 
     historyEvents.sort((a, b) => dayjs(b.at).valueOf() - dayjs(a.at).valueOf());
 
-    return { dueToday, overdue, priorityOpen, urgent, latestEvents: historyEvents.slice(0, 5) };
+    return { dueToday, overdue, priorityOpen, urgent, latestEvents: historyEvents.slice(0, 10) };
   }, [warrantyRows]);
 
   const columns = [

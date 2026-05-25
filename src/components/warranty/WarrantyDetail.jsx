@@ -380,19 +380,6 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     }
   };
 
-  const handleDeleteHistoryEntry = async (historyIndex) => {
-    try {
-      const res = await warrantyService.deleteHistoryEntry(warranty.id, historyIndex);
-      if (res.data.success) {
-        markChanged();
-        setWarranty(res.data.data);
-        message.success('Đã xóa dòng lịch sử');
-      }
-    } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Không thể xóa dòng lịch sử');
-    }
-  };
-
   const loadCustomerList = async () => {
     setCustomerListLoading(true);
     try {
@@ -1562,24 +1549,13 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             return {
               color,
               children: (
-                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                  <div style={{ minWidth: 0 }}>
-                    <Text strong>{title}</Text>
-                    <div>
-                      <ClockCircleOutlined style={{ fontSize: 12, marginRight: 4, color: '#999' }} />
-                      <Text type="secondary" style={{ fontSize: 12 }}>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</Text>
-                    </div>
-                    {detail && <div style={{ marginTop: 4, fontSize: 13, whiteSpace: 'pre-line' }}>{detail}</div>}
+                <div style={{ minWidth: 0 }}>
+                  <Text strong>{title}</Text>
+                  <div>
+                    <ClockCircleOutlined style={{ fontSize: 12, marginRight: 4, color: '#999' }} />
+                    <Text type="secondary" style={{ fontSize: 12 }}>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</Text>
                   </div>
-                  <Popconfirm
-                    title="Xóa dòng lịch sử này?"
-                    okText="Xóa"
-                    cancelText="Hủy"
-                    okButtonProps={{ danger: true }}
-                    onConfirm={() => handleDeleteHistoryEntry(historyIndex)}
-                  >
-                    <Button size="small" type="text" danger icon={<CloseOutlined />} aria-label="Xóa dòng lịch sử" />
-                  </Popconfirm>
+                  {detail && <div style={{ marginTop: 4, fontSize: 13, whiteSpace: 'pre-line' }}>{detail}</div>}
                 </div>
               ),
             };
@@ -1958,34 +1934,9 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 : normalizeHistoryText(h.note) || (isCreate ? 'Phiếu đã được tạo' : '');
             return (
               <div className="warranty-mobile-timeline-item" key={`${h.at}-${h.action}-${historyIndex}`}>
-                <button
-                  type="button"
-                  aria-label="Xóa dòng lịch sử"
-                  onClick={() => Dialog.confirm({
-                    content: 'Xóa dòng lịch sử này?',
-                    confirmText: 'Xóa',
-                    cancelText: 'Hủy',
-                    onConfirm: () => handleDeleteHistoryEntry(historyIndex),
-                  })}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    width: 28,
-                    height: 28,
-                    border: 0,
-                    background: 'transparent',
-                    color: 'var(--adm-color-danger)',
-                    display: 'grid',
-                    placeItems: 'center',
-                    padding: 0,
-                  }}
-                >
-                  <CloseOutlined />
-                </button>
-                <b style={{ paddingRight: 32 }}>{title}</b>
+                <b>{title}</b>
                 <span>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</span>
-                {detail && <p style={{ paddingRight: 32, whiteSpace: 'pre-line' }}>{detail}</p>}
+                {detail && <p style={{ whiteSpace: 'pre-line' }}>{detail}</p>}
               </div>
             );
           })}

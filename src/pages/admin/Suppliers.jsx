@@ -1,14 +1,15 @@
-﻿import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { App, Button, Card, DatePicker, Form, Input, Modal, Popconfirm, Select, Space, Switch, Table, Tag, Typography, Grid, Row, Col, theme } from 'antd';
 import { SearchOutlined, EditOutlined, StopOutlined, CheckOutlined, HistoryOutlined, FormOutlined } from '@ant-design/icons';
 import { Button as MobileButton, Card as MobileCard, DatePicker as MobileDatePicker, Dialog, Input as MobileInput, List, Popup, Space as MobileSpace, Switch as MobileSwitch, Tag as MobileTag, TextArea as MobileTextArea, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { nhanVienService, supplierService, warrantyService } from '../../services/warrantyService';
 import StatusTag from '../../components/warranty/StatusTag';
+import WarrantyDetail from '../../components/warranty/WarrantyDetail';
 import { getStatusBadgeColor } from '../../constants/badgeConfig';
 import { useTranslation } from 'react-i18next';
 
-const { Title, Text } = Typography;
+const { Title, Text, Link } = Typography;
 
 function formatDateTime(value) {
   if (!value) return '-';
@@ -42,6 +43,13 @@ export default function Suppliers() {
   const [trackingRowsMap, setTrackingRowsMap] = useState({});
   const [receiveModalOpen, setReceiveModalOpen] = useState(false);
   const [selectedWarranty, setSelectedWarranty] = useState(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailId, setDetailId] = useState(null);
+
+  const openDetail = (id) => {
+    setDetailId(id);
+    setDetailOpen(true);
+  };
 
   const [receiveForm] = Form.useForm();
   const [form] = Form.useForm();
@@ -259,7 +267,7 @@ export default function Suppliers() {
           rowExpandable: (record) => (record.supplierHistory || []).length > 0,
         }}
         columns={[
-          { title: t('adminWarrantyList.documentNumber'), dataIndex: 'soChungTu', key: 'soChungTu', render: (v) => <Text strong>{v}</Text> },
+          { title: t('adminWarrantyList.documentNumber'), dataIndex: 'soChungTu', key: 'soChungTu', render: (v, record) => <Link onClick={() => openDetail(record.id)} strong>{v}</Link> },
           { title: t('field.khachHang'), dataIndex: 'khachHang', key: 'khachHang' },
           { title: t('field.sanPham'), dataIndex: 'tenHang', key: 'tenHang' },
           {
@@ -297,11 +305,13 @@ export default function Suppliers() {
         {trackingRows.map((record) => (
           <List.Item
             key={record.id}
+            clickable
+            onClick={() => openDetail(record.id)}
             description={`${record.khachHang || '-'} · ${record.tenHang || '-'}`}
-            extra={record.supplierStatus === 'sent' ? <MobileButton size="mini" color="primary" onClick={() => openReceiveModal(record)}>{t('adminSuppliers.received')}</MobileButton> : null}
+            extra={record.supplierStatus === 'sent' ? <MobileButton size="mini" color="primary" onClick={(e) => { e.stopPropagation(); openReceiveModal(record); }}>{t('adminSuppliers.received')}</MobileButton> : null}
           >
             <div style={{ display: 'grid', gap: 6 }}>
-              <Text strong>{record.soChungTu}</Text>
+              <Link onClick={(e) => { e.stopPropagation(); openDetail(record.id); }} strong>{record.soChungTu}</Link>
               <MobileSpace wrap>
                 <MobileTag color={record.supplierStatus === 'sent' ? 'success' : record.supplierStatus === 'returned' ? 'primary' : 'default'}>
                   {record.supplierStatus === 'sent' ? t('adminSuppliers.sent') : record.supplierStatus === 'returned' ? t('adminSuppliers.returned') : t('adminSuppliers.notSent')}
@@ -510,6 +520,13 @@ export default function Suppliers() {
           placeholder="Nhập ghi chú"
         />
       </Modal>
+
+      <WarrantyDetail
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        warrantyId={detailId}
+        onRefresh={refreshTracking}
+      />
     </>
   );
 }

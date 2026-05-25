@@ -1,225 +1,1078 @@
-# Hệ Thống Quản Lý Bảo Hành NTPC (NTPC Warranty)
-## Đánh Giá Chi Tiết Kiến Trúc Kỹ Thuật & Lộ Trình Nâng Cấp Hệ Thống
+# NTPC Warranty - Đánh giá chi tiết dự án
 
-Tài liệu này cung cấp một bản phân tích, đánh giá chuyên sâu và chi tiết về mặt kỹ thuật đối với hệ thống quản lý bảo hành **NTPC Warranty (Nguyễn Tân PC)** hiện tại. Phân tích bao gồm chi tiết kiến trúc kỹ thuật hiện tại, sơ đồ hoạt động, đánh giá khách quan về điểm mạnh, điểm yếu, các phương án khắc phục ngắn hạn và lộ trình chuyển đổi sang kiến trúc Enterprise dài hạn tối ưu nhất.
+## 1. Tổng quan dự án
 
----
+NTPC Warranty là hệ thống quản lý bảo hành, sửa chữa, khách hàng, nhân viên, nhà cung cấp và tra cứu tình trạng phiếu bảo hành. Dự án dùng React/Vite cho giao diện, Express cho API, Prisma + PostgreSQL cho dữ liệu chính, kèm cơ chế dự phòng bằng `api/db.json` và hệ thống backup file.
 
-## 1. Tổng Quan Nghiệp Vụ Dự Án (Project Overview)
+Mục tiêu nghiệp vụ hiện tại:
 
-Hệ thống quản lý bảo hành **NTPC Warranty** là giải pháp phần mềm toàn diện nhằm tối ưu hóa quy trình tiếp nhận, xử lý sửa chữa, đổi trả thiết bị công nghệ và quản lý vòng đời bảo hành sản phẩm. Dự án phục vụ hai nhóm đối tượng người dùng chính:
+- Nhân viên tạo, cập nhật, in và theo dõi phiếu bảo hành.
+- Khách hàng tra cứu tình trạng phiếu bằng số chứng từ.
+- Quản trị viên quản lý nhân viên, import/export, backup/restore.
+- Theo dõi gửi/nhận bảo hành qua nhà cung cấp.
+- Lưu ảnh/file đính kèm trong `api/uploads`.
+- Chạy local bằng Vite + Express hoặc triển khai Docker Compose với Nginx + API + PostgreSQL + Cloudflare Quick Tunnel.
 
-*   **Nhân viên & Ban quản trị (Admin Portal):** Quản lý, theo dõi trạng thái tiếp nhận bảo hành, thực hiện các hành động chuyên sâu như cập nhật tiến độ kỹ thuật, đổi mới/trả hàng cho khách, gửi thiết bị bảo hành tới các đối tác nhà cung cấp (Suppliers), xem báo cáo thống kê hiệu suất, xuất/nhập excel và quản lý cấu hình hệ thống.
-*   **Khách hàng (Customer Portal):** Giao diện tra cứu công khai tối giản, thân thiện trên nền tảng di động (Mobile-friendly) giúp khách hàng dễ dàng nhập mã chứng từ hoặc quét QR code để theo dõi tiến độ sửa chữa thiết bị theo thời gian thực (Real-time) mà không cần đăng nhập.
+## 2. Kiến trúc kỹ thuật hiện tại
 
----
+### 2.1 Frontend
 
-## 2. Chi Tiết Kiến Trúc Kỹ Thuật Hiện Tại (Current Technical Stack)
+- Framework: React 18.
+- Build tool: Vite 5.
+- UI: Ant Design 5, Ant Design Mobile.
+- Routing: `react-router-dom` v6.
+- Form/validation: `react-hook-form`, `zod`, `@hookform/resolvers`.
+- HTTP client: Axios.
+- i18n: `i18next`, `react-i18next`, detector trình duyệt.
+- Test: Vitest, Testing Library, jsdom.
 
-Mã nguồn dự án được xây dựng dưới dạng cấu trúc chia tách rõ ràng giữa lớp xử lý hiển thị giao diện (Frontend SPA) và dịch vụ cung cấp dữ liệu (Backend API) được tích hợp trong cùng một kho lưu trữ mã nguồn để tối ưu hóa quy trình phân phối và triển khai.
+Thư mục chính:
 
-### 2.1. Phân Tích Lớp Frontend (Client-side)
-*   **Công nghệ cốt lõi:** React (v18.3.0) kết hợp công cụ đóng gói Vite (v5.4.0) nhằm tối đa hóa tốc độ biên dịch (HMR - Hot Module Replacement) và tối ưu dung lượng gói build sản phẩm đầu ra.
-*   **Hệ thống thiết kế UX/UI (Design System):**
-    *   **Desktop Admin:** Sử dụng thư viện thành phần doanh nghiệp **Ant Design (antd v5.22.2)** đem lại giao diện trang nhã, chuyên nghiệp với cấu trúc bảng thông tin, bộ lọc đa năng và biểu đồ thống kê hiện đại từ `@ant-design/charts`.
-    *   **Mobile Customer:** Sử dụng **Ant Design Mobile (v5.42.3)**, tối ưu hoàn hảo cho các thiết bị di động, đảm bảo trải nghiệm vuốt chạm, hiệu ứng mượt mà và hiển thị thông tin trực quan.
-*   **Quản lý Form & Ràng buộc dữ liệu (Validation):** Sử dụng **React Hook Form (v7.53.0)** kết hợp giải pháp xác thực schema **Zod (v3.23.0)** thông qua bộ chuyển đổi `@hookform/resolvers`. Ràng buộc dữ liệu chặt chẽ ngay từ giao diện trước khi gửi yêu cầu API.
-*   **Kiến trúc Đa ngôn ngữ (i18n):** Tích hợp sâu thư viện **react-i18next** tách biệt hoàn toàn chuỗi văn bản hiển thị ra khỏi logic điều hướng cấu phần giao diện. Toàn bộ ngôn ngữ hiển thị gốc nằm trong các tệp JSON có cấu trúc tại lớp tài nguyên ngôn ngữ (`src/i18n/locales/vi/`).
-*   **Các tính năng chuyên dụng hỗ trợ thiết bị ngoại vi:**
-    *   **In ấn hóa đơn nhiệt:** Thư viện `react-to-print` hỗ trợ thiết kế biểu mẫu in hóa đơn nhiệt tiêu chuẩn (khổ 80mm), tự động định dạng CSS cho máy in nhiệt tại cửa hàng.
-    *   **Tích hợp QR Code / Barcode:** Thư viện `qrcode.react` tạo động mã QR cho từng phiếu biên nhận bảo hành để dán lên vỏ máy của khách hoặc in kèm phiếu nhận máy, giúp tối ưu hóa việc quản lý thiết bị vật lý bằng đầu đọc mã vạch chuyên dụng.
-
-### 2.2. Phân Tích Lớp Backend (Server-side)
-*   **Dịch vụ API:** Xây dựng trên nền tảng **Node.js Express (v4.21.0)** sử dụng cơ chế nạp module theo chuẩn hiện đại ES Modules (`"type": "module"`).
-*   **Cơ sở dữ liệu cục bộ (File-based JSON DB):** Hệ thống lưu trữ dữ liệu tập trung hoàn toàn trong tệp JSON (`api/db.json`). Nhằm giải quyết điểm nghẽn ghi đồng thời và xung đột ghi file của Node.js, hệ thống triển khai cơ chế **Lock & Queue** an toàn tại `api/lib/db.js`:
-    1.  **Read/Write Queue:** Mọi yêu cầu đọc/ghi dữ liệu được đưa vào hàng đợi (`readQueue` và `writeQueue`) để thực hiện tuần tự.
-    2.  **Cơ chế Ghi File Nguyên Tử (Atomic Writes):**
-        *   Tạo bản sao dự phòng tức thời: Sao chép tệp `db.json` hiện tại thành `db.json.prev` để phục hồi nếu xảy ra lỗi ghi đột ngột.
-        *   Ghi tệp tạm thời: Chuẩn bị nội dung mới và ghi vào `db.json.tmp`.
-        *   Đồng bộ vật lý xuống ổ cứng: Gọi `fs.fsyncSync` ép hệ thống ghi trực tiếp xuống thiết bị lưu trữ vật lý thay vì lưu trữ ở vùng đệm RAM (Buffer).
-        *   Hoàn tất thay thế: Đổi tên (Rename) tệp tạm thành `db.json` chính thức. Cơ chế này đảm bảo dữ liệu không bao giờ bị hỏng (corrupt) ngay cả khi mất điện đột ngột trong quá trình ghi.
-
-### 2.3. Hệ Thống Sao Lưu Siêu Việt (Tiered Backup Scheduler)
-Điểm sáng kỹ thuật cực kỳ nổi bật của dự án nằm ở mô-đun quản lý và lập lịch sao lưu tại `api/lib/backup.js`. Thay vì sao lưu đơn giản, hệ thống tích hợp các logic an toàn cấp độ cao:
-*   **Chiến lược lưu giữ đa tầng (Multi-tier Retention):** Lập lịch sao lưu tự động với thời gian lưu trữ thông minh:
-    *   *Phút (Minute):* Lưu 360 bản ghi, tự dọn dẹp sau 6 giờ.
-    *   *Giờ (Hourly):* Lưu 168 bản ghi, tự dọn dẹp sau 7 ngày.
-    *   *Ngày (Daily):* Lưu 365 bản ghi, tự dọn dẹp sau 1 năm.
-    *   *Tháng (Monthly):* Lưu 60 bản ghi, tự dọn dẹp sau 5 năm.
-    *   *Sao lưu thủ công (Manual)* & *Sao lưu an toàn hệ thống khi khôi phục (Restore-safety).*
-*   **Tránh trùng lặp dữ liệu thông qua mã hóa SHA-256:** Hệ thống liên tục kiểm tra mã Hash SHA-256 của cơ sở dữ liệu. Nếu trạng thái dữ liệu không thay đổi so với phút trước đó, bản sao lưu phút sẽ tự động bỏ qua để tránh gây phình dung lượng ổ đĩa.
-*   **Cơ chế Xác thực cấu trúc Dữ liệu (Shape Validation):** Khi thực hiện khôi phục dữ liệu hoặc nhập tệp dữ liệu tải lên, hàm `validateDbShape` sẽ xác thực tính hợp lệ của lược đồ JSON, đảm bảo không có trường dữ liệu lỗi hoặc thiếu mảng thiết yếu.
-
----
-
-## 3. Sơ Đồ Kiến Trúc Hệ Thống (System Architecture Diagram)
-
-Sơ đồ dưới đây mô tả luồng giao tiếp dữ liệu từ giao diện ứng dụng phía Client thông qua lớp API Bảo mật xuống Hệ thống lưu trữ và cơ chế sao lưu tại Server:
-
-```mermaid
-graph TD
-    subgraph Client [Môi Trường Khách - Client SPA]
-        direction TB
-        AP[Cổng thông tin quản trị - Admin Portal] -->|Ant Design Desktop| RT[React Router v6]
-        CP[Cổng thông tin khách hàng - Customer Portal] -->|Ant Design Mobile| RT
-        RT --> |Validate dữ liệu đầu vào| RFZ[React Hook Form + Zod]
-        RT --> |Bộ dịch thuật chuỗi| RX[react-i18next]
-        AP -->|In ấn biểu mẫu vật lý| RPT[react-to-print]
-        AP -->|Tạo mã quét QR động| QRC[qrcode.react]
-        RFZ -->|Yêu cầu kết nối API| AX[HTTP Axios Client]
-    end
-
-    subgraph Server [Máy Chủ Ứng Dụng - Node.js Server]
-        direction TB
-        AX -->|Chính sách CORS & Ghi nhận log Morgan| EXP[Express Application API]
-        EXP -->|Điều phối tuyến đường Route| RTES[API Routes Layer]
-        RTES -->|Xác thực Schema đầu vào| ZVAL[Zod Backend Schemas]
-        RTES -->|Truy vấn dịch vụ dữ liệu| DBL[Thư viện DB api/lib/db.js]
-        
-        DBL -->|Hàng đợi đọc/ghi tuần tự FIFO| DBL_Q[Queue Manager]
-        DBL_Q -->|Kiểm soát khóa ghi đồng thời| W_LOCK[Write Lock Status]
-        W_LOCK -->|Ghi file nguyên tử an toàn| ATOM[Atomic Writer]
-        ATOM -->|Sao chép & Ghi đồng bộ fsyncSync| DB_JSON[(Cơ sở dữ liệu tập tin db.json)]
-
-        subgraph BackupSystem [Hệ Thống Quản Lý Sao Lưu Thông Minh]
-            BSCH[Trình lập lịch Backup Scheduler api/lib/backup.js] -->|Liên tục giám sát dữ liệu| DB_JSON
-            BSCH -->|Tính toán mã Hash SHA-256 tránh trùng lặp| SHAC[Hash Comparator]
-            BSCH -->|Ghi nhật ký lịch sử| BHIST[backups/history.json]
-            BSCH -->|Phân phối vào các thư mục đa phân cấp| BDIR[Thư mục phân cấp: minute/ hourly/ daily/ monthly]
-        end
-    end
-    
-    classDef clientStyle fill:#e6f7ff,stroke:#1890ff,stroke-width:2px;
-    classDef serverStyle fill:#f6ffed,stroke:#52c41a,stroke-width:2px;
-    classDef dbStyle fill:#fff7e6,stroke:#ffa940,stroke-width:2px;
-    
-    class AP,CP,RT,RFZ,RX,RPT,QRC,AX clientStyle;
-    class EXP,RTES,ZVAL,DBL,DBL_Q,W_LOCK,ATOM,BSCH,SHAC,BHIST,BDIR serverStyle;
-    class DB_JSON dbStyle;
+```txt
+src/
+  App.jsx
+  main.jsx
+  components/
+  constants/
+  contexts/
+  hooks/
+  i18n/
+  lib/
+  pages/
+  services/
+  styles/
+  theme/
+  utils/
 ```
 
----
+Luồng route chính trong `src/App.jsx`:
 
-## 4. Đánh Giá Điểm Mạnh Hệ Thống (Detailed Strengths)
+- `/tra-cuu`: trang tra cứu công khai.
+- `/tra-cuu/:soChungTu`: kết quả tra cứu công khai.
+- `/admin/dashboard`: dashboard nhân viên.
+- `/admin/phieu`: danh sách phiếu.
+- `/admin/phieu/:id/in`: in phiếu.
+- `/admin/tao-phieu`: tạo phiếu.
+- `/admin/khach-hang`: thông tin khách hàng.
+- `/admin/nhan-vien`: quản lý nhân viên, yêu cầu admin.
+- `/admin/nha-cung-cap`: quản lý nhà cung cấp.
+- `/admin/thong-ke`: thống kê.
+- `/admin/import-export`: import/export, yêu cầu admin.
 
-Hệ thống quản lý bảo hành NTPC sở hữu nhiều điểm cộng đắt giá phản ánh tư duy thiết kế phần mềm thực tế, bền bỉ và tập trung sâu vào nghiệp vụ thực tế của cửa hàng:
+Điểm tốt frontend:
 
-1.  **Thiết kế UX/UI xuất sắc và đồng bộ:** Sự kết hợp đồng thời giữa Ant Design và Ant Design Mobile trên cùng một nền tảng tạo ra hai luồng trải nghiệm hoàn hảo cho cả thiết bị máy tính và điện thoại. Trực quan hóa quy trình bảo hành thành chuỗi trạng thái trực quan tăng độ tin cậy của khách hàng đối với thương hiệu cửa hàng.
-2.  **Khả năng đồng bộ hóa giao dịch ghi an toàn (Atomic File Transactions):** Đối với các ứng dụng nhỏ chạy trên tệp dữ liệu JSON, rủi ro lớn nhất là lỗi hỏng file (corrupt) khi ghi. Hệ thống đã giải quyết triệt để lỗi này bằng giải pháp **Atomic Write** (sử dụng tệp tạm thời `.tmp` kết hợp sao lưu khẩn cấp `.prev` và cơ chế đồng bộ vật lý ổ đĩa `fsyncSync`). Đây là một thiết kế thông minh vượt trội so với các hệ thống Express JSON DB thông thường.
-3.  **Hệ thống bảo vệ dữ liệu cực kỳ vững chắc:** Bộ sao lưu đa tầng (minute, hourly, daily, monthly) đảm bảo an toàn tuyệt đối trước rủi ro thao tác sai dữ liệu của nhân viên. Cơ chế so sánh mã băm SHA-256 giúp lưu trữ hiệu quả mà không tốn dung lượng ổ đĩa một cách lãng phí.
-4.  **Độ tin cậy của dữ liệu cao (Data Integrity):** Việc xác thực dữ liệu song song (Validation ở Frontend bằng React Hook Form + Zod, ở Backend API bằng Zod Schemas) ngăn ngừa hoàn toàn các lỗi thiếu thông tin trường hoặc nhập liệu không đúng định dạng.
-5.  **Quốc tế hóa sẵn sàng (Localization):** Dù hiện tại chỉ phân phối ngôn ngữ Tiếng Việt, việc phân tách cấu trúc chuỗi ngôn ngữ sang thư viện `react-i18next` giúp ứng dụng sẵn sàng mở rộng đa ngôn ngữ (Tiếng Anh, Tiếng Trung...) bất cứ lúc nào mà không cần chỉnh sửa sâu mã nguồn.
+- Có lazy loading route bằng `React.lazy` và `Suspense`.
+- Có `ErrorBoundary` để chặn crash toàn app.
+- Có layout riêng cho admin và khách hàng.
+- Có bảo vệ route theo đăng nhập và quyền admin.
+- Có hỗ trợ mobile qua Ant Design Mobile.
+- Có hooks riêng cho debounce, mobile, theme, shortcut, warranties.
+- Có test smoke cho UI tiếng Việt, status tag, i18n, urgency, generate chứng từ.
 
----
+### 2.2 Backend/API
 
-## 5. Phân Tích Điểm Yếu & Rủi Ro Tiềm Ẩn (Detailed Weaknesses & Risks)
+- Runtime: Node.js ESM.
+- Framework: Express 4.
+- Middleware: CORS, Morgan, JSON parser.
+- Auth: cookie JWT HS256 tự viết, password hash bằng `crypto.scryptSync`.
+- Rate limit đăng nhập: memory map theo IP + mã nhân viên.
+- Database layer: Prisma Client + fallback file JSON.
+- Static uploads: `/uploads` trỏ vào `api/uploads`.
 
-Mặc dù có nhiều thiết kế đột phá, hệ thống vẫn tồn tại các điểm yếu chí mạng về mặt hiệu năng và bảo mật khi ứng dụng bước vào giai đoạn mở rộng quy mô lớn:
+File chính:
 
-> [!CAUTION]
-> ### RỦI RO CHÍ MẠNG VỀ HIỆU NĂNG FILE JSON (JSON DB PERFORMANCE BOTTLENECK)
-> Lớp cơ sở dữ liệu `db.json` hoạt động bằng cách tải toàn bộ tệp dữ liệu vào bộ nhớ RAM (`fs.readFileSync`), phân tích thành đối tượng JavaScript (`JSON.parse`), thao tác trên RAM, sau đó chuyển hóa ngược thành chuỗi (`JSON.stringify`) rồi ghi đè lại ổ đĩa vật lý. 
-> *   **Hậu quả:** Khi số lượng phiếu bảo hành tăng lên hơn **10,000 bản ghi** (kèm hình ảnh đính kèm dạng Base64 và nhật ký lịch sử sửa chữa dài), dung lượng tệp `db.json` có thể vượt quá **10MB - 50MB**. Mỗi một truy vấn API (dù chỉ là lấy danh sách hoặc cập nhật trạng thái nhỏ) cũng sẽ ép máy chủ phải nạp/chuyển đổi và ghi file liên tục, gây nghẽn hoàn toàn CPU và treo máy chủ (I/O Bottleneck).
+```txt
+api/server.js
+api/lib/db.js
+api/lib/auth.js
+api/lib/backup.js
+api/lib/validators.js
+api/routes/auth.js
+api/routes/backups.js
+api/routes/customers.js
+api/routes/nhanVien.js
+api/routes/public.js
+api/routes/stats.js
+api/routes/suppliers.js
+api/routes/warranties.js
+```
 
-> [!WARNING]
-> ### LỖ HỔNG XÁC THỰC CẤP API & PHÂN QUYỀN (API SECURITY & AUTHORIZATION FLAW)
-> Mặc dù giao diện Admin Portal được khóa bởi một lớp Modal yêu cầu mật mã quản trị ở Frontend (`AdminPasswordModal.jsx`), lớp **API Backend hoàn toàn không có cơ chế bảo mật (như JWT, Session hoặc OAuth)**.
-> *   **Hậu quả:** Bất kỳ ai có hiểu biết cơ bản về kỹ thuật mạng hoặc sử dụng các công cụ như Postman, Curl có thể gửi trực tiếp các yêu cầu HTTP POST/PUT/DELETE tới các endpoint như `/api/warranties`, `/api/nhan-vien` để xóa sạch cơ sở dữ liệu hoặc giả mạo phiếu bảo hành của cửa hàng mà không gặp bất kỳ rào cản xác thực nào từ server.
+Route backend chính:
 
-3.  **Tốc độ truy vấn chậm do không có chỉ mục (Lack of Indexing):** Việc tìm kiếm thiết bị, khách hàng, hay lọc trạng thái bảo hành đều sử dụng hàm duyệt mảng của JavaScript (`Array.prototype.filter`, `map`, `sort`) trên RAM. Tốc độ thực thi của thuật toán này là $O(N)$ (tuyến tính), nghĩa là dữ liệu càng nhiều thì truy vấn càng chậm, không thể tối ưu hóa bằng lập chỉ mục giống như các cơ sở dữ liệu chuyên nghiệp (SQL/NoSQL).
-4.  **Phình to ổ cứng do dung lượng hình ảnh Base64:** Việc đính kèm hình ảnh thiết bị khi bảo hành dưới dạng chuỗi Base64 (`attachmentsInput`) trong dữ liệu gửi lên và lưu trực tiếp trong tệp JSON khiến cơ sở dữ liệu phình to nhanh chóng (Base64 tăng dung lượng thực tế của ảnh lên 33%), làm trầm trọng hơn vấn đề nghẽn hiệu năng I/O.
-5.  **Điểm lỗi vật lý duy nhất (Single Point of Failure):** Do toàn bộ mã nguồn, cơ sở dữ liệu JSON và dữ liệu hình ảnh tải lên được lưu trực tiếp cục bộ trên máy chủ chạy ứng dụng, nếu phần cứng máy chủ bị hỏng, chập nguồn hoặc lỗi ổ đĩa cứng, hệ thống sẽ ngừng hoạt động hoàn toàn và có rủi ro mất mát toàn bộ dữ liệu nếu các tệp sao lưu chưa kịp sao chép ra thiết bị bên ngoài.
+- `GET /api/health`: kiểm tra sống.
+- `/api/public`: API công khai cho tra cứu.
+- `/api/auth`: đăng nhập, đăng xuất, trạng thái phiên.
+- `/api/warranties`: quản lý phiếu, yêu cầu đăng nhập.
+- `/api/nhan-vien`: quản lý nhân viên, yêu cầu admin.
+- `/api/stats`: thống kê.
+- `/api/customers`: khách hàng.
+- `/api/suppliers`: nhà cung cấp.
+- `/api/admin/backups`: backup/restore, yêu cầu admin.
 
----
+Cấu hình bảo mật hiện tại trong `api/server.js`:
 
-## 6. Phương Án Khắc Phục Khẩn Cấp & Ngắn Hạn (Short-term Mitigations)
+```js
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+```
 
-Để đảm bảo hệ thống hiện tại chạy ổn định và an toàn ngay lập tức mà không cần viết lại toàn bộ mã nguồn, chúng ta có thể áp dụng các giải pháp khắc phục nhanh sau:
+Cookie auth hiện tại:
 
-### 6.1. Bảo mật khẩn cấp lớp API Backend bằng JWT hoặc Static Token
-Tích hợp một lớp Middleware bảo mật đơn giản cho Express để chặn toàn bộ các yêu cầu HTTP từ các thiết bị không được cấp phép:
-*   *Giải pháp:* Tạo mã khóa API (API Key) được lưu cấu hình trong tệp `.env` của máy chủ. Cấu hình Axios Client của Frontend tự động đính kèm Token này vào Header của mỗi request (ví dụ: `Authorization: Bearer <token>`). Các API chỉnh sửa dữ liệu quản trị trên Express sẽ từ chối truy cập (401 Unauthorized) nếu thiếu mã khóa này.
+- `httpOnly: true`
+- `secure`: bật khi production hoặc `COOKIE_SECURE=true`
+- `sameSite: 'lax'`
+- TTL mặc định: 8 giờ
 
-### 6.2. Đồng bộ hóa File Backup tự động lên Cloud (Google Drive / Dropbox / S3)
-*   *Giải pháp:* Viết một tập lệnh Node.js đơn giản (hoặc sử dụng công cụ hệ thống như `Rclone` trên Windows/Linux) chạy định kỳ mỗi 6 giờ. Công cụ này sẽ quét thư mục `api/backups/` và tự động đẩy các bản sao lưu mới nhất lên Google Drive hoặc dịch vụ đám mây AWS S3. Điều này đảm bảo an toàn dữ liệu 100% trước rủi ro hỏng hóc máy chủ vật lý vật lý.
+### 2.3 Database
 
-### 6.3. Tách biệt lưu trữ hình ảnh vật lý ra khỏi dữ liệu JSON
-*   *Giải pháp:* Sửa đổi logic lưu ảnh. Khi người dùng tải ảnh lên, thay vì lưu chuỗi Base64 dài hàng triệu ký tự vào trực tiếp phiếu bảo hành trong tệp JSON, hãy lập tức ghi chuỗi Base64 đó thành file ảnh vật lý `.jpg` / `.png` trong thư mục `api/uploads/` (như hệ thống đã làm một phần tại `saveAttachmentDataUrls`). Tệp JSON của cơ sở dữ liệu sẽ chỉ lưu trữ đường dẫn URL dạng `/uploads/warranties/image_name.jpg` để giữ dung lượng tệp `db.json` luôn nhẹ nhàng ở mức vài trăm KB.
+Prisma schema hiện tại dùng PostgreSQL:
 
-### 6.4. Định kỳ dọn dẹp và nén dữ liệu cũ (Compaction Job)
-*   *Giải pháp:* Triển khai một tính năng dọn dẹp hàng tuần. Lọc và di chuyển các phiếu bảo hành đã hoàn thành (`da_tra` hoặc `huy`) từ hơn 6 tháng trước sang một file lưu trữ lịch sử riêng (`db_archive.json`) để giữ cho tệp cơ sở dữ liệu làm việc chính (`db.json`) luôn có kích thước nhỏ gọn (< 2MB), đảm bảo tốc độ đọc ghi tức thì.
+```txt
+prisma/schema.prisma
+```
 
----
+Model chính:
 
-## 7. Phương Án Kiến Trúc Tối Ưu Hơn & Dài Hạn (Long-term Production Architecture)
+- `NhanVien`: nhân viên, mật khẩu, quyền, active.
+- `Supplier`: nhà cung cấp.
+- `SupplierLog`: nhật ký gửi/nhận nhà cung cấp.
+- `Warranty`: phiếu bảo hành.
 
-Khi lượng khách hàng tăng trưởng mạnh mẽ và cửa hàng mở rộng thêm các chi nhánh kỹ thuật, kiến trúc phân tán chuyên nghiệp dưới đây sẽ là lộ trình hoàn hảo nhất để chuyển đổi hệ thống sang quy mô cấp doanh nghiệp (Enterprise Grade):
+Đặc điểm kỹ thuật database:
 
-### 7.1. Chuyển đổi Cơ sở dữ liệu: Từ JSON File sang Relational Database (SQL)
-> [!TIP]
-> **Đề xuất: Sử dụng PostgreSQL kết hợp Prisma ORM**
-> PostgreSQL là tiêu chuẩn vàng của ngành phần mềm dành cho các ứng dụng quản lý giao dịch tài chính, kho bãi và bảo hành nhờ tính toàn vẹn dữ liệu cực cao và hỗ trợ các truy vấn phân tích phức tạp.
+- `Warranty.soChungTu` có `@unique`.
+- Nhiều trường ngày đang lưu `String` thay vì `DateTime`.
+- Các cấu trúc động như `doiTra`, `attachments`, `history`, `supplierLogs` lưu dạng `Json`.
+- `createdAt`, `updatedAt` trong `Warranty` đang là `String`, không phải `DateTime`.
+- Chưa thấy quan hệ Prisma rõ giữa `Warranty`, `NhanVien`, `Supplier`, `SupplierLog`.
 
-*   **Vì sao dùng PostgreSQL?**
-    *   **ACID Compliance:** Đảm bảo các giao dịch ghi phiếu bảo hành, trừ kho linh kiện hoặc cập nhật trạng thái hoạt động chính xác tuyệt đối, không có hiện tượng mất mát thông tin.
-    *   **Chỉ mục (Indexing):** Lập chỉ mục cho các trường tìm kiếm chính như `soChungTu`, `soSeri`, `khachHang.soDienThoai` giúp tăng tốc độ tìm kiếm từ $O(N)$ xuống $O(\log N)$ (thời gian phản hồi < 5ms ngay cả với cơ sở dữ liệu hàng triệu dòng).
-*   **Vì sao dùng Prisma ORM?**
-    *   Prisma tự động ánh xạ cấu trúc bảng thành các kiểu dữ liệu Type Safety mạnh mẽ trong Node.js, cung cấp tính năng tự động di cư cấu trúc dữ liệu (Migrations) mượt mà và an toàn.
+### 2.4 Cơ chế dữ liệu lai PostgreSQL + JSON
 
-### 7.2. Tái cấu trúc Backend: Chuyển sang Framework NestJS hoặc Clean Express
-*   **Kiến trúc NestJS (Khuyên Dùng):**
-    *   Chuyển đổi Express sang NestJS sử dụng ngôn ngữ **TypeScript**. NestJS cung cấp một bộ khung kiến trúc tiêu chuẩn (Module - Controller - Service) giúp phân tách rạch ròi giữa các lớp Logic Nghiệp vụ, Lớp Kiểm soát Điều hướng API và Lớp Giao tiếp Cơ sở dữ liệu (Repository Pattern).
-    *   Tích hợp sẵn các Module bảo mật cao cấp: **NestJS Guards + Passport JWT** giúp xác thực người dùng chặt chẽ, phân quyền nhân viên theo nhóm quyền (Role-Based Access Control - RBAC) như: Kỹ thuật viên (chỉ cập nhật lỗi/trạng thái sửa), Quản trị viên (có quyền xóa phiếu, xem thống kê doanh thu).
+`api/lib/db.js` đang đóng vai trò lớp tương thích ngược:
 
-### 7.3. Nâng cấp Lớp Quản Lý State Frontend: TanStack Query (React Query)
-*   **Hiện trạng:** Frontend đang gọi API thủ công trong các móc `useEffect` kết hợp khoảng thời gian `setInterval` 60 giây để làm mới dữ liệu. Cơ chế này tiêu tốn nhiều băng thông hệ thống và dễ gây giật lag giao diện (Layout Shift).
-*   **Giải pháp:** Tích hợp **TanStack Query (React Query v5)**:
-    *   Tự động lưu trữ bộ nhớ đệm (Caching) thông minh ở client, giúp chuyển trang Admin tức thời mà không cần chờ tải lại API.
-    *   Cơ chế tự động làm mới ngầm (Background Fetching) khi người dùng lấy lại tiêu điểm cửa sổ (window focus) hoặc định kỳ mà không gây đứng hình màn hình.
-    *   Quản lý trạng thái lỗi, trạng thái đang tải (loading) tự động ở cấp độ toàn cục.
+- `readDb()` đọc từ PostgreSQL, trả về object giống cấu trúc `db.json` cũ.
+- Nếu PostgreSQL lỗi, fallback sang `api/db.json`.
+- `writeDb(data)` ghi bằng transaction vào PostgreSQL, sau đó đồng bộ ra `api/db.json`.
+- Nếu ghi PostgreSQL lỗi, ghi vào `api/db.json` làm dự phòng.
 
-### 7.4. Kiến Trúc Triển Khai Hiện Đại (DevOps & Hosting Cloud)
-Để giải quyết bài toán "Điểm lỗi vật lý duy nhất" và tự động hóa khâu vận hành:
-*   **Container hóa với Docker:** Đóng gói mã nguồn Backend, Frontend và các dịch vụ bổ trợ thành các Docker Container độc lập giúp đảm bảo ứng dụng chạy đồng nhất trên mọi môi trường (Local, Staging, Cloud Server).
-*   **Dịch vụ Hosting đám mây:**
-    *   *Backend API:* Chạy trên dịch vụ Cloud VPS chất lượng cao (như Vultr, DigitalOcean) hoặc Serverless Container (như Render, Fly.io).
-    *   *Database:* Sử dụng các dịch vụ Cloud Database được quản trị hoàn toàn (Managed Database) như **Supabase** hoặc **Neon**. Các dịch vụ này tự động nhân bản dữ liệu (Replication), sao lưu tự động hàng ngày và cung cấp cơ chế khôi phục thảm họa chỉ với 1 cú click.
-    *   *Lưu trữ hình ảnh:* Sử dụng dịch vụ lưu trữ đối tượng đám mây như **Cloudinary** hoặc **AWS S3** giúp giảm tải 100% dung lượng lưu trữ tệp tĩnh trên máy chủ ứng dụng chính.
+Ưu điểm:
 
----
+- Dễ chuyển đổi từ dữ liệu JSON cũ sang PostgreSQL.
+- App vẫn chạy khi DB tạm lỗi hoặc môi trường dev chưa có DB.
+- Có bản sao dữ liệu local phục vụ phục hồi khẩn cấp.
 
-## 8. Bảng So Sánh Hai Mô Hình Kiến Trúc
+Nhược điểm:
 
-| Tiêu Chí So Sánh | Kiến Trúc Hiện Tại (File JSON) | Kiến Trúc Đề Xuất (Enterprise Cloud) |
-| :--- | :--- | :--- |
-| **Cơ sở dữ liệu** | Tệp tin phẳng `db.json` | Hệ quản trị CSDL PostgreSQL hoặc MongoDB |
-| **Giao dịch đồng thời** | Xử lý hàng đợi thủ công (Chậm khi tải cao) | Hỗ trợ hàng vạn kết nối đồng thời từ CSDL |
-| **Bảo mật API** | Không có xác thực (Nguy cơ bị tấn công cao) | Xác thực JWT / Phân quyền nâng cao (RBAC) |
-| **Tốc độ tìm kiếm** | Duyệt mảng tuần tự $O(N)$ (Chậm dần theo thời gian) | Tìm kiếm trên Chỉ mục $O(\log N)$ (Tốc độ cực nhanh) |
-| **Lưu trữ hình ảnh** | Lưu trữ trực tiếp trong CSDL (Gây phình CSDL) | Tách biệt lưu trữ đám mây S3 / Cloudinary |
-| **Sao lưu dự phòng** | Sao lưu cục bộ trên máy chủ (Dễ mất khi hỏng ổ) | Tự động nhân bản CSDL & Đồng bộ đám mây |
-| **Khả năng mở rộng** | Giới hạn ở 1 chi nhánh nhỏ | Dễ dàng mở rộng chuỗi nhiều chi nhánh |
+- `writeDb()` nhiều chỗ xóa toàn bộ bảng rồi `createMany` lại. Rủi ro mất dữ liệu nếu transaction/logic lỗi.
+- Dữ liệu có thể lệch giữa PostgreSQL và `db.json` khi fallback xảy ra.
+- `readDb()` có xu hướng load toàn bộ dữ liệu, không tối ưu khi số phiếu tăng lớn.
+- Quan hệ dữ liệu chưa được tận dụng đúng sức mạnh PostgreSQL.
 
----
+### 2.5 Backup/restore
 
-## 9. Hướng Dẫn Vận Hành Dự Án Hiện Tại
+Dự án có thư mục:
 
-Trong khi chờ đợi nâng cấp hệ thống lên kiến trúc Enterprise mới, để chạy dự án hiện tại trên môi trường phát triển cục bộ, bạn hãy thực hiện theo các bước sau:
+```txt
+api/backups/
+  hourly/
+  daily/
+  monthly/
+  manual/
+  restore-safety/
+  uploaded/
+```
 
-### Khởi chạy môi trường phát triển (Development Mode)
-1.  **Cài đặt thư viện phụ thuộc:**
-    ```bash
-    npm install
-    ```
-2.  **Khởi động đồng thời cả Front-end SPA và Back-end API:**
-    ```bash
-    npm start
-    ```
-    *Ghi chú: Lệnh `npm start` sử dụng thư viện `concurrently` để chạy song song dịch vụ Express API (cổng 3004) và Vite Web Server (cổng 8888).*
+Quan sát hiện tại:
 
-### Chạy các bài kiểm thử tự động (Testing)
-Để chạy toàn bộ hệ thống Unit Test và Smoke Test của dự án nhằm xác nhận tính ổn định của các dịch vụ cốt lõi:
+- Có nhiều file backup `.json` kèm `.sha256`.
+- Có backup tài sản dạng `.assets.tgz` kèm metadata và checksum.
+- Có backup trước restore trong `restore-safety`.
+
+Điểm mạnh:
+
+- Có phân tầng backup theo giờ/ngày/tháng/manual.
+- Có checksum SHA-256 để kiểm tra toàn vẹn.
+- Có safety backup trước khi restore.
+
+Điểm yếu:
+
+- Backup nằm trong repository/project directory, dễ bị commit nhầm hoặc mất nếu xóa thư mục dự án.
+- Chưa thấy tài liệu restore rõ trong README cũ vì README đang trống.
+- Chưa thấy kiểm tra định kỳ khả năng restore thực tế.
+
+### 2.6 Docker/triển khai
+
+`docker-compose.yml` gồm:
+
+- `postgres-db`: PostgreSQL 15 Alpine.
+- `backend-api`: Express API, build từ `api.Dockerfile`.
+- `frontend-web`: Nginx phục vụ React build, build từ `web.Dockerfile`.
+- `cloudflare-quick-tunnel`: public frontend qua trycloudflare.com.
+
+Điểm tốt:
+
+- Có tách service DB/API/Web.
+- Có volume bền vững cho PostgreSQL, uploads, backups.
+- Có network nội bộ riêng.
+- Có cấu hình production env cho API.
+
+Điểm cần sửa:
+
+- `DATABASE_URL=postgresql://${POSTGRES_USER}:***@postgres-db:5432/${POSTGRES_DB}?schema=public` đang dùng `***`, Prisma sẽ không kết nối nếu không thay bằng password thật hoặc biến đúng.
+- Expose `5432:5432` ra host; production nên chỉ expose nội bộ nếu không cần truy cập ngoài.
+- Dùng Cloudflare Quick Tunnel tiện thử nghiệm nhưng không ổn định bằng named tunnel cho production.
+- Chưa thấy healthcheck cho DB/API/Web trong compose.
+
+## 3. Điểm mạnh chi tiết
+
+### 3.1 Phù hợp nghiệp vụ bảo hành thực tế
+
+Dự án đã có đủ nhóm chức năng cần thiết cho cửa hàng/trung tâm bảo hành:
+
+- Lập phiếu.
+- In phiếu.
+- Theo dõi trạng thái.
+- Quản lý khách hàng.
+- Quản lý nhân viên.
+- Quản lý nhà cung cấp.
+- Gửi/nhận nhà cung cấp.
+- Thống kê.
+- Tra cứu công khai.
+- Backup/restore.
+
+Giá trị: dự án không chỉ là demo CRUD, mà đã bám sát quy trình vận hành thật.
+
+### 3.2 Frontend tổ chức tương đối rõ
+
+Dự án có tách:
+
+- `components`: UI tái sử dụng.
+- `pages`: màn hình nghiệp vụ.
+- `services`: gọi API.
+- `utils`: xử lý dữ liệu.
+- `constants`: cấu hình trạng thái, route, option.
+- `hooks`: logic React tái sử dụng.
+- `theme`: theme Ant Design.
+
+Giá trị: dễ bảo trì hơn so với để toàn bộ logic trong một file.
+
+### 3.3 Có bảo vệ quyền và phiên đăng nhập
+
+Backend có:
+
+- JWT ký HMAC.
+- Cookie `httpOnly`.
+- Kiểm tra `requireAuth`.
+- Kiểm tra `requireRole('admin')`.
+- Hash mật khẩu bằng scrypt.
+- Tự rehash mật khẩu cũ dạng plain/sha256 sang scrypt.
+- Rate limit đăng nhập cơ bản.
+
+Giá trị: tốt hơn nhiều so với lưu staff trong localStorage hoặc gửi mã nhân viên tự do.
+
+### 3.4 Có bước chuyển đổi sang PostgreSQL
+
+Dự án đã có Prisma schema và dùng PostgreSQL thay vì chỉ dùng JSON file. Đây là bước quan trọng để:
+
+- Tăng độ bền dữ liệu.
+- Tăng khả năng truy vấn.
+- Dễ backup production chuẩn hơn.
+- Dễ mở rộng người dùng và dữ liệu.
+
+### 3.5 Có backup nhiều lớp
+
+Backup theo giờ/ngày/tháng/manual và checksum là điểm mạnh lớn. Nhiều dự án nội bộ bỏ qua phần này, dẫn tới mất dữ liệu khi lỗi ổ cứng, restore nhầm hoặc sửa code sai.
+
+### 3.6 Có test tự động ban đầu
+
+Thư mục `tests/` có nhiều test nhỏ. Dù chưa đủ, đây là nền tốt để mở rộng regression test khi sửa nghiệp vụ.
+
+### 3.7 Có hướng mobile và trải nghiệm thực tế
+
+Dùng Ant Design Mobile, route khách hàng, QR code, print CSS, shortcut, notification. Đây là các chi tiết cho thấy dự án đã nghĩ tới người dùng thật, không chỉ admin desktop.
+
+## 4. Điểm yếu/rủi ro chi tiết
+
+### 4.1 README trước đó trống
+
+Tình trạng: `README.md` cũ không có nội dung.
+
+Rủi ro:
+
+- Người mới không biết chạy dự án.
+- Không biết cấu hình `.env`.
+- Không biết backup/restore.
+- Không biết kiến trúc và giới hạn kỹ thuật.
+- Khó bàn giao hoặc triển khai lại sau sự cố.
+
+Khắc phục:
+
+- README hiện tại đã bổ sung đánh giá chi tiết.
+- Nên tiếp tục thêm ảnh màn hình, sơ đồ luồng nghiệp vụ, API contract và runbook production.
+
+### 4.2 Test hiện tại chưa chạy được trong môi trường kiểm tra
+
+Lệnh đã chạy:
+
 ```bash
 npm test
 ```
-*(Hệ thống sử dụng bộ thư viện Vitest để tự động chạy các kịch bản kiểm thử giao diện tiếng Việt, logic ngày hẹn và trạng thái bảo hành).*
+
+Lỗi hiện tại:
+
+```txt
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies.
+```
+
+Nguyên nhân khả dĩ:
+
+- `node_modules` thiếu optional dependency của Rollup.
+- Dự án nằm trên `/mnt/c/...` WSL, có thể `node_modules` được cài từ Windows hoặc bị lệch platform.
+- npm optional dependency bug.
+
+Cách khắc phục đề xuất:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+npm test
+```
+
+Nếu muốn giữ lockfile:
+
+```bash
+rm -rf node_modules
+npm ci
+npm test
+```
+
+Nếu vẫn lỗi trên WSL:
+
+```bash
+npm rebuild rollup
+npm install @rollup/rollup-linux-x64-gnu -D
+npm test
+```
+
+Khuyến nghị tốt hơn:
+
+- Không dùng chung `node_modules` giữa Windows và WSL.
+- Clone/move project vào filesystem Linux, ví dụ `~/projects/baohanh3ant5`, để tăng tốc và tránh lỗi native optional dependency.
+- Thêm CI chạy `npm ci && npm test && npm run build`.
+
+### 4.3 Database schema chưa chuẩn quan hệ
+
+Vấn đề:
+
+- `Warranty.maNhanVien` là `String`, chưa khai báo relation tới `NhanVien`.
+- `SupplierLog.supplierId`, `SupplierLog.warrantyId` là `String`, chưa relation tới `Supplier`/`Warranty`.
+- Nhiều ngày lưu `String`.
+- Nhiều dữ liệu nghiệp vụ quan trọng lưu `Json`.
+
+Rủi ro:
+
+- Không có foreign key, dễ sinh dữ liệu mồ côi.
+- Khó query báo cáo nâng cao.
+- Khó index theo ngày/trạng thái.
+- Dễ sai format ngày.
+- Khó migrate khi dữ liệu tăng.
+
+Khắc phục ngắn hạn:
+
+- Thêm index cho field hay lọc:
+
+```prisma
+@@index([trangThai])
+@@index([maNhanVien])
+@@index([ngayNhan])
+@@index([ngayHenTra])
+@@index([supplierStatus])
+@@index([deletedAt])
+```
+
+- Chuẩn hóa format ngày ISO khi ghi.
+- Thêm validator backend bắt buộc format ngày hợp lệ.
+
+Khắc phục dài hạn tốt hơn:
+
+- Chuyển `ngayNhan`, `ngayHenTra`, `ngayTra`, `createdAt`, `updatedAt`, `deletedAt` sang `DateTime?`.
+- Thêm relation:
+
+```prisma
+model Warranty {
+  maNhanVien String
+  nhanVien   NhanVien @relation(fields: [maNhanVien], references: [maNV])
+}
+```
+
+- Tách `attachments`, `history`, `supplierLogs` thành bảng riêng nếu cần lọc/tìm kiếm/báo cáo.
+
+### 4.4 Lớp `writeDb()` ghi đè toàn bộ bảng
+
+Vấn đề:
+
+`writeDb(data)` có nhiều đoạn:
+
+```js
+await tx.warranty.deleteMany();
+await tx.warranty.createMany(...);
+```
+
+Rủi ro:
+
+- Dữ liệu lớn sẽ chậm.
+- Ghi đồng thời dễ mất update cuối.
+- Nếu dữ liệu input thiếu bảng/phần tử, có thể xóa nhầm nhiều dữ liệu.
+- Không tận dụng update từng bản ghi.
+
+Khắc phục ngắn hạn:
+
+- Chỉ dùng `writeDb()` cho migrate/import/restore.
+- Với CRUD hàng ngày, dùng route gọi Prisma `create/update/delete` theo từng record.
+- Thêm log audit mỗi lần `writeDb()` được gọi: user, route, số lượng record, thời điểm.
+
+Phương án tốt hơn:
+
+- Tách repository/service theo entity:
+
+```txt
+api/repositories/warrantyRepository.js
+api/repositories/staffRepository.js
+api/repositories/supplierRepository.js
+api/services/warrantyService.js
+api/services/backupService.js
+```
+
+- API tạo phiếu dùng `prisma.warranty.create`.
+- API sửa phiếu dùng `prisma.warranty.update` với optimistic locking bằng `updatedAt`.
+- API xóa dùng soft delete `deletedAt`.
+- Import/restore dùng transaction riêng, có dry-run và preview diff.
+
+### 4.5 Fallback JSON có thể gây lệch dữ liệu
+
+Vấn đề:
+
+Khi PostgreSQL lỗi, app đọc/ghi `api/db.json`. Khi DB quay lại, dữ liệu trong JSON có thể mới hơn DB hoặc ngược lại.
+
+Rủi ro:
+
+- Người dùng thấy dữ liệu khác nhau sau restart.
+- Restore nhầm nguồn.
+- Backup có thể backup nguồn không mong muốn.
+
+Khắc phục:
+
+- Ghi thêm metadata nguồn dữ liệu đang dùng:
+
+```json
+{
+  "source": "postgres" | "json-fallback",
+  "lastWriteAt": "...",
+  "lastWriteId": "..."
+}
+```
+
+- Khi fallback xảy ra, hiển thị cảnh báo rõ trong admin dashboard.
+- Khi PostgreSQL hồi phục, yêu cầu admin chọn sync từ JSON sang PostgreSQL hoặc bỏ JSON.
+
+Phương án tốt hơn:
+
+- Production không nên tự động fallback ghi JSON âm thầm.
+- Production nên fail closed: trả lỗi 503 nếu DB chết, để tránh split-brain.
+- JSON fallback chỉ bật trong dev bằng biến:
+
+```env
+ENABLE_JSON_FALLBACK=true
+```
+
+### 4.6 Security headers còn thiếu
+
+Hiện có một số header cũ/cơ bản. Thiếu:
+
+- Content-Security-Policy.
+- Referrer-Policy.
+- Permissions-Policy.
+- Strict-Transport-Security khi HTTPS.
+- Cross-Origin-Opener-Policy tùy nhu cầu.
+
+Khắc phục:
+
+- Dùng `helmet`:
+
+```bash
+npm install helmet
+```
+
+```js
+import helmet from 'helmet';
+app.use(helmet({
+  contentSecurityPolicy: false
+}));
+```
+
+Sau đó cấu hình CSP riêng cho production khi biết domain ảnh/API/tunnel.
+
+### 4.7 CORS cấu hình còn thủ công
+
+Vấn đề:
+
+`allowedOrigins` hard-code localhost và IP LAN. Production dựa vào `CORS_ORIGIN`.
+
+Rủi ro:
+
+- Quên cập nhật domain mới.
+- CORS lỗi khi đổi tunnel/domain.
+- Dễ mở rộng sai thành `*` với credentials.
+
+Khắc phục:
+
+- Bắt buộc `CORS_ORIGIN` trong production.
+- Log origin bị từ chối.
+- Không dùng wildcard khi `credentials: true`.
+
+### 4.8 Rate limit đăng nhập dùng memory map
+
+Vấn đề:
+
+`loginAttempts` nằm trong RAM process.
+
+Rủi ro:
+
+- Restart app mất rate limit.
+- Scale nhiều instance không chia sẻ trạng thái.
+- Memory có thể tăng nếu nhiều IP/mã nhân viên lạ.
+
+Khắc phục ngắn hạn:
+
+- Dọn map định kỳ.
+- Giới hạn kích thước map.
+
+Phương án tốt hơn:
+
+- Dùng Redis hoặc table `LoginAttempt` trong PostgreSQL.
+- Dùng package `express-rate-limit` với store phù hợp.
+
+### 4.9 Upload/static file cần kiểm soát chặt hơn
+
+Quan sát:
+
+- `express.static(uploadsDir)` public `/uploads`.
+- Chưa đánh giá sâu route upload vì chưa đọc toàn bộ route.
+
+Rủi ro cần kiểm tra:
+
+- Upload file quá lớn.
+- Upload file không phải ảnh.
+- File name nguy hiểm/path traversal.
+- Public URL lộ ảnh nhạy cảm.
+- Không có virus scan nếu dùng production public.
+
+Khắc phục:
+
+- Dùng whitelist MIME thật bằng đọc magic bytes.
+- Giới hạn kích thước file.
+- Rename file bằng UUID.
+- Không tin `originalname`.
+- Lưu metadata file trong DB.
+- Nếu ảnh bảo hành riêng tư, bảo vệ `/uploads` bằng auth thay vì static public.
+
+### 4.10 Docker Compose còn thiếu healthcheck và secret handling chuẩn
+
+Vấn đề:
+
+- `DATABASE_URL` trong compose đang có `***`.
+- DB port mở ra host.
+- Không có healthcheck.
+- Không có named Cloudflare tunnel.
+
+Khắc phục:
+
+```yaml
+healthcheck:
+  test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+  interval: 10s
+  timeout: 5s
+  retries: 5
+```
+
+Sửa `DATABASE_URL`:
+
+```yaml
+- DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:5432/${POSTGRES_DB}?schema=public
+```
+
+Production nên bỏ:
+
+```yaml
+ports:
+  - "5432:5432"
+```
+
+nếu không cần truy cập DB từ ngoài Docker network.
+
+### 4.11 `.env` có trong project directory
+
+Quan sát project có file `.env`.
+
+Rủi ro:
+
+- Dễ commit secret.
+- Dễ copy nhầm lên nơi công khai.
+
+Khắc phục:
+
+- Đảm bảo `.env` nằm trong `.gitignore`.
+- Tạo `.env.example` không chứa secret thật.
+- Rotate secret nếu từng commit `.env`.
+
+### 4.12 Dữ liệu runtime nằm trong repository
+
+Các thư mục runtime hiện nằm trong dự án:
+
+```txt
+pgdata/
+api/backups/
+api/uploads/
+api/db.json
+```
+
+Rủi ro:
+
+- Git status nặng.
+- Backup/source/runtime lẫn nhau.
+- Xóa repo có thể xóa dữ liệu.
+- Copy dự án chậm.
+
+Khắc phục:
+
+- Đưa data ra ngoài repo bằng `.env` path hoặc Docker volume named.
+- Thêm `.gitignore` rõ:
+
+```gitignore
+.env
+pgdata/
+api/backups/
+api/uploads/
+api/db.json
+*.log
+node_modules/
+dist/
+```
+
+Phương án tốt hơn:
+
+- Production dùng volume riêng:
+
+```yaml
+volumes:
+  postgres_data:
+  api_uploads:
+  api_backups:
+```
+
+hoặc mount tới `/var/lib/ntpc/...`.
+
+## 5. Phương án khắc phục chi tiết theo mức ưu tiên
+
+### P0 - Việc cần làm ngay trước khi chạy production
+
+1. Sửa Docker `DATABASE_URL`.
+
+```yaml
+- DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:5432/${POSTGRES_DB}?schema=public
+```
+
+2. Bắt buộc secret mạnh.
+
+```env
+AUTH_SECRET=chuoi-ngau-nhien-it-nhat-32-ky-tu
+POSTGRES_PASSWORD=mat-khau-manh
+COOKIE_SECURE=true
+NODE_ENV=production
+```
+
+3. Kiểm tra `.gitignore` có chặn dữ liệu nhạy cảm/runtime.
+
+4. Sửa môi trường test:
+
+```bash
+rm -rf node_modules
+npm ci
+npm test
+npm run build
+```
+
+5. Thêm `helmet` và header bảo mật cơ bản.
+
+6. Không expose PostgreSQL port ra Internet.
+
+7. Test restore backup thật trên môi trường staging.
+
+### P1 - Ổn định dữ liệu và giảm rủi ro mất dữ liệu
+
+1. Giảm dùng `writeDb()` cho CRUD thường ngày.
+2. Chuyển các route quan trọng sang Prisma create/update/delete từng record.
+3. Thêm index Prisma cho trạng thái, ngày, nhân viên, nhà cung cấp.
+4. Thêm audit log cho hành động tạo/sửa/xóa/restore.
+5. Thêm transaction rõ cho nghiệp vụ phức tạp.
+6. Thêm cảnh báo khi app đang chạy bằng JSON fallback.
+7. Production tắt fallback JSON tự động hoặc chỉ cho read-only fallback.
+
+### P2 - Chuẩn hóa schema
+
+1. Chuyển ngày từ `String` sang `DateTime?`.
+2. Thêm relation và foreign key.
+3. Tách bảng:
+
+```txt
+WarrantyAttachment
+WarrantyHistory
+WarrantySupplierLog
+Customer
+```
+
+4. Thêm enum Prisma cho trạng thái:
+
+```prisma
+enum WarrantyStatus {
+  cho_xu_ly
+  dang_xu_ly
+  cho_lien_he
+  da_tra
+  huy
+}
+```
+
+5. Thêm migration có script backfill dữ liệu cũ.
+
+### P3 - Nâng chất lượng code và vận hành
+
+1. Thêm ESLint script:
+
+```json
+"lint": "eslint ."
+```
+
+2. Thêm format script:
+
+```json
+"format": "prettier --write ."
+```
+
+3. Thêm type check nếu chuyển dần sang TypeScript.
+4. Thêm CI:
+
+```yaml
+npm ci
+npm run lint
+npm test
+npm run build
+```
+
+5. Thêm API integration tests cho auth/warranties/backups.
+6. Thêm logging structured bằng `pino` hoặc `winston`.
+7. Thêm monitoring uptime và disk space backup.
+
+## 6. Phương án tốt hơn: kiến trúc mục tiêu đề xuất
+
+### 6.1 Kiến trúc mục tiêu
+
+```txt
+Browser
+  |
+  v
+Nginx / Reverse Proxy / Cloudflare Named Tunnel
+  |
+  +--> React static assets
+  |
+  +--> Express API
+          |
+          +--> PostgreSQL
+          +--> File storage / object storage
+          +--> Backup service
+          +--> Redis optional for rate limit/session/cache
+```
+
+### 6.2 Backend mục tiêu
+
+Tách lớp:
+
+```txt
+api/
+  server.js
+  app.js
+  config/
+    env.js
+    cors.js
+  middleware/
+    auth.js
+    errorHandler.js
+    validate.js
+    rateLimit.js
+  modules/
+    auth/
+    warranties/
+    customers/
+    suppliers/
+    staff/
+    backups/
+  repositories/
+  services/
+  utils/
+```
+
+Mỗi module có:
+
+```txt
+routes.js
+controller.js
+service.js
+repository.js
+schema.js
+test.js
+```
+
+Lợi ích:
+
+- Dễ test.
+- Dễ sửa nghiệp vụ.
+- Giảm file route quá lớn.
+- Dễ thay Prisma/query.
+- Dễ kiểm soát quyền từng endpoint.
+
+### 6.3 Database mục tiêu
+
+Nên có bảng rõ:
+
+```txt
+NhanVien
+Customer
+Warranty
+WarrantyAttachment
+WarrantyHistory
+Supplier
+SupplierLog
+BackupJob
+AuditLog
+LoginAttempt
+```
+
+Quan hệ chính:
+
+- `Warranty.customerId -> Customer.id`
+- `Warranty.maNhanVien -> NhanVien.maNV`
+- `SupplierLog.warrantyId -> Warranty.id`
+- `SupplierLog.supplierId -> Supplier.id`
+- `WarrantyAttachment.warrantyId -> Warranty.id`
+- `WarrantyHistory.warrantyId -> Warranty.id`
+
+Lợi ích:
+
+- Truy vấn nhanh.
+- Báo cáo chính xác.
+- Không có dữ liệu mồ côi.
+- Dễ phân quyền và audit.
+
+### 6.4 Auth mục tiêu
+
+Hiện tại cookie JWT là ổn cho app nhỏ. Nếu nâng cấp:
+
+- Dùng access session server-side trong DB/Redis để revoke phiên.
+- Thêm CSRF token cho request thay đổi dữ liệu nếu dùng cookie auth.
+- Thêm password policy.
+- Thêm lock tài khoản sau nhiều lần sai.
+- Thêm audit login/logout/change password.
+- Thêm optional 2FA cho admin.
+
+### 6.5 Backup mục tiêu
+
+Backup nên gồm:
+
+1. PostgreSQL dump:
+
+```bash
+pg_dump --format=custom --file=backup.dump "$DATABASE_URL"
+```
+
+2. Uploads archive:
+
+```bash
+tar -czf uploads.tgz api/uploads
+```
+
+3. Metadata:
+
+```json
+{
+  "createdAt": "...",
+  "dbSha256": "...",
+  "uploadsSha256": "...",
+  "appVersion": "3.0.0"
+}
+```
+
+4. Restore drill định kỳ:
+
+- Restore vào DB staging.
+- Chạy smoke test.
+- Kiểm tra số phiếu, số nhân viên, số file.
+
+### 6.6 Deploy mục tiêu
+
+Thay Quick Tunnel tạm bằng:
+
+- Cloudflare Named Tunnel hoặc reverse proxy Nginx/Caddy có TLS ổn định.
+- Domain cố định.
+- Healthcheck service.
+- Auto restart có kiểm tra readiness.
+- Backup offsite: Google Drive/S3/R2/ổ NAS.
+
+## 7. Hướng dẫn chạy dự án hiện tại
+
+### 7.1 Cài dependency
+
+```bash
+npm install
+```
+
+Nếu lỗi Rollup optional dependency:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+Hoặc:
+
+```bash
+rm -rf node_modules
+npm ci
+```
+
+### 7.2 Chạy frontend + API local
+
+```bash
+npm run start
+```
+
+Lệnh này chạy song song:
+
+```bash
+npm run api
+npm run dev
+```
+
+### 7.3 Chạy API riêng
+
+```bash
+npm run api
+```
+
+API mặc định:
+
+```txt
+http://localhost:3004
+```
+
+Health check:
+
+```bash
+curl http://localhost:3004/api/health
+```
+
+### 7.4 Chạy frontend riêng
+
+```bash
+npm run dev
+```
+
+### 7.5 Build frontend
+
+```bash
+npm run build
+```
+
+### 7.6 Test
+
+```bash
+npm test
+```
+
+Lưu ý hiện tại: môi trường kiểm tra đang lỗi thiếu `@rollup/rollup-linux-x64-gnu`; cần cài lại dependency như mục 7.1.
+
+### 7.7 Chạy Docker Compose
+
+Tạo `.env` phù hợp trước:
+
+```env
+POSTGRES_USER=ntpc
+POSTGRES_PASSWORD=mat-khau-manh
+POSTGRES_DB=ntpc_warranty
+AUTH_SECRET=chuoi-ngau-nhien-it-nhat-32-ky-tu
+INITIAL_STAFF_PASSWORD=doi-mat-khau-ngay
+SESSION_TTL_SECONDS=28800
+COOKIE_SECURE=true
+CORS_ORIGIN=https://domain-cua-ban.example
+```
+
+Sửa `docker-compose.yml` để `DATABASE_URL` dùng `${POSTGRES_PASSWORD}` thay vì placeholder mật khẩu.
+
+Chạy:
+
+```bash
+docker compose up -d --build
+```
+
+Xem log:
+
+```bash
+docker compose logs -f backend-api
+```
+
+## 8. Checklist chất lượng trước bàn giao
+
+### Bảo mật
+
+- [ ] `.env` không bị commit.
+- [ ] `AUTH_SECRET` >= 32 ký tự, ngẫu nhiên.
+- [ ] `POSTGRES_PASSWORD` mạnh.
+- [ ] `COOKIE_SECURE=true` khi HTTPS.
+- [ ] CORS chỉ cho domain thật.
+- [ ] Helmet/CSP đã cấu hình.
+- [ ] Upload giới hạn type/size.
+- [ ] Admin route kiểm tra quyền đầy đủ.
+
+### Dữ liệu
+
+- [ ] PostgreSQL kết nối thật trong production.
+- [ ] Không dùng `***` trong `DATABASE_URL`.
+- [ ] Có backup DB + uploads.
+- [ ] Restore đã test ít nhất một lần.
+- [ ] Có cảnh báo khi fallback JSON.
+- [ ] Có index cho field hay lọc.
+
+### Code
+
+- [ ] `npm test` pass.
+- [ ] `npm run build` pass.
+- [ ] Có lint/format.
+- [ ] Route chính có integration test.
+- [ ] Không còn log/debug nhạy cảm.
+
+### Vận hành
+
+- [ ] Docker healthcheck.
+- [ ] Không expose DB nếu không cần.
+- [ ] Logs có rotation.
+- [ ] Backup offsite.
+- [ ] Có tài liệu restore.
+- [ ] Có domain/tunnel ổn định.
+
+## 9. Kết luận đánh giá
+
+Dự án có nền nghiệp vụ tốt và đã đi xa hơn mức prototype: có React UI, Express API, auth, phân quyền, PostgreSQL, backup, Docker, tra cứu công khai và test ban đầu. Điểm mạnh nhất là hệ thống đã bám sát quy trình bảo hành thực tế và có ý thức bảo vệ dữ liệu bằng backup/checksum.
+
+Rủi ro lớn nhất hiện tại nằm ở lớp dữ liệu lai PostgreSQL + JSON, cách `writeDb()` ghi đè toàn bộ bảng, schema chưa chuẩn quan hệ, Docker secret chưa đúng, test chưa chạy được do dependency native Rollup, và README trước đây thiếu tài liệu vận hành.
+
+Hướng tốt nhất: giữ giao diện/luồng nghiệp vụ hiện tại, nhưng nâng cấp dần backend theo module, chuyển CRUD sang Prisma trực tiếp, chuẩn hóa schema quan hệ, tắt fallback JSON âm thầm trong production, bổ sung healthcheck/CI/security headers/restore drill. Sau các bước này, dự án sẽ bền hơn, dễ mở rộng hơn và an toàn hơn khi dùng thật lâu dài.

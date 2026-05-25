@@ -4,6 +4,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import dayjs from 'dayjs';
 import { fileURLToPath } from 'url';
 import pkg from '@prisma/client';
 const { PrismaClient } = pkg;
@@ -23,10 +24,30 @@ function normalizeNhanVienRows(rows = []) {
   });
 }
 
+function normalizeSupplierLogs(logs = []) {
+  return logs.map((log) => {
+    if (log.at) return log;
+    let atVal = '';
+    const dateVal = log.createdAt || log.at;
+    if (dateVal) {
+      try {
+        const d = dayjs(dateVal);
+        if (d.isValid()) {
+          atVal = d.format('YYYY-MM-DDTHH:mm:ss');
+        }
+      } catch {
+        atVal = String(dateVal);
+      }
+    }
+    return { ...log, at: atVal };
+  });
+}
+
 function normalizeDbShape(data = {}) {
   return {
     ...data,
     nhanVien: normalizeNhanVienRows(data.nhanVien || []),
+    supplierLogs: normalizeSupplierLogs(data.supplierLogs || []),
   };
 }
 
@@ -55,7 +76,7 @@ async function readDb() {
       warranties,
       nhanVien: normalizeNhanVienRows(nhanVien),
       suppliers,
-      supplierLogs,
+      supplierLogs: normalizeSupplierLogs(supplierLogs),
       adminConfig,
       customers: [] // Khách hàng sẽ được sinh động trong code nghiệp vụ
     };

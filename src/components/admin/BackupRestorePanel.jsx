@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Alert, App, Button, Card, Col, Descriptions, Input, Row, Space, Table, Tag, Tooltip, Upload } from 'antd';
-import { CloudDownloadOutlined, DeleteOutlined, EyeOutlined, PushpinOutlined, ReloadOutlined, RollbackOutlined, SafetyOutlined, UploadOutlined } from '@ant-design/icons';
+import { CloudDownloadOutlined, DeleteOutlined, EyeOutlined, FileImageOutlined, PushpinOutlined, ReloadOutlined, RollbackOutlined, SafetyOutlined, UploadOutlined } from '@ant-design/icons';
 import { backupService } from '../../services/backupService';
 import { getStatusBadgeColor } from '../../constants/badgeConfig';
 
-const fmtSize = n => n ? `${(n / 1024).toFixed(1)} KB` : '0 KB';
+const fmtSize = n => {
+  if (!n) return '0 KB';
+  if (n >= 1024 * 1024) return `${(n / 1024 / 1024).toFixed(1)} MB`;
+  return `${(n / 1024).toFixed(1)} KB`;
+};
 const fmtTime = s => s ? new Date(s).toLocaleString('vi-VN') : '-';
 const warrantyStatusMap = {
   da_nhan: { label: 'Đã nhận' },
@@ -101,6 +105,29 @@ export default function BackupRestorePanel() {
     return false;
   };
 
+  const uploadAssets = async (file) => {
+    let value = '';
+    modal.confirm({
+      title: 'Upload gói ảnh backup?',
+      content: <Space direction="vertical" style={{ width: '100%' }}>
+        <Alert type="warning" showIcon message="Gói ảnh chỉ khôi phục file trong /uploads/warranties, không thay thế dữ liệu phiếu." />
+        <div>File: <b>{file.name}</b></div>
+        <div>Nhập <b>RESTORE</b> để xác nhận:</div>
+        <Input onChange={e => { value = e.target.value; }} placeholder="RESTORE" />
+      </Space>,
+      okText: 'Upload gói ảnh',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      onOk: async () => {
+        if (value !== 'RESTORE') throw new Error('Cần nhập RESTORE');
+        await backupService.uploadAssets(file.name, file);
+        message.success('Đã khôi phục gói ảnh');
+        await loadAll();
+      },
+    });
+    return false;
+  };
+
   const deleteBackup = async (relativePath) => {
     modal.confirm({
       title: 'Xóa backup?',
@@ -129,6 +156,7 @@ export default function BackupRestorePanel() {
             <Descriptions.Item label="Khách hàng">{data.summary.customers}</Descriptions.Item>
             <Descriptions.Item label="Nhà cung cấp">{data.summary.suppliers}</Descriptions.Item>
             <Descriptions.Item label="Nhân viên">{data.summary.nhanVien}</Descriptions.Item>
+            <Descriptions.Item label="Gói ảnh">{data.summary.assets?.exists ? `${data.summary.assets.count ?? '-'} file - ${fmtSize(data.summary.assets.size)}` : 'Không có'}</Descriptions.Item>
           </Descriptions>
           <b>Phiếu bảo hành mới nhất</b>
           <Table size="small" rowKey={(r) => r.id || r.soChungTu || `${r.khachHang || ''}-${r.soSeri || ''}`} dataSource={data.preview.warranties} pagination={false} scroll={{ x: 800, y: 220 }} columns={[
@@ -193,10 +221,12 @@ export default function BackupRestorePanel() {
     { title: 'File', dataIndex: 'filename', ellipsis: true, render: (_, r) => <Space direction="vertical" size={0}><span>{r.filename}</span>{r.pinned && <Tag color="gold">Giữ lại</Tag>}{r.note && <small>{r.note}</small>}</Space> },
     { title: 'Thời gian', dataIndex: 'createdAt', width: 170, render: fmtTime },
     { title: 'Dung lượng', dataIndex: 'size', width: 110, render: fmtSize },
+    { title: 'Ảnh', width: 130, render: (_, r) => r.assets?.exists ? <Tag color="cyan">{r.assets.count ?? '?'} file · {fmtSize(r.assets.size)}</Tag> : <Tag>Không</Tag> },
     { title: 'SHA256', dataIndex: 'sha256', ellipsis: true, render: v => v ? <span title={v}>{v.slice(0, 12)}...</span> : '-' },
-    { title: 'Hành động', width: 190, render: (_, r) => <Space size={6}>
+    { title: 'Hành động', width: 230, render: (_, r) => <Space size={6}>
       <Tooltip title="Xem backup"><Button size="small" shape="circle" icon={<EyeOutlined />} onClick={() => viewBackup(r.relativePath)} /></Tooltip>
       <Tooltip title="Tải backup"><Button size="small" shape="circle" href={backupService.downloadUrl(r.relativePath)} icon={<CloudDownloadOutlined />} /></Tooltip>
+      {r.assets?.exists && <Tooltip title="Tải gói ảnh"><Button size="small" shape="circle" href={backupService.downloadAssetsUrl(r.relativePath)} icon={<FileImageOutlined />} /></Tooltip>}
       <Tooltip title="Giữ lại / Ghi chú"><Button size="small" shape="circle" icon={<PushpinOutlined />} onClick={() => editMetadata(r)} /></Tooltip>
       <Tooltip title="Khôi phục backup"><Button size="small" shape="circle" danger icon={<RollbackOutlined />} onClick={() => confirmRestore(r.relativePath)} /></Tooltip>
       {r.type !== 'restore-safety' && !r.pinned && <Tooltip title="Xóa backup"><Button size="small" shape="circle" danger icon={<DeleteOutlined />} onClick={() => deleteBackup(r.relativePath)} /></Tooltip>}
@@ -214,7 +244,7 @@ export default function BackupRestorePanel() {
 
   return <Card title={<Space><SafetyOutlined /> Sao lưu / Khôi phục dữ liệu</Space>} style={{ marginTop: 16 }}>
     <Space direction="vertical" style={{ width: '100%' }} size="middle">
-      <Alert type="info" showIcon message="Backup tự động: minute 6 giờ/360 file, hourly 7 ngày/168 file, daily 12 tháng/365 file, monthly 5 năm/60 file. Backup được giữ lại sẽ không bị dọn tự động." />
+      <Alert type="info" showIcon message="Backup tự động lưu JSON nhẹ và gói ảnh .assets.tgz riêng. Khi restore backup trên máy khác, restore JSON trước rồi upload gói ảnh nếu cần." />
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
           <Descriptions bordered size="small" column={1} title="Trạng thái">
@@ -232,11 +262,14 @@ export default function BackupRestorePanel() {
             <Upload accept=".json,application/json" showUploadList={false} beforeUpload={uploadRestore}>
               <Button danger icon={<UploadOutlined />}>Upload backup để restore</Button>
             </Upload>
+            <Upload accept=".tgz,.assets.tgz,application/gzip,application/x-gzip" showUploadList={false} beforeUpload={uploadAssets}>
+              <Button danger icon={<FileImageOutlined />}>Upload gói ảnh</Button>
+            </Upload>
           </Space>
         </Col>
       </Row>
 
-      <Table title={() => 'Danh sách backup'} rowKey="relativePath" loading={loading} dataSource={backups} columns={backupColumns} size="small" scroll={{ x: 980, y: 420 }} pagination={{ pageSize: 20, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], showTotal: total => `Tổng ${total} backup` }} />
+      <Table title={() => 'Danh sách backup'} rowKey="relativePath" loading={loading} dataSource={backups} columns={backupColumns} size="small" scroll={{ x: 1120, y: 420 }} pagination={{ pageSize: 20, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], showTotal: total => `Tổng ${total} backup` }} />
       <Table title={() => 'Lịch sử backup/restore'} rowKey="id" loading={loading} dataSource={history} columns={historyColumns} size="small" scroll={{ x: 900 }} pagination={{ pageSize: 10 }} />
     </Space>
   </Card>;

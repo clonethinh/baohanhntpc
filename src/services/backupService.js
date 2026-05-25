@@ -7,8 +7,13 @@ export const backupService = {
   create: () => api.post('/admin/backups', { type: 'manual' }),
   restore: (path) => api.post('/admin/backups/restore', { path, confirm: 'RESTORE' }),
   uploadRestore: (filename, data) => api.post('/admin/backups/upload-restore', { filename, data, confirm: 'RESTORE' }),
+  uploadAssets: (filename, file) => api.post(`/admin/backups/upload-assets?filename=${encodeURIComponent(filename)}&confirm=RESTORE`, file, {
+    headers: { 'Content-Type': 'application/octet-stream' },
+    timeout: 120000,
+  }),
   delete: (path) => api.delete('/admin/backups', { data: { path } }),
   view: (path, limit = 50) => api.get(`/admin/backups/view?path=${encodeURIComponent(path)}&limit=${limit}`),
   metadata: (path, pinned, note) => api.patch('/admin/backups/metadata', { path, pinned, note }),
   downloadUrl: (path) => `/api/admin/backups/download?path=${encodeURIComponent(path)}`,
+  downloadAssetsUrl: (path) => `/api/admin/backups/download-assets?path=${encodeURIComponent(path)}`,
 };
