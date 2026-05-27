@@ -217,6 +217,7 @@ router.get('/', async (req, res) => {
       const s = search.toLowerCase();
       warranties = warranties.filter(w =>
         (w.khachHang || '').toLowerCase().includes(s) ||
+        (w.soDienThoai || '').toLowerCase().includes(s) ||
         (w.tenHang || '').toLowerCase().includes(s) ||
         (w.soSeri || '').toLowerCase().includes(s) ||
         (w.soChungTu || '').toLowerCase().includes(s)

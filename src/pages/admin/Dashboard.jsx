@@ -346,7 +346,7 @@ export default function Dashboard() {
 
         <Col xs={24} lg={8}>
           <Card title={t('adminDashboard.latestHistory')} extra={<Button size="small" onClick={() => navigate('/admin/phieu')}>{t('adminDashboard.openTicket')}</Button>}>
-            <div style={{ maxHeight: '480px', overflowY: 'auto', paddingTop: '12px', paddingRight: 8, paddingLeft: 4 }}>
+            <div className="dashboard-history-scroll" style={{ maxHeight: '480px', overflowY: 'auto', paddingTop: '12px', paddingRight: 8, paddingLeft: 4 }}>
               <Timeline
                 items={insights.latestEvents.map((ev, idx) => {
                   const detail = normalizeHistoryNote(ev.detail || ev.note || '');

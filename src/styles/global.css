@@ -2478,4 +2478,55 @@ html[data-theme='dark'] .ntpc-mobile-actions {
   overflow: hidden !important;
 }
 
+/* ==========================================================================
+   GLOBAL PREMIUM SCROLLBAR SYSTEM (Adapts beautifully to Light & Dark themes)
+   ========================================================================== */
+
+/* Target the scrollbar for all scrollable elements in the entire application */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Light Mode: Elegant branded slim green scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background: #cbd6c5;
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aab5a4;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Dark Mode: Translucent glowing white scrollbar thumb */
+html[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 2px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
+html[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border: 2px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
+/* Cross-browser fallback support (Firefox) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd6c5 transparent;
+}
+
+html[data-theme='dark'] * {
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent !important;
+}
+
 
