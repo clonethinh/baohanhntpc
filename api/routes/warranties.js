@@ -201,7 +201,6 @@ function statusPriority(status) {
 
 router.use((req, res, next) => {
   const isAdminOnly =
-    req.method === 'DELETE' ||
     (req.method === 'POST' && req.path === '/import') ||
     (req.method === 'GET' && (req.path === '/export' || req.path === '/template'));
   if (isAdminOnly) return requireAdmin(req, res, next);
@@ -374,7 +373,7 @@ router.get('/export', async (req, res) => {
       w.baoHanh,
       w.ghiChu,
       w.ngayMua ? dayjs(w.ngayMua).format('DD/MM/YYYY') : '',
-      w.ngayHenTra ? dayjs(w.ngayHenTra).format('DD/MM/YYYY') : '',
+      (w.ngayHenTra && w.ngayHenTra !== 'none') ? dayjs(w.ngayHenTra).format('DD/MM/YYYY') : '',
       w.ngayTra ? dayjs(w.ngayTra).format('DD/MM/YYYY') : '',
       w.doiTra ? (w.doiTra.type === 'doi_hang' ? 'Đổi hàng' : 'Trả hàng') : '',
       w.trangThai,
@@ -443,6 +442,17 @@ router.post('/', async (req, res) => {
     const employeeExists = await prisma.nhanVien.findUnique({ where: { maNV: maNhanVien } });
     const finalMaNhanVien = employeeExists ? maNhanVien : 'admin';
 
+    const initialHistory = [{ at: now, by: finalMaNhanVien, action: 'create', changes: {}, note: '' }];
+    if (body.ngayHenTra === 'none' || !body.ngayHenTra) {
+      initialHistory.push({
+        at: now,
+        by: finalMaNhanVien,
+        action: 'update',
+        changes: { ngayHenTra: { from: '', to: 'none' } },
+        note: ''
+      });
+    }
+
     const newWarranty = {
       id: uuidv4(),
       stt: maxStt + 1,
@@ -473,7 +483,7 @@ router.post('/', async (req, res) => {
       supplierIdCurrent: null,
       sentSupplierAt: '',
       expectedReturnSupplierAt: '',
-      history: [{ at: now, by: finalMaNhanVien, action: 'create', changes: {}, note: '' }],
+      history: initialHistory,
       createdAt: now,
       updatedAt: now,
       deletedAt: '',
@@ -484,7 +494,8 @@ router.post('/', async (req, res) => {
     await writeAuditLog(req, { action: 'create', entity: 'warranty', entityId: created.id, summary: `Tạo phiếu ${created.soChungTu}`, after: created });
 
     const allWarranties = await prisma.warranty.findMany();
-    const customers = buildCustomerMasterFromWarranties(allWarranties, []);
+    const currentCustomers = await getCollection('customers');
+    const customers = buildCustomerMasterFromWarranties(allWarranties, currentCustomers);
     await setCollection('customers', customers);
     syncLocalBackup();
 
@@ -551,7 +562,8 @@ router.put('/:id', async (req, res) => {
     await writeAuditLog(req, { action: 'update', entity: 'warranty', entityId: updated.id, summary: `Cập nhật phiếu ${updated.soChungTu}`, before: old, after: updated });
 
     const allWarranties = await prisma.warranty.findMany();
-    const customers = buildCustomerMasterFromWarranties(allWarranties, []);
+    const currentCustomers = await getCollection('customers');
+    const customers = buildCustomerMasterFromWarranties(allWarranties, currentCustomers);
     await setCollection('customers', customers);
     syncLocalBackup();
 
@@ -916,10 +928,25 @@ router.post('/:id/attachments', async (req, res) => {
       return res.status(400).json({ success: false, error: { code: 'INVALID_DATA', message: 'Không có ảnh hợp lệ để tải lên.' } });
     }
 
+    // Lọc bỏ những ảnh đã tồn tại ở bản ghi cũ (trùng tên và kích thước) để tránh bị lặp khi có request retry gửi lại
+    const uniqueUploaded = uploaded.filter(newFile => {
+      const isDuplicate = current.some(oldFile => oldFile.name === newFile.name && oldFile.size === newFile.size);
+      if (isDuplicate) {
+        deleteAttachmentFile(newFile); // Xóa file vật lý vừa tạo để tránh rác đĩa
+        return false;
+      }
+      return true;
+    });
+
+    // Nếu tất cả ảnh đều đã tồn tại (do trình duyệt retry lại yêu cầu cũ)
+    if (!uniqueUploaded.length) {
+      return res.json({ success: true, data: withDefaultDueDate(old) });
+    }
+
     const updated = await prisma.warranty.update({
       where: { id: old.id },
       data: {
-        attachments: [...current, ...uploaded],
+        attachments: [...current, ...uniqueUploaded],
         updatedAt: now,
         history: [
           ...(Array.isArray(old.history) ? old.history : []),
@@ -927,8 +954,8 @@ router.post('/:id/attachments', async (req, res) => {
             at: now,
             by,
             action: 'update',
-            changes: { attachments: { from: current.length, to: current.length + uploaded.length } },
-            note: `Thêm ${uploaded.length} ảnh đính kèm`
+            changes: { attachments: { from: current.length, to: current.length + uniqueUploaded.length } },
+            note: `Thêm ${uniqueUploaded.length} ảnh đính kèm`
           }
         ]
       }
@@ -1386,7 +1413,7 @@ router.post('/:id/supplier-return', async (req, res) => {
   }
 });
 
-router.delete('/', async (req, res) => {
+router.delete('/', requireAdmin, async (req, res) => {
   try {
     const now = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss');
     const result = await prisma.warranty.updateMany({
@@ -1403,7 +1430,7 @@ router.delete('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAdmin, async (req, res) => {
   try {
     const old = await prisma.warranty.findFirst({ where: { id: req.params.id, deletedAt: '' } });
     if (!old) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy phiếu.' } });
@@ -1512,7 +1539,8 @@ router.post('/import', async (req, res) => {
     });
 
     const allWarranties = await prisma.warranty.findMany();
-    const nextCustomers = buildCustomerMasterFromWarranties(allWarranties, []);
+    const currentCustomers = await getCollection('customers');
+    const nextCustomers = buildCustomerMasterFromWarranties(allWarranties, currentCustomers);
     await setCollection('customers', nextCustomers);
     syncLocalBackup();
 

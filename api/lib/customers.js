@@ -60,6 +60,7 @@ function getCustomerRows(warranties = [], customers = []) {
     const stat = statsMap.get(c.key);
     rows.push({
       key: c.key,
+      maKhachHang: c.maKhachHang || '',
       khachHang: c.khachHang || '',
       soDienThoai: c.soDienThoai || '',
       diaChi: c.diaChi || '',
@@ -75,9 +76,26 @@ function getCustomerRows(warranties = [], customers = []) {
     if (!rows.some((r) => r.key === key)) rows.push(stat);
   });
 
-  return rows
-    .sort((a, b) => new Date(b.lastNgayNhan || 0).getTime() - new Date(a.lastNgayNhan || 0).getTime())
-    .map((row, index) => ({ maKhachHang: `KH${String(index + 1).padStart(5, '0')}`, ...row }));
+  // Tìm mã khách hàng số lớn nhất hiện tại
+  let maxNum = 0;
+  rows.forEach((r) => {
+    if (r.maKhachHang && r.maKhachHang.startsWith('KH')) {
+      const num = parseInt(r.maKhachHang.substring(2), 10);
+      if (!isNaN(num) && num > maxNum) {
+        maxNum = num;
+      }
+    }
+  });
+
+  // Gán mã tuần tự tăng dần ổn định cho những khách hàng chưa có mã
+  rows.forEach((r) => {
+    if (!r.maKhachHang) {
+      maxNum += 1;
+      r.maKhachHang = `KH${String(maxNum).padStart(5, '0')}`;
+    }
+  });
+
+  return rows.sort((a, b) => new Date(b.lastNgayNhan || 0).getTime() - new Date(a.lastNgayNhan || 0).getTime());
 }
 
 function buildCustomerNameSuggestions(customers = [], q = '') {

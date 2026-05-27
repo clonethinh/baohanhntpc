@@ -24,8 +24,11 @@ export const PUBLIC_HISTORY_ACTIONS = new Set([
   'tra_hang',
   'exchange',
   'return',
+  'priority',
   'supplier_sent',
   'supplier_returned',
+  'customer_transfer',
+  'customer_detached',
   'update',
   'log',
 ]);
@@ -60,6 +63,7 @@ function isSupplierNoise(entry) {
 }
 
 function formatDateValue(raw) {
+  if (raw === 'none') return 'Đang cập nhập...';
   const d = dayjs(raw);
   return d.isValid() ? d.format('DD-MM-YYYY') : String(raw);
 }
@@ -92,6 +96,12 @@ export function formatHistoryChanges(changes = {}, { publicMode = false } = {}) 
       const label = getFieldLabel(field);
       const fromValue = formatFieldValue(field, value?.from);
       const toValue = formatFieldValue(field, value?.to);
+      if (field === 'ngayHenTra' && value?.from === 'none') {
+        return `${label}: ${toValue}`;
+      }
+      if (field === 'ngayHenTra' && value?.to === 'none') {
+        return `${label}: ${toValue}`;
+      }
       if (!fromValue && toValue) return `${label}: ${toValue}`;
       if (fromValue && !toValue) return `${label}: ${fromValue}`;
       if (!fromValue && !toValue) return `${label}:`;
@@ -201,10 +211,10 @@ export function toHistoryTimelineItem(entry, warranty = {}, { publicMode = false
     detail = note;
   } else if (action === 'supplier_sent') {
     title = 'Gửi nhà cung cấp';
-    detail = resolveSupplierHistoryNote(entry, warranty, note || 'Đã gửi bảo hành nhà cung cấp');
+    detail = publicMode ? 'Đã gửi bảo hành nhà cung cấp' : resolveSupplierHistoryNote(entry, warranty, note || 'Đã gửi bảo hành nhà cung cấp');
   } else if (action === 'supplier_returned') {
     title = 'Nhận lại từ nhà cung cấp';
-    detail = resolveSupplierHistoryNote(entry, warranty, note || 'Đã nhận lại từ nhà cung cấp');
+    detail = publicMode ? 'Đã nhận lại từ nhà cung cấp' : resolveSupplierHistoryNote(entry, warranty, note || 'Đã nhận lại từ nhà cung cấp');
   } else if (action === 'customer_transfer') {
     title = 'Chuyển khách hàng';
     detail = customerDetail(entry);
@@ -247,13 +257,32 @@ export function toHistoryTimelineItem(entry, warranty = {}, { publicMode = false
 export function buildInternalHistoryTimeline(history = [], warranty = {}) {
   return (history || [])
     .map((entry, index) => toHistoryTimelineItem(entry, warranty, { publicMode: false, index }))
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((item) => {
+      // Ẩn các mục lịch sử chỉ thuần túy là thêm/xóa ảnh đính kèm để tránh loãng timeline
+      // Dữ liệu vẫn được lưu đầy đủ trong DB phục vụ audit log khi Admin cần tra cứu
+      if (item.actionType === 'update') {
+        const changeKeys = Object.keys(item.changes || {});
+        const isAttachmentOnly = changeKeys.length === 1 && changeKeys[0] === 'attachments';
+        if (isAttachmentOnly) return false;
+      }
+      return true;
+    });
 }
 
 export function buildPublicHistoryTimeline(history = [], warranty = {}) {
   return (history || [])
     .map((entry, index) => toHistoryTimelineItem(entry, warranty, { publicMode: true, index }))
     .filter(Boolean)
+    .filter((item) => {
+      // Ẩn các mục lịch sử chỉ thuần túy là thêm/xóa ảnh đính kèm đối với khách hàng tra cứu công khai
+      if (item.actionType === 'update') {
+        const changeKeys = Object.keys(item.changes || {});
+        const isAttachmentOnly = changeKeys.length === 1 && changeKeys[0] === 'attachments';
+        if (isAttachmentOnly) return false;
+      }
+      return true;
+    })
     .map((item) => ({
       actionType: item.actionType,
       action: item.title,

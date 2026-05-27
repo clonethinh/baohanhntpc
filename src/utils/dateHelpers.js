@@ -8,13 +8,15 @@ dayjs.extend(timezone);
 dayjs.locale('vi');
 
 export function formatDate(dateStr, format = 'DD/MM/YYYY') {
-  if (!dateStr) return '';
-  return dayjs(dateStr).tz('Asia/Ho_Chi_Minh').format(format);
+  if (!dateStr || dateStr === 'none') return '-';
+  const d = dayjs(dateStr);
+  return d.isValid() ? d.tz('Asia/Ho_Chi_Minh').format(format) : '-';
 }
 
 export function formatDateTime(dateStr) {
-  if (!dateStr) return '';
-  return dayjs(dateStr).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm');
+  if (!dateStr || dateStr === 'none') return '-';
+  const d = dayjs(dateStr);
+  return d.isValid() ? d.tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm') : '-';
 }
 
 export function parseExcelDate(serial) {
@@ -43,11 +45,11 @@ export function addBusinessDaysSkipSunday(startDate, businessDays = 14) {
 }
 
 export function getWarrantyDueDate(warranty) {
-  if (warranty?.ngayHenTra) return warranty.ngayHenTra;
+  if (warranty?.ngayHenTra && warranty.ngayHenTra !== 'none') return warranty.ngayHenTra;
   if (warranty?.ngayNhan) return addBusinessDaysSkipSunday(warranty.ngayNhan, 14);
   return '';
 }
 
 export function shouldShowDueDate(warranty) {
-  return warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy';
+  return warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && warranty?.ngayHenTra !== 'none';
 }

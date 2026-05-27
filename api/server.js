@@ -50,9 +50,51 @@ const allowedOrigins = [
   'http://localhost:5175',
   'http://127.0.0.1:5175',
   'http://192.168.1.146:5175',
+  'http://192.168.1.146:8888',
   'http://localhost:8888',
   'http://127.0.0.1:8888',
 ];
+
+// Hàm tự động cho phép các kết nối từ mạng nội bộ (LAN) hoặc localhost
+const checkCorsOrigin = (origin, callback) => {
+  if (!origin) {
+    return callback(null, true);
+  }
+
+  const configuredOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+    : allowedOrigins;
+
+  if (configuredOrigins.includes(origin)) {
+    return callback(null, true);
+  }
+
+  try {
+    const url = new URL(origin);
+    const hostname = url.hostname;
+
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return callback(null, true);
+    }
+
+    const ipParts = hostname.split('.').map(Number);
+    if (ipParts.length === 4 && !ipParts.some(isNaN)) {
+      const [p1, p2, p3, p4] = ipParts;
+      // Cho phép các dải IP mạng LAN: 10.x.x.x, 172.16.x.x - 172.31.x.x, 192.168.x.x
+      if (
+        p1 === 10 ||
+        (p1 === 172 && p2 >= 16 && p2 <= 31) ||
+        (p1 === 192 && p2 === 168)
+      ) {
+        return callback(null, true);
+      }
+    }
+  } catch (err) {
+    // Bỏ qua lỗi parse URL
+  }
+
+  callback(null, false);
+};
 
 app.use(helmet({
   contentSecurityPolicy: process.env.HELMET_CSP === 'true'
@@ -68,9 +110,7 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: 'same-site' },
 }));
 app.use(cors({
-  origin: process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
-    : allowedOrigins,
+  origin: checkCorsOrigin,
   credentials: true,
 }));
 app.use(morgan('dev'));
@@ -180,7 +220,7 @@ app.use(attachUser);
 app.use('/api/auth', authRoutes);
 app.use(requireAuth);
 app.use('/api/warranties', warrantiesRoutes);
-app.use('/api/nhan-vien', requireRole('admin'), nhanVienRoutes);
+app.use('/api/nhan-vien', nhanVienRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/customers', customersRoutes);
 app.use('/api/suppliers', suppliersRoutes);

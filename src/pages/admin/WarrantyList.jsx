@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, Space, Input, Select, Button, Popconfirm, App, Typography, Tag, DatePicker, Affix, Tooltip } from 'antd';
 import {
   Button as MobileButton,
@@ -265,6 +265,9 @@ export default function WarrantyList() {
       width: 70,
       sorter: true,
       render: (text, record) => {
+        if (record.ngayHenTra === 'none') {
+          return <span>Pending<span className="loading-dots" /></span>;
+        }
         if (!shouldShowDueDate(record)) return '-';
         const dueDate = getWarrantyDueDate(record);
         const u = getUrgency({ trangThai: 'dang_xu_ly', ngayHenTra: dueDate });
@@ -295,10 +298,12 @@ export default function WarrantyList() {
         <Space size="small" style={{ whiteSpace: 'nowrap' }}>
           <Tooltip title={t('adminWarrantyList.viewDetail')}><Button size="small" icon={<EyeOutlined />} onClick={(event) => { event.stopPropagation(); handleOpenDetail(r.id); }} /></Tooltip>
           <Tooltip title={t('adminWarrantyList.printTicket')}><Button size="small" icon={<PrinterOutlined />} onClick={(event) => { event.stopPropagation(); navigate(`/admin/phieu/${r.id}/in`); }} /></Tooltip>
-          {r.trangThai !== 'da_tra' && r.trangThai !== 'huy' && (
-            <Popconfirm title={t('adminWarrantyList.markWarrantyDoneConfirm')} onConfirm={() => handleTraHang(r.id)}>
-              <Tooltip title={t('adminWarrantyList.markDone')}><Button size="small" icon={<CheckCircleOutlined />} type="primary" /></Tooltip>
-            </Popconfirm>
+                    {r.trangThai !== 'da_tra' && r.trangThai !== 'huy' && (
+            <span onClick={(event) => event.stopPropagation()}>
+              <Popconfirm title={t('adminWarrantyList.markWarrantyDoneConfirm')} onConfirm={() => handleTraHang(r.id)}>
+                <Tooltip title={t('adminWarrantyList.markDone')}><Button size="small" icon={<CheckCircleOutlined />} type="primary" /></Tooltip>
+              </Popconfirm>
+            </span>
           )}
           {r.trangThai !== 'da_tra' && r.trangThai !== 'huy' && (
             <Tooltip title={r.uuTien ? t('adminWarrantyList.unmarkPriority') : t('adminDashboard.priority')}>
@@ -311,9 +316,11 @@ export default function WarrantyList() {
               />
             </Tooltip>
           )}
-          <Popconfirm title={t('adminWarrantyList.deleteConfirm')} onConfirm={() => handleDelete(r.id)}>
-            <Tooltip title={t('adminWarrantyList.deleteTicket')}><Button size="small" danger icon={<DeleteOutlined />} /></Tooltip>
-          </Popconfirm>
+                    <span onClick={(event) => event.stopPropagation()}>
+            <Popconfirm title={t('adminWarrantyList.deleteConfirm')} onConfirm={() => handleDelete(r.id)}>
+              <Tooltip title={t('adminWarrantyList.deleteTicket')}><Button size="small" danger icon={<DeleteOutlined />} /></Tooltip>
+            </Popconfirm>
+          </span>
         </Space>
       ),
     },
@@ -384,7 +391,12 @@ export default function WarrantyList() {
               <div className="admin-mobile-ticket-body">
                 <b>{w.khachHang || '-'}</b>
                 <span>{w.tenHang || '-'}</span>
-                <small>{t('adminWarrantyList.serialDue', { serial: w.soSeri || '-', due: dueText })}</small>
+                <small>
+                  Serial: {w.soSeri || '-'} · Hẹn trả:{' '}
+                  {w.ngayHenTra === 'none'
+                    ? <span>Pending<span className="loading-dots" /></span>
+                    : (shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-')}
+                </small>
               </div>
               <MobileSpace wrap className="admin-mobile-ticket-actions">
                 {w.uuTien && w.trangThai !== 'da_tra' && w.trangThai !== 'huy' && <MobileTag color="danger">{t('adminDashboard.priority')}</MobileTag>}

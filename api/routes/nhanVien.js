@@ -1,6 +1,6 @@
 import express from 'express';
 import { prisma } from '../lib/db.js';
-import { authenticateStaff, getStaffRole, hashPassword, sanitizeStaff } from '../lib/auth.js';
+import { authenticateStaff, getStaffRole, hashPassword, sanitizeStaff, requireRole } from '../lib/auth.js';
 import { writeAuditLog } from '../lib/audit.js';
 
 const router = express.Router();
@@ -35,7 +35,7 @@ router.post('/verify', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', requireRole('admin'), async (req, res) => {
   try {
     const { maNV, tenNV, role = 'staff', matKhau = '' } = req.body || {};
     if (!maNV || !tenNV) {
@@ -73,7 +73,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.patch('/:maNV/password', async (req, res) => {
+router.patch('/:maNV/password', requireRole('admin'), async (req, res) => {
   try {
     const target = String(req.params.maNV || '').trim();
     const { newPassword } = req.body || {};
@@ -108,7 +108,7 @@ router.patch('/:maNV/password', async (req, res) => {
   }
 });
 
-router.delete('/:maNV', async (req, res) => {
+router.delete('/:maNV', requireRole('admin'), async (req, res) => {
   try {
     const target = String(req.params.maNV || '').trim();
     if (!target) {

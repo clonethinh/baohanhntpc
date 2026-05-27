@@ -70,10 +70,13 @@ async function readDb() {
     ]);
 
     let adminConfig = null;
+    let customers = [];
     if (fs.existsSync(DB_PATH)) {
       try {
         const raw = fs.readFileSync(DB_PATH, 'utf-8');
-        adminConfig = JSON.parse(raw).adminConfig || null;
+        const parsed = JSON.parse(raw);
+        adminConfig = parsed.adminConfig || null;
+        customers = parsed.customers || [];
       } catch { /* ignore */ }
     }
 
@@ -84,7 +87,7 @@ async function readDb() {
       suppliers,
       supplierLogs: normalizeSupplierLogs(supplierLogs),
       adminConfig,
-      customers: [] // Khách hàng sẽ được sinh động trong code nghiệp vụ
+      customers
     };
   } catch (err) {
     console.error('[DB] Lỗi khi truy vấn dữ liệu từ PostgreSQL:', err.message);
@@ -245,6 +248,10 @@ async function getCollection(name) {
     if (name === 'nhanVien') return normalizeNhanVienRows(await prisma.nhanVien.findMany({ orderBy: { maNV: 'asc' } }));
     if (name === 'suppliers') return await prisma.supplier.findMany({ orderBy: { name: 'asc' } });
     if (name === 'supplierLogs') return await prisma.supplierLog.findMany({ orderBy: { createdAt: 'desc' } });
+    if (name === 'customers') {
+      const db = await readDb();
+      return db.customers || [];
+    }
     return [];
   } catch (err) {
     console.error(`[DB] Lỗi truy vấn bảng ${name}:`, err.message);
@@ -539,7 +546,7 @@ async function autoSelfHealingSync() {
         suppliers,
         supplierLogs: normalizeSupplierLogs(supplierLogs),
         adminConfig: dbJsonData?.adminConfig || null,
-        customers: []
+        customers: dbJsonData?.customers || []
       };
       const content = JSON.stringify(currentData, null, 2);
       fs.writeFileSync(DB_PATH, content, 'utf-8');

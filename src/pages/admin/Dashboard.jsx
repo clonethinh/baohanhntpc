@@ -17,6 +17,31 @@ import dayjs from 'dayjs';
 
 const { Title, Text } = Typography;
 
+function renderHistoryDetail(detail) {
+  if (!detail || typeof detail !== 'string') return detail;
+  const regex = /Đang cập nhập\.\.\.|Đang cập nhập/g;
+  const matches = [...detail.matchAll(regex)];
+  if (matches.length === 0) return detail;
+
+  const elements = [];
+  let lastIndex = 0;
+  matches.forEach((match, idx) => {
+    const textBefore = detail.substring(lastIndex, match.index);
+    if (textBefore) elements.push(textBefore);
+    elements.push(
+      <span key={`loading-${idx}`}>
+        Đang cập nhập
+        <span className="loading-dots" />
+      </span>
+    );
+    lastIndex = match.index + match[0].length;
+  });
+  const textAfter = detail.substring(lastIndex);
+  if (textAfter) elements.push(textAfter);
+
+  return elements;
+}
+
 function priorityRank(w) {
   if (w.uuTien) return 0;
   const u = getUrgency(w);
@@ -241,7 +266,7 @@ export default function Dashboard() {
                 <b>{mapHistoryAction(ev.action, t)}</b>
                 <span>{ev.soChungTu} · {ev.khachHang || t('adminDashboard.unknownCustomer')}</span>
                 <small>{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</small>
-                {detail ? <em style={{ whiteSpace: 'pre-line' }}>{detail}</em> : null}
+                {detail ? <em style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</em> : null}
               </button>
             );
           })}
@@ -335,7 +360,7 @@ export default function Dashboard() {
                           <Text type="secondary"> · {ev.khachHang || t('adminDashboard.unknownCustomer')}</Text>
                         </div>
                         <div><Text type="secondary">{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</Text></div>
-                        {detail ? <div><Text style={{ whiteSpace: 'pre-line' }}>{detail}</Text></div> : null}
+                        {detail ? <div><Text style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</Text></div> : null}
                       </div>
                     ),
                   };

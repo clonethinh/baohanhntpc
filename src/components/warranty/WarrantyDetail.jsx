@@ -50,6 +50,31 @@ export function normalizeHistoryText(text) {
   return normalizeVietnameseText(text);
 }
 
+function renderHistoryDetail(detail) {
+  if (!detail || typeof detail !== 'string') return detail;
+  const regex = /Đang cập nhập\.\.\.|Đang cập nhập/g;
+  const matches = [...detail.matchAll(regex)];
+  if (matches.length === 0) return detail;
+
+  const elements = [];
+  let lastIndex = 0;
+  matches.forEach((match, idx) => {
+    const textBefore = detail.substring(lastIndex, match.index);
+    if (textBefore) elements.push(textBefore);
+    elements.push(
+      <span key={`loading-${idx}`}>
+        Đang cập nhập
+        <span className="loading-dots" />
+      </span>
+    );
+    lastIndex = match.index + match[0].length;
+  });
+  const textAfter = detail.substring(lastIndex);
+  if (textAfter) elements.push(textAfter);
+
+  return elements;
+}
+
 function normalizeAttachments(value) {
   if (Array.isArray(value)) return value.filter((item) => item && item.url);
   if (value && typeof value === 'object') {
@@ -76,6 +101,8 @@ function escapeHtml(value) {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
 }
+
+let isGlobalUploading = false;
 
 export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh }) {
   const { t } = useTranslation();
@@ -126,8 +153,9 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   const [customerList, setCustomerList] = useState([]);
   const [customerListLoading, setCustomerListLoading] = useState(false);
   const [customerTransferSubmitting, setCustomerTransferSubmitting] = useState(false);
-  const attachmentUploadBatchRef = useRef('');
-  const exchangeUploadBatchRef = useRef('');
+  const fileInputRef = useRef(null);
+  const exchangeFileInputRef = useRef(null);
+  const isUploadingRef = useRef(false);
   // Keep last successful payload mounted to avoid Drawer/Popup layout jumps while refetching.
   const lastWarrantyRef = useRef(null);
   const hasChangedRef = useRef(false);
@@ -324,23 +352,38 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   };
 
   const handleUploadAttachments = async (files) => {
+    if (isGlobalUploading || isUploadingRef.current) return;
+    isGlobalUploading = true;
+    isUploadingRef.current = true;
     const selectedFiles = Array.from(files || []).filter(Boolean);
-    if (!selectedFiles.length) return;
+    if (!selectedFiles.length) {
+      isUploadingRef.current = false;
+      isGlobalUploading = false;
+      return;
+    }
     if (selectedFiles.some(file => !['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type))) {
       message.warning('Chỉ hỗ trợ ảnh JPG, PNG hoặc WEBP');
+      isUploadingRef.current = false;
+      isGlobalUploading = false;
       return;
     }
     if (selectedFiles.some(file => file.size > 5 * 1024 * 1024)) {
       message.warning('Mỗi ảnh tối đa 5MB');
+      isUploadingRef.current = false;
+      isGlobalUploading = false;
       return;
     }
     if (attachments.length >= 10) {
       message.warning('Tối đa 10 ảnh đính kèm');
+      isUploadingRef.current = false;
+      isGlobalUploading = false;
       return;
     }
     const remainingSlots = 10 - attachments.length;
     if (selectedFiles.length > remainingSlots) {
       message.warning(`Chỉ có thể thêm tối đa ${remainingSlots} ảnh nữa`);
+      isUploadingRef.current = false;
+      isGlobalUploading = false;
       return;
     }
 
@@ -362,6 +405,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       message.error(err?.response?.data?.error?.message || 'Lỗi khi thêm ảnh');
     } finally {
       setAttachmentUploading(false);
+      isUploadingRef.current = false;
+      isGlobalUploading = false;
     }
   };
 
@@ -460,7 +505,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         ...rawValues,
         ngayNhan: rawValues.ngayNhan ? rawValues.ngayNhan.format('YYYY-MM-DDTHH:mm:ss') : warranty.ngayNhan,
         ngayMua: rawValues.ngayMua ? rawValues.ngayMua.format('YYYY-MM-DD') : '',
-        ngayHenTra: rawValues.ngayHenTra ? rawValues.ngayHenTra.format('YYYY-MM-DD') : '',
+        ngayHenTra: rawValues.ngayHenTra ? rawValues.ngayHenTra.format('YYYY-MM-DD') : 'none',
       };
       const res = await warrantyService.update(warranty.id, values);
       if (res.data.success) {
@@ -588,28 +633,39 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     }
   };
 
+  const handleExchangeUploadClick = () => {
+    if (exchangeFileInputRef.current) {
+      exchangeFileInputRef.current.click();
+    }
+  };
+
+  const handleExchangeFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files || []).filter(Boolean);
+    if (selectedFiles.length > 0) {
+      handleAddExchangeAttachments(selectedFiles);
+    }
+    e.target.value = '';
+  };
+
   const exchangeAttachmentUpload = (
-    <Upload
-      multiple
-      accept="image/png,image/jpeg,image/webp"
-      showUploadList={false}
-      disabled={exchangeAttachments.length >= 10 || exchangeSubmitting}
-      beforeUpload={(file, fileList) => {
-        const selectedFiles = fileList || [file];
-        const batchKey = selectedFiles.map(item => `${item.uid || item.name}-${item.size}-${item.lastModified}`).join('|');
-        if (exchangeUploadBatchRef.current !== batchKey) {
-          exchangeUploadBatchRef.current = batchKey;
-          handleAddExchangeAttachments(selectedFiles).finally(() => {
-            if (exchangeUploadBatchRef.current === batchKey) exchangeUploadBatchRef.current = '';
-          });
-        }
-        return Upload.LIST_IGNORE;
-      }}
-    >
-      <Button size="small" icon={<UploadOutlined />} disabled={exchangeAttachments.length >= 10 || exchangeSubmitting}>
+    <div style={{ display: 'inline-block' }}>
+      <input
+        type="file"
+        multiple
+        accept="image/png,image/jpeg,image/webp"
+        ref={exchangeFileInputRef}
+        onChange={handleExchangeFileChange}
+        style={{ display: 'none' }}
+      />
+      <Button
+        size="small"
+        icon={<UploadOutlined />}
+        disabled={exchangeAttachments.length >= 10 || exchangeSubmitting}
+        onClick={handleExchangeUploadClick}
+      >
         Thêm ảnh
       </Button>
-    </Upload>
+    </div>
   );
 
   const renderExchangeAttachmentGrid = (items = [], options = {}) => {
@@ -712,6 +768,27 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       }
     } catch (err) {
       message.error(err?.response?.data?.error?.message || 'Không thể xóa lịch sử NCC');
+    }
+  };
+
+  const handleDeleteHistory = async (historyIndex) => {
+    if (historyIndex == null) return;
+    try {
+      const res = await warrantyService.deleteHistory(warranty.id, historyIndex);
+      if (res.data?.success) {
+        markChanged();
+        if (res.data.data) {
+          setWarranty(res.data.data);
+        }
+        message.success('Đã xóa dòng lịch sử');
+        try {
+          await Promise.resolve(onSaved?.(res.data.data || null));
+        } catch (callbackErr) {
+          console.error('onSaved after deleteHistory failed:', callbackErr);
+        }
+      }
+    } catch (err) {
+      message.error(err?.response?.data?.error?.message || 'Không thể xóa dòng lịch sử');
     }
   };
 
@@ -920,28 +997,40 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     }, 500);
   };
 
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files || []).filter(Boolean);
+    if (selectedFiles.length > 0) {
+      handleUploadAttachments(selectedFiles);
+    }
+    e.target.value = '';
+  };
+
   const uploadAttachmentButton = (
-    <Upload
-      multiple
-      accept="image/png,image/jpeg,image/webp"
-      showUploadList={false}
-      disabled={attachmentUploading || attachments.length >= 10}
-      beforeUpload={(file, fileList) => {
-        const selectedFiles = fileList || [file];
-        const batchKey = selectedFiles.map(item => `${item.uid || item.name}-${item.size}-${item.lastModified}`).join('|');
-        if (attachmentUploadBatchRef.current !== batchKey) {
-          attachmentUploadBatchRef.current = batchKey;
-          handleUploadAttachments(selectedFiles).finally(() => {
-            if (attachmentUploadBatchRef.current === batchKey) attachmentUploadBatchRef.current = '';
-          });
-        }
-        return Upload.LIST_IGNORE;
-      }}
-    >
-      <Button size="small" icon={<UploadOutlined />} loading={attachmentUploading} disabled={attachments.length >= 10}>
+    <div style={{ display: 'inline-block' }}>
+      <input
+        type="file"
+        multiple
+        accept="image/png,image/jpeg,image/webp"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+      <Button
+        size="small"
+        icon={<UploadOutlined />}
+        loading={attachmentUploading}
+        disabled={attachments.length >= 10 || attachmentUploading}
+        onClick={handleUploadClick}
+      >
         Thêm ảnh
       </Button>
-    </Upload>
+    </div>
   );
 
   const renderAttachmentGrid = (compact = false) => (
@@ -1139,6 +1228,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     const formatFieldValue = (field, raw) => {
       if (raw === null || raw === undefined || raw === '') return '';
       if (field === 'ngayHenTra') {
+        if (raw === 'none') return 'Đang cập nhập...';
         const d = dayjs(raw);
         return d.isValid() ? d.format('DD-MM-YYYY') : String(raw);
       }
@@ -1153,6 +1243,12 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       const label = fieldLabels[field] || field;
       const fromValue = formatFieldValue(field, value?.from);
       const toValue = formatFieldValue(field, value?.to);
+      if (field === 'ngayHenTra' && value?.from === 'none') {
+        return `${label}: ${toValue}`;
+      }
+      if (field === 'ngayHenTra' && value?.to === 'none') {
+        return `${label}: ${toValue}`;
+      }
       if (!fromValue && toValue) return `${label}: ${toValue}`;
       if (fromValue && !toValue) return `${label}: ${fromValue}`;
       if (!fromValue && !toValue) return `${label}:`;
@@ -1203,10 +1299,12 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     ? <Form.Item name="ngayNhan" style={{ marginBottom: 0 }}><DatePicker showTime style={{ width: '100%' }} format="DD/MM/YYYY HH:mm" /></Form.Item>
                     : formatDate(warranty.ngayNhan, 'DD/MM/YYYY HH:mm')}
                 </Descriptions.Item>
-                {shouldShowDueDate(warranty) && <Descriptions.Item label="Ngày hẹn trả">
+                {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && <Descriptions.Item label="Ngày hẹn trả">
                   {editing && editSection === 'summary'
-                    ? <Form.Item name="ngayHenTra" style={{ marginBottom: 0 }}><DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" /></Form.Item>
-                    : formatDate(warranty.ngayHenTra)}
+                    ? <Form.Item name="ngayHenTra" style={{ marginBottom: 0 }}><DatePicker allowClear style={{ width: '100%' }} format="DD/MM/YYYY" /></Form.Item>
+                    : (warranty.ngayHenTra === 'none'
+                        ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                        : formatDate(warranty.ngayHenTra))}
                 </Descriptions.Item>}
                 <Descriptions.Item label="Ngày trả">{warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}</Descriptions.Item>
               </Descriptions>
@@ -1550,12 +1648,31 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               color,
               children: (
                 <div style={{ minWidth: 0 }}>
-                  <Text strong>{title}</Text>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                    <Text strong>{title}</Text>
+                    {h.action !== 'create' && (
+                      <Popconfirm
+                        title="Xóa dòng lịch sử này?"
+                        okText="Xóa"
+                        cancelText="Hủy"
+                        okButtonProps={{ danger: true }}
+                        onConfirm={() => handleDeleteHistory(historyIndex)}
+                      >
+                        <Button
+                          type="text"
+                          danger
+                          size="small"
+                          icon={<DeleteOutlined style={{ fontSize: 13 }} />}
+                          style={{ height: 'auto', padding: '2px 4px', marginTop: -2 }}
+                        />
+                      </Popconfirm>
+                    )}
+                  </div>
                   <div>
                     <ClockCircleOutlined style={{ fontSize: 12, marginRight: 4, color: '#999' }} />
                     <Text type="secondary" style={{ fontSize: 12 }}>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</Text>
                   </div>
-                  {detail && <div style={{ marginTop: 4, fontSize: 13, whiteSpace: 'pre-line' }}>{detail}</div>}
+                  {detail && <div style={{ marginTop: 4, fontSize: 13, whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</div>}
                 </div>
               ),
             };
@@ -1587,7 +1704,13 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
           <List.Item title="Số điện thoại">{warranty.soDienThoai || '-'}</List.Item>
           <List.Item title="Địa chỉ">{warranty.diaChi || '-'}</List.Item>
           <List.Item title="Ngày nhận">{formatDate(warranty.ngayNhan, 'DD/MM/YYYY HH:mm')}</List.Item>
-          {shouldShowDueDate(warranty) && <List.Item title="Ngày hẹn trả">{formatDate(warranty.ngayHenTra)}</List.Item>}
+          {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && (
+            <List.Item title="Ngày hẹn trả">
+              {warranty.ngayHenTra === 'none'
+                ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                : formatDate(warranty.ngayHenTra)}
+            </List.Item>
+          )}
           <List.Item title="Ngày trả">{warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}</List.Item>
           <List.Item title="Nhân viên">{getStaffName(warranty.maNhanVien)}</List.Item>
           {warranty.ghiChu && <List.Item title="Ghi chú">{warranty.ghiChu}</List.Item>}
@@ -1663,7 +1786,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             <Form.Item label="Lỗi lúc nhận" name="loiLucNhan"><TextArea rows={2} /></Form.Item>
             <Form.Item label="Phụ kiện" name="phuKien"><Input /></Form.Item>
             <Form.Item label="Ngày nhận" name="ngayNhan"><DatePicker showTime style={{ width: '100%' }} format="DD/MM/YYYY HH:mm" /></Form.Item>
-            <Form.Item label="Ngày hẹn trả" name="ngayHenTra"><DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" /></Form.Item>
+            <Form.Item label="Ngày hẹn trả" name="ngayHenTra"><DatePicker allowClear style={{ width: '100%' }} format="DD/MM/YYYY" /></Form.Item>
             <Form.Item label="Ghi chú" name="ghiChu"><TextArea rows={2} /></Form.Item>
             <MobileSpace>
               <MobileButton color="primary" onClick={handleSave}>Lưu</MobileButton>
@@ -1936,7 +2059,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               <div className="warranty-mobile-timeline-item" key={`${h.at}-${h.action}-${historyIndex}`}>
                 <b>{title}</b>
                 <span>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</span>
-                {detail && <p style={{ whiteSpace: 'pre-line' }}>{detail}</p>}
+                {detail && <p style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</p>}
               </div>
             );
           })}

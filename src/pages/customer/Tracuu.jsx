@@ -107,6 +107,7 @@ export default function Tracuu() {
   const [recent, setRecent] = useState(() => readRecent());
   const [phoneResults, setPhoneResults] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [showZaloBubble, setShowZaloBubble] = useState(true);
 
   useEffect(() => {
     const onStorage = (event) => {
@@ -395,6 +396,69 @@ export default function Tracuu() {
       </Row>
     </main>
     <style>{`@keyframes zalo-bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}60%{transform:translateY(-3px)}}`}</style>
+    {showZaloBubble && (
+      <a
+        href={ZALO_WEB_URL}
+        onClick={openZaloApp}
+        style={{
+          position: 'fixed',
+          right: 80,
+          bottom: 20,
+          background: '#fff',
+          borderRadius: 12,
+          padding: '10px 14px 10px 12px',
+          boxShadow: '0 8px 30px rgba(0,104,255,0.15)',
+          border: '1px solid #d9d9d9',
+          zIndex: 1199,
+          maxWidth: 240,
+          cursor: 'pointer',
+          textDecoration: 'none',
+          animation: 'zalo-bounce 2s infinite',
+          display: 'block',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            right: -6,
+            bottom: 16,
+            width: 10,
+            height: 10,
+            background: '#fff',
+            transform: 'rotate(45deg)',
+            borderRight: '1px solid #d9d9d9',
+            borderTop: '1px solid #d9d9d9',
+          }}
+        />
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setShowZaloBubble(false);
+          }}
+          style={{
+            position: 'absolute',
+            top: 4,
+            right: 4,
+            border: 'none',
+            background: 'none',
+            fontSize: 10,
+            color: '#bfbfbf',
+            cursor: 'pointer',
+            padding: 2,
+            lineHeight: 1,
+          }}
+        >
+          ✕
+        </button>
+        <div style={{ fontSize: 13, color: '#262626', fontWeight: 500, lineHeight: 1.4 }}>
+          Bạn cần trợ giúp?
+        </div>
+        <div style={{ fontSize: 12, color: '#0068ff', fontWeight: 700, marginTop: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+          Chat ngay <RightOutlined style={{ fontSize: 10 }} />
+        </div>
+      </a>
+    )}
     <a
       href={ZALO_WEB_URL}
       onClick={openZaloApp}

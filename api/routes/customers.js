@@ -16,8 +16,56 @@ router.get('/list', async (req, res) => {
   try {
     const db = await readDb();
     ensureCustomers(db);
+    
+    // Lấy danh sách khách hàng được tổng hợp từ dữ liệu hiện tại
     const rows = getCustomerRows(db.warranties || [], db.customers || []);
-    res.json({ success: true, data: rows });
+    
+    let needsSave = false;
+    let maxNum = 0;
+    
+    // Tìm mã khách hàng số lớn nhất đã được lưu trong DB
+    (db.customers || []).forEach(c => {
+      if (c.maKhachHang && c.maKhachHang.startsWith('KH')) {
+        const num = parseInt(c.maKhachHang.substring(2), 10);
+        if (!isNaN(num) && num > maxNum) maxNum = num;
+      }
+    });
+
+    const updatedCustomers = [...(db.customers || [])];
+    
+    // Quét qua toàn bộ danh sách để đảm bảo tất cả khách hàng đều có mã cố định trong DB
+    rows.forEach(r => {
+      let c = updatedCustomers.find(x => x.key === r.key);
+      if (!c) {
+        maxNum += 1;
+        const newCode = `KH${String(maxNum).padStart(5, '0')}`;
+        updatedCustomers.push({
+          key: r.key,
+          maKhachHang: newCode,
+          khachHang: r.khachHang,
+          soDienThoai: r.soDienThoai,
+          diaChi: r.diaChi,
+          createdAt: r.lastNgayNhan || dayjs().format('YYYY-MM-DDTHH:mm:ss'),
+          updatedAt: r.lastNgayNhan || dayjs().format('YYYY-MM-DDTHH:mm:ss'),
+          lastSeenAt: r.lastNgayNhan || dayjs().format('YYYY-MM-DDTHH:mm:ss'),
+          isActive: true
+        });
+        needsSave = true;
+      } else if (!c.maKhachHang) {
+        maxNum += 1;
+        c.maKhachHang = `KH${String(maxNum).padStart(5, '0')}`;
+        needsSave = true;
+      }
+    });
+
+    if (needsSave) {
+      db.customers = updatedCustomers;
+      await writeDb(db);
+    }
+    
+    // Trả về danh sách đã được cập nhật mã cố định
+    const finalRows = getCustomerRows(db.warranties || [], updatedCustomers);
+    res.json({ success: true, data: finalRows });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
   }
@@ -42,7 +90,8 @@ router.get('/suggest', async (req, res) => {
     if (!q) return res.json({ success: true, data: [] });
     const db = await readDb();
     ensureCustomers(db);
-    res.json({ success: true, data: buildCustomerNameSuggestions(db.customers, q) });
+    const rows = getCustomerRows(db.warranties || [], db.customers || []);
+    res.json({ success: true, data: buildCustomerNameSuggestions(rows, q) });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
   }

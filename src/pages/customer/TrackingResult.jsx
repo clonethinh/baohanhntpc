@@ -38,6 +38,48 @@ import { useTheme } from '../../hooks/useTheme';
 import { normalizeHistoryNote } from '../../utils/historyDisplay';
 import styles from './TrackingResult.module.css';
 
+const ZALO_WEB_URL = 'https://zalo.me/0937632000';
+const ZALO_APP_URL = 'zalo://chat?phone=0937632000';
+
+function openZaloApp(event) {
+  event?.preventDefault?.();
+  const ua = navigator.userAgent || '';
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+  if (!isMobile) {
+    window.open(ZALO_WEB_URL, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  window.location.href = ZALO_APP_URL;
+  setTimeout(() => {
+    window.location.href = ZALO_WEB_URL;
+  }, 800);
+}
+
+function renderHistoryDetail(detail) {
+  if (!detail || typeof detail !== 'string') return detail;
+  const regex = /Đang cập nhập\.\.\.|Đang cập nhập/g;
+  const matches = [...detail.matchAll(regex)];
+  if (matches.length === 0) return detail;
+
+  const elements = [];
+  let lastIndex = 0;
+  matches.forEach((match, idx) => {
+    const textBefore = detail.substring(lastIndex, match.index);
+    if (textBefore) elements.push(textBefore);
+    elements.push(
+      <span key={`loading-${idx}`}>
+        Đang cập nhập
+        <span className="loading-dots" />
+      </span>
+    );
+    lastIndex = match.index + match[0].length;
+  });
+  const textAfter = detail.substring(lastIndex);
+  if (textAfter) elements.push(textAfter);
+
+  return elements;
+}
+
 const { Title, Text, Paragraph } = Typography;
 
 function parseTrackDate(value) {
@@ -55,11 +97,16 @@ function parseTrackDate(value) {
 }
 
 const STATUS_LABELS = {
-  tiep_nhan: 'Tiếp nhận',
+  da_nhan: 'Đã nhận',
+  tiep_nhan: 'Đã nhận',
   dang_xu_ly: 'Đang xử lý',
+  cho_xu_ly: 'Đã nhận',
+  cho_lien_he: 'Đang xử lý',
   cho_linh_kien: 'Chờ linh kiện',
   da_sua_xong: 'Đã sửa xong',
-  da_tra_hang: 'Đã trả hàng',
+  da_tra: 'Đã xong',
+  da_tra_hang: 'Đã xong',
+  huy: 'Đã hủy',
   da_huy: 'Đã hủy',
 };
 
@@ -70,10 +117,10 @@ function formatStatus(status) {
 
 function normalizeStatusKey(status) {
   const key = String(status || '').trim();
-  if (key === 'da_tra_hang' || key === 'da_sua_xong') return 'da_tra';
-  if (key === 'da_huy') return 'huy';
-  if (key === 'tiep_nhan') return 'da_nhan';
-  if (key === 'cho_linh_kien') return 'dang_xu_ly';
+  if (key === 'da_tra_hang' || key === 'da_sua_xong' || key === 'da_tra') return 'da_tra';
+  if (key === 'da_huy' || key === 'huy') return 'huy';
+  if (key === 'tiep_nhan' || key === 'da_nhan' || key === 'cho_xu_ly') return 'da_nhan';
+  if (key === 'cho_linh_kien' || key === 'dang_xu_ly' || key === 'cho_lien_he') return 'dang_xu_ly';
   return key;
 }
 
@@ -160,6 +207,7 @@ export default function TrackingResult() {
   const [relatedByPhone, setRelatedByPhone] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showZaloBubble, setShowZaloBubble] = useState(true);
 
   useEffect(() => {
     setLoading(true);
@@ -321,7 +369,16 @@ export default function TrackingResult() {
           <div className="ntpc-mobile-kpi"><span>{t('trackingResult.receivedDate')}</span><b>{data.ngayNhan || '-'}</b></div>
         </MobileGrid.Item>
         <MobileGrid.Item>
-          <div className="ntpc-mobile-kpi"><span>{isClosed ? t('trackingResult.doneDate') : t('trackingResult.dueDateShort')}</span><b>{isClosed ? (data.ngayTra || '-') : (data.ngayHenTra || '-')}</b></div>
+          <div className="ntpc-mobile-kpi">
+            <span>{isClosed ? t('trackingResult.doneDate') : t('trackingResult.dueDateShort')}</span>
+            <b>
+              {isClosed
+                ? (data.ngayTra || '-')
+                : (data.ngayHenTraRaw === 'none'
+                    ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                    : (data.ngayHenTra || '-'))}
+            </b>
+          </div>
         </MobileGrid.Item>
         <MobileGrid.Item>
           <div className="ntpc-mobile-kpi"><span>{t('trackingResult.customer')}</span><b>{data.khachHang || '-'}</b></div>
@@ -354,7 +411,7 @@ export default function TrackingResult() {
               <div className="ntpc-mobile-timeline-item" key={`${log.action}-${log.time}-${i}`}>
                 <b>{log.action}</b>
                 <span>{log.time}</span>
-                {log.note && <p style={{ whiteSpace: 'pre-line' }}>{normalizeHistoryNote(log.note)}</p>}
+                {log.note && <p style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(normalizeHistoryNote(log.note))}</p>}
               </div>
             ))}
           </div>
@@ -400,7 +457,16 @@ export default function TrackingResult() {
           <List.Item title={t('trackingResult.phoneLong')} extra={<span className={styles.infoValue}>{data.soDienThoai || '-'}</span>} />
           <List.Item title={t('trackingResult.receivedDate')} extra={<span className={styles.infoValue}>{data.ngayNhan || '-'}</span>} />
           {!isClosed && (
-            <List.Item title={t('trackingResult.dueDate')} extra={<span className={styles.infoValue}>{data.ngayHenTra || '-'}</span>} />
+            <List.Item
+              title={t('trackingResult.dueDate')}
+              extra={
+                <span className={styles.infoValue}>
+                  {data.ngayHenTraRaw === 'none'
+                    ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                    : (data.ngayHenTra || '-')}
+                </span>
+              }
+            />
           )}
           {isClosed && (
             <List.Item title={t('trackingResult.doneDate')} extra={<span className={styles.infoValue}>{data.ngayTra || '-'}</span>} />
@@ -523,7 +589,15 @@ export default function TrackingResult() {
               <Col xs={12}>
                 <div style={miniStyle}>
                   <Text type="secondary">{isClosed ? t('trackingResult.doneDate') : t('trackingResult.dueDateShort')}</Text>
-                  <div><Text strong>{isClosed ? (data.ngayTra || '-') : (data.ngayHenTra || '-')}</Text></div>
+                  <div>
+                    <Text strong>
+                      {isClosed
+                        ? (data.ngayTra || '-')
+                        : (data.ngayHenTraRaw === 'none'
+                            ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                            : (data.ngayHenTra || '-'))}
+                    </Text>
+                  </div>
                 </div>
               </Col>
               <Col xs={12}>
@@ -588,7 +662,7 @@ export default function TrackingResult() {
                         <ClockCircleOutlined style={{ fontSize: 12, marginRight: 4 }} />
                         <Text type="secondary">{log.time}</Text>
                       </div>
-                      {log.note && <div style={{ marginTop: 6, fontSize: 13, color: isDark ? '#b8b8b8' : '#4b5563', lineHeight: 1.5, whiteSpace: 'pre-line' }}>{normalizeHistoryNote(log.note)}</div>}
+                      {log.note && <div style={{ marginTop: 6, fontSize: 13, color: isDark ? '#b8b8b8' : '#4b5563', lineHeight: 1.5, whiteSpace: 'pre-line' }}>{renderHistoryDetail(normalizeHistoryNote(log.note))}</div>}
                     </div>
                   ),
                 }))}
@@ -669,7 +743,13 @@ export default function TrackingResult() {
               <Descriptions.Item label={t('trackingResult.customer')}>{data.khachHang || '-'}</Descriptions.Item>
               <Descriptions.Item label={t('trackingResult.phoneLong')}>{data.soDienThoai || '-'}</Descriptions.Item>
               <Descriptions.Item label={t('trackingResult.receivedDate')}>{data.ngayNhan || '-'}</Descriptions.Item>
-              {!isClosed && <Descriptions.Item label={t('trackingResult.dueDate')}>{data.ngayHenTra || '-'}</Descriptions.Item>}
+              {!isClosed && (
+                <Descriptions.Item label={t('trackingResult.dueDate')}>
+                  {data.ngayHenTraRaw === 'none'
+                    ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                    : (data.ngayHenTra || '-')}
+                </Descriptions.Item>
+              )}
               {isClosed && <Descriptions.Item label={t('trackingResult.doneDate')}>{data.ngayTra || '-'}</Descriptions.Item>}
               {data.ghiChu && <Descriptions.Item label={t('trackingResult.note')}>{data.ghiChu}</Descriptions.Item>}
             </Descriptions>
@@ -716,7 +796,101 @@ export default function TrackingResult() {
         </Col>
       </Row>
     </div>
+    <style>{`@keyframes zalo-bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}60%{transform:translateY(-3px)}}`}</style>
+    {showZaloBubble && (
+      <a
+        href={ZALO_WEB_URL}
+        onClick={openZaloApp}
+        style={{
+          position: 'fixed',
+          right: 80,
+          bottom: 20,
+          background: '#fff',
+          borderRadius: 12,
+          padding: '10px 14px 10px 12px',
+          boxShadow: '0 8px 30px rgba(0,104,255,0.15)',
+          border: '1px solid #d9d9d9',
+          zIndex: 1199,
+          maxWidth: 240,
+          cursor: 'pointer',
+          textDecoration: 'none',
+          animation: 'zalo-bounce 2s infinite',
+          display: 'block',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            right: -6,
+            bottom: 16,
+            width: 10,
+            height: 10,
+            background: '#fff',
+            transform: 'rotate(45deg)',
+            borderRight: '1px solid #d9d9d9',
+            borderTop: '1px solid #d9d9d9',
+          }}
+        />
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            setShowZaloBubble(false);
+          }}
+          style={{
+            position: 'absolute',
+            top: 4,
+            right: 4,
+            border: 'none',
+            background: 'none',
+            fontSize: 10,
+            color: '#bfbfbf',
+            cursor: 'pointer',
+            padding: 2,
+            lineHeight: 1,
+          }}
+        >
+          ✕
+        </button>
+        <div style={{ fontSize: 13, color: '#262626', fontWeight: 500, lineHeight: 1.4 }}>
+          Bạn cần trợ giúp?
+        </div>
+        <div style={{ fontSize: 12, color: '#0068ff', fontWeight: 700, marginTop: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
+          Chat ngay <RightOutlined style={{ fontSize: 10 }} />
+        </div>
+      </a>
+    )}
+    <a
+      href={ZALO_WEB_URL}
+      onClick={openZaloApp}
+      aria-label="Chat Zalo 0937 63 2000"
+      style={{
+        position: 'fixed',
+        right: 16,
+        bottom: 16,
+        width: 56,
+        height: 56,
+        borderRadius: '50%',
+        background: '#fff',
+        color: '#0068ff',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textDecoration: 'none',
+        boxShadow: '0 10px 24px rgba(0,104,255,0.32)',
+        border: '2px solid #0068ff',
+        zIndex: 1200,
+        animation: 'zalo-bounce 2s infinite',
+      }}
+    >
+      <img
+        src="/zalo.png"
+        alt="Zalo"
+        width="34"
+        height="34"
+        style={{ borderRadius: '50%', objectFit: 'cover', display: 'block' }}
+      />
+    </a>
     </>
   );
 }
-

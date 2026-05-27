@@ -12,3 +12,8 @@ api/*.prev
 backup4
 vibackup
 pgdata
+
+# AI config and scratch files
+.antigravitycli
+scratch/
+cloudflare-ddns.sh

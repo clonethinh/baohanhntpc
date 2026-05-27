@@ -1,4 +1,4 @@
-﻿import z from 'zod';
+import z from 'zod';
 
 const warrantySchema = z.object({
   khachHang: z.string().min(1, 'Khách hàng không được để trống'),
@@ -17,7 +17,7 @@ const warrantySchema = z.object({
   loaiXuLyKhac: z.string().optional().default(''),
   ghiChu: z.string().optional().default(''),
   ngayMua: z.string().optional().default(''),
-  ngayHenTra: z.string().min(1, 'Ngày hẹn trả không được để trống'),
+  ngayHenTra: z.string().optional().default(''),
   maNhanVien: z.string().min(1, 'Nhân viên không được để trống'),
   trangThai: z.enum(['cho_xu_ly', 'dang_xu_ly', 'cho_lien_he', 'da_tra', 'huy']).default('dang_xu_ly'),
 }).superRefine((data, ctx) => {

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, Row, Col, Form, Input, Select, InputNumber, Button, DatePicker, Alert, Modal, Typography, Space, App, AutoComplete, Radio, Switch, Upload } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -73,6 +73,12 @@ export default function CreateWarranty() {
       if (res.data.success) setNextCode(res.data.data.code);
     });
   }, []);
+
+  useEffect(() => {
+    if (currentStaff?.maNV) {
+      setValue('maNhanVien', currentStaff.maNV);
+    }
+  }, [currentStaff, setValue]);
 
   useEffect(() => {
     try {
@@ -161,7 +167,11 @@ export default function CreateWarranty() {
     setFormErrors([]);
     setSubmitting(true);
     try {
-      const res = await warrantyService.create({ ...values, attachmentsInput });
+      const finalValues = {
+        ...values,
+        ngayHenTra: values.ngayHenTra || 'none',
+      };
+      const res = await warrantyService.create({ ...finalValues, attachmentsInput });
       if (res.data.success) {
         localStorage.removeItem('ntpc-draft-warranty');
         message.success(t('adminCreateWarranty.createSuccess'));
@@ -410,7 +420,7 @@ export default function CreateWarranty() {
             <Col span={24}>
               <Form.Item label={t('field.ngayHenTra')} validateStatus={errors.ngayHenTra ? 'error' : ''} help={errors.ngayHenTra?.message}>
                 <Controller name="ngayHenTra" control={control} render={({ field }) => (
-                  <DatePicker {...field} style={{ width: '100%' }} format="DD/MM/YYYY" value={field.value ? dayjs(field.value) : null} onChange={d => field.onChange(d ? d.format('YYYY-MM-DD') : '')} />
+                  <DatePicker allowClear {...field} style={{ width: '100%' }} format="DD/MM/YYYY" value={field.value ? dayjs(field.value) : null} onChange={d => field.onChange(d ? d.format('YYYY-MM-DD') : '')} />
                 )} />
               </Form.Item>
             </Col>
