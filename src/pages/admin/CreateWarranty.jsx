@@ -30,6 +30,16 @@ export default function CreateWarranty() {
   const [serialWarning, setSerialWarning] = useState(null);
   const [baoHanhCustom, setBaoHanhCustom] = useState(false);
   const [attachmentFiles, setAttachmentFiles] = useState([]);
+  const [previewImageOpen, setPreviewImageOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+
+  const handleImagePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await fileToDataUrl(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewImageOpen(true);
+  };
 
   const fileToDataUrl = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -58,7 +68,7 @@ export default function CreateWarranty() {
       loaiXuLy: 'bao_hanh',
       ghiChu: '',
       ngayMua: '',
-      ngayHenTra: addBusinessDaysSkipSunday(dayjs(), 14),
+      ngayHenTra: null,
       maNhanVien: currentStaff?.maNV || '',
     },
   });
@@ -420,7 +430,7 @@ export default function CreateWarranty() {
             <Col span={24}>
               <Form.Item label={t('field.ngayHenTra')} validateStatus={errors.ngayHenTra ? 'error' : ''} help={errors.ngayHenTra?.message}>
                 <Controller name="ngayHenTra" control={control} render={({ field }) => (
-                  <DatePicker allowClear {...field} style={{ width: '100%' }} format="DD/MM/YYYY" value={field.value ? dayjs(field.value) : null} onChange={d => field.onChange(d ? d.format('YYYY-MM-DD') : '')} />
+                  <DatePicker allowClear placeholder="Chọn thời điểm" {...field} style={{ width: '100%' }} format="DD/MM/YYYY" value={field.value ? dayjs(field.value) : null} onChange={d => field.onChange(d ? d.format('YYYY-MM-DD') : '')} />
                 )} />
               </Form.Item>
             </Col>
@@ -434,6 +444,7 @@ export default function CreateWarranty() {
             accept="image/png,image/jpeg,image/webp"
             fileList={attachmentFiles}
             onChange={({ fileList }) => setAttachmentFiles(fileList.slice(0, 10))}
+            onPreview={handleImagePreview}
             beforeUpload={() => false}
           >
             {attachmentFiles.length >= 10 ? null : <div>{t('adminCreateWarranty.addImage')}</div>}
@@ -473,6 +484,10 @@ export default function CreateWarranty() {
             {previewData.ghiChu && <p><strong>{t('field.ghiChu')}:</strong> {previewData.ghiChu}</p>}
           </div>
         )}
+      </Modal>
+
+      <Modal open={previewImageOpen} title="Xem ảnh đính kèm" footer={null} onCancel={() => setPreviewImageOpen(false)}>
+        <img alt="preview" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </div>
   );
