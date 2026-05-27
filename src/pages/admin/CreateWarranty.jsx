@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Card, Row, Col, Form, Input, Select, InputNumber, Button, DatePicker, Alert, Modal, Typography, Space, App, AutoComplete, Radio, Switch, Upload } from 'antd';
+import { Card, Row, Col, Form, Input, Select, InputNumber, Button, DatePicker, Alert, Modal, Typography, Space, App, AutoComplete, Radio, Switch, Upload, Image } from 'antd';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
@@ -31,13 +31,21 @@ export default function CreateWarranty() {
   const [baoHanhCustom, setBaoHanhCustom] = useState(false);
   const [attachmentFiles, setAttachmentFiles] = useState([]);
   const [previewImageOpen, setPreviewImageOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
+  const [previewImageIndex, setPreviewImageIndex] = useState(0);
 
   const handleImagePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await fileToDataUrl(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
+    const updatedFiles = await Promise.all(
+      attachmentFiles.map(async (f) => {
+        if (!f.url && !f.preview && f.originFileObj) {
+          f.preview = await fileToDataUrl(f.originFileObj);
+        }
+        return f;
+      })
+    );
+    setAttachmentFiles(updatedFiles);
+
+    const index = updatedFiles.findIndex(f => f.uid === file.uid);
+    setPreviewImageIndex(index >= 0 ? index : 0);
     setPreviewImageOpen(true);
   };
 
@@ -443,7 +451,17 @@ export default function CreateWarranty() {
             listType="picture-card"
             accept="image/png,image/jpeg,image/webp"
             fileList={attachmentFiles}
-            onChange={({ fileList }) => setAttachmentFiles(fileList.slice(0, 10))}
+            onChange={({ fileList }) => {
+              const updated = fileList.slice(0, 10).map((f) => {
+                if (!f.url && !f.thumbUrl && f.originFileObj) {
+                  const blobUrl = URL.createObjectURL(f.originFileObj);
+                  f.thumbUrl = blobUrl;
+                  f.preview = blobUrl;
+                }
+                return f;
+              });
+              setAttachmentFiles(updated);
+            }}
             onPreview={handleImagePreview}
             beforeUpload={() => false}
           >
@@ -486,9 +504,23 @@ export default function CreateWarranty() {
         )}
       </Modal>
 
-      <Modal open={previewImageOpen} title="Xem ảnh đính kèm" footer={null} onCancel={() => setPreviewImageOpen(false)}>
-        <img alt="preview" style={{ width: '100%' }} src={previewImage} />
-      </Modal>
+      <div style={{ display: 'none' }}>
+        <Image.PreviewGroup
+          preview={{
+            visible: previewImageOpen,
+            onVisibleChange: (visible) => setPreviewImageOpen(visible),
+            current: previewImageIndex,
+            onChange: (current) => setPreviewImageIndex(current)
+          }}
+        >
+          {attachmentFiles.map((file, idx) => (
+            <Image
+              key={file.uid || idx}
+              src={file.url || file.preview}
+            />
+          ))}
+        </Image.PreviewGroup>
+      </div>
     </div>
   );
 }
