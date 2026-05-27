@@ -390,6 +390,7 @@ export default function TrackingResult() {
 
       <MobileCard title={t('trackingResult.progressTitle')} className="ntpc-mobile-card ntpc-mobile-progress-desktop">
         <Steps
+          className="tracuu-progress-steps"
           size="small"
           direction="vertical"
           current={currentStep >= 0 ? currentStep : 0}
@@ -619,8 +620,13 @@ export default function TrackingResult() {
 
       <Row gutter={[16, 16]} align="top">
         <Col xs={24} lg={15}>
-          <Card title={t('trackingResult.progressTitle')} style={{ ...cardStyle, marginBottom: 16 }}>
+          <Card 
+            title={t('trackingResult.progressTitle')} 
+            style={{ ...cardStyle, marginBottom: 16 }}
+            styles={{ body: { paddingTop: 28, paddingBottom: 20 } }}
+          >
             <Steps
+              className="tracuu-progress-steps"
               current={currentStep >= 0 ? currentStep : 0}
               responsive
               items={data.steps.map(s => ({ title: s.label, description: s.date }))}
