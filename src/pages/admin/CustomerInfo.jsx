@@ -325,6 +325,11 @@ export default function CustomerInfo() {
         </MobileCard>
 
         <MobileCard className="admin-mobile-card customer-mobile-section" title={t('adminCustomer.title')} style={cardStyle}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10, padding: '0 4px' }}>
+            <MobileTag color="primary">{t('adminCustomer.customerCount', { count: customerSummary.total })}</MobileTag>
+            <MobileTag color="success">{t('adminCustomer.ticketCount', { count: customerSummary.warrantyCount })}</MobileTag>
+            <MobileTag color="warning">{t('adminCustomer.activeCount', { count: customerSummary.activeCount })}</MobileTag>
+          </div>
           {listLoading ? (
             <div className="admin-mobile-empty">{t('adminCustomer.loading')}</div>
           ) : customerRows.length === 0 ? (
@@ -427,7 +432,21 @@ export default function CustomerInfo() {
 
         {customerInfo && selectedCustomerKey && (
           <MobileCard className="admin-mobile-card customer-mobile-section" title={t('adminCustomer.filterHistory')} style={cardStyle}>
-            <Selector value={filterStatus ? [filterStatus] : []} onChange={arr => setFilterStatus(arr[0] || '')} options={statusOptions} />
+            <div style={{ display: 'grid', gap: 10 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6, opacity: 0.6 }}>Trạng thái</div>
+                <Selector value={filterStatus ? [filterStatus] : []} onChange={arr => setFilterStatus(arr[0] || '')} options={statusOptions} />
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6, opacity: 0.6 }}>Ngày nhận</div>
+                <RangePicker
+                  value={dateRange}
+                  onChange={setDateRange}
+                  style={{ width: '100%' }}
+                  format="DD/MM/YYYY"
+                />
+              </div>
+            </div>
           </MobileCard>
         )}
 

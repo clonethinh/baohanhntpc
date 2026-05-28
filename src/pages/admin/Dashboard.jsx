@@ -214,11 +214,11 @@ export default function Dashboard() {
       </div>
 
       <MobileGrid columns={2} gap={8}>
-        <MobileGrid.Item><div className="admin-mobile-kpi warn"><span>{t('adminDashboard.dueToday')}</span><b>{insights.dueToday.length}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi danger"><span>{t('adminDashboard.overdue')}</span><b>{insights.overdue.length}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi danger"><span>{t('adminDashboard.priorityOpen')}</span><b>{insights.priorityOpen.length}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi success"><span>{t('adminDashboard.doneToday')}</span><b>{s.daTraHomNay}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi"><span>{t('adminDashboard.processing')}</span><b>{s.dangXuLy}</b></div></MobileGrid.Item>
+        <MobileGrid.Item><div className="admin-mobile-kpi warn" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><ClockCircleOutlined /> {t('adminDashboard.dueToday')}</span><b>{insights.dueToday.length}</b></div></MobileGrid.Item>
+        <MobileGrid.Item><div className="admin-mobile-kpi danger" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><AlertOutlined /> {t('adminDashboard.overdue')}</span><b>{insights.overdue.length}</b></div></MobileGrid.Item>
+        <MobileGrid.Item><div className="admin-mobile-kpi danger" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><StarOutlined /> {t('adminDashboard.priorityOpen')}</span><b>{insights.priorityOpen.length}</b></div></MobileGrid.Item>
+        <MobileGrid.Item><div className="admin-mobile-kpi success" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><CheckCircleOutlined /> {t('adminDashboard.doneToday')}</span><b>{s.daTraHomNay}</b></div></MobileGrid.Item>
+        <MobileGrid.Item><div className="admin-mobile-kpi" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><SyncOutlined /> {t('adminDashboard.processing')}</span><b>{s.dangXuLy}</b></div></MobileGrid.Item>
       </MobileGrid>
 
       <MobileCard title={t('adminDashboard.quickNav')} className="admin-mobile-card">
@@ -240,8 +240,14 @@ export default function Dashboard() {
                 clickable
                 onClick={() => openDetail(w.id)}
                 title={<span className="admin-mobile-code">{w.soChungTu}</span>}
-                description={`${w.khachHang || '-'} · ${w.tenHang || '-'}`}
-                extra={shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-'}
+                description={
+                  <div style={{ display: 'grid', gap: 2, fontSize: 13 }}>
+                    <div>{w.khachHang || '-'} · {w.tenHang || '-'}</div>
+                    <div style={{ fontSize: 11, opacity: 0.7 }}>
+                      Nhận: {formatDate(w.ngayNhan)} · Hẹn trả: {shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-'}
+                    </div>
+                  </div>
+                }
               >
                 <MobileSpace wrap>
                   <MobileTag color={w.uuTien ? 'danger' : getUrgency(w) === 'overdue' ? 'danger' : 'warning'}>

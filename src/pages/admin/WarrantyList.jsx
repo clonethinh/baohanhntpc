@@ -3,14 +3,16 @@ import { Table, Space, Input, Select, Button, Popconfirm, App, Typography, Tag, 
 import {
   Button as MobileButton,
   Card as MobileCard,
+  Checkbox,
   Dialog,
   List,
+  Popup,
   SearchBar,
   Selector,
   Space as MobileSpace,
   Tag as MobileTag,
 } from 'antd-mobile';
-import { SearchOutlined, DeleteOutlined, CheckCircleOutlined, DownloadOutlined, CopyOutlined, EyeOutlined, PrinterOutlined, StarOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, CheckCircleOutlined, DownloadOutlined, CopyOutlined, EyeOutlined, PrinterOutlined, StarOutlined, FilterOutlined } from '@ant-design/icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from '../../hooks/useDebounce';
@@ -48,6 +50,7 @@ export default function WarrantyList() {
   const [sortOrder, setSortOrder] = useState('ascend');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [staffList, setStaffList] = useState([]);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailId, setDetailId] = useState(null);
 
@@ -331,13 +334,29 @@ export default function WarrantyList() {
     {isMobile && <div className="mobile-only admin-mobile-page">
       <MobileCard className="admin-mobile-card" title={t('adminWarrantyList.titleWithTotal', { total: data.total })}>
         <MobileSpace direction="vertical" block style={{ '--gap': '10px' }}>
-          <SearchBar
-            placeholder={t('adminWarrantyList.mobileSearchPlaceholder')}
-            value={search}
-            onChange={setSearch}
-            clearable
-            style={{ '--height': '42px', '--border-radius': '12px' }}
-          />
+          <MobileSpace block>
+            <div style={{ flex: 1 }}>
+              <SearchBar
+                placeholder={t('adminWarrantyList.mobileSearchPlaceholder')}
+                value={search}
+                onChange={setSearch}
+                clearable
+                style={{ '--height': '42px', '--border-radius': '12px' }}
+              />
+            </div>
+            <MobileButton
+              style={{ borderRadius: 12, minWidth: 44 }}
+              onClick={() => setMobileFilterOpen(true)}
+            >
+              <FilterOutlined /> {(loaiXuLy || maNhanVien || ngayNhanRange) ? '●' : ''}
+            </MobileButton>
+            <MobileButton
+              style={{ borderRadius: 12, minWidth: 44 }}
+              onClick={handleExport}
+            >
+              <DownloadOutlined />
+            </MobileButton>
+          </MobileSpace>
           <Selector
             value={trangThai ? [trangThai] : []}
             onChange={(arr) => setTrangThai(arr[0] || '')}
@@ -356,6 +375,17 @@ export default function WarrantyList() {
             <MobileButton size="small" fill={uuTienOnly ? 'solid' : 'outline'} color="primary" onClick={() => setUuTienOnly(!uuTienOnly)}>
               {t('adminDashboard.priority')}
             </MobileButton>
+            {data.rows.length > 0 && (
+              <MobileButton size="small" fill="outline" onClick={() => {
+                if (selectedRowKeys.length === data.rows.length) {
+                  setSelectedRowKeys([]);
+                } else {
+                  setSelectedRowKeys(data.rows.map(w => w.id));
+                }
+              }}>
+                {selectedRowKeys.length === data.rows.length ? 'Bỏ chọn hết' : 'Chọn tất cả'}
+              </MobileButton>
+            )}
             <MobileButton size="small" onClick={() => {
               setSearch('');
               setTrangThai('');
@@ -372,6 +402,52 @@ export default function WarrantyList() {
         </MobileSpace>
       </MobileCard>
 
+      {/* Popup bộ lọc nâng cao mobile */}
+      <Popup
+        visible={mobileFilterOpen}
+        onMaskClick={() => setMobileFilterOpen(false)}
+        bodyStyle={{ borderTopLeftRadius: 16, borderTopRightRadius: 16, padding: '16px 16px 32px' }}
+      >
+        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 14 }}>Bộ lọc nâng cao</div>
+        <MobileSpace direction="vertical" block style={{ '--gap': '14px' }}>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6, opacity: 0.6 }}>Loại xử lý</div>
+            <Selector
+              value={loaiXuLy ? [loaiXuLy] : []}
+              onChange={(arr) => setLoaiXuLy(arr[0] || '')}
+              options={[
+                { label: 'Tất cả', value: '' },
+                ...LOAI_XU_LY_OPTIONS,
+              ]}
+            />
+          </div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6, opacity: 0.6 }}>Nhân viên</div>
+            <Selector
+              value={maNhanVien ? [maNhanVien] : []}
+              onChange={(arr) => setMaNhanVien(arr[0] || '')}
+              options={[
+                { label: 'Tất cả', value: '' },
+                ...staffList.map(nv => ({ label: nv.tenNV, value: nv.maNV })),
+              ]}
+            />
+          </div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 6, opacity: 0.6 }}>Ngày nhận</div>
+            <RangePicker
+              value={ngayNhanRange}
+              onChange={setNgayNhanRange}
+              style={{ width: '100%' }}
+              format="DD/MM/YYYY"
+            />
+          </div>
+          <MobileSpace block justify="between">
+            <MobileButton onClick={() => { setLoaiXuLy(''); setMaNhanVien(''); setNgayNhanRange(null); }}>Xóa lọc</MobileButton>
+            <MobileButton color="primary" onClick={() => setMobileFilterOpen(false)}>Áp dụng</MobileButton>
+          </MobileSpace>
+        </MobileSpace>
+      </Popup>
+
       <div className="admin-mobile-ticket-list">
         {loading ? (
           <MobileCard className="admin-mobile-card">{t('adminWarrantyList.loading')}</MobileCard>
@@ -382,8 +458,20 @@ export default function WarrantyList() {
           const dueText = shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-';
           return (
             <MobileCard key={w.id} className={`admin-mobile-ticket row-${urgency}`} onClick={() => handleOpenDetail(w.id)}>
-              <div className="admin-mobile-ticket-head">
-                <button type="button" onClick={(event) => { event.stopPropagation(); handleOpenDetail(w.id); }}>{w.soChungTu}</button>
+              <div className="admin-mobile-ticket-head" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span onClick={(event) => event.stopPropagation()} style={{ display: 'inline-flex', alignSelf: 'center' }}>
+                  <Checkbox
+                    checked={selectedRowKeys.includes(w.id)}
+                    onChange={(checked) => {
+                      if (checked) {
+                        setSelectedRowKeys(prev => [...prev, w.id]);
+                      } else {
+                        setSelectedRowKeys(prev => prev.filter(k => k !== w.id));
+                      }
+                    }}
+                  />
+                </span>
+                <button type="button" onClick={(event) => { event.stopPropagation(); handleOpenDetail(w.id); }} style={{ flex: 1, textAlign: 'left', border: 'none', background: 'none', padding: 0, fontWeight: 'bold', color: 'inherit', cursor: 'pointer' }}>{w.soChungTu}</button>
                 <MobileTag color={w.trangThai === 'da_tra' ? 'success' : w.trangThai === 'huy' ? 'danger' : urgency === 'overdue' ? 'danger' : getStatusBadgeColor(w.trangThai, 'mobile')}>
                   {STATUS[w.trangThai]?.label || w.trangThai}
                 </MobileTag>
@@ -424,6 +512,18 @@ export default function WarrantyList() {
           <MobileButton disabled={data.page * data.limit >= data.total} onClick={() => handlePageChange(data.page + 1, data.limit)}>{t('adminWarrantyList.nextPage')}</MobileButton>
         </MobileSpace>
       </MobileCard>
+
+      {/* Bulk action bar mobile */}
+      {selectedRowKeys.length > 0 && (
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'var(--ant-color-bg-container)', padding: '12px 16px', boxShadow: '0 -2px 12px rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+          <span style={{ fontWeight: 700, fontSize: 14 }}>Đã chọn {selectedRowKeys.length} phiếu</span>
+          <MobileSpace>
+            <MobileButton size="small" color="primary" onClick={() => confirmMobile(`Đánh dấu hoàn thành ${selectedRowKeys.length} phiếu?`, handleBulkTraHang)}>Xong hết</MobileButton>
+            <MobileButton size="small" onClick={handleExport}><DownloadOutlined /></MobileButton>
+            <MobileButton size="small" onClick={() => setSelectedRowKeys([])}>Bỏ chọn</MobileButton>
+          </MobileSpace>
+        </div>
+      )}
     </div>}
 
     {!isMobile && <div className="desktop-only admin-warranty-list-desktop" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

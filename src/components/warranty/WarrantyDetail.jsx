@@ -1740,6 +1740,31 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         )}
       </MobileCard>
 
+      <MobileCard className="warranty-mobile-card" title="QR Code tra cứu">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '10px 0' }}>
+          <QRCode value={trackingUrl} size={128} />
+          <MobileButton
+            size="small"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(trackingUrl);
+                message.success('Đã sao chép liên kết');
+              } catch {
+                const ta = document.createElement('textarea');
+                ta.value = trackingUrl;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                message.success('Đã sao chép liên kết');
+              }
+            }}
+          >
+            Sao chép liên kết tra cứu
+          </MobileButton>
+        </div>
+      </MobileCard>
+
       <MobileCard className="warranty-mobile-card" title="Thao tác nhanh">
         <MobileSpace wrap>
           <MobileButton size="small" onClick={() => setEditing(true)}>Sửa</MobileButton>
@@ -2056,8 +2081,23 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 ? getUpdateHistoryDetail(h)
                 : normalizeHistoryText(h.note) || (isCreate ? 'Phiếu đã được tạo' : '');
             return (
-              <div className="warranty-mobile-timeline-item" key={`${h.at}-${h.action}-${historyIndex}`}>
-                <b>{title}</b>
+              <div className="warranty-mobile-timeline-item" key={`${h.at}-${h.action}-${historyIndex}`} style={{ display: 'grid', gap: 2, position: 'relative' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <b>{title}</b>
+                  {h.action !== 'create' && (
+                    <span onClick={(e) => {
+                      e.stopPropagation();
+                      Dialog.confirm({
+                        content: 'Xóa dòng lịch sử này?',
+                        onConfirm: () => handleDeleteHistory(historyIndex),
+                      });
+                    }}>
+                      <MobileButton size="mini" color="danger" fill="none" style={{ padding: 0 }}>
+                        <DeleteOutlined style={{ fontSize: 13 }} />
+                      </MobileButton>
+                    </span>
+                  )}
+                </div>
                 <span>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</span>
                 {detail && <p style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</p>}
               </div>

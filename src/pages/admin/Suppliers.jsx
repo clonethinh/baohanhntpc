@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { App, Button, Card, DatePicker, Form, Input, Modal, Popconfirm, Select, Space, Switch, Table, Tag, Typography, Grid, Row, Col, theme } from 'antd';
 import { SearchOutlined, EditOutlined, StopOutlined, CheckOutlined, HistoryOutlined, FormOutlined } from '@ant-design/icons';
 import { Button as MobileButton, Card as MobileCard, DatePicker as MobileDatePicker, Dialog, Input as MobileInput, List, Popup, Space as MobileSpace, Switch as MobileSwitch, Tag as MobileTag, TextArea as MobileTextArea, Toast } from 'antd-mobile';
+import { EditSOutline } from 'antd-mobile-icons';
 import dayjs from 'dayjs';
 import { nhanVienService, supplierService, warrantyService } from '../../services/warrantyService';
 import StatusTag from '../../components/warranty/StatusTag';
@@ -321,9 +322,14 @@ export default function Suppliers() {
                 </MobileTag>
               </MobileSpace>
               {(record.supplierHistory || []).slice().reverse().map((h, idx) => (
-                <div key={`${record.id}-${h.action}-${h.at}-${idx}`} style={{ fontSize: 12, color: 'var(--adm-color-weak)' }}>
-                  {h.action === 'sent' ? t('adminSuppliers.sentToSupplier') : t('adminSuppliers.received')} · {formatDateTime(h.at)}
-                  {h.note ? ` · ${h.note}` : ''}
+                <div key={`${record.id}-${h.action}-${h.at}-${idx}`} style={{ fontSize: 12, color: 'var(--adm-color-weak)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
+                  <span>
+                    {h.action === 'sent' ? t('adminSuppliers.sentToSupplier') : t('adminSuppliers.received')} · {formatDateTime(h.at)}
+                    {h.note ? ` · ${h.note}` : ''}
+                  </span>
+                  <MobileButton size="mini" fill="none" style={{ padding: 0 }} onClick={(e) => { e.stopPropagation(); openEditNote(record, h); }}>
+                    <EditSOutline fontSize={12} />
+                  </MobileButton>
                 </div>
               ))}
             </div>
@@ -337,6 +343,11 @@ export default function Suppliers() {
     return (
       <div className="admin-mobile-page">
         <MobileCard className="admin-mobile-card" title={t('adminSuppliers.title')}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10, padding: '0 4px' }}>
+            <MobileTag color="primary">{t('adminSuppliers.summaryTotal', { count: summary.total })}</MobileTag>
+            <MobileTag color="success">{t('adminSuppliers.summaryActive', { count: summary.active })}</MobileTag>
+            <MobileTag color="default">{t('adminSuppliers.summaryInactive', { count: summary.inactive })}</MobileTag>
+          </div>
           <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
             <MobileInput placeholder={t('adminSuppliers.searchMobile')} value={search} onChange={setSearch} />
             <MobileSpace wrap>

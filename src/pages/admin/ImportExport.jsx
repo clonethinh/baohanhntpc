@@ -186,6 +186,26 @@ export default function ImportExport() {
             </MobileSpace>
           </MobileCard>
 
+          {importResult && (
+            <MobileCard title="Kết quả import">
+              <div style={{ display: 'grid', gap: 8 }}>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  <MobileTag color="success">Đã thêm: {importResult.inserted}</MobileTag>
+                  <MobileTag color="warning">Bỏ qua: {importResult.skipped}</MobileTag>
+                  {importResult.errors?.length > 0 && <MobileTag color="danger">Lỗi: {importResult.errors.length}</MobileTag>}
+                </div>
+                {importResult.errors?.length > 0 && (
+                  <div style={{ maxHeight: 120, overflow: 'auto', fontSize: 11, color: 'var(--adm-color-danger)' }}>
+                    {importResult.errors.map((e, i) => (
+                      <div key={i}>Dòng {e.row}: {e.reason}</div>
+                    ))}
+                  </div>
+                )}
+                <MobileButton block size="small" onClick={() => setImportResult(null)}>Đóng</MobileButton>
+              </div>
+            </MobileCard>
+          )}
+
           <MobileCard title={t('adminImportExport.exportExcel')}>
             <MobileSpace direction="vertical" block>
               <Radio.Group value={exportType} onChange={e => setExportType(e.target.value)}>

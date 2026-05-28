@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const MOBILE_MEDIA_QUERY = '(max-width: 991px)';
+const MOBILE_MEDIA_QUERY = '(max-width: 1199px)';
 
 function readMatch() {
   if (typeof window === 'undefined' || !window.matchMedia) return false;

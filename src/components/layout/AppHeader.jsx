@@ -3,6 +3,7 @@ import {
   MenuOutlined,
   MoonOutlined,
   SunOutlined,
+  SearchOutlined,
   QuestionCircleOutlined,
   UserOutlined,
   UserSwitchOutlined,
@@ -117,6 +118,13 @@ export default function AppHeader({ onHamburger }) {
           left={<Button className={iconButtonClass} type="text" icon={<MenuOutlined />} onClick={onHamburger} aria-label={t('action.moMenu')} />}
           right={(
             <Space size={4}>
+              <Button
+                className={iconButtonClass}
+                type="text"
+                icon={<SearchOutlined />}
+                onClick={() => { if (window.__focusSearch) window.__focusSearch(); }}
+                aria-label={t('action.timKiem')}
+              />
               {staffButton}
               <Tooltip title={themeLabel}>
                 <Button className={iconButtonClass} type="text" icon={isDark ? <SunOutlined /> : <MoonOutlined />} onClick={toggle} aria-label={themeLabel} />
@@ -130,7 +138,6 @@ export default function AppHeader({ onHamburger }) {
       </div>
       <Header className="desktop-only" style={{ padding: '0 24px', background: 'var(--ant-color-bg-container)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56, position: 'sticky', top: 0, zIndex: 100 }}>
         <Space>
-          <Button type="text" icon={<MenuOutlined />} onClick={onHamburger} className={`mobile-only ${iconButtonClass}`} aria-label={t('action.moMenu')} />
           <Breadcrumb items={items} />
         </Space>
         <Space>

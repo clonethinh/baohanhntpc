@@ -92,6 +92,15 @@ export default function CustomerLayout({ children }) {
         <div style={{ flex: 1, padding: '16px 12px calc(16px + env(safe-area-inset-bottom))' }}>
           {children}
         </div>
+        <div style={{ textAlign: 'center', padding: '12px 16px', borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`, background: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.5)' }}>
+          <Typography.Text type="secondary" style={{ fontSize: 11 }}>
+            {t('app.companyFooter')}
+          </Typography.Text>
+          <br />
+          <Typography.Link href="/admin" style={{ fontSize: 11 }}>
+            {t('common.nhanVienDangNhap')}
+          </Typography.Link>
+        </div>
       </div>
       <FloatingZalo />
     </>
