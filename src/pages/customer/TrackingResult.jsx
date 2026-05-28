@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Card, Result, Button, Tag, Descriptions, Steps, Alert, Typography, Space, Timeline, Row, Col, Divider, Image, Collapse, List as DesktopList } from 'antd';
+import { Card, Result, Button, Tag, Descriptions, Steps, Alert, Typography, Space, Timeline, Row, Col, Divider, Image, Collapse, List as DesktopList, Watermark } from 'antd';
 import {
   Button as MobileButton,
   Card as MobileCard,
@@ -15,6 +15,9 @@ import {
   Steps as MobileSteps,
   Tag as MobileTag,
   Toast,
+  PullToRefresh,
+  ImageViewer,
+  ActionSheet,
 } from 'antd-mobile';
 import {
   ArrowLeftOutlined,
@@ -38,22 +41,6 @@ import { useTheme } from '../../hooks/useTheme';
 import { normalizeHistoryNote } from '../../utils/historyDisplay';
 import styles from './TrackingResult.module.css';
 
-const ZALO_WEB_URL = 'https://zalo.me/0937632000';
-const ZALO_APP_URL = 'zalo://chat?phone=0937632000';
-
-function openZaloApp(event) {
-  event?.preventDefault?.();
-  const ua = navigator.userAgent || '';
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
-  if (!isMobile) {
-    window.open(ZALO_WEB_URL, '_blank', 'noopener,noreferrer');
-    return;
-  }
-  window.location.href = ZALO_APP_URL;
-  setTimeout(() => {
-    window.location.href = ZALO_WEB_URL;
-  }, 800);
-}
 
 function renderHistoryDetail(detail) {
   if (!detail || typeof detail !== 'string') return detail;
@@ -207,7 +194,8 @@ export default function TrackingResult() {
   const [relatedByPhone, setRelatedByPhone] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showZaloBubble, setShowZaloBubble] = useState(true);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [imageViewerIndex, setImageViewerIndex] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -339,213 +327,300 @@ export default function TrackingResult() {
 
   return (
     <>
-    <div className="mobile-only ntpc-mobile-page tracking-mobile">
-      <section className="ntpc-mobile-hero tracking-hero">
-        <MobileTag round color={isOverdue ? 'danger' : mobileStatusColor(data.trangThai)}>
-          {statusConfig.label}
-        </MobileTag>
-        <h1>{data.soChungTu}</h1>
-        <p>{statusSummary}</p>
-      </section>
-
-      {(isOverdue || isUrgent || data.trangThai === 'huy' || data.trangThai === 'da_tra') && (
-        <NoticeBar
-          color={data.trangThai === 'huy' || isOverdue ? 'error' : data.trangThai === 'da_tra' ? 'success' : 'alert'}
-          wrap
-          content={
-            data.trangThai === 'huy'
-              ? t('trackingResult.canceled')
-              : data.trangThai === 'da_tra'
-                ? (data.ngayTra ? t('trackingResult.doneOn', { date: data.ngayTra }) : t('trackingResult.done'))
-                : isOverdue
-                  ? t('trackingResult.overdueDays', { count: dayjs().diff(dueDate, 'day') })
-                  : t('trackingResult.remainingDays', { count: dueDate.diff(dayjs(), 'day') })
+    <div className="mobile-only ntpc-mobile-page tracking-mobile" style={{ position: 'relative' }}>
+      <Watermark
+        content={`Nguyễn Tân PC - ${data.soChungTu}`}
+        gapX={100}
+        gapY={120}
+        rotate={-30}
+        opacity={isDark ? 0.05 : 0.07}
+      />
+      <PullToRefresh
+        onRefresh={async () => {
+          try {
+            const res = await publicService.track(soChungTu);
+            if (res.data.success) {
+              setData(res.data.data);
+              Toast.show({ content: 'Đã cập nhật trạng thái mới nhất', icon: 'success' });
+            }
+          } catch {
+            Toast.show({ content: 'Không thể làm mới dữ liệu lúc này', icon: 'fail' });
           }
-        />
-      )}
+        }}
+      >
+        <section className="ntpc-mobile-hero tracking-hero ntpc-glass-card" style={{ margin: '0 0 16px 0' }}>
+          <MobileTag round color={isOverdue ? 'danger' : mobileStatusColor(data.trangThai)}>
+            {statusConfig.label}
+          </MobileTag>
+          <h1>{data.soChungTu}</h1>
+          <p>{statusSummary}</p>
+        </section>
 
-      <MobileGrid columns={2} gap={8} className="ntpc-mobile-kpis">
-        <MobileGrid.Item>
-          <div className="ntpc-mobile-kpi"><span>{t('trackingResult.receivedDate')}</span><b>{data.ngayNhan || '-'}</b></div>
-        </MobileGrid.Item>
-        <MobileGrid.Item>
-          <div className="ntpc-mobile-kpi">
-            <span>{isClosed ? t('trackingResult.doneDate') : t('trackingResult.dueDateShort')}</span>
-            <b>
-              {isClosed
-                ? (data.ngayTra || '-')
-                : (data.ngayHenTraRaw === 'none'
-                    ? <span>Đang cập nhập<span className="loading-dots" /></span>
-                    : (data.ngayHenTra || '-'))}
-            </b>
-          </div>
-        </MobileGrid.Item>
-        <MobileGrid.Item>
-          <div className="ntpc-mobile-kpi"><span>{t('trackingResult.customer')}</span><b>{data.khachHang || '-'}</b></div>
-        </MobileGrid.Item>
-        <MobileGrid.Item>
-          <div className="ntpc-mobile-kpi"><span>{t('trackingResult.phone')}</span><b>{data.soDienThoai || '-'}</b></div>
-        </MobileGrid.Item>
-      </MobileGrid>
-
-      <MobileCard title={t('trackingResult.progressTitle')} className="ntpc-mobile-card ntpc-mobile-progress-desktop">
-        <Steps
-          className="tracuu-progress-steps"
-          size="small"
-          direction="vertical"
-          current={currentStep >= 0 ? currentStep : 0}
-          items={(data.steps || []).map((s) => ({ title: s.label, description: s.date || '' }))}
-        />
-        {data.doiTra && (
-          <div className="ntpc-mobile-success">
-            {data.doiTra.type === 'doi_hang'
-              ? t('trackingResult.exchangeDone', { name: data.doiTra.tenHangMoi || '-', serial: data.doiTra.soSeriMoi || '-' })
-              : t('trackingResult.returnDone', { reason: data.doiTra.reason || data.doiTra.note || '-' })}
-          </div>
+        {(isOverdue || isUrgent || data.trangThai === 'huy' || data.trangThai === 'da_tra') && (
+          <NoticeBar
+            color={data.trangThai === 'huy' || isOverdue ? 'error' : data.trangThai === 'da_tra' ? 'success' : 'alert'}
+            wrap
+            content={
+              data.trangThai === 'huy'
+                ? t('trackingResult.canceled')
+                : data.trangThai === 'da_tra'
+                  ? (data.ngayTra ? t('trackingResult.doneOn', { date: data.ngayTra }) : t('trackingResult.done'))
+                  : isOverdue
+                    ? t('trackingResult.overdueDays', { count: dayjs().diff(dueDate, 'day') })
+                    : t('trackingResult.remainingDays', { count: dueDate.diff(dayjs(), 'day') })
+            }
+            style={{ borderRadius: 12, marginBottom: 16 }}
+          />
         )}
-      </MobileCard>
 
-      {timelineItems.length > 0 && (
-        <MobileCard title={t('trackingResult.detailProgress')} className="ntpc-mobile-card">
-          <div className="ntpc-mobile-timeline">
-            {timelineItems.map((log, i) => (
-              <div className="ntpc-mobile-timeline-item" key={`${log.action}-${log.time}-${i}`}>
-                <b>{log.action}</b>
-                <span>{log.time}</span>
-                {log.note && <p style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(normalizeHistoryNote(log.note))}</p>}
-              </div>
-            ))}
+        <MobileGrid columns={2} gap={8} className="ntpc-mobile-kpis" style={{ marginBottom: 16 }}>
+          <MobileGrid.Item>
+            <div className="ntpc-mobile-kpi ntpc-glass-card" style={{ padding: 12, minHeight: 74 }}>
+              <span>{t('trackingResult.receivedDate')}</span>
+              <b>{data.ngayNhan || '-'}</b>
+            </div>
+          </MobileGrid.Item>
+          <MobileGrid.Item>
+            <div className="ntpc-mobile-kpi ntpc-glass-card" style={{ padding: 12, minHeight: 74 }}>
+              <span>{isClosed ? t('trackingResult.doneDate') : t('trackingResult.dueDateShort')}</span>
+              <b>
+                {isClosed
+                  ? (data.ngayTra || '-')
+                  : (data.ngayHenTraRaw === 'none'
+                      ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                      : (data.ngayHenTra || '-'))}
+              </b>
+            </div>
+          </MobileGrid.Item>
+          <MobileGrid.Item>
+            <div className="ntpc-mobile-kpi ntpc-glass-card" style={{ padding: 12, minHeight: 74 }}>
+              <span>{t('trackingResult.customer')}</span>
+              <b>{data.khachHang || '-'}</b>
+            </div>
+          </MobileGrid.Item>
+          <MobileGrid.Item>
+            <div className="ntpc-mobile-kpi ntpc-glass-card" style={{ padding: 12, minHeight: 74 }}>
+              <span>{t('trackingResult.phone')}</span>
+              <b>{data.soDienThoai || '-'}</b>
+            </div>
+          </MobileGrid.Item>
+        </MobileGrid>
+
+        <MobileCard title={t('trackingResult.progressTitle')} className="ntpc-mobile-card ntpc-glass-card">
+          <div style={{ paddingTop: 8, paddingBottom: 8 }}>
+            <MobileSteps
+              direction="vertical"
+              current={currentStep >= 0 ? currentStep : 0}
+              style={{
+                '--title-font-size': '15px',
+                '--description-font-size': '13px',
+                '--indicator-margin': '0 8px 0 0',
+              }}
+            >
+              {(data.steps || []).map((s, idx) => (
+                <MobileSteps.Step
+                  key={idx}
+                  title={<span style={{ fontWeight: 800, color: idx === currentStep ? '#1677ff' : 'inherit' }}>{s.label}</span>}
+                  description={s.date || ''}
+                />
+              ))}
+            </MobileSteps>
           </div>
+          {data.doiTra && (
+            <div className="ntpc-mobile-success" style={{ borderRadius: 10, marginTop: 12 }}>
+              {data.doiTra.type === 'doi_hang'
+                ? t('trackingResult.exchangeDone', { name: data.doiTra.tenHangMoi || '-', serial: data.doiTra.soSeriMoi || '-' })
+                : t('trackingResult.returnDone', { reason: data.doiTra.reason || data.doiTra.note || '-' })}
+            </div>
+          )}
         </MobileCard>
-      )}
 
-      {relatedByPhone.length > 0 && (
-        <MobileCard className="ntpc-mobile-card tracking-related-card">
-          <MobileCollapse defaultActiveKey={[]}>
-            <MobileCollapse.Panel key="related" title="Chứng từ khác cùng số điện thoại">
-              <List>
-                {relatedByPhone.map((item, i) => (
-                  <List.Item
-                    key={`${item.soChungTu}-${i}`}
-                    onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}
-                    description={(
-                      <div className="tracuu-result-meta">
-                        <div className="tracuu-result-product">{normalizeProductName(item.tenHang) || '-'}</div>
-                        <div className="tracuu-result-dates">
-                          <span><CalendarOutlined /> Nhận: {item.ngayNhan || '-'}</span>
-                          <span><CalendarOutlined /> Hẹn trả: {item.ngayHenTra || '-'}</span>
-                        </div>
-                      </div>
-                    )}
-                  >
-                    <MobileSpace wrap>
-                      <span className="admin-mobile-code">{item.soChungTu}</span>
-                      <MobileTag color={mobileStatusColor(item.trangThai)}>{formatStatus(item.trangThai)}</MobileTag>
-                    </MobileSpace>
-                  </List.Item>
-                ))}
-              </List>
-            </MobileCollapse.Panel>
-          </MobileCollapse>
-        </MobileCard>
-      )}
-
-      <MobileCard title={t('trackingResult.ticketInfo')} className="ntpc-mobile-card tracking-info-card">
-        <List>
-          <List.Item title={t('trackingResult.documentNumber')} extra={<span className={styles.infoValue}>{data.soChungTu}</span>} />
-          <List.Item title={t('trackingResult.status')} extra={<MobileTag color={mobileStatusColor(data.trangThai)}>{statusConfig.label}</MobileTag>} />
-          <List.Item title={t('trackingResult.customer')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.khachHang || '-'}</span>} />
-          <List.Item title={t('trackingResult.phoneLong')} extra={<span className={styles.infoValue}>{data.soDienThoai || '-'}</span>} />
-          <List.Item title={t('trackingResult.receivedDate')} extra={<span className={styles.infoValue}>{data.ngayNhan || '-'}</span>} />
-          {!isClosed && (
-            <List.Item
-              title={t('trackingResult.dueDate')}
-              extra={
-                <span className={styles.infoValue}>
-                  {data.ngayHenTraRaw === 'none'
-                    ? <span>Đang cập nhập<span className="loading-dots" /></span>
-                    : (data.ngayHenTra || '-')}
-                </span>
-              }
-            />
-          )}
-          {isClosed && (
-            <List.Item title={t('trackingResult.doneDate')} extra={<span className={styles.infoValue}>{data.ngayTra || '-'}</span>} />
-          )}
-          {data.ghiChu && (
-            <List.Item title={t('trackingResult.note')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.ghiChu}</span>} />
-          )}
-        </List>
-      </MobileCard>
-
-      <MobileCard title={t('trackingResult.productInfo')} className="ntpc-mobile-card tracking-info-card">
-        <List>
-          <List.Item title={t('trackingResult.productName')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.tenHang || '-'}</span>} />
-          <List.Item title={t('trackingResult.serial')} extra={<span className={styles.infoValue}>{data.soSeri || '-'}</span>} />
-          <List.Item title={t('trackingResult.warranty')} extra={<span className={styles.infoValue}>{data.baoHanh || '-'}</span>} />
-          <List.Item title={t('trackingResult.purchaseDate')} extra={<span className={styles.infoValue}>{data.ngayMua || '-'}</span>} />
-          <List.Item title={t('trackingResult.receivedIssue')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.loiLucNhan || '-'}</span>} />
-          <List.Item title={t('trackingResult.accessories')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.phuKien || '-'}</span>} />
-        </List>
-      </MobileCard>
-
-
-      {(data.attachmentsPublic || []).length > 0 && (
-        <MobileCard title={t('trackingResult.viewImages')} className="ntpc-mobile-card">
-          <Image.PreviewGroup>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              {(data.attachmentsPublic || []).map((img) => (
-                <Image key={img.id || img.url} src={img.url} alt={img.name || 'image'} preview={{ mask: t('trackingResult.viewImage') }} width="100%" height={120} wrapperStyle={{ display: 'block', width: '100%' }} style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb' }} />
+        {timelineItems.length > 0 && (
+          <MobileCard title={t('trackingResult.detailProgress')} className="ntpc-mobile-card ntpc-glass-card">
+            <div className="ntpc-mobile-timeline">
+              {timelineItems.map((log, i) => (
+                <div className="ntpc-mobile-timeline-item" key={`${log.action}-${log.time}-${i}`}>
+                  <b>{log.action}</b>
+                  <span>{log.time}</span>
+                  {log.note && <p style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(normalizeHistoryNote(log.note))}</p>}
+                </div>
               ))}
             </div>
-          </Image.PreviewGroup>
-        </MobileCard>
-      )}
-      {data.doiTra && (
-        <MobileCard title={t('trackingResult.exchangeReturn')} className="ntpc-mobile-card">
-        <List>
-            <List.Item title={t('trackingResult.handlingType')}>{data.doiTra.type === 'doi_hang' ? t('trackingResult.exchange') : t('trackingResult.return')}</List.Item>
-            <List.Item title={t('trackingResult.time')}>{data.doiTra.at || '-'}</List.Item>
-            <List.Item title={t('trackingResult.oldProduct')}>{data.doiTra.tenHangCu || '-'}</List.Item>
-            <List.Item title={t('trackingResult.oldSerial')}>{data.doiTra.soSeriCu || '-'}</List.Item>
-            {data.doiTra.type === 'doi_hang' ? (
-              <>
-                <List.Item title={t('trackingResult.newProduct')}>{data.doiTra.tenHangMoi || '-'}</List.Item>
-                <List.Item title={t('trackingResult.newSerial')}>{data.doiTra.soSeriMoi || '-'}</List.Item>
-              </>
-            ) : (
-              <List.Item title={t('trackingResult.returnReason')}>{data.doiTra.reason || '-'}</List.Item>
+          </MobileCard>
+        )}
+
+        {relatedByPhone.length > 0 && (
+          <MobileCard className="ntpc-mobile-card tracking-related-card ntpc-glass-card">
+            <MobileCollapse defaultActiveKey={[]}>
+              <MobileCollapse.Panel key="related" title="Chứng từ khác cùng số điện thoại">
+                <List>
+                  {relatedByPhone.map((item, i) => (
+                    <List.Item
+                      key={`${item.soChungTu}-${i}`}
+                      onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}
+                      description={(
+                        <div className="tracuu-result-meta">
+                          <div className="tracuu-result-product">{normalizeProductName(item.tenHang) || '-'}</div>
+                          <div className="tracuu-result-dates">
+                            <span><CalendarOutlined /> Nhận: {item.ngayNhan || '-'}</span>
+                            <span><CalendarOutlined /> Hẹn trả: {item.ngayHenTra || '-'}</span>
+                          </div>
+                        </div>
+                      )}
+                    >
+                      <MobileSpace wrap>
+                        <span className="admin-mobile-code">{item.soChungTu}</span>
+                        <MobileTag color={mobileStatusColor(item.trangThai)}>{formatStatus(item.trangThai)}</MobileTag>
+                      </MobileSpace>
+                    </List.Item>
+                  ))}
+                </List>
+              </MobileCollapse.Panel>
+            </MobileCollapse>
+          </MobileCard>
+        )}
+
+        <MobileCard title={t('trackingResult.ticketInfo')} className="ntpc-mobile-card tracking-info-card ntpc-glass-card">
+          <List>
+            <List.Item title={t('trackingResult.documentNumber')} extra={<span className={styles.infoValue}>{data.soChungTu}</span>} />
+            <List.Item title={t('trackingResult.status')} extra={<MobileTag color={mobileStatusColor(data.trangThai)}>{statusConfig.label}</MobileTag>} />
+            <List.Item title={t('trackingResult.customer')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.khachHang || '-'}</span>} />
+            <List.Item title={t('trackingResult.phoneLong')} extra={<span className={styles.infoValue}>{data.soDienThoai || '-'}</span>} />
+            <List.Item title={t('trackingResult.receivedDate')} extra={<span className={styles.infoValue}>{data.ngayNhan || '-'}</span>} />
+            {!isClosed && (
+              <List.Item
+                title={t('trackingResult.dueDate')}
+                extra={
+                  <span className={styles.infoValue}>
+                    {data.ngayHenTraRaw === 'none'
+                      ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                      : (data.ngayHenTra || '-')}
+                  </span>
+                }
+              />
             )}
-            {data.doiTra.note && <List.Item title={t('trackingResult.note')}>{data.doiTra.note}</List.Item>}
+            {isClosed && (
+              <List.Item title={t('trackingResult.doneDate')} extra={<span className={styles.infoValue}>{data.ngayTra || '-'}</span>} />
+            )}
+            {data.ghiChu && (
+              <List.Item title={t('trackingResult.note')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.ghiChu}</span>} />
+            )}
           </List>
         </MobileCard>
-      )}
 
-      <MobileCard title={t('trackingResult.policyTitle')} className="ntpc-mobile-card">
-        <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
-          <span>{t('trackingResult.policyDelivery')}</span>
-          <span>{t('trackingResult.policyStorage')}</span>
-          <a href={support.policyUrl} target="_blank" rel="noreferrer">{t('trackingResult.policyLinkText')}</a>
-        </MobileSpace>
-      </MobileCard>
+        <MobileCard title={t('trackingResult.productInfo')} className="ntpc-mobile-card tracking-info-card ntpc-glass-card">
+          <List>
+            <List.Item title={t('trackingResult.productName')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.tenHang || '-'}</span>} />
+            <List.Item title={t('trackingResult.serial')} extra={<span className={styles.infoValue}>{data.soSeri || '-'}</span>} />
+            <List.Item title={t('trackingResult.warranty')} extra={<span className={styles.infoValue}>{data.baoHanh || '-'}</span>} />
+            <List.Item title={t('trackingResult.purchaseDate')} extra={<span className={styles.infoValue}>{data.ngayMua || '-'}</span>} />
+            <List.Item title={t('trackingResult.receivedIssue')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.loiLucNhan || '-'}</span>} />
+            <List.Item title={t('trackingResult.accessories')} extra={<span className={`${styles.infoValue} ${styles.infoValueLong}`}>{data.phuKien || '-'}</span>} />
+          </List>
+        </MobileCard>
 
-      <MobileCard title={t('trackingResult.supportContact')} className="ntpc-mobile-card">
-        <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
-          <b>{support.company || t('trackingResult.companyFallback')}</b>
-          <span>{support.address}</span>
-          <MobileDivider />
-          <MobileButton block color="primary" href={`tel:${(support.warrantyPhone || '0937632000').replace(/\s/g, '')}`}>
-            BH-KT: {support.warrantyPhone || '0937 63 2000'}
-          </MobileButton>
-          <MobileButton block href={`tel:${(support.hotline || '0903602240').replace(/\s/g, '')}`}>
-            Hotline: {support.hotline || '0903 602 240'}
-          </MobileButton>
-        </MobileSpace>
-      </MobileCard>
+        {(data.attachmentsPublic || []).length > 0 && (
+          <MobileCard title={t('trackingResult.viewImages')} className="ntpc-mobile-card ntpc-glass-card">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              {(data.attachmentsPublic || []).map((img, idx) => (
+                <div
+                  key={img.id || img.url}
+                  onClick={() => {
+                    setImageViewerIndex(idx);
+                    setImageViewerVisible(true);
+                  }}
+                  style={{ position: 'relative', width: '100%', height: 120, borderRadius: 8, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer' }}
+                >
+                  <img
+                    src={img.url}
+                    alt={img.name || 'image'}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = 1} onMouseLeave={(e) => e.currentTarget.style.opacity = 0}>
+                    <span style={{ color: '#fff', fontSize: 12 }}>{t('trackingResult.viewImage')}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* ImageViewer overlay */}
+            <ImageViewer.Multi
+              images={data.attachmentsPublic.map(img => img.url)}
+              visible={imageViewerVisible}
+              defaultIndex={imageViewerIndex}
+              onClose={() => setImageViewerVisible(false)}
+            />
+          </MobileCard>
+        )}
+
+        {data.doiTra && (
+          <MobileCard title={t('trackingResult.exchangeReturn')} className="ntpc-mobile-card ntpc-glass-card">
+            <List>
+              <List.Item title={t('trackingResult.handlingType')}>{data.doiTra.type === 'doi_hang' ? t('trackingResult.exchange') : t('trackingResult.return')}</List.Item>
+              <List.Item title={t('trackingResult.time')}>{data.doiTra.at || '-'}</List.Item>
+              <List.Item title={t('trackingResult.oldProduct')}>{data.doiTra.tenHangCu || '-'}</List.Item>
+              <List.Item title={t('trackingResult.oldSerial')}>{data.doiTra.soSeriCu || '-'}</List.Item>
+              {data.doiTra.type === 'doi_hang' ? (
+                <>
+                  <List.Item title={t('trackingResult.newProduct')}>{data.doiTra.tenHangMoi || '-'}</List.Item>
+                  <List.Item title={t('trackingResult.newSerial')}>{data.doiTra.soSeriMoi || '-'}</List.Item>
+                </>
+              ) : (
+                <List.Item title={t('trackingResult.returnReason')}>{data.doiTra.reason || '-'}</List.Item>
+              )}
+              {data.doiTra.note && <List.Item title={t('trackingResult.note')}>{data.doiTra.note}</List.Item>}
+            </List>
+          </MobileCard>
+        )}
+
+        <MobileCard title={t('trackingResult.policyTitle')} className="ntpc-mobile-card ntpc-glass-card">
+          <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
+            <span>{t('trackingResult.policyDelivery')}</span>
+            <span>{t('trackingResult.policyStorage')}</span>
+            <a href={support.policyUrl} target="_blank" rel="noreferrer">{t('trackingResult.policyLinkText')}</a>
+          </MobileSpace>
+        </MobileCard>
+
+        <MobileCard title={t('trackingResult.supportContact')} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 20 }}>
+          <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
+            <b style={{ color: isDark ? '#fff' : '#1f2a1d' }}>{support.company || t('trackingResult.companyFallback')}</b>
+            <span>{support.address}</span>
+            <MobileDivider />
+            <MobileButton
+              block
+              color="primary"
+              onClick={() => {
+                ActionSheet.show({
+                  actions: [
+                    {
+                      key: 'technical',
+                      text: '📞 Gọi Kỹ thuật - Bảo hành (0937 63 2000)',
+                      onClick: () => window.open('tel:0937632000')
+                    },
+                    {
+                      key: 'hotline',
+                      text: '☎️ Gọi Hotline Nguyễn Tân PC (0903 602 240)',
+                      onClick: () => window.open('tel:0903602240')
+                    },
+                    {
+                      key: 'map',
+                      text: '🗺️ Chỉ đường Google Maps',
+                      onClick: () => window.open('https://maps.app.goo.gl/Nx6WgejPbu1YJGWR7', '_blank')
+                    }
+                  ],
+                  cancelText: 'Hủy bỏ'
+                });
+              }}
+              style={{ borderRadius: 10 }}
+            >
+              📞 Liên hệ & Bản đồ
+            </MobileButton>
+          </MobileSpace>
+        </MobileCard>
+      </PullToRefresh>
 
       <div className="ntpc-mobile-actions">
-        <MobileButton block onClick={handleCopyLink}>{t('trackingResult.copyLink')}</MobileButton>
-        <MobileButton block onClick={() => navigate('/tra-cuu')}>{t('trackingResult.searchAgain')}</MobileButton>
+        <MobileButton block onClick={handleCopyLink} style={{ borderRadius: 10 }}>{t('trackingResult.copyLink')}</MobileButton>
+        <MobileButton block onClick={() => navigate('/tra-cuu')} style={{ borderRadius: 10 }}>{t('trackingResult.searchAgain')}</MobileButton>
       </div>
     </div>
 
@@ -802,101 +877,6 @@ export default function TrackingResult() {
         </Col>
       </Row>
     </div>
-    <style>{`@keyframes zalo-bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}60%{transform:translateY(-3px)}}`}</style>
-    {showZaloBubble && (
-      <a
-        href={ZALO_WEB_URL}
-        onClick={openZaloApp}
-        style={{
-          position: 'fixed',
-          right: 80,
-          bottom: 20,
-          background: '#fff',
-          borderRadius: 12,
-          padding: '10px 14px 10px 12px',
-          boxShadow: '0 8px 30px rgba(0,104,255,0.15)',
-          border: '1px solid #d9d9d9',
-          zIndex: 1199,
-          maxWidth: 240,
-          cursor: 'pointer',
-          textDecoration: 'none',
-          animation: 'zalo-bounce 2s infinite',
-          display: 'block',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            right: -6,
-            bottom: 16,
-            width: 10,
-            height: 10,
-            background: '#fff',
-            transform: 'rotate(45deg)',
-            borderRight: '1px solid #d9d9d9',
-            borderTop: '1px solid #d9d9d9',
-          }}
-        />
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setShowZaloBubble(false);
-          }}
-          style={{
-            position: 'absolute',
-            top: 4,
-            right: 4,
-            border: 'none',
-            background: 'none',
-            fontSize: 10,
-            color: '#bfbfbf',
-            cursor: 'pointer',
-            padding: 2,
-            lineHeight: 1,
-          }}
-        >
-          ✕
-        </button>
-        <div style={{ fontSize: 13, color: '#262626', fontWeight: 500, lineHeight: 1.4 }}>
-          Bạn cần trợ giúp?
-        </div>
-        <div style={{ fontSize: 12, color: '#0068ff', fontWeight: 700, marginTop: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
-          Chat ngay <RightOutlined style={{ fontSize: 10 }} />
-        </div>
-      </a>
-    )}
-    <a
-      href={ZALO_WEB_URL}
-      onClick={openZaloApp}
-      aria-label="Chat Zalo 0937 63 2000"
-      style={{
-        position: 'fixed',
-        right: 16,
-        bottom: 16,
-        width: 56,
-        height: 56,
-        borderRadius: '50%',
-        background: '#fff',
-        color: '#0068ff',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textDecoration: 'none',
-        boxShadow: '0 10px 24px rgba(0,104,255,0.32)',
-        border: '2px solid #0068ff',
-        zIndex: 1200,
-        animation: 'zalo-bounce 2s infinite',
-      }}
-    >
-      <img
-        src="/zalo.png"
-        alt="Zalo"
-        width="34"
-        height="34"
-        style={{ borderRadius: '50%', objectFit: 'cover', display: 'block' }}
-      />
-    </a>
     </>
   );
 }

@@ -1,25 +1,10 @@
-import { useEffect, useState } from 'react';
-
-const ZALO_WEB_URL = 'https://zalo.me/0937632000';
-const ZALO_APP_URL = 'zalo://chat?phone=0937632000';
-
-function openZaloApp(event) {
-  event?.preventDefault?.();
-  const ua = navigator.userAgent || '';
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
-  if (!isMobile) {
-    window.open(ZALO_WEB_URL, '_blank', 'noopener,noreferrer');
-    return;
-  }
-  window.location.href = ZALO_APP_URL;
-  setTimeout(() => {
-    window.location.href = ZALO_WEB_URL;
-  }, 800);
-}
+import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Alert, Button, Card, Col, Empty, Grid, Input, List, Row, Skeleton, Space, Tag, Typography } from 'antd';
-import { Button as MobileButton, Card as MobileCard, Dialog, Empty as MobileEmpty, Input as MobileInput, List as MobileList, Skeleton as MobileSkeleton, Space as MobileSpace, Tag as MobileTag } from 'antd-mobile';
+import { Button as MobileButton, Card as MobileCard, Dialog, Empty as MobileEmpty, List as MobileList, Skeleton as MobileSkeleton, Space as MobileSpace, Tag as MobileTag, TabBar, NavBar, SwipeAction, SearchBar, Toast, Collapse, Popup, CapsuleTabs } from 'antd-mobile';
+import { useTheme } from '../../hooks/useTheme';
+import { MoonOutlined, SunOutlined } from '@ant-design/icons';
 import {
   CalendarOutlined,
   CheckCircleOutlined,
@@ -100,6 +85,10 @@ function writeRecent(list) {
 export default function Tracuu() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isDark, toggle } = useTheme();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const activeTab = queryParams.get('tab') || 'search';
   const screens = Grid.useBreakpoint();
   const isCompact = !screens.lg;
   const [code, setCode] = useState('');
@@ -107,7 +96,8 @@ export default function Tracuu() {
   const [recent, setRecent] = useState(() => readRecent());
   const [phoneResults, setPhoneResults] = useState(null);
   const [searching, setSearching] = useState(false);
-  const [showZaloBubble, setShowZaloBubble] = useState(true);
+
+  const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {
     const onStorage = (event) => {
@@ -136,6 +126,7 @@ export default function Tracuu() {
     const soChungTu = normalizeCode(raw);
     setError('');
     setPhoneResults(null);
+    setFilterStatus('all');
 
     if (!raw) {
       setError('Vui lòng nhập mã phiếu hoặc số điện thoại.');
@@ -171,37 +162,77 @@ export default function Tracuu() {
     }
   };
 
+  const getFilteredItems = () => {
+    const items = phoneResults?.items || [];
+    if (filterStatus === 'all') return items;
+    if (filterStatus === 'pending') {
+      return items.filter(item => !['da_tra', 'da_tra_hang', 'da_sua_xong', 'huy', 'da_huy'].includes(item.trangThai));
+    }
+    if (filterStatus === 'completed') {
+      return items.filter(item => ['da_tra', 'da_tra_hang', 'da_sua_xong'].includes(item.trangThai));
+    }
+    return items;
+  };
+
   const renderMobileResults = () => {
     if (searching) {
-      return <MobileCard className="ntpc-mobile-card"><MobileSkeleton.Title animated /><MobileSkeleton.Paragraph lineCount={4} animated /></MobileCard>;
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
+          {[1, 2].map((i) => (
+            <MobileCard key={i} className="ntpc-mobile-card ntpc-glass-card" style={{ padding: '16px 16px 12px 16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <MobileSkeleton animated style={{ '--width': '110px', '--height': '18px', '--border-radius': '4px' }} />
+                <MobileSkeleton animated style={{ '--width': '76px', '--height': '18px', '--border-radius': '999px' }} />
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <MobileSkeleton animated style={{ '--width': '85%', '--height': '16px', '--border-radius': '4px' }} />
+              </div>
+              <div style={{ display: 'flex', gap: 16 }}>
+                <MobileSkeleton animated style={{ '--width': '100px', '--height': '13px', '--border-radius': '4px' }} />
+                <MobileSkeleton animated style={{ '--width': '100px', '--height': '13px', '--border-radius': '4px' }} />
+              </div>
+            </MobileCard>
+          ))}
+        </div>
+      );
     }
     if (!phoneResults) return null;
+    const filtered = getFilteredItems();
     return (
-      <MobileCard title={`Kết quả theo SĐT ${phoneResults.phone} (${phoneResults.total})`} className="ntpc-mobile-card">
-        {(phoneResults.items || []).length ? (
+      <MobileCard title={`Kết quả theo SĐT ${phoneResults.phone} (${phoneResults.total})`} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 12, marginTop: -4 }}>
+          <CapsuleTabs activeKey={filterStatus} onChange={setFilterStatus} style={{ '--capsule-border-radius': '8px' }}>
+            <CapsuleTabs.Tab title={`Tất cả (${phoneResults.items?.length || 0})`} key="all" />
+            <CapsuleTabs.Tab title={`Chờ xử lý (${phoneResults.items?.filter(x => !['da_tra', 'da_tra_hang', 'da_sua_xong', 'huy', 'da_huy'].includes(x.trangThai)).length || 0})`} key="pending" />
+            <CapsuleTabs.Tab title={`Đã xong (${phoneResults.items?.filter(x => ['da_tra', 'da_tra_hang', 'da_sua_xong'].includes(x.trangThai)).length || 0})`} key="completed" />
+          </CapsuleTabs>
+        </div>
+        {filtered.length ? (
           <MobileList>
-            {(phoneResults.items || []).map((item) => (
+            {filtered.map((item) => (
               <MobileList.Item
                 key={item.id || item.soChungTu}
                 onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}
                 description={(
                   <div className="tracuu-result-meta">
-                    <div className="tracuu-result-product">{item.tenHang || '-'}</div>
-                    <div className="tracuu-result-dates">
-                      <span><CalendarOutlined /> Nhận: {item.ngayNhan || '-'}</span>
+                    <div className="tracuu-result-product" style={{ fontSize: 13, fontWeight: 500 }}>{item.tenHang || '-'}</div>
+                    <div className="tracuu-result-dates" style={{ fontSize: 11, opacity: 0.7, marginTop: 4 }}>
+                      <span style={{ marginRight: 12 }}><CalendarOutlined /> Nhận: {item.ngayNhan || '-'}</span>
                       <span><CalendarOutlined /> Hẹn trả: {item.ngayHenTra || '-'}</span>
                     </div>
                   </div>
                 )}
               >
-                <MobileSpace wrap>
-                  <span className="admin-mobile-code">{item.soChungTu}</span>
+                <MobileSpace wrap align="center">
+                  <span className="admin-mobile-code" style={{ fontWeight: 800 }}>{item.soChungTu}</span>
                   <MobileTag color={getStatusBadgeColor(item.trangThai, 'mobile')}>{STATUS_LABELS[item.trangThai] || item.trangThai || '-'}</MobileTag>
                 </MobileSpace>
               </MobileList.Item>
             ))}
           </MobileList>
-        ) : <MobileEmpty description="Không có phiếu liên quan SĐT này." />}
+        ) : (
+          <MobileEmpty description="Không có phiếu nào ở mục này." />
+        )}
       </MobileCard>
     );
   };
@@ -209,65 +240,144 @@ export default function Tracuu() {
   return (
     <>
     <main className="mobile-only ntpc-mobile-page">
-      <section className="ntpc-mobile-hero">
+      <section className="ntpc-mobile-hero ntpc-glass-card">
         <h1>{t('tracking.title')}</h1>
         <p>{t('tracking.description')}</p>
       </section>
 
-      <MobileCard title={t('tracking.newSearch')} className="ntpc-mobile-card">
-        <MobileSpace direction="vertical" block style={{ '--gap': '12px' }}>
-          <MobileInput
-            clearable
-            value={code}
-            placeholder={t('tracking.placeholder')}
-            onChange={(value) => {
-              setCode(value);
-              if (error) setError('');
-            }}
-            onEnterPress={() => submit(code)}
-          />
-          <MobileButton block color="primary" loading={searching} onClick={() => submit(code)}>{t('tracking.newSearch')}</MobileButton>
-          {error ? <div style={{ color: '#ff4d4f', fontSize: 13 }}>{error}</div> : null}
+      <MobileCard className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
+        <MobileSpace direction="vertical" block style={{ '--gap': '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <span style={{ fontWeight: 800, fontSize: 16, color: isDark ? '#fff' : '#26361f' }}>{t('tracking.newSearch')}</span>
+            <span style={{ fontSize: 12, opacity: 0.8 }}>Vui lòng nhập mã chứng từ hoặc số điện thoại của bạn.</span>
+          </div>
+          
+          <div className="ntpc-searchbar-container" style={{ padding: '2px 4px', borderRadius: 12 }}>
+            <SearchBar
+              placeholder={t('tracking.placeholder')}
+              value={code}
+              onChange={(value) => {
+                setCode(value);
+                if (error) setError('');
+              }}
+              onSearch={submit}
+              clearable
+            />
+          </div>
+
+          <MobileButton block color="primary" loading={searching} onClick={() => submit(code)} style={{ borderRadius: 10 }}>
+            {t('tracking.newSearch')}
+          </MobileButton>
+          {error ? <div className="ntpc-mobile-error" style={{ borderRadius: 10 }}>{error}</div> : null}
         </MobileSpace>
       </MobileCard>
 
       {renderMobileResults()}
 
-      <MobileCard title={t('tracking.historyTitle')} className="ntpc-mobile-card">
-        {recent.length ? (
-          <MobileList>
+      {recent.length > 0 && (
+        <MobileCard title={t('tracking.historyTitle')} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
             {recent.map((item, index) => {
               const codeValue = recentCode(item);
               const timeValue = recentTime(item);
               return (
-                <MobileList.Item key={codeValue} onClick={() => submit(codeValue)} description={timeValue || (index === 0 ? t('tracking.latest') : t('tracking.searched'))}>
-                  {codeValue}
-                </MobileList.Item>
+                <div className="ntpc-history-swipe-item" key={codeValue}>
+                  <SwipeAction
+                    rightActions={[
+                      {
+                        key: 'delete',
+                        text: 'Xóa',
+                        color: 'danger',
+                        onClick: () => {
+                          const next = recent.filter((x) => recentCode(x) !== codeValue);
+                          setRecent(next);
+                          writeRecent(next);
+                          Toast.show({ content: 'Đã xóa khỏi lịch sử' });
+                        }
+                      }
+                    ]}
+                  >
+                    <MobileList.Item
+                      onClick={() => submit(codeValue)}
+                      description={timeValue || (index === 0 ? t('tracking.latest') : t('tracking.searched'))}
+                      arrow={<RightOutlined style={{ fontSize: 12, opacity: 0.5 }} />}
+                    >
+                      <span style={{ fontWeight: 700, color: isDark ? '#fff' : '#1f2a1d' }}>{codeValue}</span>
+                    </MobileList.Item>
+                  </SwipeAction>
+                </div>
               );
             })}
-          </MobileList>
-        ) : <MobileEmpty description={t('tracking.emptyHistory')} />}
-        <MobileButton block size="small" disabled={!recent.length} onClick={() => Dialog.confirm({ content: 'Xóa lịch sử tra cứu?', confirmText: 'Xóa', cancelText: 'Hủy', onConfirm: clearRecent })}>{t('tracking.clearHistory')}</MobileButton>
-      </MobileCard>
+          </div>
+          <MobileButton
+            block
+            size="small"
+            onClick={() => Dialog.confirm({
+              content: 'Xóa toàn bộ lịch sử tra cứu?',
+              confirmText: 'Xóa',
+              cancelText: 'Hủy',
+              onConfirm: clearRecent
+            })}
+            style={{ borderRadius: 10 }}
+          >
+            {t('tracking.clearHistory')}
+          </MobileButton>
+        </MobileCard>
+      )}
 
-      <MobileCard title={t('tracking.contactTitle')} className="ntpc-mobile-card ntpc-mobile-contact">
-        <div className="ntpc-mobile-contact-actions">
-          <a className="ntpc-mobile-contact-btn" href="tel:0937632000" aria-label="Gọi kỹ thuật 0937 63 2000">
-            <span className="ntpc-mobile-contact-label">Gọi kỹ thuật</span>
-            <b>0937 63 2000</b>
+      <MobileCard title="📞 Hỗ trợ kỹ thuật & Bản đồ" className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
+        <div className="ntpc-mobile-contact-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+          <a className="ntpc-mobile-contact-btn" href="tel:0937632000" style={{ borderRadius: 12, padding: '10px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.04)' : '#f5f7f4', border: '1px solid rgba(0,0,0,0.05)', textDecoration: 'none' }}>
+            <span style={{ fontSize: 11, opacity: 0.7, color: isDark ? '#bbb' : '#666' }}>Gọi kỹ thuật</span>
+            <b style={{ fontSize: 13, color: '#1677ff', marginTop: 2 }}>0937 63 2000</b>
           </a>
-          <a className="ntpc-mobile-contact-btn" href="tel:0903602240" aria-label="Gọi hotline 0903 602 240">
-            <span className="ntpc-mobile-contact-label">Gọi hotline</span>
-            <b>0903 602 240</b>
+          <a className="ntpc-mobile-contact-btn" href="tel:0903602240" style={{ borderRadius: 12, padding: '10px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.04)' : '#f5f7f4', border: '1px solid rgba(0,0,0,0.05)', textDecoration: 'none' }}>
+            <span style={{ fontSize: 11, opacity: 0.7, color: isDark ? '#bbb' : '#666' }}>Gọi hotline</span>
+            <b style={{ fontSize: 13, color: '#1677ff', marginTop: 2 }}>0903 602 240</b>
           </a>
         </div>
-
-        <a className="ntpc-mobile-contact-map" href="https://maps.app.goo.gl/Nx6WgejPbu1YJGWR7" target="_blank" rel="noreferrer">
-          Chỉ đường (Google Maps)
+        <a className="ntpc-mobile-contact-map" href="https://maps.app.goo.gl/Nx6WgejPbu1YJGWR7" target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', padding: '10px', background: '#1677ff', color: '#fff', borderRadius: 10, fontWeight: 700, textDecoration: 'none', marginBottom: 12, fontSize: 13 }}>
+          🗺️ Chỉ đường (Google Maps)
         </a>
-
-        <div className="ntpc-mobile-contact-address">{t('tracking.address')}</div>
+        <div style={{ fontSize: 12, opacity: 0.7, lineHeight: 1.4, color: isDark ? '#ccc' : '#444' }}>
+          <b>Địa chỉ bảo hành:</b> {t('tracking.address')}
+        </div>
       </MobileCard>
+
+      <MobileCard title="🛡️ Điều kiện & Chính sách" className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 24 }}>
+        <MobileSpace direction="vertical" block style={{ '--gap': '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <CheckCircleOutlined style={{ color: '#52c41a', marginTop: 3 }} />
+            <span style={{ fontSize: 13, lineHeight: 1.4, color: isDark ? '#ddd' : '#333' }}>{t('tracking.deliveryNote')}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <CheckCircleOutlined style={{ color: '#52c41a', marginTop: 3 }} />
+            <span style={{ fontSize: 13, lineHeight: 1.4, color: isDark ? '#ddd' : '#333' }}>{t('tracking.storageNote')}</span>
+          </div>
+          <a href="https://nguyentanpc.com/pages/dieu-kien-bao-hanh" target="_blank" rel="noreferrer" style={{ textDecoration: 'none', display: 'block', width: '100%', marginTop: 8 }}>
+            <MobileButton block color="primary" fill="outline" style={{ borderRadius: 10, fontSize: 13, pointerEvents: 'none' }}>
+              Xem toàn bộ chính sách
+            </MobileButton>
+          </a>
+        </MobileSpace>
+      </MobileCard>
+
+      <div style={{ textAlign: 'center', paddingBottom: 24, paddingTop: 4 }}>
+        <button
+          onClick={() => navigate('/admin')}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: 13,
+            color: isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.32)',
+            padding: '4px 8px',
+            letterSpacing: 0.1,
+          }}
+        >
+          Bạn là nhân viên? <span style={{ color: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.45)', fontWeight: 600 }}>Đăng nhập →</span>
+        </button>
+      </div>
     </main>
 
     <main className="desktop-only tracuu-old-page">
@@ -395,101 +505,6 @@ export default function Tracuu() {
         </Col>
       </Row>
     </main>
-    <style>{`@keyframes zalo-bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}60%{transform:translateY(-3px)}}`}</style>
-    {showZaloBubble && (
-      <a
-        href={ZALO_WEB_URL}
-        onClick={openZaloApp}
-        style={{
-          position: 'fixed',
-          right: 80,
-          bottom: 20,
-          background: '#fff',
-          borderRadius: 12,
-          padding: '10px 14px 10px 12px',
-          boxShadow: '0 8px 30px rgba(0,104,255,0.15)',
-          border: '1px solid #d9d9d9',
-          zIndex: 1199,
-          maxWidth: 240,
-          cursor: 'pointer',
-          textDecoration: 'none',
-          animation: 'zalo-bounce 2s infinite',
-          display: 'block',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            right: -6,
-            bottom: 16,
-            width: 10,
-            height: 10,
-            background: '#fff',
-            transform: 'rotate(45deg)',
-            borderRight: '1px solid #d9d9d9',
-            borderTop: '1px solid #d9d9d9',
-          }}
-        />
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setShowZaloBubble(false);
-          }}
-          style={{
-            position: 'absolute',
-            top: 4,
-            right: 4,
-            border: 'none',
-            background: 'none',
-            fontSize: 10,
-            color: '#bfbfbf',
-            cursor: 'pointer',
-            padding: 2,
-            lineHeight: 1,
-          }}
-        >
-          ✕
-        </button>
-        <div style={{ fontSize: 13, color: '#262626', fontWeight: 500, lineHeight: 1.4 }}>
-          Bạn cần trợ giúp?
-        </div>
-        <div style={{ fontSize: 12, color: '#0068ff', fontWeight: 700, marginTop: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
-          Chat ngay <RightOutlined style={{ fontSize: 10 }} />
-        </div>
-      </a>
-    )}
-    <a
-      href={ZALO_WEB_URL}
-      onClick={openZaloApp}
-      aria-label="Chat Zalo 0937 63 2000"
-      style={{
-        position: 'fixed',
-        right: 16,
-        bottom: 16,
-        width: 56,
-        height: 56,
-        borderRadius: '50%',
-        background: '#fff',
-        color: '#0068ff',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textDecoration: 'none',
-        boxShadow: '0 10px 24px rgba(0,104,255,0.32)',
-        border: '2px solid #0068ff',
-        zIndex: 1200,
-        animation: 'zalo-bounce 2s infinite',
-      }}
-    >
-      <img
-        src="/zalo.png"
-        alt="Zalo"
-        width="34"
-        height="34"
-        style={{ borderRadius: '50%', objectFit: 'cover', display: 'block' }}
-      />
-    </a>
     </>
   );
 }
