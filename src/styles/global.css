@@ -273,10 +273,13 @@ body { margin: 0; padding: 0; }
 .ntpc-mobile-page {
   width: 100%;
   color: #1f2a1d;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .ntpc-mobile-hero {
-  margin: -2px 0 10px;
+  margin: 0 0 12px;
   padding: 20px 18px;
   border: 1px solid rgba(63, 93, 47, 0.16);
   border-radius: 18px;
@@ -284,6 +287,20 @@ body { margin: 0; padding: 0; }
     radial-gradient(circle at 12% 0%, rgba(255,255,255,0.88), transparent 34%),
     linear-gradient(135deg, #f6f1e7 0%, #e8f3df 58%, #d6e3cc 100%);
   box-shadow: 0 16px 40px rgba(38, 56, 30, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.ntpc-mobile-hero::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(22,119,255,0.08), transparent 70%);
+  pointer-events: none;
 }
 
 .ntpc-mobile-hero h1 {
@@ -305,15 +322,20 @@ body { margin: 0; padding: 0; }
   font-weight: 800;
   color: #2f6b2f;
   text-transform: uppercase;
-  letter-spacing: 0;
+  letter-spacing: 0.5px;
 }
 
 .ntpc-mobile-card {
-  margin: 10px 0;
-  border: 1px solid #e3eadb;
-  border-radius: 14px;
+  margin: 0 0 12px;
+  border: 1px solid rgba(227, 234, 219, 0.8);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 26px rgba(31, 42, 29, 0.06);
+  box-shadow: 0 4px 16px rgba(31, 42, 29, 0.06);
+  transition: box-shadow 0.25s ease;
+}
+
+.ntpc-mobile-card:last-child {
+  margin-bottom: 0;
 }
 
 .ntpc-mobile-card .adm-card-header-title {
@@ -323,6 +345,381 @@ body { margin: 0; padding: 0; }
 
 .ntpc-mobile-card .adm-list-card {
   margin: 0;
+}
+
+.tracuu-mobile-v2 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.tracuu-mobile-v2 > * {
+  width: 100%;
+}
+
+.tracuu-mobile-hero-v2 {
+  padding: 14px 16px 14px;
+  margin-bottom: 12px;
+}
+
+.tracuu-mobile-hero-v2 .ntpc-mobile-eyebrow {
+  margin-bottom: 6px;
+}
+
+.tracuu-mobile-hero-v2 h1 {
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.tracuu-mobile-hero-v2 p {
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.tracuu-mobile-search-card .adm-card-body,
+.tracuu-mobile-phone-card .adm-card-body,
+.tracuu-mobile-support-card .adm-card-body,
+.tracuu-mobile-recent-card .adm-card-body,
+.tracuu-mobile-policy-card .adm-card-body {
+  padding: 14px;
+}
+
+.tracuu-mobile-search-stack {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+}
+
+.tracuu-mobile-search-title {
+  display: grid;
+  gap: 4px;
+}
+
+.tracuu-mobile-search-title span {
+  font-size: 17px;
+  font-weight: 800;
+  color: #26361f;
+}
+
+.tracuu-mobile-search-title small {
+  font-size: 12px;
+  color: rgba(31, 42, 29, 0.68);
+}
+
+.tracuu-mobile-searchbar {
+  width: 100%;
+  padding: 2px 4px;
+  border-radius: 13px;
+}
+
+.tracuu-mobile-searchbar .adm-search-bar,
+.tracuu-mobile-searchbar .adm-search-bar-input-box,
+.tracuu-mobile-searchbar .adm-search-bar-input {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.tracuu-mobile-searchbar .adm-search-bar-input-box {
+  min-height: 48px;
+}
+
+.tracuu-mobile-primary-btn {
+  min-height: 48px;
+  border-radius: 13px !important;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.tracuu-mobile-input-hint {
+  margin-top: -4px;
+  font-size: 12px;
+  color: rgba(31, 42, 29, 0.58);
+}
+
+.tracuu-mobile-error {
+  border-radius: 12px;
+}
+
+.tracuu-mobile-recent-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tracuu-mobile-recent-chip {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  padding: 11px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(63, 93, 47, 0.12);
+  background: rgba(245, 247, 244, 0.85);
+  color: #1f2a1d;
+}
+
+.tracuu-mobile-recent-copy {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 3px;
+}
+
+.tracuu-mobile-recent-chip span {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tracuu-mobile-recent-chip small {
+  font-size: 11px;
+  color: rgba(31, 42, 29, 0.55);
+}
+
+.tracuu-mobile-recent-arrow {
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: rgba(31, 42, 29, 0.45);
+}
+
+.tracuu-mobile-clear-btn {
+  border-radius: 12px !important;
+}
+
+.tracuu-mobile-support-card {
+  background: linear-gradient(135deg, rgba(22, 119, 255, 0.04), rgba(22, 119, 255, 0.01)) !important;
+  border: 1px solid rgba(22, 119, 255, 0.12) !important;
+  box-shadow: 0 8px 24px rgba(22, 119, 255, 0.04) !important;
+}
+
+html[data-theme='dark'] .tracuu-mobile-support-card {
+  background: linear-gradient(135deg, rgba(22, 119, 255, 0.08), rgba(22, 119, 255, 0.02)) !important;
+  border-color: rgba(22, 119, 255, 0.18) !important;
+}
+
+.tracuu-mobile-support-stack {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.tracuu-mobile-support-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 15px;
+  text-decoration: none;
+  border: 1px solid rgba(22, 119, 255, 0.14);
+  background: rgba(245, 247, 244, 0.92);
+  color: #1f2a1d;
+}
+
+.tracuu-mobile-support-row-primary {
+  background: linear-gradient(135deg, rgba(22, 119, 255, 0.12), rgba(22, 119, 255, 0.05));
+}
+
+.tracuu-mobile-support-row > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tracuu-mobile-support-row span {
+  color: rgba(31, 42, 29, 0.65);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tracuu-mobile-support-row b {
+  color: #1677ff;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.tracuu-mobile-support-row .anticon {
+  color: rgba(22, 119, 255, 0.72);
+  font-size: 14px;
+}
+
+.tracuu-mobile-support-footer {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(31, 42, 29, 0.62);
+}
+
+.tracuu-mobile-support-footer a {
+  color: #1677ff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tracuu-mobile-policy-header {
+  margin-bottom: 14px;
+  font-weight: 800;
+  color: #26361f;
+}
+
+.tracuu-mobile-policy-list {
+  display: grid;
+  gap: 12px;
+}
+
+.tracuu-mobile-policy-list > div {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  padding: 13px 14px;
+  border-radius: 14px;
+  background: rgba(245, 247, 244, 0.85);
+  color: #26361f;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tracuu-mobile-policy-list .anticon {
+  color: #52c41a;
+  margin-top: 2px;
+}
+
+.tracuu-mobile-policy-list a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 42px;
+  border-radius: 13px;
+  border: 1.5px solid #1677ff;
+  background: transparent;
+  color: #1677ff;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tracuu-mobile-policy-list a:active {
+  background: rgba(22, 119, 255, 0.08);
+}
+
+.tracuu-mobile-related-list {
+  display: grid;
+  gap: 10px;
+}
+
+.tracuu-mobile-related-card {
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(127, 127, 127, 0.12);
+  background: rgba(127, 127, 127, 0.05);
+  color: #1f2a1d;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.tracuu-mobile-related-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tracuu-mobile-related-code {
+  font-size: 14px;
+  font-weight: 800;
+  color: #1f2a1d;
+}
+
+.tracuu-mobile-related-product {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1f2a1d;
+}
+
+.tracuu-mobile-related-meta {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  color: rgba(31, 42, 29, 0.62);
+  font-size: 12px;
+}
+
+.tracuu-mobile-related-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.tracuu-mobile-related-page-button {
+  min-width: 76px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(127, 127, 127, 0.16);
+  background: rgba(127, 127, 127, 0.06);
+  color: #1f2a1d;
+  font-size: 13px;
+  font-weight: 700;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.tracuu-mobile-related-page-button:disabled {
+  opacity: 0.45;
+}
+
+.tracuu-mobile-related-page-info {
+  flex: 1;
+  text-align: center;
+  color: rgba(31, 42, 29, 0.62);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+html[data-theme='dark'] .tracuu-mobile-search-title span,
+html[data-theme='dark'] .tracuu-mobile-policy-header {
+  color: #f2f2f2;
+}
+
+html[data-theme='dark'] .tracuu-mobile-search-title small,
+html[data-theme='dark'] .tracuu-mobile-input-hint,
+html[data-theme='dark'] .tracuu-mobile-support-footer,
+html[data-theme='dark'] .tracuu-mobile-support-row span,
+html[data-theme='dark'] .tracuu-mobile-related-meta,
+html[data-theme='dark'] .tracuu-mobile-related-page-info {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+html[data-theme='dark'] .tracuu-mobile-recent-chip,
+html[data-theme='dark'] .tracuu-mobile-support-row,
+html[data-theme='dark'] .tracuu-mobile-policy-list > div,
+html[data-theme='dark'] .tracuu-mobile-related-card,
+html[data-theme='dark'] .tracuu-mobile-related-page-button {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f2f2f2;
+}
+
+html[data-theme='dark'] .tracuu-mobile-recent-chip small,
+html[data-theme='dark'] .tracuu-mobile-related-code,
+html[data-theme='dark'] .tracuu-mobile-related-product {
+  color: #f2f2f2;
+}
+
+html[data-theme='dark'] .tracuu-mobile-recent-arrow {
+  color: rgba(255, 255, 255, 0.42);
 }
 
 /* /tra-cuu mobile contact card */
@@ -403,36 +800,8 @@ html[data-theme='dark'] .ntpc-mobile-contact-map{
   font-size: 23px;
 }
 
-.ntpc-mobile-kpis {
-  margin: 10px 0;
-}
+/* ntpc-mobile-kpis & ntpc-mobile-kpi styles moved/upgraded at end of file */
 
-.ntpc-mobile-kpi {
-  min-height: 76px;
-  padding: 12px;
-  border: 1px solid rgba(63, 93, 47, 0.14);
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 8px 22px rgba(31, 42, 29, 0.05);
-}
-
-.ntpc-mobile-kpi span {
-  display: block;
-  margin-bottom: 5px;
-  color: #6b755f;
-  font-size: 12px;
-}
-
-.ntpc-mobile-kpi b {
-  display: -webkit-box;
-  overflow: hidden;
-  color: #1f2a1d;
-  font-size: 14px;
-  line-height: 1.3;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-break: break-word;
-}
 
 .ntpc-mobile-success {
   margin-top: 12px;
@@ -571,54 +940,10 @@ html[data-theme='dark'] .ntpc-mobile-contact-map{
   font-size: 13px;
 }
 
-.ntpc-mobile-timeline {
-  display: grid;
-  gap: 12px;
-}
+/* ntpc-mobile-timeline styles moved to end of file */
 
-.ntpc-mobile-timeline-item {
-  position: relative;
-  padding-left: 18px;
-}
+/* ntpc-mobile-timeline-item b,p styles (see end of file) */
 
-.ntpc-mobile-timeline-item::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 5px;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #2f6b2f;
-}
-
-.ntpc-mobile-timeline-item b,
-.ntpc-mobile-timeline-item span {
-  display: block;
-}
-
-.ntpc-mobile-timeline-item span {
-  margin-top: 2px;
-  color: #6b755f;
-  font-size: 12px;
-}
-
-.ntpc-mobile-timeline-item p {
-  margin: 6px 0 0;
-  color: #46513f;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-/* Make the "Chi tiet tien trinh xu ly" section easier to scan on mobile */
-.ntpc-mobile-timeline-item b {
-  font-size: 15px;
-  line-height: 1.25;
-}
-
-.ntpc-mobile-timeline-item p {
-  font-size: 14px;
-}
 
 /* Mobile progress (steps): render like desktop Steps, but tuned for small screens */
 .ntpc-mobile-progress-desktop .ant-steps-item-title {
@@ -668,19 +993,8 @@ html[data-theme='dark'] .ntpc-mobile-contact-map{
   line-height: 1.2;
 }
 
-.ntpc-mobile-actions {
-  position: sticky;
-  bottom: 0;
-  z-index: 20;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin: 12px -10px -84px;
-  padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
-  border-top: 1px solid #e5eadf;
-  background: rgba(250, 252, 247, 0.95);
-  backdrop-filter: blur(12px);
-}
+/* ntpc-mobile-actions styles moved to end of file */
+
 
 .admin-mobile-header {
   position: sticky;
@@ -2706,5 +3020,421 @@ html[data-theme='dark'] .ntpc-history-swipe-item {
   border-color: rgba(255, 255, 255, 0.04);
 }
 
+/* ============================================================
+   NÂNG CẤP MOBILE UI - Ant Design Mobile Modern Components
+   ============================================================ */
 
+/* Selector component - recent tracks native feel */
+.ntpc-mobile-page .adm-selector {
+  --padding: 8px 10px;
+}
+
+.ntpc-mobile-page .adm-selector-item {
+  border-radius: 10px !important;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  transition: all 0.2s ease;
+}
+
+.ntpc-mobile-page .adm-selector-item-active {
+  background: #1677ff !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.35);
+  transform: scale(1.02);
+}
+
+html[data-theme='dark'] .ntpc-mobile-page .adm-selector-item {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #e6e6e6;
+}
+
+html[data-theme='dark'] .ntpc-mobile-page .adm-selector-item-active {
+  background: #1677ff !important;
+  color: #fff !important;
+}
+
+/* ProgressBar trong hero */
+.ntpc-mobile-hero .adm-progress-bar {
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* NoticeBar trong search card */
+.ntpc-mobile-card .adm-notice-bar {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+/* KPI card - nâng cấp */
+.ntpc-mobile-kpi {
+  min-height: 76px;
+  padding: 12px 14px;
+  border: 1px solid rgba(63, 93, 47, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 14px rgba(31, 42, 29, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ntpc-mobile-kpi::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #1677ff 0%, #52c41a 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.ntpc-mobile-kpi:hover::before {
+  opacity: 1;
+}
+
+.ntpc-mobile-kpi span {
+  display: block;
+  margin-bottom: 5px;
+  color: #6b755f;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.ntpc-mobile-kpi b {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #1f2a1d;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+/* Footer từ antd-mobile */
+.adm-footer {
+  text-align: center;
+}
+
+.adm-footer-content {
+  font-size: 11px !important;
+}
+
+/* Timeline item - cải thiện */
+.ntpc-mobile-timeline {
+  display: grid;
+  gap: 14px;
+}
+
+.ntpc-mobile-timeline-item {
+  position: relative;
+  padding-left: 22px;
+  animation: fadeSlideIn 0.3s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.ntpc-mobile-timeline-item:nth-child(1) { animation-delay: 0.05s; }
+.ntpc-mobile-timeline-item:nth-child(2) { animation-delay: 0.1s; }
+.ntpc-mobile-timeline-item:nth-child(3) { animation-delay: 0.15s; }
+.ntpc-mobile-timeline-item:nth-child(4) { animation-delay: 0.2s; }
+.ntpc-mobile-timeline-item:nth-child(5) { animation-delay: 0.25s; }
+
+.ntpc-mobile-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #2f6b2f;
+  box-shadow: 0 0 0 3px rgba(47, 107, 47, 0.15);
+}
+
+.ntpc-mobile-timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 18px;
+  bottom: -14px;
+  width: 1px;
+  background: rgba(47, 107, 47, 0.2);
+}
+
+.ntpc-mobile-timeline-item:last-child::after {
+  display: none;
+}
+
+.ntpc-mobile-timeline-item b,
+.ntpc-mobile-timeline-item span {
+  display: block;
+}
+
+.ntpc-mobile-timeline-item span {
+  margin-top: 2px;
+  color: #6b755f;
+  font-size: 12px;
+}
+
+.ntpc-mobile-timeline-item p {
+  margin: 6px 0 0;
+  color: #46513f;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.ntpc-mobile-timeline-item b {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+/* Action bar ở cuối trang */
+.ntpc-mobile-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px -12px 0;
+  padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(229, 234, 223, 0.8);
+  background: rgba(250, 252, 247, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+html[data-theme='dark'] .ntpc-mobile-actions {
+  border-top-color: rgba(255, 255, 255, 0.08);
+  background: rgba(18, 18, 18, 0.97);
+}
+
+/* Mobile card title upgrade */
+.ntpc-mobile-card .adm-card-header-title {
+  font-weight: 800;
+  font-size: 15px;
+  color: #26361f;
+}
+
+html[data-theme='dark'] .ntpc-mobile-card .adm-card-header-title {
+  color: #f2f2f2;
+}
+
+/* List item trong card nâng cấp */
+.ntpc-mobile-card .adm-list-item-content-extra {
+  color: #1f2a1d;
+  font-weight: 700;
+}
+
+html[data-theme='dark'] .ntpc-mobile-card .adm-list-item-content-extra {
+  color: #e6e6e6;
+}
+
+/* KPI dark mode */
+html[data-theme='dark'] .ntpc-mobile-kpi {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(30, 30, 30, 0.85);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .ntpc-mobile-kpi span {
+  color: #8a9480;
+}
+
+html[data-theme='dark'] .ntpc-mobile-kpi b {
+  color: #e6e6e6;
+}
+
+/* Cải thiện search bar container */
+.ntpc-searchbar-container .adm-search-bar-input-box {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Card header padding nhỏ hơn trên mobile */
+.ntpc-mobile-card .adm-card-header {
+  padding: 14px 16px 8px;
+}
+
+.ntpc-mobile-card .adm-card-body {
+  padding: 8px 16px 14px;
+}
+
+/* Selector description text */
+.ntpc-mobile-page .adm-selector-item-description {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 1px;
+}
+
+/* Smooth page entry animation */
+.ntpc-mobile-page > * {
+  animation: ntpc-page-enter 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.ntpc-mobile-page > *:nth-child(1) { animation-delay: 0s; }
+.ntpc-mobile-page > *:nth-child(2) { animation-delay: 0.06s; }
+.ntpc-mobile-page > *:nth-child(3) { animation-delay: 0.12s; }
+.ntpc-mobile-page > *:nth-child(4) { animation-delay: 0.18s; }
+.ntpc-mobile-page > *:nth-child(5) { animation-delay: 0.22s; }
+.ntpc-mobile-page > *:nth-child(6) { animation-delay: 0.26s; }
+
+@keyframes ntpc-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ntpc-mobile-page > *,
+  .ntpc-mobile-timeline-item {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ProgressBar trong hero */
+.ntpc-mobile-hero .adm-progress-bar-fill {
+  background: linear-gradient(90deg, #1677ff, #52c41a) !important;
+}
+
+/* NoticeBar shape */
+.ntpc-mobile-card .adm-notice-bar {
+  --font-size: 13px;
+}
+
+/* =============================================
+   MobileSteps - TrackingResult upgrade
+   ============================================= */
+.tracking-mobile .adm-steps-item-process .adm-steps-icon-dot {
+  background: #1677ff !important;
+  box-shadow: 0 0 0 4px rgba(22, 119, 255, 0.2) !important;
+  animation: stepPulse 2s infinite !important;
+}
+
+.tracking-mobile .adm-steps-item-finish .adm-steps-icon-dot {
+  background: #52c41a !important;
+}
+
+.tracking-mobile .adm-steps-item-wait .adm-steps-icon-dot {
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+
+@keyframes stepPulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(22, 119, 255, 0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(22, 119, 255, 0.08); }
+}
+
+html[data-theme='dark'] .tracking-mobile .adm-steps-item-wait .adm-steps-icon-dot {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Step connector line */
+.tracking-mobile .adm-steps-item-tail-line {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme='dark'] .tracking-mobile .adm-steps-item-tail-line {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.tracking-mobile .adm-steps-item-finish .adm-steps-item-tail-line {
+  background: #52c41a !important;
+}
+
+/* Card body trong tracking */
+.tracking-mobile .ntpc-mobile-card .adm-card-body {
+  padding: 8px 14px 14px;
+}
+
+/* Cải thiện glass card trong dark mode cho tracking */
+html[data-theme='dark'] .tracking-mobile .ntpc-glass-card {
+  background: rgba(28, 28, 28, 0.85) !important;
+}
+
+/* Cải thiện KPI card trong tracking */
+.tracking-mobile .ntpc-mobile-kpi {
+  cursor: default;
+}
+
+/* Footer mobile (antd-mobile Footer component) */
+.adm-footer-wrapper {
+  padding: 8px 16px !important;
+}
+
+.adm-footer-label {
+  margin-top: 4px !important;
+}
+
+/* Notice bar wrap - fix radius */
+.adm-notice-bar-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Improve search bar styling */
+.ntpc-mobile-page .adm-search-bar {
+  --height: 44px;
+  --border-radius: 12px;
+  --background: transparent;
+}
+
+/* Smooth hover on list items */
+.ntpc-mobile-card .adm-list-item {
+  transition: background 0.15s ease;
+}
+
+.ntpc-mobile-card .adm-list-item:active {
+  background: rgba(22, 119, 255, 0.04) !important;
+}
+
+html[data-theme='dark'] .ntpc-mobile-card .adm-list-item:active {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Collapse panel upgrade */
+.ntpc-mobile-card .adm-collapse-panel-header {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* =============================================
+   Micro-animation for Cards
+   ============================================= */
+.ntpc-mobile-card .adm-card-header {
+  position: relative;
+}
+
+.ntpc-mobile-card .adm-card-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+}
+
+html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+}
 

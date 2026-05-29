@@ -1,8 +1,22 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, Input, Typography, Alert, Tag, Space, Divider, Row, Col, Table, Collapse } from 'antd';
-import { Button as MobileButton, Card as MobileCard, Divider as MobileDivider, List, SearchBar, Space as MobileSpace, Tag as MobileTag } from 'antd-mobile';
+import { Card, Input, Typography, Alert, Tag, Space, Divider } from 'antd';
+import {
+  Button as MobileButton,
+  Card as MobileCard,
+  Divider as MobileDivider,
+  List,
+  NoticeBar,
+  ProgressBar,
+  SafeArea,
+  SearchBar,
+  Selector,
+  Space as MobileSpace,
+  Tag as MobileTag,
+} from 'antd-mobile';
+import { PhoneOutlined, EnvironmentOutlined, SafetyCertificateOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../hooks/useTheme';
 import { publicService } from '../../services/warrantyService';
 import { getStatusBadgeColor } from '../../constants/badgeConfig';
 
@@ -51,6 +65,7 @@ function normalizeProductName(name) {
 
 export default function CustomerPortal() {
   const { t } = useTranslation();
+  const { isDark } = useTheme();
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [phoneMatches, setPhoneMatches] = useState([]);
@@ -122,84 +137,155 @@ export default function CustomerPortal() {
   return (
     <>
     <div className="mobile-only ntpc-mobile-page">
-      <section className="ntpc-mobile-hero">
+      {/* Hero section với gradient xanh thương hiệu */}
+      <section className="ntpc-mobile-hero ntpc-glass-card" style={{ margin: '0 0 12px 0' }}>
         <div className="ntpc-mobile-eyebrow">{t('app.customerBrand')}</div>
-        <h1>{t('tracking.progressTitle')}</h1>
-        <p>{t('tracking.progressDescription')}</p>
+        <h1 style={{ margin: '8px 0 6px' }}>{t('tracking.progressTitle')}</h1>
+        <p style={{ margin: 0 }}>{t('tracking.progressDescription')}</p>
+        {/* Mini progress bar gợi ý hành trình bảo hành */}
+        <div style={{ marginTop: 14 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 11, opacity: 0.75 }}>
+            <span>Nhận hàng</span><span>Xử lý</span><span>Hoàn trả</span>
+          </div>
+          <ProgressBar percent={40} style={{ '--fill-color': '#1677ff', '--track-color': 'rgba(22,119,255,0.15)', '--track-width': '5px' }} />
+        </div>
       </section>
 
-      <MobileCard className="ntpc-mobile-card">
+      {/* Search card */}
+      <MobileCard className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
         <MobileSpace direction="vertical" block style={{ '--gap': '12px' }}>
-          <SearchBar
-            placeholder={t('tracking.legacyPlaceholder')}
-            value={code}
-            onChange={value => { setCode(value); setError(''); }}
-            onSearch={handleSearch}
-            clearable
-            style={{ '--height': '44px', '--border-radius': '12px' }}
-          />
-          <MobileButton block color="primary" size="large" onClick={handleSearch}>
+          <div style={{ fontWeight: 800, fontSize: 15, color: isDark ? '#fff' : '#26361f' }}>Tra cứu bảo hành</div>
+          <div className="ntpc-searchbar-container" style={{ padding: '2px 4px', borderRadius: 12 }}>
+            <SearchBar
+              placeholder={t('tracking.legacyPlaceholder')}
+              value={code}
+              onChange={value => { setCode(value); setError(''); }}
+              onSearch={handleSearch}
+              clearable
+            />
+          </div>
+          <MobileButton block color="primary" size="large" onClick={handleSearch} style={{ borderRadius: 10 }}>
             {t('tracking.title')}
           </MobileButton>
-          {error && <div className="ntpc-mobile-error">{error}</div>}
+          {error && (
+            <NoticeBar
+              color={error.includes('Tìm thấy') ? 'info' : 'alert'}
+              wrap
+              content={error}
+              style={{ borderRadius: 10 }}
+            />
+          )}
         </MobileSpace>
       </MobileCard>
 
+      {/* Phone search results */}
       {phoneMatches.length > 0 && (
-        <MobileCard title={`Lịch sử bảo hành SĐT ${phoneQuery}`} className="ntpc-mobile-card">
+        <MobileCard title={`📋 Lịch sử bảo hành SĐT ${phoneQuery}`} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
           <List>
             {phoneMatches.map((item, i) => (
               <List.Item
                 key={`${item.soChungTu}-${i}`}
-                title={item.soChungTu}
                 description={(
-                  <Space direction="vertical" size={4}>
-                    <span>{normalizeProductName(item.tenHang)}</span>
-                    <Tag color={statusColor(item.trangThai)}>{formatStatus(item.trangThai)}</Tag>
-                  </Space>
+                  <MobileSpace direction="vertical" block style={{ '--gap': '4px' }}>
+                    <span style={{ fontSize: 13, opacity: 0.8 }}>{normalizeProductName(item.tenHang)}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <MobileTag color={statusColor(item.trangThai)} fill="outline">{formatStatus(item.trangThai)}</MobileTag>
+                      {item.ngayNhan && <span style={{ fontSize: 11, opacity: 0.6 }}>{item.ngayNhan}</span>}
+                    </div>
+                  </MobileSpace>
                 )}
-                extra={item.ngayNhan || ''}
+                extra={
+                  <span style={{ fontSize: 13, fontWeight: 800, color: isDark ? '#8fc7ff' : '#1677ff' }}>
+                    {item.soChungTu}
+                  </span>
+                }
                 onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}
+                arrow
               />
             ))}
           </List>
         </MobileCard>
       )}
 
+      {/* Recent tracks dùng Selector để trải nghiệm native hơn */}
       {recentTracks.length > 0 && (
-        <MobileCard title={t('tracking.recentTitle')} className="ntpc-mobile-card">
-          <div className="ntpc-mobile-tags">
-            {recentTracks.map((track, i) => (
-              <MobileTag key={i} round color="primary" fill="outline" onClick={() => navigate(`/tra-cuu/${track}`)}>
-                {track}
-              </MobileTag>
-            ))}
-          </div>
+        <MobileCard title={`🕐 ${t('tracking.recentTitle')}`} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
+          <Selector
+            columns={2}
+            options={recentTracks.map(track => ({
+              label: track,
+              value: track,
+              description: 'Nhấn để xem',
+            }))}
+            onChange={(val) => {
+              if (val[0]) navigate(`/tra-cuu/${val[0]}`);
+            }}
+            style={{
+              '--border-radius': '10px',
+              '--checked-color': 'var(--adm-color-primary)',
+              '--checked-text-color': '#fff',
+              '--checked-border': 'none',
+            }}
+          />
         </MobileCard>
       )}
 
-      <MobileCard title={t('tracking.contactTitle')} className="ntpc-mobile-card">
+      {/* Contact card nâng cấp với List.Item có icon */}
+      <MobileCard title={`📞 ${t('tracking.contactTitle')}`} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
         <List>
-          <List.Item title={t('tracking.companyTitle')}>{t('print:company')}</List.Item>
-          <List.Item title="BH-KT" extra="08h30 - 18h">0937 63 2000</List.Item>
-          <List.Item title="Hotline">0903 602 240</List.Item>
-          <List.Item title="MST">3603797285</List.Item>
-          <List.Item title={t('tracking.addressTitle')}>{t('print:address').replace(new RegExp(`^${t('print:addressPrefix')} `), '')}</List.Item>
+          <List.Item prefix={<span style={{ fontSize: 16 }}>🏢</span>} title={t('tracking.companyTitle')}>
+            {t('print:company')}
+          </List.Item>
+          <List.Item prefix={<PhoneOutlined style={{ fontSize: 15, color: '#1677ff' }} />} title="BH-KT" extra="08h30 - 18h">
+            <a href="tel:0937632000" style={{ color: '#1677ff', fontWeight: 700, textDecoration: 'none' }}>0937 63 2000</a>
+          </List.Item>
+          <List.Item prefix={<PhoneOutlined style={{ fontSize: 15, color: '#52c41a' }} />} title="Hotline">
+            <a href="tel:0903602240" style={{ color: '#52c41a', fontWeight: 700, textDecoration: 'none' }}>0903 602 240</a>
+          </List.Item>
+          <List.Item prefix={<span style={{ fontSize: 15 }}>🪪</span>} title="MST">3603797285</List.Item>
+          <List.Item prefix={<EnvironmentOutlined style={{ fontSize: 15, color: '#ff7a00' }} />} title={t('tracking.addressTitle')}>
+            {t('print:address').replace(new RegExp(`^${t('print:addressPrefix')} `), '')}
+          </List.Item>
         </List>
         <MobileDivider />
-        <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
-          <MobileButton block onClick={() => { window.location.href = 'tel:0937632000'; }}>{t('tracking.callWarranty')}</MobileButton>
-          <MobileButton block onClick={() => { window.location.href = 'tel:0903602240'; }}>{t('tracking.callHotline')}</MobileButton>
-        </MobileSpace>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          <MobileButton
+            block
+            color="primary"
+            fill="outline"
+            onClick={() => { window.location.href = 'tel:0937632000'; }}
+            style={{ borderRadius: 10 }}
+          >
+            <PhoneOutlined style={{ marginRight: 4 }} />{t('tracking.callWarranty')}
+          </MobileButton>
+          <MobileButton
+            block
+            color="success"
+            fill="outline"
+            onClick={() => { window.location.href = 'tel:0903602240'; }}
+            style={{ borderRadius: 10 }}
+          >
+            <PhoneOutlined style={{ marginRight: 4 }} />{t('tracking.callHotline')}
+          </MobileButton>
+        </div>
       </MobileCard>
 
-      <MobileCard title={t('tracking.policyCardTitle')} className="ntpc-mobile-card">
-        <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
-          <a href="https://nguyentanpc.com/pages/dieu-kien-bao-hanh" target="_blank" rel="noreferrer">{t('tracking.policyDetail')}</a>
-          <span>{t('tracking.deliveryNote')}</span>
-          <span>{t('tracking.storageNote')}</span>
-        </MobileSpace>
+      {/* Policy card */}
+      <MobileCard title={`🛡️ ${t('tracking.policyCardTitle')}`} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
+        <List>
+          <List.Item prefix={<span>✅</span>}>{t('tracking.deliveryNote')}</List.Item>
+          <List.Item prefix={<span>📦</span>}>{t('tracking.storageNote')}</List.Item>
+        </List>
+        <div style={{ padding: '8px 0 0' }}>
+          <a href="https://nguyentanpc.com/pages/dieu-kien-bao-hanh" target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+            <MobileButton block fill="outline" style={{ borderRadius: 10, fontSize: 13, pointerEvents: 'none' }}>
+              Xem toàn bộ chính sách →
+            </MobileButton>
+          </a>
+        </div>
       </MobileCard>
+
+      <SafeArea position="bottom" />
     </div>
 
     <div className="desktop-only" style={{ maxWidth: 1040, width: '100%', margin: '0 auto' }}>

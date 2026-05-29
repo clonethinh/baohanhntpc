@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
-import { RightOutlined } from '@ant-design/icons';
+import { RightOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const ZALO_WEB_URL = 'https://zalo.me/0937632000';
 const ZALO_APP_URL = 'zalo://chat?phone=0937632000';
 
 export default function FloatingZalo() {
   const [showZaloBubble, setShowZaloBubble] = useState(true);
+  const [showZaloButton, setShowZaloButton] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [position, setPosition] = useState({
     x: window.innerWidth - 72,
     y: window.innerHeight - 150
   });
   const [isDragging, setIsDragging] = useState(false);
+  const [isOverTrash, setIsOverTrash] = useState(false);
   const dragStart = useRef({ x: 0, y: 0 });
   const elementStart = useRef({ x: 0, y: 0 });
   const clickPrevented = useRef(false);
@@ -75,47 +77,58 @@ export default function FloatingZalo() {
     const nextX = Math.max(10, Math.min(maxX, elementStart.current.x + dx));
     const nextY = Math.max(10, Math.min(maxY, elementStart.current.y + dy));
 
+    const buttonCenterX = nextX + 28;
+    const buttonCenterY = nextY + 28;
+    const trashCenterX = window.innerWidth / 2;
+    const trashCenterY = window.innerHeight - 46;
+    const isNearBottomZone = nextY > window.innerHeight - 180;
+    const distanceToTrash = Math.hypot(buttonCenterX - trashCenterX, buttonCenterY - trashCenterY);
+
+    setIsOverTrash(isNearBottomZone && distanceToTrash < 64);
     setPosition({ x: nextX, y: nextY });
   };
 
   const handleEnd = () => {
     setIsDragging(false);
 
-    const buttonWidth = 56;
-    const padding = 16;
-    const tabbarHeight = 80;
+    if (isOverTrash) {
+      setShowZaloButton(false);
+      setShowZaloBubble(false);
+      setIsOverTrash(false);
+      clickPrevented.current = false;
+      return;
+    }
 
+    const buttonWidth = 56;
+    const padding = 14;
+    const bottomSafeOffset = 88;
     const currentX = position.x;
     const currentY = position.y;
-
     const screenW = window.innerWidth;
     const screenH = window.innerHeight;
 
     const snapLeft = padding;
     const snapRight = screenW - buttonWidth - padding;
     const snapTop = padding;
-    const snapBottom = screenH - buttonWidth - tabbarHeight;
+    const snapBottom = screenH - buttonWidth - bottomSafeOffset;
 
     const distToLeft = Math.abs(currentX - snapLeft);
     const distToRight = Math.abs(currentX - snapRight);
     const distToTop = Math.abs(currentY - snapTop);
     const distToBottom = Math.abs(currentY - snapBottom);
 
-    let targetX = currentX;
-    let targetY = currentY;
+    const targetX = distToLeft <= distToRight ? snapLeft : snapRight;
 
-    // Snaps to the closest edge horizontally
-    targetX = distToLeft < distToRight ? snapLeft : snapRight;
-
-    // Corner magnetic snapping (snaps to top/bottom corners if close to top/bottom)
-    if (distToTop < 100) {
+    let targetY;
+    if (distToTop < 96) {
       targetY = snapTop;
-    } else if (distToBottom < 100) {
+    } else if (distToBottom < 120) {
       targetY = snapBottom;
     } else {
       targetY = Math.max(snapTop, Math.min(snapBottom, currentY));
     }
 
+    setIsOverTrash(false);
     setPosition({ x: targetX, y: targetY });
 
     setTimeout(() => {
@@ -168,6 +181,8 @@ export default function FloatingZalo() {
 
   const bubbleOnRight = position.x < (window.innerWidth - 56) / 2;
   const bubbleX = bubbleOnRight ? position.x + 68 : position.x - 170;
+  const isNearBottom = position.y > window.innerHeight - 180;
+  const showTrashDropzone = isMobile && isDragging && showZaloButton && isNearBottom;
 
   return (
     <>
@@ -190,7 +205,39 @@ export default function FloatingZalo() {
         }
       `}</style>
 
-      {/* 1. Zalo Button (Draggable on mobile, Static on desktop) */}
+      {showTrashDropzone && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'fixed',
+            left: '50%',
+            bottom: 18,
+            transform: 'translateX(-50%)',
+            width: isOverTrash ? 84 : 72,
+            height: isOverTrash ? 84 : 72,
+            borderRadius: '50%',
+            background: isOverTrash
+              ? 'linear-gradient(135deg, rgba(255, 77, 79, 0.24), rgba(255, 120, 117, 0.18))'
+              : 'rgba(22, 24, 35, 0.82)',
+            border: `1px solid ${isOverTrash ? 'rgba(255,77,79,0.9)' : 'rgba(255,255,255,0.14)'}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            zIndex: 1300,
+            boxShadow: isOverTrash
+              ? '0 16px 40px rgba(255,77,79,0.22)'
+              : '0 10px 30px rgba(0,0,0,0.28)',
+            transition: 'all 0.18s ease',
+            pointerEvents: 'none',
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          <DeleteOutlined style={{ fontSize: isOverTrash ? 28 : 24, color: isOverTrash ? '#ff7875' : '#ffffffd9' }} />
+        </div>
+      )}
+
+      {showZaloButton && (
       <a
         href={ZALO_WEB_URL}
         onClick={openZaloApp}
@@ -215,13 +262,14 @@ export default function FloatingZalo() {
           alignItems: 'center',
           justifyContent: 'center',
           textDecoration: 'none',
-          border: '2px solid #0068ff',
+          border: isOverTrash ? '2px solid #ff4d4f' : '2px solid #0068ff',
           zIndex: 1200,
           cursor: isMobile ? (isDragging ? 'grabbing' : 'grab') : 'pointer',
+          transform: isOverTrash ? 'scale(1.08)' : 'scale(1)',
           transition: isMobile 
             ? (isDragging 
-                ? 'none' 
-                : 'left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.2s, transform 0.2s')
+                ? 'transform 0.12s ease, border-color 0.12s ease' 
+                : 'left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.2s, transform 0.2s, border-color 0.2s')
             : 'box-shadow 0.2s, transform 0.2s',
         }}
       >
@@ -233,9 +281,10 @@ export default function FloatingZalo() {
           style={{ borderRadius: '50%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
         />
       </a>
+      )}
 
       {/* 2. Text Bubble (Snaps on mobile, Default on desktop) */}
-      {showZaloBubble && (
+      {showZaloBubble && showZaloButton && (
         <a
           href={ZALO_WEB_URL}
           onClick={openZaloApp}

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Alert, Button, Card, Col, Empty, Grid, Input, List, Row, Skeleton, Space, Tag, Typography } from 'antd';
-import { Button as MobileButton, Card as MobileCard, Dialog, Empty as MobileEmpty, List as MobileList, Skeleton as MobileSkeleton, Space as MobileSpace, Tag as MobileTag, TabBar, NavBar, SwipeAction, SearchBar, Toast, Collapse, Popup, CapsuleTabs } from 'antd-mobile';
+import { Button as MobileButton, Card as MobileCard, Dialog, Empty as MobileEmpty, List as MobileList, Skeleton as MobileSkeleton, Space as MobileSpace, Tag as MobileTag, TabBar, NavBar, SwipeAction, SearchBar, Toast, Popup, CapsuleTabs } from 'antd-mobile';
 import { useTheme } from '../../hooks/useTheme';
 import { MoonOutlined, SunOutlined } from '@ant-design/icons';
 import {
@@ -46,9 +46,19 @@ const STATUS_LABELS = {
   da_tra: 'Đã trả',
   huy: 'Hủy',
 };
-const STATUS_COLORS = Object.fromEntries(
-  Object.keys(STATUS_LABELS).map((key) => [key, getStatusBadgeColor(key)])
-);
+
+function normalizeStatusKey(status) {
+  const key = String(status || '').trim();
+  if (key === 'da_tra_hang' || key === 'da_sua_xong' || key === 'da_tra') return 'da_tra';
+  if (key === 'da_huy' || key === 'huy') return 'huy';
+  if (key === 'tiep_nhan' || key === 'da_nhan' || key === 'cho_xu_ly') return 'da_nhan';
+  if (key === 'cho_linh_kien' || key === 'dang_xu_ly' || key === 'cho_lien_he') return 'dang_xu_ly';
+  return key;
+}
+
+function statusColor(status, target = 'desktop') {
+  return getStatusBadgeColor(normalizeStatusKey(status), target);
+}
 
 function normalizeCode(raw) {
   return String(raw || '').toUpperCase().replace(/\s/g, '');
@@ -85,7 +95,7 @@ function writeRecent(list) {
 export default function Tracuu() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isDark, toggle } = useTheme();
+  useTheme();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const activeTab = queryParams.get('tab') || 'search';
@@ -98,6 +108,7 @@ export default function Tracuu() {
   const [searching, setSearching] = useState(false);
 
   const [filterStatus, setFilterStatus] = useState('all');
+  const phonePageSize = 5;
 
   useEffect(() => {
     const onStorage = (event) => {
@@ -174,6 +185,15 @@ export default function Tracuu() {
     return items;
   };
 
+  const filteredPhoneItems = getFilteredItems();
+  const [phonePage, setPhonePage] = useState(1);
+  const phoneTotalPages = Math.max(1, Math.ceil(filteredPhoneItems.length / phonePageSize));
+  const visiblePhoneItems = filteredPhoneItems.slice((phonePage - 1) * phonePageSize, phonePage * phonePageSize);
+
+  useEffect(() => {
+    setPhonePage(1);
+  }, [phoneResults, filterStatus]);
+
   const renderMobileResults = () => {
     if (searching) {
       return (
@@ -197,39 +217,61 @@ export default function Tracuu() {
       );
     }
     if (!phoneResults) return null;
-    const filtered = getFilteredItems();
     return (
-      <MobileCard title={`Kết quả theo SĐT ${phoneResults.phone} (${phoneResults.total})`} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 20 }}>
-        <div style={{ marginBottom: 12, marginTop: -4 }}>
+      <MobileCard title={`Chứng từ theo số điện thoại ${phoneResults.phone} (${phoneResults.total})`} className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-phone-card" style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: 12, marginTop: -2 }}>
           <CapsuleTabs activeKey={filterStatus} onChange={setFilterStatus} style={{ '--capsule-border-radius': '8px' }}>
             <CapsuleTabs.Tab title={`Tất cả (${phoneResults.items?.length || 0})`} key="all" />
             <CapsuleTabs.Tab title={`Chờ xử lý (${phoneResults.items?.filter(x => !['da_tra', 'da_tra_hang', 'da_sua_xong', 'huy', 'da_huy'].includes(x.trangThai)).length || 0})`} key="pending" />
             <CapsuleTabs.Tab title={`Đã xong (${phoneResults.items?.filter(x => ['da_tra', 'da_tra_hang', 'da_sua_xong'].includes(x.trangThai)).length || 0})`} key="completed" />
           </CapsuleTabs>
         </div>
-        {filtered.length ? (
-          <MobileList>
-            {filtered.map((item) => (
-              <MobileList.Item
-                key={item.id || item.soChungTu}
-                onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}
-                description={(
-                  <div className="tracuu-result-meta">
-                    <div className="tracuu-result-product" style={{ fontSize: 13, fontWeight: 500 }}>{item.tenHang || '-'}</div>
-                    <div className="tracuu-result-dates" style={{ fontSize: 11, opacity: 0.7, marginTop: 4 }}>
-                      <span style={{ marginRight: 12 }}><CalendarOutlined /> Nhận: {item.ngayNhan || '-'}</span>
-                      <span><CalendarOutlined /> Hẹn trả: {item.ngayHenTra || '-'}</span>
-                    </div>
+        {visiblePhoneItems.length ? (
+          <>
+            <div className="tracuu-mobile-related-list">
+              {visiblePhoneItems.map((item, i) => (
+                <button
+                  key={`${item.id || item.soChungTu}-${i}`}
+                  type="button"
+                  className="tracuu-mobile-related-card"
+                  onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}
+                >
+                  <div className="tracuu-mobile-related-top">
+                    <span className="tracuu-mobile-related-code">{item.soChungTu}</span>
+                    <MobileTag color={statusColor(item.trangThai, 'mobile')}>
+                      {STATUS_LABELS[item.trangThai] || item.trangThai || '-'}
+                    </MobileTag>
                   </div>
-                )}
-              >
-                <MobileSpace wrap align="center">
-                  <span className="admin-mobile-code" style={{ fontWeight: 800 }}>{item.soChungTu}</span>
-                  <MobileTag color={getStatusBadgeColor(item.trangThai, 'mobile')}>{STATUS_LABELS[item.trangThai] || item.trangThai || '-'}</MobileTag>
-                </MobileSpace>
-              </MobileList.Item>
-            ))}
-          </MobileList>
+                  <div className="tracuu-mobile-related-product">{item.tenHang || '-'}</div>
+                  <div className="tracuu-mobile-related-meta">
+                    <span><CalendarOutlined /> Nhận: {item.ngayNhan || '-'}</span>
+                    <span><CalendarOutlined /> Hẹn trả: {item.ngayHenTra || '-'}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+            {filteredPhoneItems.length > phonePageSize && (
+              <div className="tracuu-mobile-related-pagination">
+                <button
+                  type="button"
+                  className="tracuu-mobile-related-page-button"
+                  disabled={phonePage <= 1}
+                  onClick={() => setPhonePage((p) => Math.max(1, p - 1))}
+                >
+                  Trước
+                </button>
+                <span className="tracuu-mobile-related-page-info">Trang {phonePage} / {phoneTotalPages}</span>
+                <button
+                  type="button"
+                  className="tracuu-mobile-related-page-button"
+                  disabled={phonePage >= phoneTotalPages}
+                  onClick={() => setPhonePage((p) => Math.min(phoneTotalPages, p + 1))}
+                >
+                  Sau
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <MobileEmpty description="Không có phiếu nào ở mục này." />
         )}
@@ -239,22 +281,23 @@ export default function Tracuu() {
 
   return (
     <>
-    <main className="mobile-only ntpc-mobile-page">
-      <section className="ntpc-mobile-hero ntpc-glass-card">
+    <main className="mobile-only ntpc-mobile-page tracuu-mobile-v2">
+      <section className="ntpc-mobile-hero ntpc-glass-card tracuu-mobile-hero-v2">
+        <div className="ntpc-mobile-eyebrow">Trung tâm bảo hành</div>
         <h1>{t('tracking.title')}</h1>
-        <p>{t('tracking.description')}</p>
+        <p>Nhập mã phiếu hoặc số điện thoại để xem tiến trình xử lý.</p>
       </section>
 
-      <MobileCard className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
-        <MobileSpace direction="vertical" block style={{ '--gap': '14px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span style={{ fontWeight: 800, fontSize: 16, color: isDark ? '#fff' : '#26361f' }}>{t('tracking.newSearch')}</span>
-            <span style={{ fontSize: 12, opacity: 0.8 }}>Vui lòng nhập mã chứng từ hoặc số điện thoại của bạn.</span>
+      <MobileCard className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-search-card" style={{ marginBottom: 12 }}>
+        <div className="tracuu-mobile-search-stack">
+          <div className="tracuu-mobile-search-title">
+            <span>Tra cứu phiếu bảo hành</span>
+            <small>Hỗ trợ tra cứu theo mã phiếu hoặc số điện thoại.</small>
           </div>
-          
-          <div className="ntpc-searchbar-container" style={{ padding: '2px 4px', borderRadius: 12 }}>
+
+          <div className="ntpc-searchbar-container tracuu-mobile-searchbar">
             <SearchBar
-              placeholder={t('tracking.placeholder')}
+              placeholder="Nhập mã phiếu hoặc số điện thoại"
               value={code}
               onChange={(value) => {
                 setCode(value);
@@ -265,119 +308,112 @@ export default function Tracuu() {
             />
           </div>
 
-          <MobileButton block color="primary" loading={searching} onClick={() => submit(code)} style={{ borderRadius: 10 }}>
-            {t('tracking.newSearch')}
+          <MobileButton block color="primary" loading={searching} onClick={() => submit(code)} className="tracuu-mobile-primary-btn">
+            Tra cứu ngay
           </MobileButton>
-          {error ? <div className="ntpc-mobile-error" style={{ borderRadius: 10 }}>{error}</div> : null}
-        </MobileSpace>
+          <div className="tracuu-mobile-input-hint">VD: 20250101NTPC123 hoặc 0903xxxxxx</div>
+          {error ? <div className="ntpc-mobile-error tracuu-mobile-error">{error}</div> : null}
+        </div>
       </MobileCard>
 
       {renderMobileResults()}
 
       {recent.length > 0 && (
-        <MobileCard title={t('tracking.historyTitle')} className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+        <MobileCard title="Tra cứu gần đây" className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-recent-card" style={{ marginBottom: 12 }}>
+          <div className="tracuu-mobile-recent-list">
             {recent.map((item, index) => {
               const codeValue = recentCode(item);
               const timeValue = recentTime(item);
               return (
-                <div className="ntpc-history-swipe-item" key={codeValue}>
-                  <SwipeAction
-                    rightActions={[
-                      {
-                        key: 'delete',
-                        text: 'Xóa',
-                        color: 'danger',
-                        onClick: () => {
-                          const next = recent.filter((x) => recentCode(x) !== codeValue);
-                          setRecent(next);
-                          writeRecent(next);
-                          Toast.show({ content: 'Đã xóa khỏi lịch sử' });
-                        }
+                <SwipeAction
+                  key={codeValue}
+                  rightActions={[
+                    {
+                      key: 'delete',
+                      text: 'Xóa',
+                      color: 'danger',
+                      onClick: () => {
+                        const next = recent.filter((x) => recentCode(x) !== codeValue);
+                        setRecent(next);
+                        writeRecent(next);
+                        Toast.show({ content: 'Đã xóa khỏi lịch sử' });
                       }
-                    ]}
-                  >
-                    <MobileList.Item
-                      onClick={() => submit(codeValue)}
-                      description={timeValue || (index === 0 ? t('tracking.latest') : t('tracking.searched'))}
-                      arrow={<RightOutlined style={{ fontSize: 12, opacity: 0.5 }} />}
-                    >
-                      <span style={{ fontWeight: 700, color: isDark ? '#fff' : '#1f2a1d' }}>{codeValue}</span>
-                    </MobileList.Item>
-                  </SwipeAction>
-                </div>
+                    }
+                  ]}
+                >
+                  <button type="button" className="tracuu-mobile-recent-chip" onClick={() => submit(codeValue)}>
+                    <div className="tracuu-mobile-recent-copy">
+                      <span>{codeValue}</span>
+                      <small>{timeValue || (index === 0 ? t('tracking.latest') : t('tracking.searched'))}</small>
+                    </div>
+                    <RightOutlined className="tracuu-mobile-recent-arrow" />
+                  </button>
+                </SwipeAction>
               );
             })}
           </div>
           <MobileButton
             block
             size="small"
+            fill="outline"
             onClick={() => Dialog.confirm({
               content: 'Xóa toàn bộ lịch sử tra cứu?',
               confirmText: 'Xóa',
               cancelText: 'Hủy',
               onConfirm: clearRecent
             })}
-            style={{ borderRadius: 10 }}
+            className="tracuu-mobile-clear-btn"
           >
-            {t('tracking.clearHistory')}
+            Xóa lịch sử
           </MobileButton>
         </MobileCard>
       )}
 
-      <MobileCard title="📞 Hỗ trợ kỹ thuật & Bản đồ" className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
-        <div className="ntpc-mobile-contact-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
-          <a className="ntpc-mobile-contact-btn" href="tel:0937632000" style={{ borderRadius: 12, padding: '10px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.04)' : '#f5f7f4', border: '1px solid rgba(0,0,0,0.05)', textDecoration: 'none' }}>
-            <span style={{ fontSize: 11, opacity: 0.7, color: isDark ? '#bbb' : '#666' }}>Gọi kỹ thuật</span>
-            <b style={{ fontSize: 13, color: '#1677ff', marginTop: 2 }}>0937 63 2000</b>
+      <MobileCard title="Hỗ trợ nhanh" className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-support-card" style={{ marginBottom: 12 }}>
+        <div className="tracuu-mobile-support-stack">
+          <a className="tracuu-mobile-support-row tracuu-mobile-support-row-primary" href="tel:0937632000">
+            <div>
+              <span>Bảo hành - kỹ thuật</span>
+              <b>0937 63 2000</b>
+            </div>
+            <RightOutlined />
           </a>
-          <a className="ntpc-mobile-contact-btn" href="tel:0903602240" style={{ borderRadius: 12, padding: '10px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.04)' : '#f5f7f4', border: '1px solid rgba(0,0,0,0.05)', textDecoration: 'none' }}>
-            <span style={{ fontSize: 11, opacity: 0.7, color: isDark ? '#bbb' : '#666' }}>Gọi hotline</span>
-            <b style={{ fontSize: 13, color: '#1677ff', marginTop: 2 }}>0903 602 240</b>
+          <a className="tracuu-mobile-support-row" href="tel:0903602240">
+            <div>
+              <span>Hotline</span>
+              <b>0903 602 240</b>
+            </div>
+            <RightOutlined />
+          </a>
+          <a className="tracuu-mobile-support-row" href="https://maps.app.goo.gl/Nx6WgejPbu1YJGWR7" target="_blank" rel="noreferrer">
+            <div>
+              <span>Địa chỉ bảo hành</span>
+              <b>Xem đường đi trên Google Maps</b>
+            </div>
+            <RightOutlined />
           </a>
         </div>
-        <a className="ntpc-mobile-contact-map" href="https://maps.app.goo.gl/Nx6WgejPbu1YJGWR7" target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', padding: '10px', background: '#1677ff', color: '#fff', borderRadius: 10, fontWeight: 700, textDecoration: 'none', marginBottom: 12, fontSize: 13 }}>
-          🗺️ Chỉ đường (Google Maps)
-        </a>
-        <div style={{ fontSize: 12, opacity: 0.7, lineHeight: 1.4, color: isDark ? '#ccc' : '#444' }}>
-          <b>Địa chỉ bảo hành:</b> {t('tracking.address')}
+        <div className="tracuu-mobile-support-footer">
+          <span>🏢 {t('tracking.address')}</span>
         </div>
       </MobileCard>
 
-      <MobileCard title="🛡️ Điều kiện & Chính sách" className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 24 }}>
-        <MobileSpace direction="vertical" block style={{ '--gap': '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <CheckCircleOutlined style={{ color: '#52c41a', marginTop: 3 }} />
-            <span style={{ fontSize: 13, lineHeight: 1.4, color: isDark ? '#ddd' : '#333' }}>{t('tracking.deliveryNote')}</span>
+      <MobileCard className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-policy-card" style={{ marginBottom: 24 }}>
+        <div className="tracuu-mobile-policy-header">Điều kiện & lưu ý bảo hành</div>
+        <div className="tracuu-mobile-policy-list">
+          <div>
+            <CheckCircleOutlined />
+            <span>{t('tracking.deliveryNote')}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <CheckCircleOutlined style={{ color: '#52c41a', marginTop: 3 }} />
-            <span style={{ fontSize: 13, lineHeight: 1.4, color: isDark ? '#ddd' : '#333' }}>{t('tracking.storageNote')}</span>
+          <div>
+            <CheckCircleOutlined />
+            <span>{t('tracking.storageNote')}</span>
           </div>
-          <a href="https://nguyentanpc.com/pages/dieu-kien-bao-hanh" target="_blank" rel="noreferrer" style={{ textDecoration: 'none', display: 'block', width: '100%', marginTop: 8 }}>
-            <MobileButton block color="primary" fill="outline" style={{ borderRadius: 10, fontSize: 13, pointerEvents: 'none' }}>
-              Xem toàn bộ chính sách
-            </MobileButton>
+          <a href="https://nguyentanpc.com/pages/dieu-kien-bao-hanh" target="_blank" rel="noreferrer">
+            Xem chính sách đầy đủ
           </a>
-        </MobileSpace>
+        </div>
       </MobileCard>
-
-      <div style={{ textAlign: 'center', paddingBottom: 24, paddingTop: 4 }}>
-        <button
-          onClick={() => navigate('/admin')}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: 13,
-            color: isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.32)',
-            padding: '4px 8px',
-            letterSpacing: 0.1,
-          }}
-        >
-          Bạn là nhân viên? <span style={{ color: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.45)', fontWeight: 600 }}>Đăng nhập →</span>
-        </button>
-      </div>
     </main>
 
     <main className="desktop-only tracuu-old-page">
@@ -435,7 +471,7 @@ export default function Tracuu() {
                 renderItem={(item) => (
                   <List.Item className="tracuu-old-result-item" onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}>
                     <List.Item.Meta
-                      title={<Space><b>{item.soChungTu}</b><Tag color={STATUS_COLORS[item.trangThai] || 'default'}>{STATUS_LABELS[item.trangThai] || item.trangThai || '-'}</Tag></Space>}
+                      title={<Space><b>{item.soChungTu}</b><Tag color={statusColor(item.trangThai)}>{STATUS_LABELS[item.trangThai] || item.trangThai || '-'}</Tag></Space>}
                       description={(
                         <div className="tracuu-result-meta">
                           <div className="tracuu-result-product">{item.tenHang || '-'}</div>
