@@ -23,6 +23,7 @@ import { buildInternalHistoryTimeline } from '../../utils/historyTimeline';
 import { LOAI_XU_LY_OPTIONS, LOAI_XU_LY_LABELS } from '../../constants/warrantyOptions';
 import { formatDate, shouldShowDueDate } from '../../utils/dateHelpers';
 import { normalizeVietnameseText } from '../../utils/vietnameseText';
+import { getFieldLabel } from '../../utils/fieldLabels';
 import StatusTag from './StatusTag';
 import WarrantyProgress from './WarrantyProgress';
 import CustomerPickerModal from '../common/CustomerPickerModal';
@@ -1203,31 +1204,6 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     .replaceAll('Xóa ảnh đính kèm', 'Đã xóa ảnh đính kèm');
 
   const getUpdateHistoryDetail = (entry) => {
-    const fieldLabels = {
-      tenHang: 'Tên sản phẩm',
-      loiLucNhan: 'Lỗi lúc nhận',
-      ngayHenTra: 'Ngày hẹn trả',
-      ngayNhan: 'Ngày nhận',
-      ngayMua: 'Ngày mua',
-      ngayTra: 'Ngày trả',
-      tenKhach: 'Tên khách hàng',
-      khachHang: 'Khách hàng',
-      sdt: 'Số điện thoại',
-      soDienThoai: 'Số điện thoại',
-      diaChi: 'Địa chỉ',
-      tenCuaHang: 'Tên cửa hàng',
-      tenSanPham: 'Tên sản phẩm',
-      soSeri: 'Số seri',
-      serial: 'Serial',
-      imei: 'IMEI',
-      cauHinh: 'Cấu hình',
-      phuKien: 'Phụ kiện',
-      ghiChu: 'Ghi chú',
-      trangThai: 'Trạng thái',
-      uuTien: 'Ưu tiên',
-      loaiXuLy: 'Loại xử lý',
-    };
-
     const formatFieldValue = (field, raw) => {
       if (raw === null || raw === undefined || raw === '') return '';
       if (field === 'ngayHenTra') {
@@ -1243,7 +1219,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
     const changes = entry?.changes || {};
     const rows = Object.entries(changes).map(([field, value]) => {
-      const label = fieldLabels[field] || field;
+      const label = getFieldLabel(field);
       const fromValue = formatFieldValue(field, value?.from);
       const toValue = formatFieldValue(field, value?.to);
       if (field === 'ngayHenTra' && value?.from === 'none') {
