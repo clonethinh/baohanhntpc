@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Row, Col, Card, Statistic, Table, Typography, Button, Skeleton, Space, Tag, Timeline } from 'antd';
-import { Button as MobileButton, Card as MobileCard, Grid as MobileGrid, List, Space as MobileSpace, Tag as MobileTag } from 'antd-mobile';
-import { SyncOutlined, CheckCircleOutlined, ClockCircleOutlined, AlertOutlined, StarOutlined } from '@ant-design/icons';
+import { Button as MobileButton, Card as MobileCard, Grid as MobileGrid, Tag as MobileTag } from 'antd-mobile';
+import { SyncOutlined, CheckCircleOutlined, ClockCircleOutlined, AlertOutlined, StarOutlined, RightOutlined, HistoryOutlined, EyeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { nhanVienService, statsService, warrantyService } from '../../services/warrantyService';
 import { STATUS } from '../../constants/statusConfig';
 import { getUrgency } from '../../utils/urgency';
 import { formatDate, getWarrantyDueDate, shouldShowDueDate } from '../../utils/dateHelpers';
-import { buildInternalHistoryTimeline } from '../../utils/historyTimeline';
+import { buildInternalHistoryTimeline, formatHistoryChanges } from '../../utils/historyTimeline';
 import { normalizeHistoryNote } from '../../utils/historyDisplay';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import StatusTag from '../../components/warranty/StatusTag';
@@ -82,6 +82,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailId, setDetailId] = useState(null);
+  const [activityCount, setActivityCount] = useState(5);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
@@ -204,79 +205,189 @@ export default function Dashboard() {
   }
 
   const s = summary || { daTraHomNay: 0, dangXuLy: 0 };
+  const mobileKpis = [
+    { key: 'processing', label: t('adminDashboard.processing'), value: s.dangXuLy, icon: <SyncOutlined />, className: 'processing' },
+    { key: 'dueToday', label: t('adminDashboard.dueToday'), value: insights.dueToday.length, icon: <ClockCircleOutlined />, className: 'warn' },
+    { key: 'overdue', label: t('adminDashboard.overdue'), value: insights.overdue.length, icon: <AlertOutlined />, className: 'danger' },
+    { key: 'priorityOpen', label: t('adminDashboard.priorityOpen'), value: insights.priorityOpen.length, icon: <StarOutlined />, className: 'priority' },
+    { key: 'doneToday', label: t('adminDashboard.doneToday'), value: s.daTraHomNay, icon: <CheckCircleOutlined />, className: 'success' },
+  ];
+  const mobileQuickActions = [
+    {
+      key: 'due-today',
+      label: t('adminDashboard.viewDueToday'),
+      hint: `${insights.dueToday.length} phiếu`,
+      icon: <ClockCircleOutlined />,
+      className: 'warn',
+      onClick: () => navigate('/admin/phieu?dueType=today'),
+    },
+    {
+      key: 'overdue',
+      label: t('adminDashboard.viewOverdue'),
+      hint: `${insights.overdue.length} phiếu`,
+      icon: <AlertOutlined />,
+      className: 'danger',
+      onClick: () => navigate('/admin/phieu?dueType=overdue'),
+    },
+    {
+      key: 'priority',
+      label: t('adminDashboard.viewPriority'),
+      hint: `${insights.priorityOpen.length} phiếu`,
+      icon: <StarOutlined />,
+      className: 'priority',
+      onClick: () => navigate('/admin/phieu?uuTien=1'),
+    },
+  ];
 
   return (
     <>
     {isMobile && <div className="mobile-only admin-mobile-page">
-      <div className="admin-mobile-title">
-        <h1>{t('adminDashboard.title')}</h1>
-        <MobileButton size="small" onClick={() => navigate('/admin/phieu')}>{t('adminDashboard.openTicket')}</MobileButton>
+      <section className="admin-mobile-hero">
+        <div className="admin-mobile-hero-top">
+          <div>
+            <h1>{t('adminDashboard.title')}</h1>
+          </div>
+          <button
+            type="button"
+            className="admin-mobile-hero-link"
+            onClick={() => navigate('/admin/phieu')}
+          >
+            <span>{t('adminDashboard.openTicketList')}</span>
+            <RightOutlined />
+          </button>
+        </div>
+      </section>
+
+      <div className="admin-mobile-kpi-grid">
+        {mobileKpis.map((item, idx) => (
+          <div
+            key={item.key}
+            className={`admin-mobile-kpi-card ${item.className} ${idx === 0 ? 'featured' : ''}`}
+          >
+            <span className="admin-mobile-kpi-card-icon">{item.icon}</span>
+            <div className="admin-mobile-kpi-card-info">
+              <span className="admin-mobile-kpi-card-label">{item.label}</span>
+              <span className="admin-mobile-kpi-card-value">{item.value}</span>
+            </div>
+          </div>
+        ))}
       </div>
 
-      <MobileGrid columns={2} gap={8}>
-        <MobileGrid.Item><div className="admin-mobile-kpi warn" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><ClockCircleOutlined /> {t('adminDashboard.dueToday')}</span><b>{insights.dueToday.length}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi danger" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><AlertOutlined /> {t('adminDashboard.overdue')}</span><b>{insights.overdue.length}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi danger" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><StarOutlined /> {t('adminDashboard.priorityOpen')}</span><b>{insights.priorityOpen.length}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi success" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><CheckCircleOutlined /> {t('adminDashboard.doneToday')}</span><b>{s.daTraHomNay}</b></div></MobileGrid.Item>
-        <MobileGrid.Item><div className="admin-mobile-kpi" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}><span><SyncOutlined /> {t('adminDashboard.processing')}</span><b>{s.dangXuLy}</b></div></MobileGrid.Item>
-      </MobileGrid>
-
-      <MobileCard title={t('adminDashboard.quickNav')} className="admin-mobile-card">
-        <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
-          <MobileButton block onClick={() => navigate('/admin/phieu?dueType=today')}>{t('adminDashboard.viewDueToday')}</MobileButton>
-          <MobileButton block color="danger" onClick={() => navigate('/admin/phieu?dueType=overdue')}>{t('adminDashboard.viewOverdue')}</MobileButton>
-          <MobileButton block color="primary" onClick={() => navigate('/admin/phieu?uuTien=1')}>{t('adminDashboard.viewPriority')}</MobileButton>
-        </MobileSpace>
+      <MobileCard title={t('adminDashboard.quickNav')} className="admin-mobile-card admin-mobile-actions-card">
+        <div className="admin-mobile-action-list">
+          {mobileQuickActions.map((action) => (
+            <button
+              key={action.key}
+              type="button"
+              className={`admin-mobile-action-item ${action.className}`}
+              onClick={action.onClick}
+            >
+              <span className="admin-mobile-action-icon">{action.icon}</span>
+              <span className="admin-mobile-action-copy">
+                <b>{action.label}</b>
+                <small>{action.hint}</small>
+              </span>
+              <RightOutlined className="admin-mobile-action-arrow" />
+            </button>
+          ))}
+        </div>
       </MobileCard>
 
       <MobileCard title={t('adminDashboard.urgentTitle')} className="admin-mobile-card">
         {insights.urgent.length === 0 ? (
           <div className="admin-mobile-empty">{t('adminDashboard.noUrgent')}</div>
         ) : (
-          <List>
-            {insights.urgent.map(w => (
-              <List.Item
-                key={w.id}
-                clickable
-                onClick={() => openDetail(w.id)}
-                title={<span className="admin-mobile-code">{w.soChungTu}</span>}
-                description={
-                  <div style={{ display: 'grid', gap: 2, fontSize: 13 }}>
-                    <div>{w.khachHang || '-'} · {w.tenHang || '-'}</div>
-                    <div style={{ fontSize: 11, opacity: 0.7 }}>
-                      Nhận: {formatDate(w.ngayNhan)} · Hẹn trả: {shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-'}
+          <div className="admin-mobile-urgent-list">
+            {insights.urgent.map(w => {
+              const urgency = w.uuTien ? 'priority' : getUrgency(w) === 'overdue' ? 'overdue' : 'near';
+              const urgencyLabel = w.uuTien
+                ? t('adminDashboard.priority')
+                : getUrgency(w) === 'overdue'
+                  ? t('adminDashboard.overdue')
+                  : t('adminDashboard.nearDue');
+              return (
+                <button
+                  key={w.id}
+                  type="button"
+                  className={`admin-mobile-urgent-card ${urgency}`}
+                  onClick={() => openDetail(w.id)}
+                >
+                  <div className="admin-mobile-urgent-head">
+                    <div>
+                      <span className="admin-mobile-code">{w.soChungTu}</span>
+                      <p>{w.khachHang || '-'} · {w.tenHang || '-'}</p>
+                    </div>
+                    <MobileTag color={w.uuTien ? 'danger' : getUrgency(w) === 'overdue' ? 'danger' : 'warning'}>
+                      {urgencyLabel}
+                    </MobileTag>
+                  </div>
+
+                  <div className="admin-mobile-urgent-meta">
+                    <div>
+                      <small>Ngày nhận</small>
+                      <strong>{formatDate(w.ngayNhan)}</strong>
+                    </div>
+                    <div>
+                      <small>Hẹn trả</small>
+                      <strong>{shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-'}</strong>
                     </div>
                   </div>
-                }
-              >
-                <MobileSpace wrap>
-                  <MobileTag color={w.uuTien ? 'danger' : getUrgency(w) === 'overdue' ? 'danger' : 'warning'}>
-                    {w.uuTien ? t('adminDashboard.priority') : getUrgency(w) === 'overdue' ? t('adminDashboard.overdue') : t('adminDashboard.nearDue')}
-                  </MobileTag>
-                  <span>{STATUS[w.trangThai]?.label || w.trangThai}</span>
-                </MobileSpace>
-              </List.Item>
-            ))}
-          </List>
+
+                  <div className="admin-mobile-urgent-footer">
+                    <span>{STATUS[w.trangThai]?.label || w.trangThai}</span>
+                    <span className="admin-mobile-urgent-open">
+                      <EyeOutlined />
+                      Chi tiết
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         )}
       </MobileCard>
 
       <MobileCard title={t('adminDashboard.latestHistory')} className="admin-mobile-card">
-        <div className="admin-mobile-history">
-          {insights.latestEvents.map((ev, idx) => {
+        <div className="admin-mobile-activity-list">
+          {insights.latestEvents.slice(0, activityCount).map((ev, idx) => {
             const note = normalizeHistoryNote(ev.note);
-            const updateDetail = ev.action === 'update' ? formatUpdateChanges(ev.changes) : '';
+            const updateDetail = ev.action === 'update' ? formatHistoryChanges(ev.changes) : '';
             const detail = updateDetail || note;
             return (
-              <button key={`${ev.id}-${ev.at}-${ev.action}-${idx}`} type="button" onClick={() => openDetail(ev.id)}>
-                <b>{mapHistoryAction(ev.action, t)}</b>
-                <span>{ev.soChungTu} · {ev.khachHang || t('adminDashboard.unknownCustomer')}</span>
-                <small>{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</small>
-                {detail ? <em style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</em> : null}
+              <button
+                key={`${ev.id}-${ev.at}-${ev.action}-${idx}`}
+                type="button"
+                className="admin-mobile-activity-item"
+                onClick={() => openDetail(ev.id)}
+              >
+                <span className="admin-mobile-activity-dot" />
+                <div className="admin-mobile-activity-body">
+                  <div className="admin-mobile-activity-top">
+                    <b>{mapHistoryAction(ev.action, t)}</b>
+                    <HistoryOutlined />
+                  </div>
+                  <span className="admin-mobile-activity-code">{ev.soChungTu}</span>
+                  <small>{ev.khachHang || t('adminDashboard.unknownCustomer')}</small>
+                  <small>{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</small>
+                  {detail ? <em style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</em> : null}
+                </div>
               </button>
             );
           })}
         </div>
+        {insights.latestEvents.length > 5 && (
+          <div className="admin-mobile-more">
+            {activityCount < insights.latestEvents.length ? (
+              <button type="button" onClick={() => setActivityCount(insights.latestEvents.length)}>
+                Xem tất cả {insights.latestEvents.length} hoạt động
+              </button>
+            ) : (
+              <button type="button" onClick={() => setActivityCount(5)}>
+                Thu gọn
+              </button>
+            )}
+          </div>
+        )}
       </MobileCard>
     </div>}
 

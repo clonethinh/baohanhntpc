@@ -269,6 +269,7 @@ export default function WarrantyList() {
       sorter: true,
       render: (text, record) => {
         if (record.ngayHenTra === 'none') {
+          if (record.trangThai === 'da_tra' || record.trangThai === 'huy') return '-';
           return <span>Pending<span className="loading-dots" /></span>;
         }
         if (!shouldShowDueDate(record)) return '-';

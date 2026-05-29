@@ -47,7 +47,9 @@ function parseFormDate(value) {
 }
 
 export function normalizeHistoryText(text) {
-  return normalizeVietnameseText(text);
+  return normalizeVietnameseText(text || '')
+    .replaceAll('soSeri:', 'Số seri:')
+    .replaceAll('soSeri :', 'Số seri:');
 }
 
 function renderHistoryDetail(detail) {
@@ -1215,6 +1217,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       diaChi: 'Địa chỉ',
       tenCuaHang: 'Tên cửa hàng',
       tenSanPham: 'Tên sản phẩm',
+      soSeri: 'Số seri',
       serial: 'Serial',
       imei: 'IMEI',
       cauHinh: 'Cấu hình',
