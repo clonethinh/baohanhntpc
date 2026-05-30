@@ -1,171 +1,734 @@
-# 📊 HỆ THỐNG QUẢN LÝ BẢO HÀNH NTPC - TÀI LIỆU KỸ THUẬT & ĐÁNH GIÁ DỰ ÁN CHI TIẾT
+# NTPC Warranty Management System
 
-Tài liệu này cung cấp một cái nhìn toàn diện và chi tiết nhất về kiến trúc hệ thống hiện tại, các giải pháp kỹ thuật cốt lõi đã triển khai, đánh giá điểm mạnh - điểm yếu khách quan, kèm theo phương án khắc phục chi tiết cùng định hướng nâng cấp tối ưu trong tương lai cho **Hệ thống Quản lý Bảo hành NTPC**.
-
----
-
-## 1. ĐÁNH GIÁ TỔNG QUAN DỰ ÁN (PROJECT ASSESSMENT)
-
-### 1.1. Mục tiêu và Nghiệp vụ cốt lõi
-Hệ thống được thiết kế đặc thù nhằm phục vụ quy trình tiếp nhận, quản lý và xử lý bảo hành/sửa chữa thiết bị công nghệ (linh kiện, máy tính) của **NTPC**. Hệ thống kết nối chặt chẽ các thực thể nghiệp vụ:
-*   **Khách hàng:** Quản lý thông tin, số điện thoại, địa chỉ, lịch sử bảo hành và cung cấp mã tra cứu động giúp khách hàng tự theo dõi tiến độ xử lý trực tuyến.
-*   **Nhân viên (Staff/Admin):** Tiếp nhận thiết bị, chẩn đoán lỗi lúc nhận, lập phiếu hẹn, phân bổ xử lý nghiệp vụ, cập nhật trạng thái hoạt động.
-*   **Nhà cung cấp (Suppliers):** Gửi bảo hành bên thứ ba (hãng sản xuất hoặc nhà phân phối lớn), theo dõi tiến độ gửi đi, ngày dự kiến trả và nhận lại thiết bị.
-*   **Lịch sử & Kiểm toán (Audit Logs):** Ghi vết 100% tất cả hoạt động thay đổi thông tin phiếu bảo hành, trạng thái gửi nhận nhà cung cấp và thông tin nhân viên thao tác.
-
-### 1.2. Tiến trình Phát triển & Các Cột mốc Lớn
-1.  **Giai đoạn 1.x & 2.x (Legacy):**
-    *   Hệ thống sử dụng tệp `db.json` làm kho lưu trữ dữ liệu duy nhất.
-    *   Cơ chế cập nhật dữ liệu là ghi đè toàn bộ tệp tin (Collection overwrite) mỗi khi có bất kỳ thay đổi nào từ phía Client.
-    *   *Hạn chế:* Rủi ro mất dữ liệu rất cao khi có ghi đồng thời (Concurrency), không có ràng buộc toàn vẹn dữ liệu khóa ngoại, hiệu năng giảm sâu theo cấp số nhân khi dung lượng dữ liệu tăng lên.
-2.  **Giai đoạn 3.0 (Hiện tại - Sản phẩm hoàn thiện):**
-    *   **Di chuyển toàn diện sang PostgreSQL:** Thiết lập cấu trúc cơ sở dữ liệu quan hệ hoàn chỉnh thông qua Prisma ORM.
-    *   **Direct CRUD:** Refactor toàn bộ các route API quan trọng sang thao tác trực tiếp trên từng record cơ sở dữ liệu (create, update, delete) thay vì ghi đè thô bạo.
-    *   **Standby Safe Fallback & Throttled Write Queue:** Giữ lại tệp `db.json` như một hệ thống dự phòng nóng (standby database) được ghi đệm thông qua hàng đợi RAM trì hoãn tối ưu. Nếu container PostgreSQL gặp sự cố, Express API tự động chuyển hướng đọc/ghi tệp JSON giúp hệ thống đạt độ sẵn sàng cao nhất (High Availability).
-    *   **Chuẩn hóa toàn diện:** Triển khai DevOps (Docker Compose, GitHub Actions CI), bảo mật (Helmet, CSP), kiểm soát múi giờ Việt Nam (GMT+7) và diễn tập khôi phục tự động (Restore Drill Validation).
+> Hệ thống quản lý bảo hành thiết bị vi tính — Full-stack Web Application
 
 ---
 
-## 2. CHI TIẾT THÔNG SỐ KỸ THUẬT HIỆN TẠI (CURRENT TECHNICAL STACK)
+## Mục lục
+
+1. [Tổng quan dự án](#1-tổng-quan-dự-án)
+2. [Kiến trúc & Công nghệ](#2-kiến-trúc--công-nghệ)
+3. [Cấu trúc thư mục](#3-cấu-trúc-thư-mục)
+4. [Kỹ thuật & Pattern được áp dụng](#4-kỹ-thuật--pattern-được-áp-dụng)
+5. [Giao diện (UI/UX)](#5-giao-diện-uiux)
+6. [Phân tích Điểm mạnh & Điểm yếu](#6-phân-tích-điểm-mạnh--điểm-yếu)
+7. [Hướng dẫn cài đặt & chạy](#7-hướng-dẫn-cài-đặt--chạy)
+8. [API & Tính năng chính](#8-api--tính-năng-chính)
+
+---
+
+## 1. Tổng quan dự án
+
+### Tên dự án
+**NTPC Warranty** (ntpc-warranty) — v3.0.0
+
+### Mục đích
+Hệ thống quản lý phiếu bảo hành thiết bị vi tính, thay thế quy trình quản lý thủ công (Excel/ giấy) bằng một ứng dụng web toàn diện. Giải quyết bài toán:
+
+- **Theo dõi vòng đời bảo hành**: từ lúc nhận thiết bị từ khách hàng → xử lý → gửi nhà cung cấp (NCC) → trả khách.
+- **Quản lý khách hàng & lịch sử sửa chữa**: lưu vết toàn bộ quá trình, hỗ trợ tra cứu nhanh.
+- **Thống kê & báo cáo**: dashboard trực quan, xuất/nhập dữ liệu Excel.
+- **Cổng tra cứu công khai**: khách hàng tự tra cứu trạng thái bảo hành bằng số chứng từ.
+
+### Đối tượng người dùng
+| Vai trò | Mô tả |
+|---------|-------|
+| **Khách hàng** | Tra cứu trạng thái phiếu bảo hành qua số chứng từ (không cần đăng nhập). |
+| **Nhân viên (Staff)** | Tạo/sửa phiếu, cập nhật trạng thái, quản lý ảnh đính kèm, gửi/nhận NCC. |
+| **Quản trị viên (Admin)** | Toàn quyền nhân viên + quản lý nhân viên, import/export, xem thống kê, backup/restore. |
+
+---
+
+## 2. Kiến trúc & Công nghệ
+
+### Tech Stack chi tiết
+
+| Thành phần | Công nghệ | Phiên bản | Vai trò |
+|------------|-----------|-----------|---------|
+| **Frontend Framework** | React | ^18.3.0 | SPA — render giao diện phía client |
+| **UI Library (Desktop)** | Ant Design (antd) | ^5.22.2 | Component library chính: Table, Form, Modal, Layout |
+| **UI Library (Mobile)** | Ant Design Mobile | ^5.42.3 | Component tối ưu mobile: Popup, List, ActionSheet |
+| **Routing** | React Router DOM | ^6.26.0 | Điều hướng SPA, lazy loading route |
+| **Form Management** | React Hook Form + Zod | ^7.53.0 + ^3.23.0 | Quản lý form + validation schema |
+| **HTTP Client** | Axios | ^1.7.0 | Giao tiếp với Backend API |
+| **Internationalization** | i18next + react-i18next | ^26.2.0 + ^17.0.8 | Đa ngôn ngữ (hiện tại: tiếng Việt) |
+| **Charts** | @ant-design/charts | ^2.2.0 | Biểu đồ thống kê (Dashboard, Statistics) |
+| **QR Code** | qrcode.react | ^4.0.1 | Tạo mã QR cho phiếu bảo hành |
+| **Print** | react-to-print | ^3.0.0 | In phiếu bảo hành trực tiếp từ browser |
+| **Excel** | xlsx (SheetJS) | ^0.18.5 | Import/Export dữ liệu Excel |
+| **Date Utility** | dayjs + date-fns | ^1.11.13 + ^3.6.0 | Xử lý ngày tháng, múi giờ Asia/Ho_Chi_Minh |
+| **Build Tool** | Vite | ^5.4.0 | Dev server HMR + build sản phẩm |
+| **Backend Runtime** | Node.js | 20 LTS (Alpine) | Chạy server-side JavaScript |
+| **Backend Framework** | Express.js | ^4.21.0 | REST API server |
+| **ORM** | Prisma | ^5.20.0 | Truy vấn PostgreSQL type-safe |
+| **Database** | PostgreSQL | 15 (Alpine) | Cơ sở dữ liệu quan hệ chính |
+| **Security** | Helmet | ^8.0.0 | HTTP security headers |
+| **Logging** | Morgan | ^1.10.0 | HTTP request logging |
+| **Auth** | Custom JWT (HMAC-SHA256) | — | Session-based auth qua httpOnly cookie |
+| **Password Hashing** | scrypt (Node.js crypto) | — | Hash mật khẩu nhân viên |
+| **Reverse Proxy** | Nginx | Alpine | Phục vụ static files + proxy /api → backend |
+| **Tunnel** | Cloudflare Quick Tunnel | — | Truy cập công khai qua trycloudflare.com |
+| **Containerization** | Docker Compose | 3.8 | Orchestration 4 services |
+| **Testing** | Vitest + Testing Library | ^2.0.0 + ^16.0.0 | Unit test + component test |
+| **E2E Testing** | Playwright | ^1.60.0 | End-to-end browser testing |
+| **CI/CD** | GitHub Actions | — | Auto test + build on push/PR |
+| **Code Quality** | ESLint + Prettier | ^9.0.0 + ^3.3.0 | Lint + format code |
+
+### Sơ đồ kiến trúc tổng thể
 
 ```mermaid
-graph TD
-    User([Khách hàng / Nhân viên]) -->|Nginx Port 8888| Web[Frontend: React SPA + Vite]
-    Web -->|Express API Port 3003| API[Backend: Node.js Express ESM]
-    API -->|Prisma Client| DB[(Database: PostgreSQL 15)]
-    API -->|syncLocalBackup| JSON[Standby: db.json File]
-    API -->|Uploads / Backups| FS[Physical Disk Storage]
-    Tunnel[Cloudflare Quick Tunnel] -->|Expose| Web
+graph TB
+    subgraph "Client (Browser)"
+        A[React SPA<br/>Vite + Ant Design] -->|Axios HTTP| B[Nginx<br/>Port 8888]
+    end
+
+    subgraph "Docker Compose Network (ntpc-network)"
+        B -->|Reverse Proxy /api| C[Backend API<br/>Express.js :3003]
+        B -->|Reverse Proxy /uploads| C
+        C -->|Prisma ORM| D[(PostgreSQL 15<br/>Port 5435)]
+        C -->|Fallback| E[(db.json<br/>Local File)]
+        C -->|Static Files| F[(uploads/<br/>Images)]
+        C -->|Scheduled| G[(backups/<br/>JSON + tgz)]
+        B -->|Public URL| H[Cloudflare<br/>Quick Tunnel]
+    end
+
+    I[Khách hàng] -->|Tra cứu| H
+    J[Nhân viên / Admin] -->|Đăng nhập| A
+
+    style A fill:#1677FF,color:#fff
+    style C fill:#52C41A,color:#fff
+    style D fill:#336791,color:#fff
+    style B fill:#269539,color:#fff
 ```
 
-### 2.1. Frontend Architecture
-*   **Core:** React JS (SPA), đóng gói bằng **Vite** mang lại tốc độ biên dịch và phản hồi giao diện cực nhanh.
-*   **UI Framework:** 
-    *   **Ant Design (v5):** Cung cấp hệ thống component phong phú, tối ưu hóa trải nghiệm quản trị trên Desktop PC (Dashboard, Warranty List, Statistics, Suppliers).
-    *   **Ant Design Mobile:** Được tích hợp tinh tế giúp tối ưu giao diện trên Tablet và Smartphone khi nhân viên di chuyển hoặc khách hàng tra cứu trạng thái phiếu.
-*   **Timezone & Locale:** 
-    *   **dayjs + dayjs/plugin/timezone + dayjs/plugin/utc:** Cấu hình mặc định múi giờ `Asia/Ho_Chi_Minh` trên toàn hệ thống giao diện, đảm bảo hiển thị đúng giờ Việt Nam (GMT+7).
-    *   **i18next + react-i18next:** Quản lý đa ngôn ngữ động (Việt/Anh) linh hoạt cho toàn bộ nhãn giao diện và các thông điệp phản hồi từ hệ thống.
+### Luồng dữ liệu chính (Data Flow)
 
-### 2.2. Backend & Database Architecture
-*   **Runtime:** Node.js, viết theo chuẩn **ES Modules (ESM)** hiện đại.
-*   **API Framework:** Express.js tích hợp hệ thống kiểm tra và xác thực dữ liệu đầu vào chặt chẽ thông qua thư viện **Zod**.
-*   **ORM:** **Prisma Client (v5)** kết nối trực tiếp đến PostgreSQL thông qua Connection Pooling.
-*   **Database chính:** **PostgreSQL 15 (Alpine)** vận hành độc lập trong mạng nội bộ cô lập của Docker Compose.
-*   **Hệ thống Standby Fallback:** Tệp `db.json` được cập nhật liên tục thông qua tiến trình nền `syncLocalBackup()` bất đồng bộ sau các thao tác thay đổi cơ sở dữ liệu thành công.
+```mermaid
+sequenceDiagram
+    participant U as Nhân viên (Browser)
+    participant N as Nginx
+    participant A as Express API
+    participant P as PostgreSQL
+    participant F as db.json (Fallback)
 
-### 2.3. Quy trình DevOps & Bảo mật
-*   **Containerization:** Đóng gói toàn bộ hệ thống bằng Docker Compose với 4 container biệt lập:
-    1.  `ntpc-postgres-db`: Cơ sở dữ liệu PostgreSQL.
-    2.  `ntpc-backend-api`: API Server Node.js (tự động đợi database khởi động và kiểm tra sức khỏe).
-    3.  `ntpc-frontend-web`: Web Server Nginx đóng vai trò phân phối mã nguồn React SPA tĩnh và reverse proxy.
-    4.  `ntpc-cloudflare-quick-tunnel`: Cloudflare Tunnel tự động tạo đường truyền HTTPS công khai an toàn mà không cần cấu hình IP tĩnh hay NAT Port trên Router.
-*   **GitHub Actions CI:** Thiết lập pipeline tự động chạy kiểm tra định dạng mã nguồn, xác thực tính đúng đắn của Lược đồ Prisma (Schema Validation), thực thi toàn bộ test suite (23 bài kiểm thử tích hợp trên Vitest) và tiến hành build thử nghiệm trước khi cho phép gộp mã nguồn.
-*   **Bảo mật:** Tích hợp **Helmet** bảo vệ chống Clickjacking, XSS, sniffing; cấu hình **Content Security Policy (CSP)** động; mã hóa mật khẩu nhân viên bằng thuật toán băm bảo mật nâng cao **scrypt**.
+    U->>N: POST /api/warranties
+    N->>A: Proxy request
+    A->>A: Validate (Zod schema)
+    A->>A: Auth check (JWT cookie)
+    A->>P: Prisma create warranty
+    P-->>A: Created record
+    A->>F: syncLocalBackup() [debounce 2.5s]
+    A-->>N: JSON response
+    N-->>U: Response + audit log
+```
 
----
-
-## 3. ĐÁNH GIÁ ĐIỂM MẠNH & ĐIỂM YẾU HỆ THỐNG
-
-### 3.1. Điểm mạnh vượt trội (Strengths)
-1.  **Độ tin cậy và Tính toàn vẹn Dữ liệu tuyệt đối:**
-    *   Prisma Schema định nghĩa rõ ràng các mối quan hệ `1-n` giữa Nhân viên, Nhà cung cấp với Phiếu bảo hành.
-    *   Khóa ngoại thực tế trên PostgreSQL ngăn chặn triệt để tình trạng mồ côi dữ liệu (orphaned records) hoặc rác dữ liệu.
-    *   Các cơ chế lập chỉ mục (Indexes) tại `trangThai`, `maNhanVien`, `ngayNhan`, `ngayHenTra`, `updatedAt` đảm bảo các truy vấn lọc dữ liệu phức tạp của Dashboard và Statistics phản hồi dưới **5ms**.
-2.  **Khả năng chịu lỗi và Tính sẵn sàng cực cao (High Availability Fallback):**
-    *   Hệ thống sở hữu kiến trúc lai độc nhất: Khi PostgreSQL hoạt động bình thường, dữ liệu được ghi trực tiếp vào SQL và đồng bộ ra `db.json`.
-    *   Nếu PostgreSQL đột ngột dừng hoạt động (lỗi RAM, hết đĩa VPS, sập container), hệ thống backend tự động bắt ngoại lệ và kích hoạt chế độ **Standby File Mode**, chuyển hướng toàn bộ các yêu cầu đọc ghi trực tiếp lên tệp `db.json`. Ứng dụng vẫn chạy trơn tru, nhân viên vẫn thao tác bình thường mà không hề hay biết có sự cố phía sau.
-3.  **Tính nguyên tử trong Nghiệp vụ phức tạp (Atomicity via Transactions):**
-    *   Các quy trình nhiều bước như: gửi thiết bị cho nhà cung cấp (tạo dòng lịch sử + đổi trạng thái phiếu + tạo bản ghi `SupplierLog`) được thực thi bên trong `prisma.$transaction`. Nếu một bước bất kỳ thất bại, toàn bộ quá trình sẽ được cuộn ngược (rollback) 100%, loại bỏ hoàn toàn khả năng lỗi bất đồng bộ trạng thái.
-4.  **Bảo vệ không gian lưu trữ thông minh (Storage Optimization):**
-    *   Backup Scheduler tự động nhận diện và phân cấp sao lưu thành: `minute`, `hourly`, `daily`, `monthly`, `manual`.
-    *   Chỉ các bản sao lưu lớn (Daily, Monthly, Manual) mới tiến hành nén thư mục ảnh đính kèm thành tệp `.assets.tgz`. Các bản sao lưu tần suất cao (Phút, Giờ) được bỏ qua việc nén ảnh, giúp tiết kiệm dung lượng đĩa VPS, ngăn ngừa lỗi đầy ổ cứng vốn thường gặp trên các máy chủ cấu hình thấp.
-5.  **Quy trình Diễn tập Khôi phục an toàn (Restore Drill Validation):**
-    *   Phát triển module `api/lib/restore_drill.js` cho phép "diễn tập" khôi phục dữ liệu từ tệp sao lưu.
-    *   Hệ thống nạp file sao lưu vào PostgreSQL, xác thực cú pháp, kiểm tra sự tồn tại của toàn bộ nhân viên, nhà cung cấp được liên kết trong phiếu bảo hành, và kết thúc bằng việc **huỷ bỏ giao dịch (rollback transaction)**. Quá trình này giúp xác thực tệp backup hoàn toàn lành mạnh mà không làm bẩn hay đè lên dữ liệu sản xuất hiện tại.
-6.  **Đồng bộ múi giờ Việt Nam (ICT - GMT+7) nhất quán:**
-    *   Nhờ tích hợp chặt chẽ `dayjs` kèm plugin `timezone` ở cả Backend, Frontend và Seeding script, toàn bộ lịch sử hệ thống, ngày in chứng từ, tên tệp backup, thời gian ghi nhật ký kiểm toán (Audit logs) luôn hiển thị khớp chính xác 100% múi giờ Việt Nam, bất kể máy chủ VPS được triển khai ở Singapore, Mỹ, Đức hay chạy cục bộ trên máy Windows.
-
-### 3.2. Điểm yếu tồn tại (Weaknesses)
-1.  **Tải trọng I/O đĩa cục bộ (Disk I/O Overhead):**
-    *   Cơ chế đồng bộ Standby File liên tục ghi đè toàn bộ nội dung tệp `db.json` (dù là bất đồng bộ) sau mỗi thay đổi trên PostgreSQL. Khi kích thước dữ liệu bảo hành vượt quá hàng chục ngàn dòng, việc tuần tự hóa JSON và ghi đĩa sẽ tiêu tốn đáng kể CPU và I/O của VPS.
-2.  **Lưu trữ tệp tin đính kèm cục bộ (Local Assets Storage):**
-    *   Toàn bộ ảnh lỗi thiết bị, hóa đơn đính kèm được lưu trực tiếp vào thư mục `./api/uploads`. Khi hệ thống vận hành nhiều năm, dung lượng ảnh này sẽ phình to vượt quá khả năng lưu trữ của VPS giá rẻ, đồng thời gây khó khăn khi cần mở rộng (scale) lên nhiều máy chủ API chạy tải cân bằng (Load Balancing).
-3.  **Khả năng lệch pha siêu nhỏ trong tình huống cực đoan:**
-    *   Vì thao tác ghi `db.json` của tiến trình `syncLocalBackup()` là bất đồng bộ sau khi giao dịch PostgreSQL hoàn tất, nếu hệ thống máy chủ vật lý bị mất điện đột ngột hoặc sập tiến trình ngay trong khoảng thời gian mili-giây sau khi PostgreSQL commit thành công nhưng chưa kịp ghi xong file JSON, tệp `db.json` dự phòng có thể bị lệch 1 bản ghi so với SQL.
-4.  **Các trường dữ liệu ngày tháng lưu ở dạng chuỗi (String Date Fields):**
-    *   Nhiều trường lưu vết thời gian trong lược đồ `Warranty` (như `ngayMua`, `ngayNhan`, `ngayHenTra`, `ngayTra`, `sentSupplierAt`, `expectedReturnSupplierAt`) đang được định nghĩa là kiểu `String` thay vì `DateTime`. Điều này cản trở việc thực hiện các truy vấn lọc theo khoảng thời gian trực tiếp bằng SQL hoặc Prisma và dễ gây sai lệch định dạng nếu tầng xác thực API không kiểm soát chặt chẽ.
-5.  **Duy trì các cột JSON động cho các thực thể nghiệp vụ cốt lõi:**
-    *   Các thông tin quan trọng như `history` (lịch sử thao tác), `attachments` (file đính kèm), `doiTra` (chi tiết đổi trả sản phẩm), và `supplierLogs` (lịch sử gửi nhà cung cấp dạng nhúng) vẫn đang được lưu trữ dưới dạng kiểu dữ liệu JSON của Postgres. Dù cơ chế này giúp tương thích ngược 100% cực nhanh với logic cũ mà không cần chỉnh sửa sâu các model nghiệp vụ, nhưng nó gây khó khăn rất lớn nếu ban quản trị cần lập các báo cáo thống kê phân tích sâu trực tiếp bằng SQL Query (ví dụ: thống kê chi tiết linh kiện lỗi đổi trả nhiều nhất theo tuần).
-6.  **Sự tồn tại của các phương thức DB di sản (Legacy Helper Operations):**
-    *   Một số ít route API phụ hoặc các module tiện ích vẫn đang tham chiếu tới các hàm thao tác di sản dạng ghi đè tập tin như `getCollection`/`setCollection`/`writeDb` thay vì di chuyển triệt để 100% sang truy vấn trực tiếp trên Prisma Client, dẫn đến mã nguồn backend còn pha trộn giữa hai tư duy thiết kế.
+**Luồng tự phục hồi dữ liệu (Self-Healing Sync):**
+```mermaid
+flowchart LR
+    A[Server khởi động] --> B{Đọc PostgreSQL}
+    B --> C{Đọc db.json}
+    C --> D{So sánh max updatedAt}
+    D -->|db.json mới hơn| E[Reverse Sync<br/>db.json → PostgreSQL]
+    D -->|PostgreSQL mới hơn| F[Forward Sync<br/>PostgreSQL → db.json]
+    D -->|Bằng nhau| G[Đã đồng nhất]
+```
 
 ---
 
-## 4. PHƯƠNG ÁN KHẮC PHỤC CHI TIẾT (REMEDIATION PLANS)
+## 3. Cấu trúc thư mục
 
-### 4.1. Khắc phục tải trọng đĩa bằng Cơ chế Hàng đợi ghi (Write Queue) cho Standby File
-*   **Vấn đề:** Khi lượng yêu cầu ghi đồng thời tăng đột biến (ví dụ: nhân viên nhập file Excel hàng loạt hoặc cập nhật đồng loạt trạng thái phiếu), hàm `syncLocalBackup()` ghi đĩa vật lý liên tục qua `fs.writeFileSync()`, dẫn đến nghẽn thắt nút cổ chai I/O đĩa cục bộ trên VPS.
-*   **Giải pháp chi tiết:**
-    *   **Bộ nhớ đệm & Debounce Throttling:** Chuyển đổi cơ chế ghi đĩa trực tiếp sang một bộ điều phối hàng đợi ghi (Write Queue Coordinator) trong bộ nhớ đệm.
-    *   **Nguyên lý hoạt động:**
-        1.  Mọi lệnh gọi ghi dữ liệu đệm ra `db.json` sẽ chỉ cập nhật biến trạng thái mới nhất trong RAM và đặt cờ `isDirty = true`.
-        2.  Hệ thống kích hoạt một bộ đếm thời gian hoãn ghi (`setTimeout`) với độ trễ cố định (ví dụ: `2500ms`).
-        3.  Các yêu cầu ghi tiếp theo diễn ra trong khoảng thời gian trì hoãn này chỉ cập nhật dữ liệu bộ đệm bộ nhớ đệm mà không kích hoạt thao tác ghi ổ đĩa thực tế.
-        4.  Khi bộ hẹn giờ kích hoạt, hệ thống sẽ thực hiện **đúng 1 lần ghi đĩa duy nhất** cho toàn bộ các thay đổi tích lũy, xóa cờ `isDirty = false` và giải phóng timer.
-    *   **Graceful Shutdown (Bảo toàn dữ liệu tắt máy khẩn cấp):** Để chống mất dữ liệu khi Node.js nhận lệnh khởi động lại hoặc tắt đột ngột, hệ thống đăng ký xử lý tín hiệu OS (`SIGINT`, `SIGTERM`, `exit`). Nếu cờ `isDirty` đang là `true`, hệ thống lập tức cưỡng bức thực hiện ghi đĩa đồng bộ (`fs.writeFileSync`) ngay trước khi tiến trình kết thúc.
-
-### 4.2. Khắc phục dung lượng ảnh bằng Cơ chế Tự động Nén ảnh tại Client & API
-*   **Vấn đề:** Các ảnh chụp lỗi sản phẩm tải trực tiếp từ điện thoại của nhân viên có dung lượng lớn (3MB - 8MB mỗi ảnh), gây tốn băng thông truyền tải và làm đầy ổ cứng máy chủ nhanh chóng.
-*   **Giải pháp chi tiết:**
-    *   *Tại Frontend:* Tích hợp thư viện `browser-image-compression` để tự động nén, thay đổi kích thước ảnh (tối đa 1280px chiều ngang) và chuyển đổi định dạng về `.webp` hiệu năng cao ngay trước khi tải lên API.
-    *   *Tại Backend:* Sử dụng thư viện `sharp` để lọc và tối ưu hóa các tệp tin hình ảnh tải lên, khống chế dung lượng mỗi bức ảnh đính kèm dưới **200KB** mà vẫn giữ nguyên độ chi tiết phục vụ việc xem lỗi thiết bị.
-
-### 4.3. Loại bỏ rủi ro lệch pha dữ liệu bằng Cơ chế Đồng bộ hóa Transaction hai chiều (Self-Healing)
-*   **Vấn đề:** Khi PostgreSQL bị mất kết nối đột ngột (container sụp, hết tài nguyên hệ thống), Express API tự động chuyển hướng đọc/ghi sang `db.json` làm dự phòng (Standby Fallback Mode). Nhân viên tiếp tục cập nhật và phát sinh nhiều dữ liệu mới trên tệp JSON này. Khi PostgreSQL được phục hồi trực tuyến trở lại, **dữ liệu trong SQL cũ hơn và bị lệch pha nghiêm trọng** so với tệp JSON cục bộ.
-*   **Giải pháp chi tiết:**
-    *   **Startup Self-Healing Engine:** Xây dựng quy trình tự phục hồi và đồng bộ hóa chéo ngay khi backend bắt đầu khởi động lại và kết nối SQL thành công:
-        1.  **Quét Trạng thái:** Đọc thời gian cập nhật bản ghi mới nhất `max(updatedAt)` và tổng số lượng bản ghi của bảng `Warranty` trên PostgreSQL so sánh trực tiếp với mảng `warranties` trong `db.json`.
-        2.  **Đồng bộ Chiều xuôi (PostgreSQL -> db.json):** Nếu PostgreSQL có dữ liệu mới hơn hoặc bằng, hệ thống xem PostgreSQL là gốc và tự động đồng bộ đè đĩa `db.json` để duy trì standby hoàn chỉnh.
-        3.  **Đồng bộ Chiều ngược (db.json -> PostgreSQL - Hồi phục sau sự cố ngoại tuyến):** Nếu `db.json` chứa dữ liệu mới hơn (do hệ thống đã vận hành ở chế độ Fallback File trong thời gian SQL ngắt kết nối):
-            *   Kích hoạt **Atomic Reverse Sync** chạy hoàn toàn bên trong một khối giao dịch cơ sở dữ liệu `prisma.$transaction()`.
-            *   Hệ thống sẽ thực hiện chèn và đồng bộ đè toàn bộ các thay đổi nghiệp vụ tích lũy từ tệp JSON ngược trở lại PostgreSQL theo đúng thứ tự topo an toàn khóa ngoại.
-            *   Khi giao dịch thành công, PostgreSQL chính thức được cập nhật đồng bộ hoàn hảo, hệ thống tự động dọn cờ ngoại tuyến và mở cổng xử lý API cho người dùng.
+```
+ntpc-warranty/
+├── api/                          # Backend API (Express.js)
+│   ├── lib/                      # Thư viện dùng chung backend
+│   │   ├── audit.js              # Ghi audit log (ai làm gì, khi nào)
+│   │   ├── auth.js               # Xác thực JWT + phân quyền + hash password
+│   │   ├── backup.js             # Hệ thống backup/restore tự động + thủ công
+│   │   ├── customerMaster.js     # Xây dựng bảng khách hàng từ warranties
+│   │   ├── customers.js          # Logic CRUD khách hàng
+│   │   ├── db.js                 # Lớp truy xuất DB: Prisma ↔ JSON fallback
+│   │   ├── restore_drill.js      # Kiểm thử khôi phục dữ liệu
+│   │   └── validators.js         # Zod schema validation cho API
+│   ├── routes/                   # Định tuyến API (REST)
+│   │   ├── auth.js               # POST /login, /logout, /me, /change-password
+│   │   ├── backups.js            # CRUD backup (admin only)
+│   │   ├── customers.js          # Quản lý khách hàng
+│   │   ├── nhanVien.js           # Quản lý nhân viên
+│   │   ├── public.js             # API công khai (tra cứu không cần login)
+│   │   ├── stats.js              # Thống kê & báo cáo
+│   │   ├── suppliers.js          # Quản lý nhà cung cấp
+│   │   └── warranties.js         # CRUD phiếu bảo hành (core)
+│   ├── seedData.js               # Dữ liệu mẫu khởi tạo
+│   ├── server.js                 # Entry point Express server
+│   └── uploads/                  # Ảnh đính kèm phiếu (persisted volume)
+│
+├── prisma/
+│   └── schema.prisma             # Lược đồ CSDL (6 models)
+│
+├── src/                          # Frontend (React SPA)
+│   ├── components/
+│   │   ├── admin/
+│   │   │   └── BackupRestorePanel.jsx   # Panel backup/restore admin
+│   │   ├── common/
+│   │   │   ├── AiAssistant.jsx          # Trợ lý AI (Ant Design X)
+│   │   │   ├── ChangePasswordModal.jsx  # Đổi mật khẩu
+│   │   │   ├── CustomerPickerModal.jsx  # Chọn khách hàng
+│   │   │   ├── ErrorBoundary.jsx        # Bắt lỗi React
+│   │   │   ├── FloatingZalo.jsx         # Nút Zalo nổi
+│   │   │   ├── ShortcutsModal.jsx       # Phím tắt
+│   │   │   ├── SkeletonCard.jsx         # Loading skeleton
+│   │   │   └── StaffPickerModal.jsx     # Chọn nhân viên đăng nhập
+│   │   ├── layout/
+│   │   │   ├── AdminLayout.jsx          # Layout chính admin (sidebar + header)
+│   │   │   ├── AppHeader.jsx            # Header với search, notification, user
+│   │   │   ├── AppSider.jsx             # Sidebar điều hướng
+│   │   │   ├── CustomerLayout.jsx       # Layout trang khách hàng
+│   │   │   ├── GlobalSearch.jsx         # Tìm kiếm toàn cục
+│   │   │   └── NotificationBell.jsx     # Chuông thông báo
+│   │   └── warranty/
+│   │       ├── MobileStatusTag.jsx      # Status tag tối ưu mobile
+│   │       ├── StatusTag.jsx            # Status tag desktop
+│   │       ├── WarrantyDetail.jsx       # Chi tiết phiếu bảo hành
+│   │       ├── WarrantyPrint.jsx        # In phiếu bảo hành
+│   │       └── WarrantyProgress.jsx     # Progress bar trạng thái
+│   ├── constants/
+│   │   ├── badgeConfig.js               # Cấu hình màu badge trạng thái
+│   │   ├── routes.js                    # Định nghĩa đường dẫn
+│   │   ├── statusConfig.js              # Cấu hình trạng thái phiếu
+│   │   └── warrantyOptions.js           # Các tùy chọn phiếu BH
+│   ├── contexts/
+│   │   └── AuthContext.jsx              # Context xác thực toàn cục
+│   ├── hooks/
+│   │   ├── useDebounce.js               # Debounce input tìm kiếm
+│   │   ├── useIsMobile.js               # Detect mobile viewport
+│   │   ├── useKeyboardShortcuts.js      # Phím tắt toàn cục
+│   │   ├── useTheme.js                  # Dark/Light theme toggle
+│   │   └── useWarranties.js             # Fetch & cache danh sách phiếu
+│   ├── i18n/
+│   │   ├── index.js                     # Khởi tạo i18next
+│   │   └── locales/vi/                  # Bản dịch tiếng Việt
+│   │       ├── ui.json                  # UI labels (default namespace)
+│   │       ├── status.json              # Tên trạng thái
+│   │       ├── messages.json            # Thông báo hệ thống
+│   │       ├── validation.json          # Lỗi validation
+│   │       ├── print.json               # Text in phiếu
+│   │       └── nav.json                 # Điều hướng
+│   ├── lib/
+│   │   ├── axios.js                     # Axios instance + interceptors
+│   │   └── zodSchemas.js               # Zod schemas frontend
+│   ├── pages/
+│   │   ├── admin/
+│   │   │   ├── CreateWarranty.jsx       # Tạo phiếu mới
+│   │   │   ├── CustomerInfo.jsx         # Quản lý khách hàng
+│   │   │   ├── Dashboard.jsx            # Dashboard tổng quan
+│   │   │   ├── ImportExport.jsx         # Import/Export Excel
+│   │   │   ├── StaffManagement.jsx      # Quản lý nhân viên (admin)
+│   │   │   ├── Statistics.jsx           # Thống kê chi tiết
+│   │   │   ├── Suppliers.jsx            # Quản lý nhà cung cấp
+│   │   │   └── WarrantyList.jsx         # Danh sách phiếu bảo hành
+│   │   ├── customer/
+│   │   │   ├── CustomerPortal.jsx       # Trang chủ khách hàng
+│   │   │   ├── TrackingResult.jsx       # Kết quả tra cứu
+│   │   │   ├── TrackingResult.module.css
+│   │   │   └── Tracuu.jsx              # Form tra cứu
+│   │   └── NotFound.jsx                 # Trang 404
+│   ├── services/
+│   │   ├── backupService.js             # API calls backup/restore
+│   │   └── warrantyService.js           # Tất cả API calls (warranty, customer, stats, auth...)
+│   ├── styles/
+│   │   ├── global.css                   # Styles toàn cục + responsive
+│   │   └── print.css                    # Styles cho in ấn
+│   ├── theme/
+│   │   └── antdTheme.js                 # Ant Design theme (light + dark)
+│   ├── utils/
+│   │   ├── copy.js                      # Copy to clipboard
+│   │   ├── dateHelpers.js               # Helper ngày tháng
+│   │   ├── excelHelpers.js              # Xử lý import/export Excel
+│   │   ├── fieldLabels.js               # Nhãn trường dữ liệu
+│   │   ├── formatters.js                # Format số, tiền, ngày
+│   │   ├── generateChungTu.js           # Sinh số chứng từ tự động
+│   │   ├── historyDisplay.js            # Hiển thị lịch sử thay đổi
+│   │   ├── historyTimeline.js           # Timeline lịch sử
+│   │   ├── i18nOptions.js               # Tùy chọn i18n
+│   │   ├── urgency.js                   # Tính toán mức độ ưu tiên
+│   │   └── vietnameseText.js            # Xử lý text tiếng Việt
+│   ├── App.jsx                          # Root component + routing
+│   └── main.jsx                         # Entry point
+│
+├── tests/                               # Unit & component tests
+│   ├── setup.js                         # Vitest setup (jsdom)
+│   ├── fieldLabels.smoke.test.js
+│   ├── generateChungTu.test.js
+│   ├── i18n.test.js
+│   ├── StatusTag.test.jsx
+│   ├── urgency.test.js
+│   └── vietnameseUi.test.js
+│
+├── public/                              # Static assets
+├── scripts/                             # Utility scripts
+├── docs/                                # Tài liệu
+│
+├── docker-compose.yml                   # Orchestration 4 services
+├── api.Dockerfile                       # Backend container (Node.js Alpine)
+├── web.Dockerfile                       # Frontend container (Nginx Alpine)
+├── nginx.conf                           # Nginx config (reverse proxy + SPA)
+├── vite.config.js                       # Vite config (dev server + proxy)
+├── vitest.config.js                     # Vitest config (jsdom + setup)
+├── package.json                         # Dependencies & scripts
+├── .env                                 # Environment variables (gitignored)
+├── .github/workflows/ci.yml            # GitHub Actions CI
+├── cloudflare-ddns.sh                   # Cloudflare DDNS script
+└── index.html                           # HTML entry point
+```
 
 ---
 
-## 5. PHƯƠNG ÁN TỐT HƠN TRONG TƯƠNG LAI (FUTURE PROPOSALS)
+## 4. Kỹ thuật & Pattern được áp dụng
 
-### 5.1. Phân tách Kiến trúc và Lưu trữ đám mây (Decoupled Cloud Architecture)
-*   **Định hướng:** Chuyển đổi toàn bộ thư mục `./api/uploads` sang dịch vụ lưu trữ đối tượng đám mây (Object Storage) như **AWS S3**, **Cloudflare R2** hoặc **Cloudinary** (đặc biệt tối ưu cho hình ảnh).
-*   **Lợi ích:** 
-    *   Băng thông tải ảnh được san sẻ trực tiếp qua mạng lưới CDN của nhà cung cấp dịch vụ đám mây, giúp giao diện tải ảnh lỗi bảo hành nhanh lập tức.
-    *   Dung lượng đĩa cứng VPS của hệ thống chỉ tập trung lưu trữ cơ sở dữ liệu cốt lõi, không bao giờ phải lo lắng về việc phình to dung lượng ảnh đính kèm theo năm tháng.
-    *   Dễ dàng nâng cấp số lượng API Server chạy song song (Scale-out) vì tất cả đều đọc chung nguồn ảnh đám mây.
+### 4.1 Architecture Patterns
 
-### 5.2. Chuyển đổi sang Prisma Migrations chính thức
-*   **Định hướng:** Ngưng sử dụng cơ chế `prisma db push` trực tiếp trên môi trường sản xuất. Thay vào đó, áp dụng quy trình kiểm soát phiên bản cấu trúc database chuẩn chỉ bằng `npx prisma migrate dev` và `npx prisma migrate deploy`.
-*   **Lợi ích:**
-    *   Lịch sử thay đổi cấu trúc bảng cơ sở dữ liệu được lưu vết rõ ràng dưới dạng các tệp tin SQL trong thư mục `prisma/migrations`.
-    *   Dễ dàng nâng cấp cấu trúc bảng cơ sở dữ liệu tự động mà không sợ làm hư hại hoặc mất dữ liệu cũ trên VPS sản xuất (Production VPS).
+| Pattern | Triển khai | Vị trí trong code |
+|---------|-----------|-------------------|
+| **Layered Architecture** | Tách biệt Routes → Lib → Prisma → DB | `api/routes/` → `api/lib/` → `prisma/` |
+| **Repository Pattern** | `db.js` đóng vai trò Data Access Layer, abstract hóa Prisma vs JSON | `api/lib/db.js` |
+| **Service Layer (Frontend)** | `warrantyService.js` tập trung mọi API call | `src/services/warrantyService.js` |
+| **Context Provider** | `AuthContext` cung cấp trạng thái auth toàn cục | `src/contexts/AuthContext.jsx` |
+| **Custom Hooks** | `useWarranties`, `useDebounce`, `useIsMobile`, `useTheme` | `src/hooks/` |
+| **Lazy Loading / Code Splitting** | `React.lazy()` cho mọi page component | `src/App.jsx` |
+| **Error Boundary** | Component bắt lỗi React, hiển thị fallback UI | `src/components/common/ErrorBoundary.jsx` |
 
-### 5.3. Bình thường hóa các trường Ngày tháng và Cấu trúc JSON động thành các Bảng chuẩn quan hệ
-*   **Định hướng:**
-    *   **DateTime Migration:** Khai báo và di chuyển toàn bộ các trường chuỗi ngày (`String`) trong database sang định dạng `DateTime` chuẩn của PostgreSQL, kiểm soát chặt chẽ định dạng ở tầng DTO/Validator (Zod).
-    *   **Relational Normalization:** Bình thường hóa (Normalize) cơ sở dữ liệu bằng cách tách các cột dữ liệu JSON (`attachments`, `history`, `doiTra`) thành các bảng riêng biệt tham chiếu khóa ngoại đến bảng `Warranty` (ví dụ: bảng `Attachment`, `WarrantyEventLog`, `ReplacementReturn`).
-*   **Lợi ích:**
-    *   Hỗ trợ lập chỉ mục (Indexing) tốt hơn, tăng tốc độ lọc và tìm kiếm dữ liệu.
-    *   Cho phép thực hiện các câu lệnh truy vấn phân tích sâu (Deep Analytics SQL Queries) để kết xuất dữ liệu thống kê, lập báo cáo hoạt động chi tiết cho ban giám đốc một cách nhanh chóng và chính xác.
+### 4.2 Authentication & Security
 
-### 5.4. Loại bỏ hoàn toàn mã nguồn di sản dạng Tập tin
-*   **Định hướng:** Rà soát và chuyển đổi 100% các route API còn lại sang sử dụng Prisma Client, loại bỏ hoàn toàn các hàm `getCollection`/`setCollection`/`writeDb` để giảm dung lượng thư viện database phụ và đồng nhất tư duy lập trình CRUD thuần túy trên SQL.
+**JWT tự triển khai (custom, không dùng thư viện bên thứ ba):**
+```javascript
+// api/lib/auth.js — HMAC-SHA256 JWT
+const signature = crypto.createHmac('sha256', getAuthSecret())
+  .update(`${header}.${body}`).digest('base64url');
+```
 
-### 5.5. Xây dựng Cổng thông tin Khách hàng (Customer Portal) độc lập và An toàn
-*   **Định hướng:** Tách biệt giao diện tra cứu bảo hành của khách hàng sang một trang web hoặc ứng dụng siêu nhẹ riêng biệt, kết nối trực tiếp đến các API công khai của hệ thống thông qua các cơ chế giới hạn tần suất yêu cầu (Rate Limiter) nghiêm ngặt hơn.
-*   **Lợi ích:**
-    *   Đảm bảo an ninh thông tin tuyệt đối: Cách ly hoàn toàn mã nguồn và giao diện quản trị nội bộ (Admin Dashboard) khỏi mạng internet công cộng.
-    *   Giảm thiểu tối đa nguy cơ bị tấn công từ chối dịch vụ (DDoS) hoặc khai thác lỗ hổng bảo mật trực tiếp lên giao diện của nhân viên quản trị.
+- **Cookie-based session**: httpOnly cookie `ntpc_session`, chống XSS.
+- **Password hashing**: `scrypt` (Node.js built-in) với salt ngẫu nhiên 16 bytes.
+- **Tự động rehash**: mật khẩu cũ (SHA256 hoặc plaintext legacy) tự động nâng cấp lên scrypt khi đăng nhập.
+- **Rate limiting đăng nhập**: tối đa 8 lần thử trong 10 phút mỗi IP+tài khoản.
+- **Timing-safe comparison**: `crypto.timingSafeEqual` chống timing attack.
+- **RBAC**: 2 vai trò `admin` / `staff`, middleware `requireRole()` kiểm soát endpoint.
+- **Helmet**: HTTP security headers (CSP, X-Frame-Options, X-Content-Type-Options).
+- **CORS**: kiểm soát origin cho phép, hỗ trợ dải IP LAN (10.x, 172.16-31.x, 192.168.x).
+
+### 4.3 Database & Persistence
+
+**Chiến lược Dual-Write với Self-Healing:**
+
+```
+PostgreSQL (chính) ←→ db.json (dự phòng)
+```
+
+- **Primary**: PostgreSQL qua Prisma ORM, transaction an toàn.
+- **Fallback**: `db.json` file-based, tự động kích hoạt khi PostgreSQL unreachable.
+- **Self-Healing Sync** (`autoSelfHealingSync`): khi server khởi động, so sánh `max(updatedAt)` giữa hai nguồn → chọn nguồn mới nhất → đồng bộ ngược.
+- **Debounce Write Queue**: ghi db.json dự phòng với độ trễ 2.5 giây, giảm I/O đĩa.
+- **Graceful Shutdown**: `SIGINT`/`SIGTERM` flush buffer ghi đệm trước khi thoát.
+- **Batch Insert**: warranties chia batch 100 bản ghi/truy vấn, tránh vượt giới hạn tham số PostgreSQL.
+
+### 4.4 Backup & Restore
+
+Hệ thống backup tự động nhiều tầng:
+- **Hourly**: mỗi giờ (giữ 6 giờ gần nhất)
+- **Daily**: mỗi ngày (giữ 1 năm)
+- **Monthly**: ngày 1 hàng tháng (giữ 5 năm)
+- **Manual**: backup thủ công từ UI admin
+- **Restore-safety**: tự động backup trước mỗi lần restore
+
+Đặc điểm kỹ thuật:
+- SHA-256 checksum cho mỗi file backup (integrity verification).
+- Asset bundle (`.tgz`) đóng gói ảnh uploads kèm backup data.
+- Deduplication: nếu ảnh không thay đổi, dùng hardlink thay vì copy lại.
+- Path traversal protection: mọi đường dẫn backup được validate trước khi truy cập.
+- Pin/Unpin: giữ lại backup quan trọng, không bị cleanup tự động xóa.
+
+### 4.5 State Management
+
+- **Không dùng Redux/Zustand**: dự án giữ đơn giản với React Context + `useState` + custom hooks.
+- **AuthContext**: trạng thái đăng nhập, phân quyền, được cung cấp ở root component.
+- **useWarranties hook**: fetch + cache danh sách phiếu, expose `refetch()` để reload.
+- **useTheme hook**: toggle dark/light theme, persist vào localStorage.
+
+### 4.6 Validation
+
+**Zod schema chia sẻ giữa Frontend và Backend:**
+- Backend (`api/lib/validators.js`): validate request body trước khi ghi DB.
+- Frontend (`src/lib/zodSchemas.js` + `@hookform/resolvers`): validate form realtime.
+- Schema sử dụng `.superRefine()` cho logic validation phức tạp (ví dụ: phiếu biên nhận chỉ hỗ trợ "sửa dịch vụ" hoặc "khác").
+
+### 4.7 Internationalization (i18n)
+
+- **6 namespaces**: `ui`, `status`, `messages`, `validation`, `print`, `nav`.
+- **Default namespace**: `ui` — tất cả key `t('xxx')` tìm trong `ui.json`.
+- **Language detector**: `i18next-browser-languagedetector` tự detect ngôn ngữ browser.
+- **Fallback**: luôn fallback về `vi` (tiếng Việt).
+
+### 4.8 File Upload & Images
+
+- Ảnh được upload dưới dạng **Base64 Data URL** từ frontend → backend decode → ghi file.
+- Lưu trữ theo cấu trúc `uploads/warranties/YYYY/MM/{uuid}.{ext}`.
+- Giới hạn: tối đa 10 ảnh/phiếu, 5MB/ảnh, chỉ chấp nhận JPEG/PNG/WebP.
+- `publicVisible` flag: kiểm soát ảnh nào hiển thị cho khách hàng ở trang tra cứu.
+
+### 4.9 Audit Trail
+
+Mọi thay đổi dữ liệu quan trọng được ghi vào bảng `audit_logs`:
+- Actor (ai), Action (hành động), Entity (đối tượng), Before/After (trạng thái trước/sau).
+- IP address + User Agent của request.
 
 ---
 
-*Tài liệu được cập nhật và phê duyệt tự động bởi hệ thống vào ngày 25/05/2026, lúc 22:30 (Giờ Việt Nam).*
+## 5. Giao diện (UI/UX)
+
+### Các trang/màn hình chính
+
+| Route | Trang | Mô tả |
+|-------|-------|-------|
+| `/tra-cuu` | **Tra cứu bảo hành** | Trang công khai, nhập số chứng từ → hiển thị kết quả |
+| `/tra-cuu/:soChungTu` | **Kết quả tra cứu** | Chi tiết phiếu + progress bar + ảnh đính kèm |
+| `/admin/dashboard` | **Dashboard** | Tổng quan: thống kê phiếu, biểu đồ, phiếu ưu tiên |
+| `/admin/phieu` | **Danh sách phiếu** | Bảng phiếu bảo hành với filter, search, sort, pagination |
+| `/admin/phieu/:id/in` | **In phiếu** | Preview + in phiếu bảo hành (react-to-print) |
+| `/admin/tao-phieu` | **Tạo phiếu mới** | Form tạo phiếu với validation realtime |
+| `/admin/khach-hang` | **Quản lý khách hàng** | Danh sách khách hàng, lịch sử bảo hành |
+| `/admin/nhan-vien` | **Quản lý nhân viên** | CRUD nhân viên, reset password (admin only) |
+| `/admin/nha-cung-cap` | **Nhà cung cấp** | Quản lý NCC, theo dõi gửi/nhận bảo hành |
+| `/admin/thong-ke` | **Thống kê** | Biểu đồ theo thời gian, top sản phẩm, top khách hàng |
+| `/admin/import-export` | **Import/Export** | Nhập/xuất dữ liệu Excel (admin only) |
+
+### Responsive Design
+
+- **Desktop**: Sidebar + Header layout, bảng dữ liệu đầy đủ cột.
+- **Mobile**: Sidebar chuyển thành `Popup` (antd-mobile) trượt từ trái, bảng responsive, dùng `MobileStatusTag` thay `StatusTag`.
+- **Breakpoint detection**: custom hook `useIsMobile()` dựa trên `window.innerWidth`.
+
+### Theme
+
+- **Light/Dark mode**: toggle qua `useTheme()`, persist preference vào localStorage.
+- Ant Design theme tokens tùy chỉnh: màu primary `#1677FF`, border radius 6px, font Segoe UI.
+- Dark mode overrides: background `#141414`, text `#E6E6E6`, table header `#262626`.
+
+### Accessibility
+
+- Ant Design cung cấp sẵn ARIA attributes cho components.
+- Keyboard shortcuts toàn cục: `Ctrl+K` tìm kiếm, `Ctrl+N` tạo phiếu mới, `?` hiển thị danh sách phím tắt.
+- `ErrorBoundary` bắt lỗi React, hiển thị fallback thay vì crash trắng trang.
+
+---
+
+## 6. Phân tích Điểm mạnh & Điểm yếu
+
+### Điểm mạnh
+
+| # | Điểm mạnh | Dẫn chứng |
+|---|-----------|------------|
+| 1 | **Kiến trúc rõ ràng, tách biệt tốt** | Backend tách `routes/` (điều hướng) → `lib/` (logic) → `prisma/` (data). Frontend tách `pages/`, `components/`, `services/`, `hooks/`, `utils/`. |
+| 2 | **Hệ thống backup tự phục hồi (Self-Healing)** | `autoSelfHealingSync()` trong `db.js` tự so sánh PostgreSQL vs db.json, đồng bộ ngược khi cần. Debounce write queue giảm I/O. |
+| 3 | **Bảo mật nhiều lớp** | Custom JWT + scrypt hashing + rate limiting + timing-safe comparison + RBAC + Helmet headers + CORS origin validation. |
+| 4 | **Fallback resilience** | Hệ thống tự chuyển sang db.json khi PostgreSQL gặp sự cố, không downtime. |
+| 5 | **Lazy loading toàn diện** | Mọi page component đều dùng `React.lazy()`, giảm bundle size ban đầu. |
+| 6 | **Validation thống nhất** | Zod schema dùng cả hai phía (frontend + backend), giảm code trùng lặp và đảm bảo一致性. |
+| 7 | **i18n có tổ chức** | 6 namespace tách biệt theo chức năng, dễ mở rộng ngôn ngữ mới. |
+| 8 | **Backup hệ thống chuyên nghiệp** | Multi-tier (hourly/daily/monthly), SHA-256 checksum, asset bundling, pin/unpin, retention policy. |
+| 9 | **Docker production-ready** | Multi-stage build (frontend), healthcheck cho cả 3 services, volume persistence, isolated network. |
+| 10 | **Audit trail** | Ghi log mọi thay đổi dữ liệu quan trọng với before/after snapshot. |
+
+### Điểm yếu & Hạn chế
+
+| # | Vấn đề | Chi tiết | Mức độ |
+|---|--------|----------|--------|
+| 1 | **writeDb() ghi đè toàn bộ bảng** | Mỗi lần `writeDb()` xóa hết rồi insert lại (`deleteMany` + `createMany`). Với dữ liệu lớn sẽ chậm và có race condition. | 🔴 Cao |
+| 2 | **Thiếu test nghiêm trọng** | Chỉ 6 test files, chủ yếu smoke test. Không có integration test cho API, không có E2E test cho critical flows (đăng nhập, tạo phiếu, backup/restore). | 🔴 Cao |
+| 3 | **JWT tự triển khai** | Không dùng thư viện chuẩn (jsonwebtoken), dễ introduce bug bảo mật. Không hỗ trợ refresh token, token revocation. | 🟡 Trung bình |
+| 4 | **Session lưu trong memory** | `loginAttempts` Map mất khi server restart. Không scale được multi-instance. | 🟡 Trung bình |
+| 5 | **Không có migration strategy** | Schema thay đổi phải dùng `prisma migrate` thủ công, không có versioned migration trong CI/CD. | 🟡 Trung bình |
+| 6 | **CORS hardcode LAN IP** | Danh sách IP LAN hardcode trong `server.js` (`192.168.1.146`). Nên dùng env variable. | 🟢 Thấp |
+| 7 | **API timeout 5 phút** | Axios timeout 300s (`src/lib/axios.js`) quá dài, có thể treo UI khi backend down. | 🟢 Thấp |
+| 8 | **Không có rate limiting cho API** | Chỉ có rate limiting cho login, các endpoint khác (create warranty, upload ảnh) không giới hạn. | 🟡 Trung bình |
+| 9 | **db.json fallback ghi plaintext mật khẩu hash** | Khi fallback sang db.json, mật khẩu hash (scrypt) nằm trong file JSON plaintext trên đĩa. | 🟢 Thấp |
+
+### Đề xuất cải thiện
+
+| # | Vấn đề | Đề xuất |
+|---|--------|---------|
+| 1 | writeDb() ghi đè | Chuyển sang Prisma upsert hoặc incremental update. Dùng `prisma.$transaction` với từng operation thay vì delete-all + insert-all. |
+| 2 | Thiếu test | Viết integration test cho API routes (supertest), E2E test cho critical flows (Playwright). Đặt mục tiêu coverage >70%. |
+| 3 | JWT tự triển khai | Thay bằng `jsonwebtoken` library chuẩn. Thêm refresh token rotation. |
+| 4 | Session memory | Dùng Redis hoặc PostgreSQL session store cho production. |
+| 5 | Migration | Thiết lập `prisma migrate deploy` trong CI/CD pipeline. Version control migration files. |
+| 6 | CORS hardcode | Chuyển IP LAN sang env variable `CORS_ORIGIN`. |
+| 7 | API timeout | Giảm timeout xuống 30s cho API thường, 120s cho upload/import. Hiển thị retry UI. |
+| 8 | Rate limiting | Thêm `express-rate-limit` cho các endpoint ghi dữ liệu. |
+| 9 | Audit frontend | Thêm optimistic UI + toast notification cho mọi operation thay vì silent success. |
+
+---
+
+## 7. Hướng dẫn cài đặt & chạy
+
+### Yêu cầu hệ thống
+
+| Yêu cầu | Tối thiểu | Khuyến nghị |
+|---------|-----------|-------------|
+| OS | Linux (Ubuntu 20.04+) | Ubuntu 22.04 LTS |
+| Node.js | 18.x | 20.x LTS |
+| Docker | 20.10+ | 24.x |
+| Docker Compose | 2.x | 2.24+ |
+| RAM | 2 GB | 4 GB+ |
+| Disk | 5 GB | 20 GB+ (cho backups) |
+
+### Cài đặt local (không Docker)
+
+```bash
+# 1. Clone repository
+git clone <repository-url>
+cd ntpc-warranty
+
+# 2. Cài đặt dependencies
+npm ci
+
+# 3. Cấu hình Prisma
+npx prisma generate
+npx prisma validate
+
+# 4. Tạo file .env (xem mẫu bên dưới)
+cp .env.example .env
+# Chỉnh sửa các biến môi trường
+
+# 5. Chạy migration (nếu dùng PostgreSQL local)
+npx prisma migrate dev
+
+# 6. Chạy đồng thời cả API + Frontend dev server
+npm run start
+# Frontend: http://localhost:8888
+# API: http://localhost:3004
+```
+
+### Cài đặt với Docker Compose
+
+```bash
+# 1. Clone repository
+git clone <repository-url>
+cd ntpc-warranty
+
+# 2. Tạo file .env
+cat > .env << 'EOF'
+AUTH_SECRET=your-secret-key-at-least-32-characters-long
+INITIAL_STAFF_PASSWORD=your-admin-password
+SESSION_TTL_SECONDS=28800
+COOKIE_SECURE=false
+API_PORT=3003
+CORS_ORIGIN=http://localhost:8888
+POSTGRES_USER=ntpc_user
+POSTGRES_PASSWORD=your-postgres-password
+POSTGRES_DB=ntpc_warranty
+DATABASE_URL=postgresql://ntpc_user:your-postgres-password@postgres-db:5432/ntpc_warranty?schema=public
+EOF
+
+# 3. Build và khởi chạy
+docker compose up -d --build
+
+# 4. Kiểm tra trạng thái
+docker compose ps
+
+# 5. Truy cập
+# Frontend: http://localhost:8888
+# API Health: http://localhost:8888/api/health
+```
+
+### Biến môi trường (.env)
+
+| Variable | Mô tả | Mặc định | Bắt buộc |
+|----------|-------|----------|-----------|
+| `AUTH_SECRET` | Secret key ký JWT (≥32 ký tự production) | — | ✅ Production |
+| `INITIAL_STAFF_PASSWORD` | Mật khẩu bootstrap cho admin | — | ✅ |
+| `SESSION_TTL_SECONDS` | Thời hạn session (giây) | `28800` (8h) | ❌ |
+| `COOKIE_SECURE` | Cookie secure flag | `true` (production) | ❌ |
+| `API_PORT` | Port backend API | `3004` (local) / `3003` (Docker) | ❌ |
+| `CORS_ORIGIN` | Danhảng origin cho phép CORS (phân tách dấu phẩy) | — | ❌ |
+| `POSTGRES_USER` | Username PostgreSQL | — | ✅ Docker |
+| `POSTGRES_PASSWORD` | Password PostgreSQL | — | ✅ Docker |
+| `POSTGRES_DB` | Tên database | — | ✅ Docker |
+| `DATABASE_URL` | Connection string PostgreSQL | — | ✅ |
+| `TZ` | Múi giờ | `Asia/Ho_Chi_Minh` | ❌ |
+| `HELMET_CSP` | Bật Content Security Policy | `false` | ❌ |
+
+### Lệnh phát triển
+
+```bash
+# Chạy dev server (frontend + API đồng thời)
+npm run start
+
+# Chạy riêng frontend (Vite dev server)
+npm run dev
+
+# Chạy riêng API
+npm run api
+
+# Build sản phẩm
+npm run build
+
+# Preview build
+npm run preview
+
+# Chạy tests
+npm run test
+
+# Prisma commands
+npx prisma studio          # Mở Prisma Studio (GUI quản lý DB)
+npx prisma migrate dev     # Tạo migration mới
+npx prisma generate        # Regenerate Prisma Client
+npx prisma validate        # Kiểm tra schema
+```
+
+---
+
+## 8. API & Tính năng chính
+
+### Public API (không cần xác thực)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/health` | Health check (DB + filesystem) |
+| `GET` | `/api/public/track/:soChungTu` | Tra cứu phiếu theo số chứng từ |
+| `GET` | `/api/public/track?q=` | Tìm kiếm phiếu công khai |
+
+### Auth API
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `POST` | `/api/auth/login` | Đăng nhập (maNV + matKhau) |
+| `POST` | `/api/auth/logout` | Đăng xuất, xóa cookie |
+| `GET` | `/api/auth/me` | Lấy thông tin nhân viên hiện tại |
+| `POST` | `/api/auth/change-password` | Đổi mật khẩu |
+
+### Warranty API (cần xác thực)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/warranties` | Danh sách phiếu (filter, sort, paginate) |
+| `GET` | `/api/warranties/next-code` | Sinh số chứng từ tiếp theo |
+| `GET` | `/api/warranties/:id` | Chi tiết phiếu |
+| `POST` | `/api/warranties` | Tạo phiếu mới |
+| `PUT` | `/api/warranties/:id` | Cập nhật phiếu |
+| `DELETE` | `/api/warranties/:id` | Xóa phiếu (soft delete) |
+| `PATCH` | `/api/warranties/:id/status` | Cập nhật trạng thái |
+| `PATCH` | `/api/warranties/:id/priority` | Đặt ưu tiên |
+| `PATCH` | `/api/warranties/:id/log` | Ghi log tiến trình |
+| `PATCH` | `/api/warranties/:id/customer` | Chuyển khách hàng |
+| `PATCH` | `/api/warranties/:id/tra-hang` | Trả hàng |
+| `PATCH` | `/api/warranties/:id/exchange-return` | Đổi/trả hàng |
+| `POST` | `/api/warranties/:id/attachments` | Upload ảnh đính kèm |
+| `DELETE` | `/api/warranties/:id/attachments/:attachmentId` | Xóa ảnh |
+| `DELETE` | `/api/warranties/:id/history/:index` | Xóa mục lịch sử |
+| `POST` | `/api/warranties/:id/supplier-send` | Gửi nhà cung cấp |
+| `POST` | `/api/warranties/:id/supplier-return` | Nhận lại từ NCC |
+| `GET` | `/api/warranties/:id/supplier-logs` | Nhật ký gửi/nhận NCC |
+| `PATCH` | `/api/warranties/:id/supplier-logs/:logId` | Sửa ghi chú NCC log |
+| `DELETE` | `/api/warranties/:id/supplier-logs/:logId` | Xóa NCC log |
+| `POST` | `/api/warranties/import` | Import từ Excel |
+| `GET` | `/api/warranties/export` | Export ra Excel |
+| `GET` | `/api/warranties/template` | Tải file mẫu import |
+
+### Customer API
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/customers/list` | Danhảng khách hàng |
+| `GET` | `/api/customers/unassigned` | Khách chưa phân loại |
+| `GET` | `/api/customers/suggest?q=` | Gợi ý khách hàng |
+| `GET` | `/api/customers/lookup?q=` | Tìm kiếm khách hàng |
+| `PUT` | `/api/customers/update` | Cập nhật thông tin KH |
+| `POST` | `/api/customers/delete` | Xóa khách hàng |
+
+### Staff API
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/nhan-vien` | Danh sách nhân viên |
+| `POST` | `/api/nhan-vien` | Tạo nhân viên mới |
+| `PATCH` | `/api/nhan-vien/:maNV/password` | Reset mật khẩu |
+| `DELETE` | `/api/nhan-vien/:maNV` | Xóa nhân viên |
+
+### Supplier API
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/suppliers` | Danh sách nhà cung cấp |
+| `POST` | `/api/suppliers` | Tạo NCC mới |
+| `PUT` | `/api/suppliers/:id` | Cập nhật NCC |
+| `PATCH` | `/api/suppliers/:id/status` | Bật/tắt NCC |
+| `GET` | `/api/suppliers/:id/warranties` | Phiếu gửi NCC |
+
+### Statistics API
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/stats/summary` | Tổng quan thống kê |
+| `GET` | `/api/stats/by-date` | Thống kê theo ngày |
+| `GET` | `/api/stats/top-products` | Top sản phẩm |
+| `GET` | `/api/stats/top-customers` | Top khách hàng |
+
+### Backup API (admin only)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/api/admin/backups` | Danh sách backup |
+| `POST` | `/api/admin/backups` | Tạo backup thủ công |
+| `GET` | `/api/admin/backups/status` | Trạng thái backup scheduler |
+| `GET` | `/api/admin/backups/history` | Lịch sử thao tác backup |
+| `GET` | `/api/admin/backups/view/:path` | Xem nội dung backup |
+| `POST` | `/api/admin/backups/restore/:path` | Khôi phục từ backup |
+| `POST` | `/api/admin/backups/upload-restore` | Upload + khôi phục |
+| `DELETE` | `/api/admin/backups/:path` | Xóa backup |
+| `PATCH` | `/api/admin/backups/:path/metadata` | Pin/ghi chú backup |
+
+### Trạng thái phiếu bảo hành
+
+```mermaid
+stateDiagram-v2
+    [*] --> cho_xu_ly : Tạo phiếu
+    [*] --> dang_xu_ly : Tạo phiếu
+    cho_xu_ly --> dang_xu_ly : Bắt đầu xử lý
+    cho_xu_ly --> huy : Hủy
+    dang_xu_ly --> da_tra : Đã trả khách
+    dang_xu_ly --> huy : Hủy
+    cho_lien_he --> da_tra : Đã trả khách
+    cho_lien_he --> huy : Hủy
+    da_tra --> [*]
+    huy --> [*]
+```
+
+### Quy trình gửi/nhận Nhà Cung Cấp
+
+```mermaid
+sequenceDiagram
+    participant NV as Nhân viên
+    participant API as Backend
+    participant NCC as Nhà cung cấp
+
+    NV->>API: POST /supplier-send<br/>{supplierId, sentAt, expectedReturnAt}
+    API->>API: Tạo SupplierLog (action=sent)
+    API->>API: Cập nhật supplierStatus=sent
+    API-->>NV: Success
+
+    Note over NCC: NCC xử lý bảo hành...
+
+    NV->>API: POST /supplier-return<br/>{returnedAt, note}
+    API->>API: Tạo SupplierLog (action=returned)
+    API->>API: Cập nhật supplierStatus=returned
+    API-->>NV: Success
+```
+
+---
+
+## License
+
+Private — Không phân phối công khai.
+
+---
+
+> Tài liệu này được tạo dựa trên phân tích source code thực tế của dự án ntpc-warranty v3.0.0.
