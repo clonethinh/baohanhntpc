@@ -1,0 +1,3738 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "fixdates.cjs",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 33,
+      "nonEmptyLines": 33,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "nginx.conf",
+      "language": "conf",
+      "fileCategory": "code",
+      "totalLines": 61,
+      "nonEmptyLines": 53,
+      "metrics": {}
+    },
+    {
+      "path": "phieuguincc/nccdemo.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 249,
+      "nonEmptyLines": 229,
+      "metrics": {}
+    },
+    {
+      "path": "prisma/migrations/20260525_add_audit_indexes/migration.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 45,
+      "nonEmptyLines": 39,
+      "definitions": [
+        {
+          "name": "audit_logs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "actor_id",
+            "actor_name",
+            "action",
+            "entity",
+            "entity_id",
+            "summary",
+            "before",
+            "after",
+            "ip",
+            "user_agent",
+            "created_at"
+          ],
+          "startLine": 4,
+          "endLine": 18
+        },
+        {
+          "name": "nhan_vien_quyen_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 20,
+          "endLine": 20
+        },
+        {
+          "name": "nhan_vien_active_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 21,
+          "endLine": 21
+        },
+        {
+          "name": "suppliers_code_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 23,
+          "endLine": 23
+        },
+        {
+          "name": "suppliers_name_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 24,
+          "endLine": 24
+        },
+        {
+          "name": "suppliers_is_active_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 25,
+          "endLine": 25
+        },
+        {
+          "name": "supplier_logs_supplier_id_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 27,
+          "endLine": 27
+        },
+        {
+          "name": "supplier_logs_warranty_id_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 28,
+          "endLine": 28
+        },
+        {
+          "name": "supplier_logs_action_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 29,
+          "endLine": 29
+        },
+        {
+          "name": "supplier_logs_created_at_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 30,
+          "endLine": 30
+        },
+        {
+          "name": "warranties_trang_thai_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 32,
+          "endLine": 32
+        },
+        {
+          "name": "warranties_ma_nhan_vien_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 33,
+          "endLine": 33
+        },
+        {
+          "name": "warranties_ngay_nhan_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 34,
+          "endLine": 34
+        },
+        {
+          "name": "warranties_ngay_hen_tra_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 35,
+          "endLine": 35
+        },
+        {
+          "name": "warranties_supplier_status_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 36,
+          "endLine": 36
+        },
+        {
+          "name": "warranties_supplier_id_current_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 37,
+          "endLine": 37
+        },
+        {
+          "name": "warranties_deleted_at_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 38,
+          "endLine": 38
+        },
+        {
+          "name": "warranties_updated_at_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 39,
+          "endLine": 39
+        },
+        {
+          "name": "audit_logs_actor_id_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 41,
+          "endLine": 41
+        },
+        {
+          "name": "audit_logs_action_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 42,
+          "endLine": 42
+        },
+        {
+          "name": "audit_logs_entity_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 43,
+          "endLine": 43
+        },
+        {
+          "name": "audit_logs_entity_id_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 44,
+          "endLine": 44
+        },
+        {
+          "name": "audit_logs_created_at_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 45,
+          "endLine": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 23
+      }
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "language": "prisma",
+      "fileCategory": "data",
+      "totalLines": 158,
+      "nonEmptyLines": 140,
+      "metrics": {}
+    },
+    {
+      "path": "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz",
+      "language": "tgz",
+      "fileCategory": "code",
+      "totalLines": 26733,
+      "nonEmptyLines": 26064,
+      "metrics": {}
+    },
+    {
+      "path": "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz.sha256",
+      "language": "sha256",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {}
+    },
+    {
+      "path": "scratch/audit_history.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 35,
+      "functions": [
+        {
+          "name": "isSupplierNoise",
+          "startLine": 6,
+          "endLine": 13,
+          "params": [
+            "entry"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 15,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String(entry?.note || '').toLowerCase",
+          "lineNumber": 7
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String",
+          "lineNumber": 7
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "note.includes",
+          "lineNumber": 8
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "note.includes",
+          "lineNumber": 9
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "Object.keys(changes).map",
+          "lineNumber": 11
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "Object.keys",
+          "lineNumber": 11
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String(key).toLowerCase",
+          "lineNumber": 11
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String",
+          "lineNumber": 11
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "keys.every",
+          "lineNumber": 12
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "key.includes",
+          "lineNumber": 12
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.warranty.findMany",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 21
+        },
+        {
+          "caller": "main",
+          "callee": "Array.isArray",
+          "lineNumber": 24
+        },
+        {
+          "caller": "main",
+          "callee": "history.forEach",
+          "lineNumber": 25
+        },
+        {
+          "caller": "main",
+          "callee": "isSupplierNoise",
+          "lineNumber": 27
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 35
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/backfill_supplier_names.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 6,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 8
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.supplier.findMany",
+          "lineNumber": 11
+        },
+        {
+          "caller": "main",
+          "callee": "suppliers.map",
+          "lineNumber": 12
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.supplierLog.findMany",
+          "lineNumber": 16
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "log.supplierName.trim",
+          "lineNumber": 21
+        },
+        {
+          "caller": "main",
+          "callee": "supplierMap.get",
+          "lineNumber": 22
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.supplierLog.update",
+          "lineNumber": 25
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 35
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/check_timeline.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 46,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 8,
+          "endLine": 44,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "readDb",
+          "lineNumber": 10
+        },
+        {
+          "caller": "main",
+          "callee": "(db.warranties || []).find",
+          "lineNumber": 11
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "(db.suppliers || []).map",
+          "lineNumber": 19
+        },
+        {
+          "caller": "main",
+          "callee": "(db.supplierLogs || [])\n      .filter((x) => x.warrantyId === w.id)\n      .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())\n      .map",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "(db.supplierLogs || [])\n      .filter((x) => x.warrantyId === w.id)\n      .sort",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "(db.supplierLogs || [])\n      .filter",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "new Date(b.at).getTime",
+          "lineNumber": 22
+        },
+        {
+          "caller": "main",
+          "callee": "new Date(a.at).getTime",
+          "lineNumber": 22
+        },
+        {
+          "caller": "main",
+          "callee": "supplierMap.get",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "buildInternalHistoryTimeline",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 34
+        },
+        {
+          "caller": "main",
+          "callee": "timeline.forEach",
+          "lineNumber": 35
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 36
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 40
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/inspect_supplier_logs.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 17,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 6,
+          "endLine": 18,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "prisma.supplierLog.findMany",
+          "lineNumber": 8
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 9
+        },
+        {
+          "caller": "main",
+          "callee": "logs.forEach",
+          "lineNumber": 10
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 11
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/inspect_users.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 22,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 7,
+          "endLine": 24,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "prisma.nhanVien.findMany",
+          "lineNumber": 9
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 10
+        },
+        {
+          "caller": "main",
+          "callee": "users.forEach",
+          "lineNumber": 11
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 12
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "hashPassword",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 22
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/inspect_warranties.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 25,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 6,
+          "endLine": 27,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "prisma.warranty.findMany",
+          "lineNumber": 8
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 16
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 19
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/reset_passwords_v2.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 7,
+          "endLine": 33,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "hashPassword",
+          "lineNumber": 10
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 12
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.nhanVien.findMany",
+          "lineNumber": 15
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 16
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 19
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.nhanVien.update",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 27
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 29
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/reset_passwords.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 7,
+          "endLine": 38,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "hashPassword",
+          "lineNumber": 10
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 12
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.nhanVien.findMany",
+          "lineNumber": 16
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "u.matKhau.trim",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 21
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.nhanVien.update",
+          "lineNumber": 22
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 34
+        },
+        {
+          "caller": "main",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scratch/verify_recovery.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 36,
+      "functions": [
+        {
+          "name": "runVerification",
+          "startLine": 9,
+          "endLine": 43,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 10
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "runVerification",
+          "callee": "readDb",
+          "lineNumber": 14
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 15
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 18
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 19
+        },
+        {
+          "caller": "runVerification",
+          "callee": "fs.existsSync",
+          "lineNumber": 21
+        },
+        {
+          "caller": "runVerification",
+          "callee": "fs.statSync",
+          "lineNumber": 21
+        },
+        {
+          "caller": "runVerification",
+          "callee": "syncLocalBackup",
+          "lineNumber": 24
+        },
+        {
+          "caller": "runVerification",
+          "callee": "fs.existsSync",
+          "lineNumber": 27
+        },
+        {
+          "caller": "runVerification",
+          "callee": "fs.statSync",
+          "lineNumber": 27
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 31
+        },
+        {
+          "caller": "runVerification",
+          "callee": "setTimeout",
+          "lineNumber": 32
+        },
+        {
+          "caller": "runVerification",
+          "callee": "fs.existsSync",
+          "lineNumber": 34
+        },
+        {
+          "caller": "runVerification",
+          "callee": "fs.statSync",
+          "lineNumber": 34
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 35
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 38
+        },
+        {
+          "caller": "runVerification",
+          "callee": "autoSelfHealingSync",
+          "lineNumber": 39
+        },
+        {
+          "caller": "runVerification",
+          "callee": "console.log",
+          "lineNumber": 41
+        },
+        {
+          "caller": "runVerification",
+          "callee": "process.exit",
+          "lineNumber": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/bootstrap-auth.mjs",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 29,
+      "functions": [
+        {
+          "name": "loadEnv",
+          "startLine": 5,
+          "endLine": 17,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "loadEnv",
+          "callee": "fs.existsSync",
+          "lineNumber": 6
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "fs.readFileSync",
+          "lineNumber": 7
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "env.split",
+          "lineNumber": 8
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "line.trim",
+          "lineNumber": 9
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "trimmed.startsWith",
+          "lineNumber": 10
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "trimmed.indexOf",
+          "lineNumber": 11
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "trimmed.slice(0, idx).trim",
+          "lineNumber": 13
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "trimmed.slice",
+          "lineNumber": 13
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "trimmed.slice(idx + 1).trim().replace",
+          "lineNumber": 14
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "trimmed.slice(idx + 1).trim",
+          "lineNumber": 14
+        },
+        {
+          "caller": "loadEnv",
+          "callee": "trimmed.slice",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/cleanup-current-data.mjs",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 105,
+      "nonEmptyLines": 92,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/cleanup-orphan-uploads.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 100,
+      "nonEmptyLines": 87,
+      "functions": [
+        {
+          "name": "safeUploadPathFromUrl",
+          "startLine": 13,
+          "endLine": 21,
+          "params": [
+            "url"
+          ]
+        },
+        {
+          "name": "collectAttachmentUrlsFromWarranty",
+          "startLine": 23,
+          "endLine": 35,
+          "params": [
+            "warranty",
+            "urls"
+          ]
+        },
+        {
+          "name": "walkFiles",
+          "startLine": 37,
+          "endLine": 46,
+          "params": [
+            "dir"
+          ]
+        },
+        {
+          "name": "fmtMb",
+          "startLine": 48,
+          "endLine": 50,
+          "params": [
+            "bytes"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "String(url || '').split",
+          "lineNumber": 14
+        },
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "String",
+          "lineNumber": 14
+        },
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "pathname.startsWith",
+          "lineNumber": 15
+        },
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "pathname.replace",
+          "lineNumber": 16
+        },
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "path.resolve",
+          "lineNumber": 17
+        },
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "path.join",
+          "lineNumber": 17
+        },
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "path.resolve",
+          "lineNumber": 18
+        },
+        {
+          "caller": "safeUploadPathFromUrl",
+          "callee": "full.startsWith",
+          "lineNumber": 19
+        },
+        {
+          "caller": "collectAttachmentUrlsFromWarranty",
+          "callee": "Array.isArray",
+          "lineNumber": 24
+        },
+        {
+          "caller": "collectAttachmentUrlsFromWarranty",
+          "callee": "safeUploadPathFromUrl",
+          "lineNumber": 25
+        },
+        {
+          "caller": "collectAttachmentUrlsFromWarranty",
+          "callee": "urls.add",
+          "lineNumber": 26
+        },
+        {
+          "caller": "collectAttachmentUrlsFromWarranty",
+          "callee": "Array.isArray",
+          "lineNumber": 30
+        },
+        {
+          "caller": "collectAttachmentUrlsFromWarranty",
+          "callee": "safeUploadPathFromUrl",
+          "lineNumber": 31
+        },
+        {
+          "caller": "collectAttachmentUrlsFromWarranty",
+          "callee": "urls.add",
+          "lineNumber": 32
+        },
+        {
+          "caller": "walkFiles",
+          "callee": "fs.existsSync",
+          "lineNumber": 38
+        },
+        {
+          "caller": "walkFiles",
+          "callee": "fs.readdirSync",
+          "lineNumber": 39
+        },
+        {
+          "caller": "walkFiles",
+          "callee": "path.join",
+          "lineNumber": 40
+        },
+        {
+          "caller": "walkFiles",
+          "callee": "fs.statSync",
+          "lineNumber": 41
+        },
+        {
+          "caller": "walkFiles",
+          "callee": "stat.isDirectory",
+          "lineNumber": 42
+        },
+        {
+          "caller": "walkFiles",
+          "callee": "walkFiles",
+          "lineNumber": 42
+        },
+        {
+          "caller": "walkFiles",
+          "callee": "files.push",
+          "lineNumber": 43
+        },
+        {
+          "caller": "fmtMb",
+          "callee": "(bytes / 1024 / 1024).toFixed",
+          "lineNumber": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/migrate_fix_mojibake_notes.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 79,
+      "nonEmptyLines": 60,
+      "functions": [
+        {
+          "name": "apply_replacements",
+          "startLine": 32,
+          "endLine": 39,
+          "params": [
+            "s"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 42,
+          "endLine": 75,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "apply_replacements",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "apply_replacements",
+          "callee": "out.replace",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "Path",
+          "lineNumber": 43
+        },
+        {
+          "caller": "main",
+          "callee": "db_path.exists",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "SystemExit",
+          "lineNumber": 45
+        },
+        {
+          "caller": "main",
+          "callee": "db_path.with_suffix",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "datetime.now().strftime",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "datetime.now",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "shutil.copy2",
+          "lineNumber": 48
+        },
+        {
+          "caller": "main",
+          "callee": "db_path.read_text",
+          "lineNumber": 50
+        },
+        {
+          "caller": "main",
+          "callee": "json.loads",
+          "lineNumber": 51
+        },
+        {
+          "caller": "main",
+          "callee": "db.get",
+          "lineNumber": 53
+        },
+        {
+          "caller": "main",
+          "callee": "w.get",
+          "lineNumber": 59
+        },
+        {
+          "caller": "main",
+          "callee": "h.get",
+          "lineNumber": 61
+        },
+        {
+          "caller": "main",
+          "callee": "isinstance",
+          "lineNumber": 62
+        },
+        {
+          "caller": "main",
+          "callee": "apply_replacements",
+          "lineNumber": 64
+        },
+        {
+          "caller": "main",
+          "callee": "db_path.write_text",
+          "lineNumber": 70
+        },
+        {
+          "caller": "main",
+          "callee": "json.dumps",
+          "lineNumber": 70
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 72
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 73
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/migrate_fix_priority_mojibake_notes.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 47,
+      "functions": [
+        {
+          "name": "fix_text",
+          "startLine": 19,
+          "endLine": 28,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 30,
+          "endLine": 52,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "fix_text",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 30,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fix_text",
+          "callee": "isinstance",
+          "lineNumber": 20
+        },
+        {
+          "caller": "fix_text",
+          "callee": "REPLACEMENTS.items",
+          "lineNumber": 24
+        },
+        {
+          "caller": "fix_text",
+          "callee": "out.count",
+          "lineNumber": 26
+        },
+        {
+          "caller": "fix_text",
+          "callee": "out.replace",
+          "lineNumber": 27
+        },
+        {
+          "caller": "main",
+          "callee": "json.loads",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "DB.read_text",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "data.get",
+          "lineNumber": 35
+        },
+        {
+          "caller": "main",
+          "callee": "warranty.get",
+          "lineNumber": 36
+        },
+        {
+          "caller": "main",
+          "callee": "fix_text",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "history.get",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "DB.with_suffix",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "datetime.now().strftime",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "datetime.now",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "shutil.copy2",
+          "lineNumber": 48
+        },
+        {
+          "caller": "main",
+          "callee": "DB.write_text",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "json.dumps",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 50
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 51
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 52
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/migrateData.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 199,
+      "nonEmptyLines": 170,
+      "functions": [
+        {
+          "name": "parseNumber",
+          "startLine": 18,
+          "endLine": 22,
+          "params": [
+            "val"
+          ]
+        },
+        {
+          "name": "parseBoolean",
+          "startLine": 25,
+          "endLine": 28,
+          "params": [
+            "val"
+          ]
+        },
+        {
+          "name": "parseJson",
+          "startLine": 31,
+          "endLine": 34,
+          "params": [
+            "val"
+          ]
+        },
+        {
+          "name": "runMigration",
+          "startLine": 36,
+          "endLine": 197,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseNumber",
+          "callee": "Number",
+          "lineNumber": 20
+        },
+        {
+          "caller": "parseNumber",
+          "callee": "Number.isFinite",
+          "lineNumber": 21
+        },
+        {
+          "caller": "parseBoolean",
+          "callee": "Boolean",
+          "lineNumber": 27
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 37
+        },
+        {
+          "caller": "runMigration",
+          "callee": "fs.existsSync",
+          "lineNumber": 40
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.error",
+          "lineNumber": 41
+        },
+        {
+          "caller": "runMigration",
+          "callee": "process.exit",
+          "lineNumber": 42
+        },
+        {
+          "caller": "runMigration",
+          "callee": "fs.readFileSync",
+          "lineNumber": 47
+        },
+        {
+          "caller": "runMigration",
+          "callee": "JSON.parse",
+          "lineNumber": 48
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.error",
+          "lineNumber": 50
+        },
+        {
+          "caller": "runMigration",
+          "callee": "process.exit",
+          "lineNumber": 51
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 56
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 57
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 58
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 59
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 60
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.$connect",
+          "lineNumber": 64
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 65
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 69
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.nhanVien.deleteMany",
+          "lineNumber": 71
+        },
+        {
+          "caller": "runMigration",
+          "callee": "nhanVien.map",
+          "lineNumber": 73
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(nv.maNV || '').trim",
+          "lineNumber": 74
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 74
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(nv.tenNV || '').trim",
+          "lineNumber": 75
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 75
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(nv.matKhau || '').trim",
+          "lineNumber": 76
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 76
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(nv.quyen || 'staff').trim",
+          "lineNumber": 77
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 77
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseBoolean",
+          "lineNumber": 78
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.nhanVien.createMany",
+          "lineNumber": 83
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 84
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 89
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.supplier.deleteMany",
+          "lineNumber": 90
+        },
+        {
+          "caller": "runMigration",
+          "callee": "suppliers.map",
+          "lineNumber": 92
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.id || '').trim",
+          "lineNumber": 93
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 93
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.code || '').trim",
+          "lineNumber": 94
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 94
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.name || '').trim",
+          "lineNumber": 95
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 95
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.phone || '').trim",
+          "lineNumber": 96
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 96
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.email || '').trim",
+          "lineNumber": 97
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 97
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.address || '').trim",
+          "lineNumber": 98
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 98
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.contactPerson || '').trim",
+          "lineNumber": 99
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 99
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(s.note || '').trim",
+          "lineNumber": 100
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 100
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseBoolean",
+          "lineNumber": 101
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.supplier.createMany",
+          "lineNumber": 104
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 105
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 110
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.supplierLog.deleteMany",
+          "lineNumber": 111
+        },
+        {
+          "caller": "runMigration",
+          "callee": "supplierLogs.map",
+          "lineNumber": 113
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.id || '').trim",
+          "lineNumber": 114
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 114
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.supplierId || '').trim",
+          "lineNumber": 115
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 115
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.supplierName || l.supplier || '').trim",
+          "lineNumber": 116
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 116
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.warrantyId || '').trim",
+          "lineNumber": 117
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 117
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.action || '').trim",
+          "lineNumber": 118
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 118
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.sentAt || '').trim",
+          "lineNumber": 119
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 119
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.expectedReturnAt || '').trim",
+          "lineNumber": 120
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 120
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.returnedAt || '').trim",
+          "lineNumber": 121
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 121
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.note || '').trim",
+          "lineNumber": 122
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 122
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(l.createdBy || '').trim",
+          "lineNumber": 123
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 123
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.supplierLog.createMany",
+          "lineNumber": 127
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 128
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 133
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.warranty.deleteMany",
+          "lineNumber": 134
+        },
+        {
+          "caller": "runMigration",
+          "callee": "warranties.slice",
+          "lineNumber": 139
+        },
+        {
+          "caller": "runMigration",
+          "callee": "batch.map",
+          "lineNumber": 140
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.id || '').trim",
+          "lineNumber": 141
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 141
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseNumber",
+          "lineNumber": 142
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.soChungTu || '').trim",
+          "lineNumber": 143
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 143
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.khachHang || '').trim",
+          "lineNumber": 144
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 144
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.soDienThoai || '').trim",
+          "lineNumber": 145
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 145
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.diaChi || '').trim",
+          "lineNumber": 146
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 146
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.tenHang || '').trim",
+          "lineNumber": 147
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 147
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.soSeri || '').trim",
+          "lineNumber": 148
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 148
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.cauHinh || '').trim",
+          "lineNumber": 149
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 149
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.loiLucNhan || '').trim",
+          "lineNumber": 150
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 150
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.phuKien || '').trim",
+          "lineNumber": 151
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 151
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseNumber",
+          "lineNumber": 152
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseBoolean",
+          "lineNumber": 153
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.loaiPhieu || 'nhan_bao_hanh').trim",
+          "lineNumber": 154
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 154
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.baoHanh || '').trim",
+          "lineNumber": 155
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 155
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.loaiXuLy || 'bao_hanh').trim",
+          "lineNumber": 156
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 156
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.loaiXuLyKhac || '').trim",
+          "lineNumber": 157
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 157
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.ghiChu || '').trim",
+          "lineNumber": 158
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 158
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.ngayMua || '').trim",
+          "lineNumber": 159
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 159
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.ngayNhan || '').trim",
+          "lineNumber": 160
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 160
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.ngayHenTra || '').trim",
+          "lineNumber": 161
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 161
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.ngayTra || '').trim",
+          "lineNumber": 162
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 162
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.maNhanVien || '').trim",
+          "lineNumber": 163
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 163
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.trangThai || 'dang_xu_ly').trim",
+          "lineNumber": 164
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 164
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseBoolean",
+          "lineNumber": 165
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 166
+        },
+        {
+          "caller": "runMigration",
+          "callee": "new Date().toISOString",
+          "lineNumber": 166
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 167
+        },
+        {
+          "caller": "runMigration",
+          "callee": "new Date().toISOString",
+          "lineNumber": 167
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 168
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseJson",
+          "lineNumber": 171
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseJson",
+          "lineNumber": 172
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseJson",
+          "lineNumber": 173
+        },
+        {
+          "caller": "runMigration",
+          "callee": "parseJson",
+          "lineNumber": 174
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.supplierStatus || 'none').trim",
+          "lineNumber": 177
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 177
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.supplierIdCurrent).trim",
+          "lineNumber": 178
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 178
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.sentSupplierAt || '').trim",
+          "lineNumber": 179
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 179
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String(w.expectedReturnSupplierAt || '').trim",
+          "lineNumber": 180
+        },
+        {
+          "caller": "runMigration",
+          "callee": "String",
+          "lineNumber": 180
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.warranty.createMany",
+          "lineNumber": 183
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 184
+        },
+        {
+          "caller": "runMigration",
+          "callee": "Math.min",
+          "lineNumber": 184
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 186
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 189
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.error",
+          "lineNumber": 192
+        },
+        {
+          "caller": "runMigration",
+          "callee": "prisma.$disconnect",
+          "lineNumber": 194
+        },
+        {
+          "caller": "runMigration",
+          "callee": "console.log",
+          "lineNumber": 195
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/App.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 134,
+      "nonEmptyLines": 122,
+      "functions": [
+        {
+          "name": "RequireStaff",
+          "startLine": 32,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "RequireAdminRole",
+          "startLine": 39,
+          "endLine": 51,
+          "params": []
+        },
+        {
+          "name": "AdminRoute",
+          "startLine": 53,
+          "endLine": 59,
+          "params": []
+        },
+        {
+          "name": "AdminOnlyRoute",
+          "startLine": 61,
+          "endLine": 69,
+          "params": []
+        },
+        {
+          "name": "AppShortcuts",
+          "startLine": 71,
+          "endLine": 81,
+          "params": []
+        },
+        {
+          "name": "App",
+          "startLine": 83,
+          "endLine": 134,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "App",
+          "line": 83,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "RequireStaff",
+          "callee": "useAuth",
+          "lineNumber": 33
+        },
+        {
+          "caller": "RequireAdminRole",
+          "callee": "useAuth",
+          "lineNumber": 40
+        },
+        {
+          "caller": "AppShortcuts",
+          "callee": "useNavigate",
+          "lineNumber": 72
+        },
+        {
+          "caller": "AppShortcuts",
+          "callee": "useKeyboardShortcuts",
+          "lineNumber": 74
+        },
+        {
+          "caller": "AppShortcuts",
+          "callee": "window.__focusSearch",
+          "lineNumber": 75
+        },
+        {
+          "caller": "App",
+          "callee": "useTheme",
+          "lineNumber": 84
+        },
+        {
+          "caller": "App",
+          "callee": "useState",
+          "lineNumber": 85
+        },
+        {
+          "caller": "App",
+          "callee": "useCallback",
+          "lineNumber": 87
+        },
+        {
+          "caller": "App",
+          "callee": "setShortcutsOpen",
+          "lineNumber": 87
+        },
+        {
+          "caller": "App",
+          "callee": "useCallback",
+          "lineNumber": 88
+        },
+        {
+          "caller": "App",
+          "callee": "setShortcutsOpen",
+          "lineNumber": 88
+        },
+        {
+          "caller": "App",
+          "callee": "useEffect",
+          "lineNumber": 90
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/admin/BackupRestorePanel.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 276,
+      "nonEmptyLines": 261,
+      "functions": [
+        {
+          "name": "fmtSize",
+          "startLine": 7,
+          "endLine": 11,
+          "params": []
+        },
+        {
+          "name": "fmtTime",
+          "startLine": 12,
+          "endLine": 12,
+          "params": []
+        },
+        {
+          "name": "renderWarrantyStatus",
+          "startLine": 21,
+          "endLine": 24,
+          "params": [
+            "status"
+          ]
+        },
+        {
+          "name": "BackupRestorePanel",
+          "startLine": 26,
+          "endLine": 276,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "BackupRestorePanel",
+          "line": 26,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fmtSize",
+          "callee": "(n / 1024 / 1024).toFixed",
+          "lineNumber": 9
+        },
+        {
+          "caller": "fmtSize",
+          "callee": "(n / 1024).toFixed",
+          "lineNumber": 10
+        },
+        {
+          "caller": "fmtTime",
+          "callee": "new Date(s).toLocaleString",
+          "lineNumber": 12
+        },
+        {
+          "caller": "renderWarrantyStatus",
+          "callee": "getStatusBadgeColor",
+          "lineNumber": 23
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "App.useApp",
+          "lineNumber": 27
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "useState",
+          "lineNumber": 28
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "useState",
+          "lineNumber": 29
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "useState",
+          "lineNumber": 30
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "useState",
+          "lineNumber": 31
+        },
+        {
+          "caller": "loadAll",
+          "callee": "setLoading",
+          "lineNumber": 34
+        },
+        {
+          "caller": "loadAll",
+          "callee": "Promise.all",
+          "lineNumber": 36
+        },
+        {
+          "caller": "loadAll",
+          "callee": "backupService.status",
+          "lineNumber": 36
+        },
+        {
+          "caller": "loadAll",
+          "callee": "backupService.list",
+          "lineNumber": 36
+        },
+        {
+          "caller": "loadAll",
+          "callee": "backupService.history",
+          "lineNumber": 36
+        },
+        {
+          "caller": "loadAll",
+          "callee": "setStatus",
+          "lineNumber": 37
+        },
+        {
+          "caller": "loadAll",
+          "callee": "setBackups",
+          "lineNumber": 38
+        },
+        {
+          "caller": "loadAll",
+          "callee": "setHistory",
+          "lineNumber": 39
+        },
+        {
+          "caller": "loadAll",
+          "callee": "message.error",
+          "lineNumber": 41
+        },
+        {
+          "caller": "loadAll",
+          "callee": "setLoading",
+          "lineNumber": 43
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "useEffect",
+          "lineNumber": 47
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "loadAll",
+          "lineNumber": 47
+        },
+        {
+          "caller": "createBackup",
+          "callee": "setLoading",
+          "lineNumber": 50
+        },
+        {
+          "caller": "createBackup",
+          "callee": "backupService.create",
+          "lineNumber": 52
+        },
+        {
+          "caller": "createBackup",
+          "callee": "message.success",
+          "lineNumber": 53
+        },
+        {
+          "caller": "createBackup",
+          "callee": "loadAll",
+          "lineNumber": 54
+        },
+        {
+          "caller": "createBackup",
+          "callee": "message.error",
+          "lineNumber": 56
+        },
+        {
+          "caller": "createBackup",
+          "callee": "setLoading",
+          "lineNumber": 58
+        },
+        {
+          "caller": "confirmRestore",
+          "callee": "modal.confirm",
+          "lineNumber": 64
+        },
+        {
+          "caller": "confirmRestore",
+          "callee": "backupService.restore",
+          "lineNumber": 76
+        },
+        {
+          "caller": "confirmRestore",
+          "callee": "message.success",
+          "lineNumber": 77
+        },
+        {
+          "caller": "confirmRestore",
+          "callee": "loadAll",
+          "lineNumber": 78
+        },
+        {
+          "caller": "uploadRestore",
+          "callee": "modal.confirm",
+          "lineNumber": 85
+        },
+        {
+          "caller": "uploadRestore",
+          "callee": "file.text",
+          "lineNumber": 98
+        },
+        {
+          "caller": "uploadRestore",
+          "callee": "JSON.parse",
+          "lineNumber": 99
+        },
+        {
+          "caller": "uploadRestore",
+          "callee": "backupService.uploadRestore",
+          "lineNumber": 100
+        },
+        {
+          "caller": "uploadRestore",
+          "callee": "message.success",
+          "lineNumber": 101
+        },
+        {
+          "caller": "uploadRestore",
+          "callee": "loadAll",
+          "lineNumber": 102
+        },
+        {
+          "caller": "uploadAssets",
+          "callee": "modal.confirm",
+          "lineNumber": 110
+        },
+        {
+          "caller": "uploadAssets",
+          "callee": "backupService.uploadAssets",
+          "lineNumber": 123
+        },
+        {
+          "caller": "uploadAssets",
+          "callee": "message.success",
+          "lineNumber": 124
+        },
+        {
+          "caller": "uploadAssets",
+          "callee": "loadAll",
+          "lineNumber": 125
+        },
+        {
+          "caller": "deleteBackup",
+          "callee": "modal.confirm",
+          "lineNumber": 132
+        },
+        {
+          "caller": "deleteBackup",
+          "callee": "backupService.delete",
+          "lineNumber": 139
+        },
+        {
+          "caller": "deleteBackup",
+          "callee": "message.success",
+          "lineNumber": 140
+        },
+        {
+          "caller": "deleteBackup",
+          "callee": "loadAll",
+          "lineNumber": 141
+        },
+        {
+          "caller": "viewBackup",
+          "callee": "backupService.view",
+          "lineNumber": 148
+        },
+        {
+          "caller": "viewBackup",
+          "callee": "modal.info",
+          "lineNumber": 150
+        },
+        {
+          "caller": "viewBackup",
+          "callee": "fmtSize",
+          "lineNumber": 159
+        },
+        {
+          "caller": "viewBackup",
+          "callee": "message.error",
+          "lineNumber": 194
+        },
+        {
+          "caller": "editMetadata",
+          "callee": "modal.confirm",
+          "lineNumber": 201
+        },
+        {
+          "caller": "editMetadata",
+          "callee": "message.info",
+          "lineNumber": 204
+        },
+        {
+          "caller": "editMetadata",
+          "callee": "backupService.metadata",
+          "lineNumber": 212
+        },
+        {
+          "caller": "editMetadata",
+          "callee": "message.success",
+          "lineNumber": 213
+        },
+        {
+          "caller": "editMetadata",
+          "callee": "loadAll",
+          "lineNumber": 214
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "fmtSize",
+          "lineNumber": 224
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "v.slice",
+          "lineNumber": 225
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "viewBackup",
+          "lineNumber": 227
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "backupService.downloadUrl",
+          "lineNumber": 228
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "backupService.downloadAssetsUrl",
+          "lineNumber": 229
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "editMetadata",
+          "lineNumber": 230
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "confirmRestore",
+          "lineNumber": 231
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "deleteBackup",
+          "lineNumber": 232
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "fmtSize",
+          "lineNumber": 252
+        },
+        {
+          "caller": "BackupRestorePanel",
+          "callee": "fmtTime",
+          "lineNumber": 253
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/common/AiAssistant.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 423,
+      "nonEmptyLines": 389,
+      "functions": [
+        {
+          "name": "includesAny",
+          "startLine": 27,
+          "endLine": 29,
+          "params": [
+            "text",
+            "terms"
+          ]
+        },
+        {
+          "name": "AiAssistant",
+          "startLine": 31,
+          "endLine": 423,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AiAssistant",
+          "line": 31,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "includesAny",
+          "callee": "terms.some",
+          "lineNumber": 28
+        },
+        {
+          "caller": "includesAny",
+          "callee": "text.includes",
+          "lineNumber": 28
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useTranslation",
+          "lineNumber": 32
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useState",
+          "lineNumber": 33
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useState",
+          "lineNumber": 34
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useState",
+          "lineNumber": 35
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useState",
+          "lineNumber": 36
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useState",
+          "lineNumber": 37
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useRef",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useAuth",
+          "lineNumber": 40
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useTheme",
+          "lineNumber": 41
+        },
+        {
+          "caller": "statusMeta",
+          "callee": "['dang_xu_ly', 'da_tra', 'huy', 'da_nhan'].includes",
+          "lineNumber": 45
+        },
+        {
+          "caller": "statusMeta",
+          "callee": "getStatusBadgeColor",
+          "lineNumber": 46
+        },
+        {
+          "caller": "statusMeta",
+          "callee": "t",
+          "lineNumber": 46
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useMemo",
+          "lineNumber": 49
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 54
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 55
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 60
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 61
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 66
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 67
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 77
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 78
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 83
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 84
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "useMemo",
+          "lineNumber": 90
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "messages.map",
+          "lineNumber": 91
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "items.push",
+          "lineNumber": 98
+        },
+        {
+          "caller": "addAssistantMessage",
+          "callee": "setMessages",
+          "lineNumber": 110
+        },
+        {
+          "caller": "addAssistantMessage",
+          "callee": "Date.now",
+          "lineNumber": 112
+        },
+        {
+          "caller": "addAssistantMessage",
+          "callee": "Math.random",
+          "lineNumber": 112
+        },
+        {
+          "caller": "executeAction",
+          "callee": "rawText.trim",
+          "lineNumber": 117
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setMessages",
+          "lineNumber": 120
+        },
+        {
+          "caller": "executeAction",
+          "callee": "Date.now",
+          "lineNumber": 120
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setInputValue",
+          "lineNumber": 121
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setLoading",
+          "lineNumber": 122
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setThoughts",
+          "lineNumber": 123
+        },
+        {
+          "caller": "executeAction",
+          "callee": "text.toLowerCase",
+          "lineNumber": 125
+        },
+        {
+          "caller": "executeAction",
+          "callee": "NTPCRegex.test",
+          "lineNumber": 127
+        },
+        {
+          "caller": "executeAction",
+          "callee": "text.match(NTPCRegex)[1].toUpperCase",
+          "lineNumber": 131
+        },
+        {
+          "caller": "executeAction",
+          "callee": "text.match",
+          "lineNumber": 131
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setThoughts",
+          "lineNumber": 133
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 134
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 135
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 136
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setTimeout",
+          "lineNumber": 138
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setThoughts",
+          "lineNumber": 140
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 141
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 142
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 143
+        },
+        {
+          "caller": "executeAction",
+          "callee": "publicService.track",
+          "lineNumber": 146
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setThoughts",
+          "lineNumber": 148
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 149
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 150
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 151
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setTimeout",
+          "lineNumber": 153
+        },
+        {
+          "caller": "executeAction",
+          "callee": "statusMeta",
+          "lineNumber": 157
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 159
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 161
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 168
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 174
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 175
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 177
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 179
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs(item.ngayHenTra).format",
+          "lineNumber": 179
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs",
+          "lineNumber": 179
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 181
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs(item.ngayTra).format",
+          "lineNumber": 181
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs",
+          "lineNumber": 181
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 186
+        },
+        {
+          "caller": "executeAction",
+          "callee": "item.lichSu.map",
+          "lineNumber": 189
+        },
+        {
+          "caller": "executeAction",
+          "callee": "hist.action.includes",
+          "lineNumber": 190
+        },
+        {
+          "caller": "executeAction",
+          "callee": "hist.action.includes",
+          "lineNumber": 190
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs(hist.at).format",
+          "lineNumber": 193
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs",
+          "lineNumber": 193
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 205
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 205
+        },
+        {
+          "caller": "executeAction",
+          "callee": "includesAny",
+          "lineNumber": 207
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 209
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 209
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setThoughts",
+          "lineNumber": 213
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 214
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 215
+        },
+        {
+          "caller": "executeAction",
+          "callee": "statsService.summary",
+          "lineNumber": 217
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 221
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 223
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 225
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 226
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 227
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 228
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 230
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs().format",
+          "lineNumber": 230
+        },
+        {
+          "caller": "executeAction",
+          "callee": "dayjs",
+          "lineNumber": 230
+        },
+        {
+          "caller": "executeAction",
+          "callee": "includesAny",
+          "lineNumber": 234
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 236
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 236
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setThoughts",
+          "lineNumber": 240
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 240
+        },
+        {
+          "caller": "executeAction",
+          "callee": "nhanVienService.getList",
+          "lineNumber": 241
+        },
+        {
+          "caller": "executeAction",
+          "callee": "Array.isArray",
+          "lineNumber": 243
+        },
+        {
+          "caller": "executeAction",
+          "callee": "res.data.filter",
+          "lineNumber": 244
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 245
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 247
+        },
+        {
+          "caller": "executeAction",
+          "callee": "list.map",
+          "lineNumber": 249
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 252
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 252
+        },
+        {
+          "caller": "executeAction",
+          "callee": "includesAny",
+          "lineNumber": 260
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 263
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 265
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 267
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 268
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 269
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 270
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 273
+        },
+        {
+          "caller": "executeAction",
+          "callee": "includesAny",
+          "lineNumber": 278
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 281
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 283
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 285
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 286
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 287
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 287
+        },
+        {
+          "caller": "executeAction",
+          "callee": "includesAny",
+          "lineNumber": 291
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 292
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 294
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 296
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 297
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 297
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 298
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 298
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 303
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 305
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 307
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 308
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 309
+        },
+        {
+          "caller": "executeAction",
+          "callee": "addAssistantMessage",
+          "lineNumber": 315
+        },
+        {
+          "caller": "executeAction",
+          "callee": "t",
+          "lineNumber": 315
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setLoading",
+          "lineNumber": 317
+        },
+        {
+          "caller": "executeAction",
+          "callee": "setThoughts",
+          "lineNumber": 318
+        },
+        {
+          "caller": "executeAction",
+          "callee": "requestAnimationFrame",
+          "lineNumber": 319
+        },
+        {
+          "caller": "executeAction",
+          "callee": "listRef.current?.scrollTo",
+          "lineNumber": 319
+        },
+        {
+          "caller": "handlePromptClick",
+          "callee": "t",
+          "lineNumber": 325
+        },
+        {
+          "caller": "handlePromptClick",
+          "callee": "t",
+          "lineNumber": 326
+        },
+        {
+          "caller": "handlePromptClick",
+          "callee": "t",
+          "lineNumber": 327
+        },
+        {
+          "caller": "handlePromptClick",
+          "callee": "t",
+          "lineNumber": 328
+        },
+        {
+          "caller": "handlePromptClick",
+          "callee": "t",
+          "lineNumber": 329
+        },
+        {
+          "caller": "handlePromptClick",
+          "callee": "String",
+          "lineNumber": 330
+        },
+        {
+          "caller": "handlePromptClick",
+          "callee": "executeAction",
+          "lineNumber": 332
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 337
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "setOpen",
+          "lineNumber": 343
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 345
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 355
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "setOpen",
+          "lineNumber": 362
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "setOpen",
+          "lineNumber": 364
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 381
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 382
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "executeAction",
+          "lineNumber": 412
+        },
+        {
+          "caller": "AiAssistant",
+          "callee": "t",
+          "lineNumber": 413
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    }
+  ]
+}

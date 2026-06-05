@@ -1,0 +1,213 @@
+[
+  {
+    "id": "layer:infrastructure",
+    "name": "Infrastructure & DevOps",
+    "description": "Docker containers, CI/CD pipelines, nginx configuration, and deployment infrastructure",
+    "nodeIds": [
+      "pipeline:.github/workflows/ci.yml",
+      "config:dockerignore",
+      "config:infra:docker-compose",
+      "service:infra:docker-service-postgres",
+      "service:infra:docker-service-backend",
+      "service:infra:docker-service-frontend",
+      "service:infra:docker-service-tunnel",
+      "file:script:get-tunnel-bat",
+      "file:script:get-tunnel-sh",
+      "service:api.Dockerfile",
+      "file:nginx.conf",
+      "service:web.Dockerfile"
+    ]
+  },
+  {
+    "id": "layer:backend-api",
+    "name": "Backend API",
+    "description": "Express.js server, REST API routes, authentication, database access, and business logic",
+    "nodeIds": [
+      "file:api/lib/db.js",
+      "file:api/lib/auth.js",
+      "file:api/lib/audit.js",
+      "file:api/lib/backup.js",
+      "file:api/lib/customerMaster.js",
+      "file:api/lib/customers.js",
+      "file:api/lib/restore_drill.js",
+      "file:api/lib/validators.js",
+      "file:api/routes/auth.js",
+      "file:api/routes/backups.js",
+      "file:api/routes/customers.js",
+      "file:api/routes/nhanVien.js",
+      "file:api/routes/public.js",
+      "file:api/routes/stats.js",
+      "file:api/routes/suppliers.js",
+      "file:api/routes/warranties.js",
+      "file:api/routes/warranties.js.bak-customers-master",
+      "file:api/seedData.js",
+      "file:api/server.js"
+    ]
+  },
+  {
+    "id": "layer:data-model",
+    "name": "Data Model & Schema",
+    "description": "Prisma schema, database migrations, and data structures",
+    "nodeIds": [
+      "file:migration:prisma/migrations/20260525_add_audit_indexes/migration.sql",
+      "schema:prisma/schema.prisma"
+    ]
+  },
+  {
+    "id": "layer:frontend-core",
+    "name": "Frontend Core",
+    "description": "React application entry point, routing, context providers, and core configuration",
+    "nodeIds": [
+      "resource:index-html",
+      "config:package-json",
+      "config:.claude/settings.local.json",
+      "config:.understand-anything/.understandignore",
+      "file:data:filebaohanh.xlsx",
+      "file:fixdates.cjs",
+      "file:phieuguincc/nccdemo.html",
+      "file:repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz",
+      "file:repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz.sha256",
+      "file:scratch/audit_history.js",
+      "file:scratch/backfill_supplier_names.js",
+      "file:scratch/check_timeline.js",
+      "file:scratch/inspect_supplier_logs.js",
+      "file:scratch/inspect_users.js",
+      "file:scratch/inspect_warranties.js",
+      "file:scratch/reset_passwords_v2.js",
+      "file:scratch/reset_passwords.js",
+      "file:scratch/verify_recovery.js",
+      "file:scripts/bootstrap-auth.mjs",
+      "file:scripts/cleanup-current-data.mjs",
+      "file:scripts/cleanup-orphan-uploads.js",
+      "file:scripts/migrate_fix_mojibake_notes.py",
+      "file:scripts/migrate_fix_priority_mojibake_notes.py",
+      "file:scripts/migrateData.js",
+      "file:src/App.jsx",
+      "file:src/contexts/AuthContext.jsx",
+      "config:src/i18n/index.js",
+      "file:src/lib/axios.js",
+      "file:src/lib/zodSchemas.js",
+      "file:src/main.jsx",
+      "file:src/styles/global.css",
+      "file:src/styles/print.css",
+      "config:vite.config.js"
+    ]
+  },
+  {
+    "id": "layer:frontend-pages",
+    "name": "Frontend Pages",
+    "description": "Admin and customer-facing page components",
+    "nodeIds": [
+      "file:src/pages/admin/CreateWarranty.jsx",
+      "file:src/pages/admin/CustomerInfo.jsx",
+      "file:src/pages/admin/Dashboard.jsx",
+      "file:src/pages/admin/ImportExport.jsx",
+      "file:src/pages/admin/StaffManagement.jsx",
+      "file:src/pages/admin/Statistics.jsx",
+      "file:src/pages/admin/Suppliers.jsx",
+      "file:src/pages/admin/WarrantyList.jsx",
+      "file:src/pages/customer/CustomerPortal.jsx",
+      "file:src/pages/customer/TrackingResult.jsx",
+      "file:src/pages/customer/TrackingResult.module.css",
+      "file:src/pages/customer/Tracuu.jsx",
+      "file:src/pages/NotFound.jsx"
+    ]
+  },
+  {
+    "id": "layer:frontend-components",
+    "name": "Frontend Components",
+    "description": "Reusable UI components, modals, forms, and mobile-specific components",
+    "nodeIds": [
+      "file:src/components/admin/BackupRestorePanel.jsx",
+      "file:src/components/common/AiAssistant.jsx",
+      "file:src/components/common/ChangePasswordModal.jsx",
+      "file:src/components/common/CustomerPickerModal.jsx",
+      "file:src/components/common/ErrorBoundary.jsx",
+      "file:src/components/common/FloatingZalo.jsx",
+      "file:src/components/common/ShortcutsModal.jsx",
+      "file:src/components/common/SkeletonCard.jsx",
+      "file:src/components/common/StaffPickerModal.jsx",
+      "file:src/components/layout/AdminLayout.jsx",
+      "file:src/components/layout/AppHeader.jsx",
+      "file:src/components/layout/AppSider.jsx",
+      "file:src/components/layout/CustomerLayout.jsx",
+      "file:src/components/layout/GlobalSearch.jsx",
+      "file:src/components/layout/NotificationBell.jsx",
+      "file:src/components/warranty/MobileStatusTag.jsx",
+      "file:src/components/warranty/StatusTag.jsx",
+      "file:src/components/warranty/WarrantyDetail.jsx",
+      "file:src/components/warranty/WarrantyPrint.jsx",
+      "file:src/components/warranty/WarrantyProgress.jsx"
+    ]
+  },
+  {
+    "id": "layer:services-hooks",
+    "name": "Services & Hooks",
+    "description": "API service clients, custom React hooks, and shared utilities",
+    "nodeIds": [
+      "file:src/constants/badgeConfig.js",
+      "file:src/constants/routes.js",
+      "file:src/constants/statusConfig.js",
+      "file:src/constants/warrantyOptions.js",
+      "file:src/hooks/useDebounce.js",
+      "file:src/hooks/useIsMobile.js",
+      "file:src/hooks/useKeyboardShortcuts.js",
+      "file:src/hooks/useTheme.js",
+      "file:src/hooks/useWarranties.js",
+      "file:src/services/backupService.js",
+      "file:src/services/warrantyService.js",
+      "file:src/theme/antdTheme.js",
+      "file:src/utils/copy.js",
+      "file:src/utils/dateHelpers.js",
+      "file:src/utils/excelHelpers.js",
+      "file:src/utils/fieldLabels.js",
+      "file:src/utils/formatters.js",
+      "file:src/utils/generateChungTu.js",
+      "file:src/utils/historyDisplay.js",
+      "file:src/utils/historyTimeline.js",
+      "file:src/utils/historyTimeline.js.bak-field-labels",
+      "file:src/utils/i18nOptions.js",
+      "file:src/utils/urgency.js",
+      "file:src/utils/vietnameseText.js"
+    ]
+  },
+  {
+    "id": "layer:i18n",
+    "name": "Internationalization",
+    "description": "Vietnamese language translations and i18n configuration",
+    "nodeIds": [
+      "config:src/i18n/locales/vi/messages.json",
+      "config:src/i18n/locales/vi/nav.json",
+      "config:src/i18n/locales/vi/print.json",
+      "config:src/i18n/locales/vi/status.json",
+      "config:src/i18n/locales/vi/ui.json",
+      "config:src/i18n/locales/vi/validation.json",
+      "file:src/i18n/locales/vi/ui.json.bak-field-labels"
+    ]
+  },
+  {
+    "id": "layer:testing",
+    "name": "Testing",
+    "description": "Unit tests, integration tests, and test configuration",
+    "nodeIds": [
+      "file:tests/fieldLabels.smoke.test.js",
+      "file:tests/generateChungTu.test.js",
+      "file:tests/i18n.test.js",
+      "file:tests/setup.js",
+      "file:tests/StatusTag.test.jsx",
+      "file:tests/urgency.test.js",
+      "file:tests/vietnameseUi.test.js",
+      "config:vitest.config.js"
+    ]
+  },
+  {
+    "id": "layer:documentation",
+    "name": "Documentation",
+    "description": "Project documentation, READMEs, and design specs",
+    "nodeIds": [
+      "document:readme",
+      "file:doc:docs/superpowers/plans/2026-05-20-react-i18next-rollout.md",
+      "file:doc:docs/superpowers/specs/2026-05-20-react-i18next-rollout-design.md"
+    ]
+  }
+]

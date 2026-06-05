@@ -1,0 +1,107 @@
+[
+  {
+    "order": 1,
+    "title": "Project Overview",
+    "description": "NTPC Warranty Management System - A full-stack web application for managing computer equipment warranty tickets. Built with React 18, Ant Design, Express.js, Prisma, and PostgreSQL.",
+    "nodeIds": [
+      "document:readme"
+    ]
+  },
+  {
+    "order": 2,
+    "title": "Infrastructure Setup",
+    "description": "Docker Compose orchestrates 4 services: PostgreSQL database, Express.js backend API, Nginx-served React frontend, and Cloudflare Quick Tunnel for public access.",
+    "nodeIds": [
+      "config:infra:docker-compose",
+      "service:infra:docker-service-postgres",
+      "service:infra:docker-service-backend",
+      "service:infra:docker-service-frontend"
+    ]
+  },
+  {
+    "order": 3,
+    "title": "Backend API Architecture",
+    "description": "Express.js server with modular route handlers and library modules. Routes handle REST endpoints while libs provide authentication, database access, audit logging, and backup functionality.",
+    "nodeIds": [
+      "file:api/server.js",
+      "file:api/routes/warranties.js",
+      "file:api/lib/auth.js",
+      "file:api/lib/db.js"
+    ]
+  },
+  {
+    "order": 4,
+    "title": "Data Model",
+    "description": "Prisma schema defines the database models for warranties, staff, suppliers, and audit logs. PostgreSQL provides the relational data store.",
+    "nodeIds": [
+      "schema:prisma/schema.prisma"
+    ]
+  },
+  {
+    "order": 5,
+    "title": "Frontend Entry Point",
+    "description": "React application bootstraps from main.jsx, renders App.jsx which sets up routing, authentication guards, and lazy-loaded page components.",
+    "nodeIds": [
+      "file:src/main.jsx",
+      "file:src/App.jsx"
+    ]
+  },
+  {
+    "order": 6,
+    "title": "Admin Dashboard",
+    "description": "Admin pages for managing warranties, viewing statistics, importing/exporting data, and managing staff and suppliers.",
+    "nodeIds": [
+      "file:src/pages/admin/Dashboard.jsx",
+      "file:src/pages/admin/WarrantyList.jsx",
+      "file:src/pages/admin/Statistics.jsx"
+    ]
+  },
+  {
+    "order": 7,
+    "title": "Customer Portal",
+    "description": "Public-facing pages for customers to track warranty status by receipt number. Includes tracking results with timeline visualization.",
+    "nodeIds": [
+      "file:src/pages/customer/Tracuu.jsx",
+      "file:src/pages/customer/TrackingResult.jsx"
+    ]
+  },
+  {
+    "order": 8,
+    "title": "Shared Components",
+    "description": "Reusable UI components including status tags, customer picker modals, warranty history timeline, and theme toggle.",
+    "nodeIds": [
+      "file:src/components/warranty/StatusTag.jsx",
+      "file:src/components/common/CustomerPickerModal.jsx",
+      "file:src/components/warranty/WarrantyDetail.jsx"
+    ]
+  },
+  {
+    "order": 9,
+    "title": "Services & Hooks",
+    "description": "API service clients (warrantyService, backupService) and custom React hooks (useWarranties, useTheme) provide data fetching and state management.",
+    "nodeIds": [
+      "file:src/services/warrantyService.js",
+      "file:src/hooks/useWarranties.js",
+      "file:src/hooks/useTheme.js"
+    ]
+  },
+  {
+    "order": 10,
+    "title": "Internationalization",
+    "description": "Vietnamese language support with i18next. Translation files organized by namespace (ui, status, messages, nav, validation, print).",
+    "nodeIds": [
+      "config:src/i18n/index.js",
+      "config:src/i18n/locales/vi/ui.json"
+    ]
+  },
+  {
+    "order": 11,
+    "title": "Testing",
+    "description": "Unit tests using Vitest and Testing Library. Tests cover utilities, components, and i18n functionality.",
+    "nodeIds": [
+      "config:vitest.config.js",
+      "file:tests/i18n.test.js",
+      "file:tests/urgency.test.js"
+    ]
+  }
+]

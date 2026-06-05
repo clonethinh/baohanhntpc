@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { nhanVienService, statsService, warrantyService } from '../../services/warrantyService';
 import { STATUS } from '../../constants/statusConfig';
 import { getUrgency } from '../../utils/urgency';
-import { formatDate, getWarrantyDueDate, shouldShowDueDate } from '../../utils/dateHelpers';
+import { formatDate, getWarrantyDueDate, shouldShowDueDate, hasExplicitDueDate } from '../../utils/dateHelpers';
 import { buildInternalHistoryTimeline, formatHistoryChanges } from '../../utils/historyTimeline';
 import { normalizeHistoryNote } from '../../utils/historyDisplay';
 import { useIsMobile } from '../../hooks/useIsMobile';
@@ -70,7 +70,11 @@ function isOpenWarranty(warranty) {
   return warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy';
 }
 
-function mapHistoryAction(action, t) {
+function mapHistoryAction(action, t, loaiXuLy) {
+  if (action === 'tra_hang') {
+    const key = loaiXuLy === 'sua_dv' ? 'adminDashboard.historyAction.tra_hang_sua_dv' : 'adminDashboard.historyAction.tra_hang';
+    return t(key);
+  }
   return t(`adminDashboard.historyAction.${action}`, { defaultValue: action });
 }
 
@@ -187,7 +191,7 @@ export default function Dashboard() {
         </Typography.Text>
       ),
     },
-    { title: t('field.henTra'), dataIndex: 'ngayHenTra', key: 'ngayHenTra', width: 110, render: (_, r) => shouldShowDueDate(r) ? formatDate(getWarrantyDueDate(r)) : '-' },
+    { title: t('field.henTra'), dataIndex: 'ngayHenTra', key: 'ngayHenTra', width: 110, render: (_, r) => hasExplicitDueDate(r) ? formatDate(getWarrantyDueDate(r)) : <span>Pending<span className="loading-dots" /></span> },
     { title: t('table.trangThai'), dataIndex: 'trangThai', key: 'trangThai', width: 120, render: s => <StatusTag status={s} /> },
     { title: t('notification.priority'), dataIndex: 'uuTien', key: 'uuTien', width: 90, render: (v, r) => (v && isOpenWarranty(r) ? <Tag color="red" icon={<StarOutlined />}>{t('adminDashboard.priority')}</Tag> : <Tag>---</Tag>) },
   ];
@@ -329,7 +333,7 @@ export default function Dashboard() {
                     </div>
                     <div>
                       <small>Hẹn trả</small>
-                      <strong>{shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-'}</strong>
+                      <strong>{hasExplicitDueDate(w) ? formatDate(getWarrantyDueDate(w)) : <span>Pending<span className="loading-dots" /></span>}</strong>
                     </div>
                   </div>
 
@@ -363,12 +367,12 @@ export default function Dashboard() {
                 <span className="admin-mobile-activity-dot" />
                 <div className="admin-mobile-activity-body">
                   <div className="admin-mobile-activity-top">
-                    <b>{mapHistoryAction(ev.action, t)}</b>
+                    <b>{mapHistoryAction(ev.action, t, ev.loaiXuLy)}</b>
                     <HistoryOutlined />
                   </div>
                   <span className="admin-mobile-activity-code">{ev.soChungTu}</span>
                   <small>{ev.khachHang || t('adminDashboard.unknownCustomer')}</small>
-                  <small>{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</small>
+                  <small>{formatDate(ev.at, 'DD-MM-YYYY - HH:mm')} · {getStaffName(ev.by)}</small>
                   {detail ? <em style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</em> : null}
                 </div>
               </button>
@@ -471,12 +475,12 @@ export default function Dashboard() {
                     color: ev.color,
                     children: (
                       <div>
-                        <Text strong>{ev.title || mapHistoryAction(ev.actionType || ev.action, t)}</Text>
+                        <Text strong>{ev.title || mapHistoryAction(ev.actionType || ev.action, t, ev.loaiXuLy)}</Text>
                         <div>
                           <Typography.Link onClick={() => openDetail(ev.id)}>{ev.soChungTu}</Typography.Link>
                           <Text type="secondary"> · {ev.khachHang || t('adminDashboard.unknownCustomer')}</Text>
                         </div>
-                        <div><Text type="secondary">{formatDate(ev.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(ev.by)}</Text></div>
+                        <div><Text type="secondary">{formatDate(ev.at, 'DD-MM-YYYY - HH:mm')} · {getStaffName(ev.by)}</Text></div>
                         {detail ? <div><Text style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</Text></div> : null}
                       </div>
                     ),

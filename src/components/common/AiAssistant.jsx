@@ -176,9 +176,9 @@ export default function AiAssistant() {
                   {item.soSeri && <div><strong>S/N:</strong> {item.soSeri}</div>}
                   {item.loiLucNhan && <div><strong>{t('field.loiLucNhan')}:</strong> {item.loiLucNhan}</div>}
                   {item.ngayHenTra && (
-                    <div><strong>{t('field.henTra')}:</strong> <span className="ntpc-ai-date">{dayjs(item.ngayHenTra).format('DD/MM/YYYY')}</span></div>
+                    <div><strong>{t('field.henTra')}:</strong> <span className="ntpc-ai-date">{dayjs(item.ngayHenTra).format('DD-MM-YYYY')}</span></div>
                   )}
-                  {item.ngayTra && <div><strong>{t('field.ngayTraThucTe')}:</strong> {dayjs(item.ngayTra).format('DD/MM/YYYY')}</div>}
+                  {item.ngayTra && <div><strong>{t('field.ngayTraThucTe')}:</strong> {dayjs(item.ngayTra).format('DD-MM-YYYY')}</div>}
                 </Space>
 
                 {item.lichSu?.length > 0 && (
@@ -227,7 +227,7 @@ export default function AiAssistant() {
                 <div><span>{t('aiAssistant.answer.completedWarranties')}</span><strong>{s.completedWarranties}</strong></div>
                 <div><span>{t('aiAssistant.answer.expiredWarranties')}</span><strong>{s.expiredWarranties || 0}</strong></div>
               </div>
-              <div className="ntpc-ai-muted">{t('aiAssistant.answer.updatedAt', { time: dayjs().format('HH:mm:ss DD/MM/YYYY') })}</div>
+              <div className="ntpc-ai-muted">{t('aiAssistant.answer.updatedAt', { time: dayjs().format('HH:mm:ss DD-MM-YYYY') })}</div>
             </div>
           );
         }

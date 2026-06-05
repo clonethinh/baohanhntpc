@@ -1,0 +1,208 @@
+{
+  "batchIndex": 2,
+  "nodes": [
+    {
+      "id": "config:dockerignore",
+      "type": "config",
+      "name": ".dockerignore",
+      "filePath": ".dockerignore",
+      "summary": "Excludes node_modules, dist, .git, .env, logs, test files, API uploads/backups, and pgdata from Docker build context to keep images small and avoid leaking secrets.",
+      "tags": ["docker", "build-context", "ignore-rules"],
+      "complexity": "low"
+    },
+    {
+      "id": "document:readme",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Comprehensive project documentation (734 lines) covering architecture, tech stack, directory structure, patterns, UI/UX, strengths/weaknesses, installation guides, and full API reference for the NTPC Warranty Management System.",
+      "tags": ["documentation", "architecture", "api-reference", "installation-guide", "vietnamese"],
+      "complexity": "high"
+    },
+    {
+      "id": "infra:docker-compose",
+      "type": "config",
+      "name": "docker-compose.yml",
+      "filePath": "docker-compose.yml",
+      "summary": "Orchestration file defining 4 services: postgres-db (PostgreSQL 15), backend-api (Node.js Express), frontend-web (Nginx serving React SPA), and cloudflare-quick-tunnel (Cloudflare tunnel for public access). Uses bridge network, health checks, and persistent volumes.",
+      "tags": ["docker-compose", "orchestration", "infrastructure", "postgresql", "nginx", "cloudflare"],
+      "complexity": "medium"
+    },
+    {
+      "id": "infra:docker-service-postgres",
+      "type": "service",
+      "name": "postgres-db",
+      "filePath": "docker-compose.yml",
+      "summary": "PostgreSQL 15 Alpine container with persistent volume at ./pgdata, port mapped 5435:5432, health check via pg_isready, and environment variables for credentials and timezone.",
+      "tags": ["database", "postgresql", "persistent-storage", "docker-service"],
+      "complexity": "medium"
+    },
+    {
+      "id": "infra:docker-service-backend",
+      "type": "service",
+      "name": "backend-api",
+      "filePath": "docker-compose.yml",
+      "summary": "Node.js Express API service built from api.Dockerfile, depends on postgres-db. Exposes port 3003, uses DATABASE_URL for Prisma, mounts uploads and backups volumes, health checked via /api/health endpoint.",
+      "tags": ["backend", "express", "nodejs", "docker-service", "api"],
+      "complexity": "medium"
+    },
+    {
+      "id": "infra:docker-service-frontend",
+      "type": "service",
+      "name": "frontend-web",
+      "filePath": "docker-compose.yml",
+      "summary": "Nginx-based frontend service built from web.Dockerfile, serving the React SPA on port 8888:80. Depends on healthy backend-api, health checked via wget to localhost.",
+      "tags": ["frontend", "nginx", "react-spa", "docker-service"],
+      "complexity": "medium"
+    },
+    {
+      "id": "infra:docker-service-tunnel",
+      "type": "service",
+      "name": "cloudflare-quick-tunnel",
+      "filePath": "docker-compose.yml",
+      "summary": "Cloudflare tunnel service exposing the frontend-web via trycloudflare.com for public HTTPS access without a static domain. Depends on frontend-web.",
+      "tags": ["cloudflare", "tunnel", "public-access", "docker-service"],
+      "complexity": "low"
+    },
+    {
+      "id": "script:get-tunnel-bat",
+      "type": "file",
+      "name": "get-tunnel.bat",
+      "filePath": "get-tunnel.bat",
+      "summary": "Windows batch script that extracts the Cloudflare Quick Tunnel URL from docker logs of ntpc-cloudflare-quick-tunnel container using PowerShell regex, copies it to clipboard, and opens it in the default browser.",
+      "tags": ["script", "windows", "cloudflare", "tunnel-extractor", "utility"],
+      "complexity": "low"
+    },
+    {
+      "id": "script:get-tunnel-sh",
+      "type": "file",
+      "name": "get-tunnel.sh",
+      "filePath": "get-tunnel.sh",
+      "summary": "Linux/macOS shell script that extracts the Cloudflare Quick Tunnel URL from docker logs of ntpc-cloudflare-quick-tunnel container using grep regex, displays it, and attempts clipboard copy via pbcopy or xclip.",
+      "tags": ["script", "linux", "macos", "cloudflare", "tunnel-extractor", "utility"],
+      "complexity": "low"
+    },
+    {
+      "id": "resource:index-html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "index.html",
+      "summary": "Vite SPA entry point with Vietnamese language, SEO meta tags for warranty lookup, SVG wrench emoji favicon, and mounts React app at #root via /src/main.jsx.",
+      "tags": ["html", "vite", "spa-entry", "seo", "vietnamese"],
+      "complexity": "low"
+    },
+    {
+      "id": "config:package-json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Root package config for ntpc-warranty v3.0.0. Defines dev/build/test scripts using Vite, concurrently runs Express API + Vite dev server. Key dependencies: React 18, antd 5, Prisma, Express, i18next, zod, react-hook-form, xlsx.",
+      "tags": ["npm", "package-config", "vite", "react", "express", "prisma", "antd"],
+      "complexity": "medium"
+    }
+  ],
+  "edges": [
+    {
+      "source": "infra:docker-compose",
+      "target": "infra:docker-service-postgres",
+      "type": "contains",
+      "label": "defines postgres-db service"
+    },
+    {
+      "source": "infra:docker-compose",
+      "target": "infra:docker-service-backend",
+      "type": "contains",
+      "label": "defines backend-api service"
+    },
+    {
+      "source": "infra:docker-compose",
+      "target": "infra:docker-service-frontend",
+      "type": "contains",
+      "label": "defines frontend-web service"
+    },
+    {
+      "source": "infra:docker-compose",
+      "target": "infra:docker-service-tunnel",
+      "type": "contains",
+      "label": "defines cloudflare-quick-tunnel service"
+    },
+    {
+      "source": "infra:docker-service-backend",
+      "target": "infra:docker-service-postgres",
+      "type": "depends_on",
+      "label": "waits for healthy postgres-db"
+    },
+    {
+      "source": "infra:docker-service-frontend",
+      "target": "infra:docker-service-backend",
+      "type": "depends_on",
+      "label": "waits for healthy backend-api"
+    },
+    {
+      "source": "infra:docker-service-tunnel",
+      "target": "infra:docker-service-frontend",
+      "type": "depends_on",
+      "label": "proxies traffic to frontend-web:80"
+    },
+    {
+      "source": "config:dockerignore",
+      "target": "infra:docker-compose",
+      "type": "configures",
+      "label": "filters Docker build context for all services"
+    },
+    {
+      "source": "config:package-json",
+      "target": "infra:docker-service-backend",
+      "type": "configures",
+      "label": "defines dependencies and scripts for backend-api"
+    },
+    {
+      "source": "config:package-json",
+      "target": "infra:docker-service-frontend",
+      "type": "configures",
+      "label": "defines build output served by frontend-web"
+    },
+    {
+      "source": "resource:index-html",
+      "target": "infra:docker-service-frontend",
+      "type": "depends_on",
+      "label": "SPA entry point served by Nginx frontend"
+    },
+    {
+      "source": "resource:index-html",
+      "target": "config:package-json",
+      "type": "depends_on",
+      "label": "Vite processes index.html using package.json config"
+    },
+    {
+      "source": "script:get-tunnel-sh",
+      "target": "infra:docker-service-tunnel",
+      "type": "calls",
+      "label": "reads docker logs from cloudflare-quick-tunnel container"
+    },
+    {
+      "source": "script:get-tunnel-bat",
+      "target": "infra:docker-service-tunnel",
+      "type": "calls",
+      "label": "reads docker logs from cloudflare-quick-tunnel container"
+    },
+    {
+      "source": "document:readme",
+      "target": "infra:docker-compose",
+      "type": "documents",
+      "label": "documents Docker Compose setup and services"
+    },
+    {
+      "source": "document:readme",
+      "target": "config:package-json",
+      "type": "documents",
+      "label": "documents npm scripts and dependency overview"
+    },
+    {
+      "source": "document:readme",
+      "target": "resource:index-html",
+      "type": "documents",
+      "label": "documents project purpose and UI/UX design"
+    }
+  ]
+}

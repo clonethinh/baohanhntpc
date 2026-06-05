@@ -1,0 +1,168 @@
+{
+  "projectRoot": "/mnt/baohanhntpc",
+  "batchFiles": [
+    {
+      "path": "src/theme/antdTheme.js",
+      "language": "javascript",
+      "sizeLines": 76,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/copy.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/dateHelpers.js",
+      "language": "javascript",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/excelHelpers.js",
+      "language": "javascript",
+      "sizeLines": 139,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/fieldLabels.js",
+      "language": "javascript",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/formatters.js",
+      "language": "javascript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/generateChungTu.js",
+      "language": "javascript",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/historyDisplay.js",
+      "language": "javascript",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/historyTimeline.js",
+      "language": "javascript",
+      "sizeLines": 292,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/historyTimeline.js.bak-field-labels",
+      "language": "bak-field-labels",
+      "sizeLines": 248,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/i18nOptions.js",
+      "language": "javascript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/urgency.js",
+      "language": "javascript",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/vietnameseText.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/fieldLabels.smoke.test.js",
+      "language": "javascript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/generateChungTu.test.js",
+      "language": "javascript",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/i18n.test.js",
+      "language": "javascript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/setup.js",
+      "language": "javascript",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/StatusTag.test.jsx",
+      "language": "javascript",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/urgency.test.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/vietnameseUi.test.js",
+      "language": "javascript",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "vite.config.js",
+      "language": "javascript",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "vitest.config.js",
+      "language": "javascript",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "web.Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/theme/antdTheme.js": [],
+    "src/utils/copy.js": [],
+    "src/utils/dateHelpers.js": [],
+    "src/utils/excelHelpers.js": [],
+    "src/utils/fieldLabels.js": [],
+    "src/utils/formatters.js": [],
+    "src/utils/generateChungTu.js": [],
+    "src/utils/historyDisplay.js": [],
+    "src/utils/historyTimeline.js": [],
+    "src/utils/historyTimeline.js.bak-field-labels": [],
+    "src/utils/i18nOptions.js": [],
+    "src/utils/urgency.js": [],
+    "src/utils/vietnameseText.js": [],
+    "tests/fieldLabels.smoke.test.js": [],
+    "tests/generateChungTu.test.js": [],
+    "tests/i18n.test.js": [],
+    "tests/setup.js": [],
+    "tests/StatusTag.test.jsx": [],
+    "tests/urgency.test.js": [],
+    "tests/vietnameseUi.test.js": [],
+    "vite.config.js": [],
+    "vitest.config.js": [],
+    "web.Dockerfile": []
+  }
+}

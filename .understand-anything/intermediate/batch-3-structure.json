@@ -1,0 +1,548 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/i18n/locales/vi/messages.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 23,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "success",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "error",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "confirm",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "phieu",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "src/i18n/locales/vi/nav.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 29,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "page",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "menu",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "action",
+          "level": 1,
+          "line": 24
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "src/i18n/locales/vi/print.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 46,
+      "nonEmptyLines": 46,
+      "sections": [
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "notFound",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "back",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "print",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "company",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "address",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "addressPrefix",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "taxInfo",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "webInfo",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "receiptTitle",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "warrantyReceiveTitle",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "documentNumber",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "date",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "customerSection",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "productSection",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "warrantySection",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "onlineLookupSection",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "customerName",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "phone",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "productName",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "serial",
+          "level": 1,
+          "line": 22
+        },
+        {
+          "heading": "config",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "receivedIssue",
+          "level": 1,
+          "line": 24
+        },
+        {
+          "heading": "accessories",
+          "level": 1,
+          "line": 25
+        },
+        {
+          "heading": "warrantyTerm",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "fromReturnDate",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "purchaseDate",
+          "level": 1,
+          "line": 28
+        },
+        {
+          "heading": "handlingType",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "cost",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "quoteLater",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "dueDate",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "note",
+          "level": 1,
+          "line": 33
+        },
+        {
+          "heading": "scanQr",
+          "level": 1,
+          "line": 34
+        },
+        {
+          "heading": "receiver",
+          "level": 1,
+          "line": 35
+        },
+        {
+          "heading": "customerConfirm",
+          "level": 1,
+          "line": 36
+        },
+        {
+          "heading": "signatureNote",
+          "level": 1,
+          "line": 37
+        },
+        {
+          "heading": "policyLink",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "deliveryNote",
+          "level": 1,
+          "line": 39
+        },
+        {
+          "heading": "storageNote",
+          "level": 1,
+          "line": 40
+        },
+        {
+          "heading": "progress",
+          "level": 1,
+          "line": 41
+        },
+        {
+          "heading": "template",
+          "level": 1,
+          "line": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 41
+      }
+    },
+    {
+      "path": "src/i18n/locales/vi/status.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 25,
+      "nonEmptyLines": 25,
+      "sections": [
+        {
+          "heading": "trangThai",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "loaiXuLy",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "baoHanh",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "src/i18n/locales/vi/ui.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 594,
+      "nonEmptyLines": 594,
+      "sections": [
+        {
+          "heading": "app",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "button",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "action",
+          "level": 1,
+          "line": 25
+        },
+        {
+          "heading": "common",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "table",
+          "level": 1,
+          "line": 45
+        },
+        {
+          "heading": "field",
+          "level": 1,
+          "line": 53
+        },
+        {
+          "heading": "adminPassword",
+          "level": 1,
+          "line": 85
+        },
+        {
+          "heading": "errorBoundary",
+          "level": 1,
+          "line": 92
+        },
+        {
+          "heading": "shortcuts",
+          "level": 1,
+          "line": 96
+        },
+        {
+          "heading": "staffPicker",
+          "level": 1,
+          "line": 106
+        },
+        {
+          "heading": "search",
+          "level": 1,
+          "line": 110
+        },
+        {
+          "heading": "notification",
+          "level": 1,
+          "line": 116
+        },
+        {
+          "heading": "notFound",
+          "level": 1,
+          "line": 131
+        },
+        {
+          "heading": "tracking",
+          "level": 1,
+          "line": 134
+        },
+        {
+          "heading": "trackingResult",
+          "level": 1,
+          "line": 175
+        },
+        {
+          "heading": "adminCustomer",
+          "level": 1,
+          "line": 244
+        },
+        {
+          "heading": "adminWarrantyList",
+          "level": 1,
+          "line": 272
+        },
+        {
+          "heading": "adminStaff",
+          "level": 1,
+          "line": 314
+        },
+        {
+          "heading": "adminStatistics",
+          "level": 1,
+          "line": 343
+        },
+        {
+          "heading": "adminDashboard",
+          "level": 1,
+          "line": 369
+        },
+        {
+          "heading": "adminCreateWarranty",
+          "level": 1,
+          "line": 402
+        },
+        {
+          "heading": "adminImportExport",
+          "level": 1,
+          "line": 445
+        },
+        {
+          "heading": "adminSuppliers",
+          "level": 1,
+          "line": 479
+        },
+        {
+          "heading": "aiAssistant",
+          "level": 1,
+          "line": 527
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 24
+      }
+    },
+    {
+      "path": "src/i18n/locales/vi/validation.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 16,
+      "nonEmptyLines": 16,
+      "sections": [
+        {
+          "heading": "batBuoc",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "khachHangBatBuoc",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "tenHangBatBuoc",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "soSeriBatBuoc",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "loiLucNhanBatBuoc",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "baoHanhBatBuoc",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "ngayHenTraBatBuoc",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "nhanVienBatBuoc",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "soDienThoaiSai",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "soChungTuTonTai",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "ngayKhongHopLe",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "chiPhiPhaiLaSo",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "chiPhiKhongAm",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "emailSai",
+          "level": 1,
+          "line": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 14
+      }
+    }
+  ]
+}

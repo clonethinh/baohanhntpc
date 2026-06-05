@@ -1,0 +1,6623 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/components/common/ChangePasswordModal.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 69,
+      "nonEmptyLines": 65,
+      "functions": [
+        {
+          "name": "ChangePasswordModal",
+          "startLine": 6,
+          "endLine": 69,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ChangePasswordModal",
+          "line": 6,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "useTranslation",
+          "lineNumber": 7
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "Form.useForm",
+          "lineNumber": 8
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "message.error",
+          "lineNumber": 12
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "t",
+          "lineNumber": 12
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "authService.changePassword",
+          "lineNumber": 17
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "message.success",
+          "lineNumber": 19
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "t",
+          "lineNumber": 19
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "form.resetFields",
+          "lineNumber": 20
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "onClose",
+          "lineNumber": 21
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "message.error",
+          "lineNumber": 24
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "t",
+          "lineNumber": 24
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "form.resetFields",
+          "lineNumber": 33
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "onClose",
+          "lineNumber": 34
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 43
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 45
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 50
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 52
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 52
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 57
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 59
+        },
+        {
+          "caller": "ChangePasswordModal",
+          "callee": "t",
+          "lineNumber": 64
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/common/CustomerPickerModal.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 84,
+      "nonEmptyLines": 80,
+      "functions": [
+        {
+          "name": "CustomerPickerModal",
+          "startLine": 7,
+          "endLine": 84,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "CustomerPickerModal",
+          "line": 7,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "useMemo",
+          "lineNumber": 18
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "query.trim().toLowerCase",
+          "lineNumber": 19
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "query.trim",
+          "lineNumber": 19
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "customers\n      .filter((row) => row.key !== excludedKey)\n      .filter",
+          "lineNumber": 20
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "customers\n      .filter",
+          "lineNumber": 20
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String(row.khachHang || '').toLowerCase().includes",
+          "lineNumber": 25
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String(row.khachHang || '').toLowerCase",
+          "lineNumber": 25
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String",
+          "lineNumber": 25
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String(row.soDienThoai || '').toLowerCase().includes",
+          "lineNumber": 26
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String(row.soDienThoai || '').toLowerCase",
+          "lineNumber": 26
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String",
+          "lineNumber": 26
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String(row.diaChi || '').toLowerCase().includes",
+          "lineNumber": 27
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String(row.diaChi || '').toLowerCase",
+          "lineNumber": 27
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "String",
+          "lineNumber": 27
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "setQuery",
+          "lineNumber": 40
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "setQuery",
+          "lineNumber": 48
+        },
+        {
+          "caller": "CustomerPickerModal",
+          "callee": "onSelect",
+          "lineNumber": 59
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/common/ErrorBoundary.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 30,
+      "classes": [
+        {
+          "name": "ErrorBoundary",
+          "startLine": 5,
+          "endLine": 32,
+          "methods": [
+            "constructor",
+            "getDerivedStateFromError",
+            "render"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 7
+        },
+        {
+          "caller": "render",
+          "callee": "i18n.t",
+          "lineNumber": 20
+        },
+        {
+          "caller": "render",
+          "callee": "i18n.t",
+          "lineNumber": 21
+        },
+        {
+          "caller": "render",
+          "callee": "window.location.reload",
+          "lineNumber": 23
+        },
+        {
+          "caller": "render",
+          "callee": "i18n.t",
+          "lineNumber": 24
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/components/common/FloatingZalo.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 387,
+      "nonEmptyLines": 353,
+      "functions": [
+        {
+          "name": "FloatingZalo",
+          "startLine": 7,
+          "endLine": 387,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "FloatingZalo",
+          "line": 7,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "FloatingZalo",
+          "callee": "useState",
+          "lineNumber": 8
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useState",
+          "lineNumber": 9
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useState",
+          "lineNumber": 11
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useState",
+          "lineNumber": 15
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useRef",
+          "lineNumber": 17
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useRef",
+          "lineNumber": 18
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useRef",
+          "lineNumber": 19
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useEffect",
+          "lineNumber": 22
+        },
+        {
+          "caller": "handleResize",
+          "callee": "setIsMobile",
+          "lineNumber": 24
+        },
+        {
+          "caller": "handleResize",
+          "callee": "setPosition",
+          "lineNumber": 25
+        },
+        {
+          "caller": "handleResize",
+          "callee": "Math.max",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleResize",
+          "callee": "Math.min",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleResize",
+          "callee": "Math.max",
+          "lineNumber": 30
+        },
+        {
+          "caller": "handleResize",
+          "callee": "Math.min",
+          "lineNumber": 30
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "window.addEventListener",
+          "lineNumber": 34
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "window.removeEventListener",
+          "lineNumber": 35
+        },
+        {
+          "caller": "openZaloApp",
+          "callee": "event.preventDefault",
+          "lineNumber": 40
+        },
+        {
+          "caller": "openZaloApp",
+          "callee": "event?.preventDefault",
+          "lineNumber": 45
+        },
+        {
+          "caller": "openZaloApp",
+          "callee": "/Android|iPhone|iPad|iPod/i.test",
+          "lineNumber": 47
+        },
+        {
+          "caller": "openZaloApp",
+          "callee": "window.open",
+          "lineNumber": 49
+        },
+        {
+          "caller": "openZaloApp",
+          "callee": "setTimeout",
+          "lineNumber": 53
+        },
+        {
+          "caller": "handleStart",
+          "callee": "setIsDragging",
+          "lineNumber": 61
+        },
+        {
+          "caller": "handleMove",
+          "callee": "Math.abs",
+          "lineNumber": 70
+        },
+        {
+          "caller": "handleMove",
+          "callee": "Math.abs",
+          "lineNumber": 70
+        },
+        {
+          "caller": "handleMove",
+          "callee": "Math.max",
+          "lineNumber": 77
+        },
+        {
+          "caller": "handleMove",
+          "callee": "Math.min",
+          "lineNumber": 77
+        },
+        {
+          "caller": "handleMove",
+          "callee": "Math.max",
+          "lineNumber": 78
+        },
+        {
+          "caller": "handleMove",
+          "callee": "Math.min",
+          "lineNumber": 78
+        },
+        {
+          "caller": "handleMove",
+          "callee": "Math.hypot",
+          "lineNumber": 85
+        },
+        {
+          "caller": "handleMove",
+          "callee": "setIsOverTrash",
+          "lineNumber": 87
+        },
+        {
+          "caller": "handleMove",
+          "callee": "setPosition",
+          "lineNumber": 88
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "setIsDragging",
+          "lineNumber": 92
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "setShowZaloButton",
+          "lineNumber": 95
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "setShowZaloBubble",
+          "lineNumber": 96
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "setIsOverTrash",
+          "lineNumber": 97
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "Math.abs",
+          "lineNumber": 115
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "Math.abs",
+          "lineNumber": 116
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "Math.abs",
+          "lineNumber": 117
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "Math.abs",
+          "lineNumber": 118
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "Math.max",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "Math.min",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "setIsOverTrash",
+          "lineNumber": 131
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "setPosition",
+          "lineNumber": 132
+        },
+        {
+          "caller": "handleEnd",
+          "callee": "setTimeout",
+          "lineNumber": 134
+        },
+        {
+          "caller": "onMouseDown",
+          "callee": "handleStart",
+          "lineNumber": 141
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "useEffect",
+          "lineNumber": 144
+        },
+        {
+          "caller": "onMouseMove",
+          "callee": "handleMove",
+          "lineNumber": 147
+        },
+        {
+          "caller": "onMouseUp",
+          "callee": "handleEnd",
+          "lineNumber": 152
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "window.addEventListener",
+          "lineNumber": 157
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "window.addEventListener",
+          "lineNumber": 158
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "window.removeEventListener",
+          "lineNumber": 162
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "window.removeEventListener",
+          "lineNumber": 163
+        },
+        {
+          "caller": "onTouchStart",
+          "callee": "handleStart",
+          "lineNumber": 169
+        },
+        {
+          "caller": "onTouchMove",
+          "callee": "handleMove",
+          "lineNumber": 175
+        },
+        {
+          "caller": "onTouchEnd",
+          "callee": "handleEnd",
+          "lineNumber": 179
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "e.stopPropagation",
+          "lineNumber": 358
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "e.preventDefault",
+          "lineNumber": 359
+        },
+        {
+          "caller": "FloatingZalo",
+          "callee": "setShowZaloBubble",
+          "lineNumber": 360
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/common/ShortcutsModal.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 26,
+      "functions": [
+        {
+          "name": "ShortcutsModal",
+          "startLine": 12,
+          "endLine": 29,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ShortcutsModal",
+          "line": 12,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ShortcutsModal",
+          "callee": "useTranslation",
+          "lineNumber": 13
+        },
+        {
+          "caller": "ShortcutsModal",
+          "callee": "shortcutKeys.map",
+          "lineNumber": 14
+        },
+        {
+          "caller": "ShortcutsModal",
+          "callee": "t",
+          "lineNumber": 14
+        },
+        {
+          "caller": "ShortcutsModal",
+          "callee": "t",
+          "lineNumber": 17
+        },
+        {
+          "caller": "ShortcutsModal",
+          "callee": "t",
+          "lineNumber": 21
+        },
+        {
+          "caller": "ShortcutsModal",
+          "callee": "t",
+          "lineNumber": 22
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/common/SkeletonCard.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 8,
+      "functions": [
+        {
+          "name": "SkeletonCard",
+          "startLine": 3,
+          "endLine": 9,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "SkeletonCard",
+          "line": 3,
+          "isDefault": true
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/common/StaffPickerModal.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 81,
+      "nonEmptyLines": 74,
+      "functions": [
+        {
+          "name": "StaffPickerModal",
+          "startLine": 6,
+          "endLine": 81,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "StaffPickerModal",
+          "line": 6,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "StaffPickerModal",
+          "callee": "useTranslation",
+          "lineNumber": 12
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "useAuth",
+          "lineNumber": 13
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "Form.useForm",
+          "lineNumber": 15
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "useEffect",
+          "lineNumber": 21
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "form.resetFields",
+          "lineNumber": 22
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "useMemo",
+          "lineNumber": 25
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "t",
+          "lineNumber": 27
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "t",
+          "lineNumber": 28
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "setLoading",
+          "lineNumber": 34
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "login",
+          "lineNumber": 36
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "onPicked",
+          "lineNumber": 37
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "onClose",
+          "lineNumber": 38
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "message.error",
+          "lineNumber": 40
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "t",
+          "lineNumber": 40
+        },
+        {
+          "caller": "handleFinish",
+          "callee": "setLoading",
+          "lineNumber": 42
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "t",
+          "lineNumber": 62
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "t",
+          "lineNumber": 64
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "t",
+          "lineNumber": 69
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "t",
+          "lineNumber": 71
+        },
+        {
+          "caller": "StaffPickerModal",
+          "callee": "t",
+          "lineNumber": 76
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/layout/AdminLayout.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 38,
+      "nonEmptyLines": 35,
+      "functions": [
+        {
+          "name": "AdminLayout",
+          "startLine": 9,
+          "endLine": 38,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AdminLayout",
+          "line": 9,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AdminLayout",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "AdminLayout",
+          "callee": "useState",
+          "lineNumber": 11
+        },
+        {
+          "caller": "AdminLayout",
+          "callee": "setCollapsed",
+          "lineNumber": 16
+        },
+        {
+          "caller": "AdminLayout",
+          "callee": "setMobileSiderOpen",
+          "lineNumber": 20
+        },
+        {
+          "caller": "AdminLayout",
+          "callee": "setMobileSiderOpen",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AdminLayout",
+          "callee": "setMobileSiderOpen",
+          "lineNumber": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/layout/AppHeader.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 166,
+      "nonEmptyLines": 157,
+      "functions": [
+        {
+          "name": "AppHeader",
+          "startLine": 37,
+          "endLine": 166,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AppHeader",
+          "line": 37,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AppHeader",
+          "callee": "useTranslation",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "useTheme",
+          "lineNumber": 39
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "useAuth",
+          "lineNumber": 40
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "useLocation",
+          "lineNumber": 41
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "(currentStaff?.tenNV || 'NV').slice(0, 1).toUpperCase",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "(currentStaff?.tenNV || 'NV').slice",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 43
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 43
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 44
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "useState",
+          "lineNumber": 45
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "useState",
+          "lineNumber": 46
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "location.pathname.split('/').filter",
+          "lineNumber": 49
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "location.pathname.split",
+          "lineNumber": 49
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "pathParts.forEach",
+          "lineNumber": 50
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "pathParts.slice(0, i + 1).join",
+          "lineNumber": 51
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "pathParts.slice",
+          "lineNumber": 51
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "items.push",
+          "lineNumber": 52
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 52
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 54
+        },
+        {
+          "caller": "changeStaff",
+          "callee": "setStaffPickerOpen",
+          "lineNumber": 57
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 67
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 68
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 76
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "setPasswordOpen",
+          "lineNumber": 83
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 118
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "window.__focusSearch",
+          "lineNumber": 125
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 126
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 150
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "window.__showShortcuts",
+          "lineNumber": 151
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "t",
+          "lineNumber": 151
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "setStaffPickerOpen",
+          "lineNumber": 158
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "setStaffPickerOpen",
+          "lineNumber": 160
+        },
+        {
+          "caller": "AppHeader",
+          "callee": "setPasswordOpen",
+          "lineNumber": 163
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/layout/AppSider.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 123,
+      "nonEmptyLines": 114,
+      "functions": [
+        {
+          "name": "AppSider",
+          "startLine": 31,
+          "endLine": 123,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AppSider",
+          "line": 31,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AppSider",
+          "callee": "useTranslation",
+          "lineNumber": 32
+        },
+        {
+          "caller": "AppSider",
+          "callee": "useNavigate",
+          "lineNumber": 33
+        },
+        {
+          "caller": "AppSider",
+          "callee": "useLocation",
+          "lineNumber": 34
+        },
+        {
+          "caller": "AppSider",
+          "callee": "useWarranties",
+          "lineNumber": 35
+        },
+        {
+          "caller": "AppSider",
+          "callee": "menuItemDefs.map",
+          "lineNumber": 36
+        },
+        {
+          "caller": "AppSider",
+          "callee": "t",
+          "lineNumber": 36
+        },
+        {
+          "caller": "AppSider",
+          "callee": "data.rows?.filter",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AppSider",
+          "callee": "getUrgency",
+          "lineNumber": 39
+        },
+        {
+          "caller": "go",
+          "callee": "window.open",
+          "lineNumber": 44
+        },
+        {
+          "caller": "go",
+          "callee": "navigate",
+          "lineNumber": 45
+        },
+        {
+          "caller": "go",
+          "callee": "onToggle",
+          "lineNumber": 46
+        },
+        {
+          "caller": "AppSider",
+          "callee": "navigate",
+          "lineNumber": 56
+        },
+        {
+          "caller": "AppSider",
+          "callee": "t",
+          "lineNumber": 59
+        },
+        {
+          "caller": "AppSider",
+          "callee": "t",
+          "lineNumber": 60
+        },
+        {
+          "caller": "AppSider",
+          "callee": "menuItems.map",
+          "lineNumber": 64
+        },
+        {
+          "caller": "AppSider",
+          "callee": "renderBadge",
+          "lineNumber": 71
+        },
+        {
+          "caller": "AppSider",
+          "callee": "go",
+          "lineNumber": 73
+        },
+        {
+          "caller": "AppSider",
+          "callee": "navigate",
+          "lineNumber": 86
+        },
+        {
+          "caller": "AppSider",
+          "callee": "t",
+          "lineNumber": 90
+        },
+        {
+          "caller": "AppSider",
+          "callee": "t",
+          "lineNumber": 91
+        },
+        {
+          "caller": "AppSider",
+          "callee": "menuItems.map",
+          "lineNumber": 97
+        },
+        {
+          "caller": "AppSider",
+          "callee": "go",
+          "lineNumber": 106
+        },
+        {
+          "caller": "AppSider",
+          "callee": "renderBadge",
+          "lineNumber": 111
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/layout/CustomerLayout.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 182,
+      "nonEmptyLines": 166,
+      "functions": [
+        {
+          "name": "CustomerLayout",
+          "startLine": 20,
+          "endLine": 181,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "CustomerLayout",
+          "line": 20,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "CustomerLayout",
+          "callee": "useTranslation",
+          "lineNumber": 21
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "useTheme",
+          "lineNumber": 22
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "useNavigate",
+          "lineNumber": 23
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "useLocation",
+          "lineNumber": 24
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 25
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 25
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "useState",
+          "lineNumber": 27
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "useEffect",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleResize",
+          "callee": "setIsMobile",
+          "lineNumber": 30
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "window.addEventListener",
+          "lineNumber": 31
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "window.removeEventListener",
+          "lineNumber": 32
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "queryParams.get",
+          "lineNumber": 36
+        },
+        {
+          "caller": "onBack",
+          "callee": "navigate",
+          "lineNumber": 40
+        },
+        {
+          "caller": "handleTabChange",
+          "callee": "navigate",
+          "lineNumber": 44
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "navigate",
+          "lineNumber": 55
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 68
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 101
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 108
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "navigate",
+          "lineNumber": 131
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 141
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 144
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 150
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 170
+        },
+        {
+          "caller": "CustomerLayout",
+          "callee": "t",
+          "lineNumber": 174
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/layout/GlobalSearch.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 406,
+      "nonEmptyLines": 386,
+      "functions": [
+        {
+          "name": "GlobalSearch",
+          "startLine": 17,
+          "endLine": 406,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "GlobalSearch",
+          "line": 17,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GlobalSearch",
+          "callee": "useTranslation",
+          "lineNumber": 18
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useTheme",
+          "lineNumber": 19
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useState",
+          "lineNumber": 20
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useState",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useDebounce",
+          "lineNumber": 25
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useNavigate",
+          "lineNumber": 26
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useRef",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useRef",
+          "lineNumber": 28
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useEffect",
+          "lineNumber": 30
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setOpen",
+          "lineNumber": 32
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setTimeout",
+          "lineNumber": 33
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "inputRef.current?.focus",
+          "lineNumber": 33
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setOpen",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setSearch",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "navigate",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setOpen",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setSearch",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "navigate",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setOpen",
+          "lineNumber": 61
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setSearch",
+          "lineNumber": 61
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "navigate",
+          "lineNumber": 61
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setOpen",
+          "lineNumber": 70
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setSearch",
+          "lineNumber": 70
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "window.__showShortcuts",
+          "lineNumber": 70
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "actions.filter",
+          "lineNumber": 74
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "act.title.toLowerCase().includes",
+          "lineNumber": 75
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "act.title.toLowerCase",
+          "lineNumber": 75
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "search.toLowerCase",
+          "lineNumber": 75
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "act.desc.toLowerCase().includes",
+          "lineNumber": 76
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "act.desc.toLowerCase",
+          "lineNumber": 76
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "search.toLowerCase",
+          "lineNumber": 76
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useEffect",
+          "lineNumber": 81
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setLoading",
+          "lineNumber": 83
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "warrantyService.getList({ search: debouncedSearch, page: 1, limit: 10 })\n        .then(res => {\n          if (res.data.success) {\n            const rows = res.data.data.rows.map(row => ({ ...row, type: 'warranty' }));\n            setResults(rows);\n          }\n        })\n        .finally",
+          "lineNumber": 84
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "warrantyService.getList({ search: debouncedSearch, page: 1, limit: 10 })\n        .then",
+          "lineNumber": 84
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "warrantyService.getList",
+          "lineNumber": 84
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "res.data.data.rows.map",
+          "lineNumber": 87
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setResults",
+          "lineNumber": 88
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setLoading",
+          "lineNumber": 91
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setResults",
+          "lineNumber": 93
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useEffect",
+          "lineNumber": 97
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setActiveIndex",
+          "lineNumber": 98
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "useEffect",
+          "lineNumber": 101
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "activeItemRef.current.scrollIntoView",
+          "lineNumber": 103
+        },
+        {
+          "caller": "handleSelectItem",
+          "callee": "item.onSelect",
+          "lineNumber": 112
+        },
+        {
+          "caller": "handleSelectItem",
+          "callee": "setOpen",
+          "lineNumber": 114
+        },
+        {
+          "caller": "handleSelectItem",
+          "callee": "setSearch",
+          "lineNumber": 115
+        },
+        {
+          "caller": "handleSelectItem",
+          "callee": "navigate",
+          "lineNumber": 116
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 125
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "setActiveIndex",
+          "lineNumber": 126
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "setActiveIndex",
+          "lineNumber": 129
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 131
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "handleSelectItem",
+          "lineNumber": 132
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setOpen",
+          "lineNumber": 210
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setOpen",
+          "lineNumber": 265
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setSearch",
+          "lineNumber": 265
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setResults",
+          "lineNumber": 265
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "t",
+          "lineNumber": 306
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setSearch",
+          "lineNumber": 308
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "t",
+          "lineNumber": 322
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "t",
+          "lineNumber": 328
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "allItems.map",
+          "lineNumber": 336
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "renderHeaderIfNeeded",
+          "lineNumber": 340
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "getItemStyle",
+          "lineNumber": 342
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "handleSelectItem",
+          "lineNumber": 343
+        },
+        {
+          "caller": "GlobalSearch",
+          "callee": "setActiveIndex",
+          "lineNumber": 344
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/layout/NotificationBell.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 395,
+      "nonEmptyLines": 362,
+      "functions": [
+        {
+          "name": "NotificationBell",
+          "startLine": 15,
+          "endLine": 395,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "NotificationBell",
+          "line": 15,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "NotificationBell",
+          "callee": "useTranslation",
+          "lineNumber": 16
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "App.useApp",
+          "lineNumber": 17
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useWarranties",
+          "lineNumber": 18
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useRef",
+          "lineNumber": 19
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useState",
+          "lineNumber": 20
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useState",
+          "lineNumber": 21
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useState",
+          "lineNumber": 25
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useState",
+          "lineNumber": 26
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "JSON.parse",
+          "lineNumber": 28
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "localStorage.getItem",
+          "lineNumber": 28
+        },
+        {
+          "caller": "openDetail",
+          "callee": "setPopoverOpen",
+          "lineNumber": 35
+        },
+        {
+          "caller": "openDetail",
+          "callee": "notification.destroy",
+          "lineNumber": 36
+        },
+        {
+          "caller": "openDetail",
+          "callee": "setDetailId",
+          "lineNumber": 37
+        },
+        {
+          "caller": "openDetail",
+          "callee": "setDetailOpen",
+          "lineNumber": 38
+        },
+        {
+          "caller": "openDetail",
+          "callee": "dismissOne",
+          "lineNumber": 39
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useMemo",
+          "lineNumber": 44
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "rows.filter",
+          "lineNumber": 44
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "getUrgency",
+          "lineNumber": 45
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useMemo",
+          "lineNumber": 49
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "rows.filter",
+          "lineNumber": 49
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "Boolean",
+          "lineNumber": 49
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useEffect",
+          "lineNumber": 51
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "priorityItems.map",
+          "lineNumber": 55
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "priorityItems.filter",
+          "lineNumber": 59
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "seenPriorityIdsRef.current.has",
+          "lineNumber": 59
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "newPriorities.forEach",
+          "lineNumber": 60
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "notification.warning",
+          "lineNumber": 62
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 64
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 65
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "notification.destroy",
+          "lineNumber": 69
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "openDetail",
+          "lineNumber": 70
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "priorityItems.map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useMemo",
+          "lineNumber": 78
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "priorityItems.forEach",
+          "lineNumber": 81
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "m.set",
+          "lineNumber": 82
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "urgentItems.forEach",
+          "lineNumber": 85
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "m.has",
+          "lineNumber": 86
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "m.set",
+          "lineNumber": 87
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "m.get",
+          "lineNumber": 87
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "m.set",
+          "lineNumber": 89
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "Array.from(m.values()).filter",
+          "lineNumber": 93
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "Array.from",
+          "lineNumber": 93
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "m.values",
+          "lineNumber": 93
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dismissedIds.includes",
+          "lineNumber": 93
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useMemo",
+          "lineNumber": 96
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "mergedItems.slice",
+          "lineNumber": 96
+        },
+        {
+          "caller": "dismissOne",
+          "callee": "setDismissedIds",
+          "lineNumber": 99
+        },
+        {
+          "caller": "dismissOne",
+          "callee": "Array.from",
+          "lineNumber": 100
+        },
+        {
+          "caller": "dismissOne",
+          "callee": "localStorage.setItem",
+          "lineNumber": 101
+        },
+        {
+          "caller": "dismissOne",
+          "callee": "JSON.stringify",
+          "lineNumber": 101
+        },
+        {
+          "caller": "dismissAll",
+          "callee": "Array.from",
+          "lineNumber": 107
+        },
+        {
+          "caller": "dismissAll",
+          "callee": "mergedItems.map",
+          "lineNumber": 107
+        },
+        {
+          "caller": "dismissAll",
+          "callee": "localStorage.setItem",
+          "lineNumber": 108
+        },
+        {
+          "caller": "dismissAll",
+          "callee": "JSON.stringify",
+          "lineNumber": 108
+        },
+        {
+          "caller": "dismissAll",
+          "callee": "setDismissedIds",
+          "lineNumber": 109
+        },
+        {
+          "caller": "getUrgencyText",
+          "callee": "t",
+          "lineNumber": 114
+        },
+        {
+          "caller": "getUrgencyText",
+          "callee": "Math.abs",
+          "lineNumber": 114
+        },
+        {
+          "caller": "getUrgencyText",
+          "callee": "t",
+          "lineNumber": 115
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 120
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 123
+        },
+        {
+          "caller": "renderTags",
+          "callee": "t",
+          "lineNumber": 131
+        },
+        {
+          "caller": "renderTags",
+          "callee": "shouldShowDueDate",
+          "lineNumber": 135
+        },
+        {
+          "caller": "renderTags",
+          "callee": "t",
+          "lineNumber": 136
+        },
+        {
+          "caller": "renderTags",
+          "callee": "formatDate",
+          "lineNumber": 136
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 144
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "getUrgency",
+          "lineNumber": 152
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "getWarrantyDueDate",
+          "lineNumber": 153
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dayjs(dueDate).diff",
+          "lineNumber": 154
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dayjs",
+          "lineNumber": 154
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dayjs",
+          "lineNumber": 154
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "getUrgencyText",
+          "lineNumber": 155
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "e.stopPropagation",
+          "lineNumber": 166
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "openDetail",
+          "lineNumber": 167
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 170
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 172
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 177
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "e.stopPropagation",
+          "lineNumber": 179
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dismissOne",
+          "lineNumber": 180
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "openDetail",
+          "lineNumber": 189
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 197
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 200
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "renderTags",
+          "lineNumber": 204
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setPopoverOpen",
+          "lineNumber": 217
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDrawerOpen",
+          "lineNumber": 218
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 221
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "useMemo",
+          "lineNumber": 229
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(drawerQuery || '').trim().toLowerCase",
+          "lineNumber": 230
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(drawerQuery || '').trim",
+          "lineNumber": 230
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String",
+          "lineNumber": 230
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "mergedItems\n      .filter((w) => {\n        if (drawerFilter === 'priority') return w.__type === 'priority' || w.__type === 'both';\n        if (drawerFilter === 'urgent') return w.__type === 'urgent' || w.__type === 'both';\n        return true;\n      })\n      .filter((w) => {\n        if (!q) return true;\n        return (\n          String(w.soChungTu || '').toLowerCase().includes(q) ||\n          String(w.khachHang || '').toLowerCase().includes(q) ||\n          String(w.tenHang || '').toLowerCase().includes(q)\n        );\n      })\n      .slice",
+          "lineNumber": 231
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "mergedItems\n      .filter((w) => {\n        if (drawerFilter === 'priority') return w.__type === 'priority' || w.__type === 'both';\n        if (drawerFilter === 'urgent') return w.__type === 'urgent' || w.__type === 'both';\n        return true;\n      })\n      .filter",
+          "lineNumber": 231
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "mergedItems\n      .filter",
+          "lineNumber": 231
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(w.soChungTu || '').toLowerCase().includes",
+          "lineNumber": 240
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(w.soChungTu || '').toLowerCase",
+          "lineNumber": 240
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String",
+          "lineNumber": 240
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(w.khachHang || '').toLowerCase().includes",
+          "lineNumber": 241
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(w.khachHang || '').toLowerCase",
+          "lineNumber": 241
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String",
+          "lineNumber": 241
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(w.tenHang || '').toLowerCase().includes",
+          "lineNumber": 242
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String(w.tenHang || '').toLowerCase",
+          "lineNumber": 242
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "String",
+          "lineNumber": 242
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 253
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDrawerQuery",
+          "lineNumber": 255
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 262
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 263
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 264
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 273
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "getUrgency",
+          "lineNumber": 275
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "getWarrantyDueDate",
+          "lineNumber": 276
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dayjs(dueDate).diff",
+          "lineNumber": 277
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dayjs",
+          "lineNumber": 277
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dayjs",
+          "lineNumber": 277
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "getUrgencyText",
+          "lineNumber": 278
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "e.stopPropagation",
+          "lineNumber": 289
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDrawerOpen",
+          "lineNumber": 290
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "openDetail",
+          "lineNumber": 291
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 294
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 296
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 301
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "e.stopPropagation",
+          "lineNumber": 303
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "dismissOne",
+          "lineNumber": 304
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDrawerOpen",
+          "lineNumber": 316
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "openDetail",
+          "lineNumber": 317
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 327
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 330
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "renderTags",
+          "lineNumber": 334
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 344
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 347
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setPopoverOpen",
+          "lineNumber": 362
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDrawerQuery",
+          "lineNumber": 364
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDrawerFilter",
+          "lineNumber": 365
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 374
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "t",
+          "lineNumber": 379
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDrawerOpen",
+          "lineNumber": 381
+        },
+        {
+          "caller": "NotificationBell",
+          "callee": "setDetailOpen",
+          "lineNumber": 390
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/warranty/MobileStatusTag.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 13,
+      "functions": [
+        {
+          "name": "MobileStatusTag",
+          "startLine": 5,
+          "endLine": 15,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "MobileStatusTag",
+          "line": 5,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "MobileStatusTag",
+          "callee": "getStatusBadgeColor",
+          "lineNumber": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/warranty/StatusTag.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 11,
+      "functions": [
+        {
+          "name": "StatusTag",
+          "startLine": 4,
+          "endLine": 12,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "StatusTag",
+          "line": 4,
+          "isDefault": true
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/warranty/WarrantyDetail.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 2299,
+      "nonEmptyLines": 2178,
+      "functions": [
+        {
+          "name": "parseFormDate",
+          "startLine": 36,
+          "endLine": 48,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "normalizeHistoryText",
+          "startLine": 50,
+          "endLine": 54,
+          "params": [
+            "text"
+          ]
+        },
+        {
+          "name": "renderHistoryDetail",
+          "startLine": 56,
+          "endLine": 79,
+          "params": [
+            "detail"
+          ]
+        },
+        {
+          "name": "normalizeAttachments",
+          "startLine": 81,
+          "endLine": 88,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "fileToDataUrl",
+          "startLine": 90,
+          "endLine": 97,
+          "params": [
+            "file"
+          ]
+        },
+        {
+          "name": "escapeHtml",
+          "startLine": 99,
+          "endLine": 106,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "WarrantyDetail",
+          "startLine": 110,
+          "endLine": 2299,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "normalizeHistoryText",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "WarrantyDetail",
+          "line": 110,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseFormDate",
+          "callee": "value.trim().match",
+          "lineNumber": 39
+        },
+        {
+          "caller": "parseFormDate",
+          "callee": "value.trim",
+          "lineNumber": 39
+        },
+        {
+          "caller": "parseFormDate",
+          "callee": "dayjs",
+          "lineNumber": 42
+        },
+        {
+          "caller": "parseFormDate",
+          "callee": "month.padStart",
+          "lineNumber": 42
+        },
+        {
+          "caller": "parseFormDate",
+          "callee": "day.padStart",
+          "lineNumber": 42
+        },
+        {
+          "caller": "parseFormDate",
+          "callee": "parsed.isValid",
+          "lineNumber": 43
+        },
+        {
+          "caller": "parseFormDate",
+          "callee": "dayjs",
+          "lineNumber": 46
+        },
+        {
+          "caller": "parseFormDate",
+          "callee": "parsed.isValid",
+          "lineNumber": 47
+        },
+        {
+          "caller": "normalizeHistoryText",
+          "callee": "normalizeVietnameseText(text || '')\n    .replaceAll('soSeri:', 'Số seri:')\n    .replaceAll",
+          "lineNumber": 51
+        },
+        {
+          "caller": "normalizeHistoryText",
+          "callee": "normalizeVietnameseText(text || '')\n    .replaceAll",
+          "lineNumber": 51
+        },
+        {
+          "caller": "normalizeHistoryText",
+          "callee": "normalizeVietnameseText",
+          "lineNumber": 51
+        },
+        {
+          "caller": "renderHistoryDetail",
+          "callee": "detail.matchAll",
+          "lineNumber": 59
+        },
+        {
+          "caller": "renderHistoryDetail",
+          "callee": "matches.forEach",
+          "lineNumber": 64
+        },
+        {
+          "caller": "renderHistoryDetail",
+          "callee": "detail.substring",
+          "lineNumber": 65
+        },
+        {
+          "caller": "renderHistoryDetail",
+          "callee": "elements.push",
+          "lineNumber": 66
+        },
+        {
+          "caller": "renderHistoryDetail",
+          "callee": "elements.push",
+          "lineNumber": 67
+        },
+        {
+          "caller": "renderHistoryDetail",
+          "callee": "detail.substring",
+          "lineNumber": 75
+        },
+        {
+          "caller": "renderHistoryDetail",
+          "callee": "elements.push",
+          "lineNumber": 76
+        },
+        {
+          "caller": "normalizeAttachments",
+          "callee": "Array.isArray",
+          "lineNumber": 82
+        },
+        {
+          "caller": "normalizeAttachments",
+          "callee": "value.filter",
+          "lineNumber": 82
+        },
+        {
+          "caller": "normalizeAttachments",
+          "callee": "Object.values(value).filter",
+          "lineNumber": 85
+        },
+        {
+          "caller": "normalizeAttachments",
+          "callee": "Object.values",
+          "lineNumber": 85
+        },
+        {
+          "caller": "fileToDataUrl",
+          "callee": "resolve",
+          "lineNumber": 93
+        },
+        {
+          "caller": "fileToDataUrl",
+          "callee": "reader.readAsDataURL",
+          "lineNumber": 95
+        },
+        {
+          "caller": "escapeHtml",
+          "callee": "String(value ?? '')\n    .replaceAll('&', '&amp;')\n    .replaceAll('<', '&lt;')\n    .replaceAll('>', '&gt;')\n    .replaceAll('\"', '&quot;')\n    .replaceAll",
+          "lineNumber": 100
+        },
+        {
+          "caller": "escapeHtml",
+          "callee": "String(value ?? '')\n    .replaceAll('&', '&amp;')\n    .replaceAll('<', '&lt;')\n    .replaceAll('>', '&gt;')\n    .replaceAll",
+          "lineNumber": 100
+        },
+        {
+          "caller": "escapeHtml",
+          "callee": "String(value ?? '')\n    .replaceAll('&', '&amp;')\n    .replaceAll('<', '&lt;')\n    .replaceAll",
+          "lineNumber": 100
+        },
+        {
+          "caller": "escapeHtml",
+          "callee": "String(value ?? '')\n    .replaceAll('&', '&amp;')\n    .replaceAll",
+          "lineNumber": 100
+        },
+        {
+          "caller": "escapeHtml",
+          "callee": "String(value ?? '')\n    .replaceAll",
+          "lineNumber": 100
+        },
+        {
+          "caller": "escapeHtml",
+          "callee": "String",
+          "lineNumber": 100
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useTranslation",
+          "lineNumber": 111
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "App.useApp",
+          "lineNumber": 112
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useNavigate",
+          "lineNumber": 113
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "Grid.useBreakpoint",
+          "lineNumber": 114
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 115
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 116
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 117
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 118
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "Form.useForm",
+          "lineNumber": 119
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "Form.useForm",
+          "lineNumber": 120
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "Form.useForm",
+          "lineNumber": 121
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 122
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 123
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 124
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 125
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 126
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 127
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 128
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 129
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 130
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 131
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 132
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 133
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "Form.useForm",
+          "lineNumber": 134
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 135
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 136
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 137
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 138
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 139
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 140
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 141
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 143
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 145
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "suppliers\n    .filter((s) => s.isActive !== false)\n    .map",
+          "lineNumber": 146
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "suppliers\n    .filter",
+          "lineNumber": 146
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "`${s.code || ''} ${s.name || ''} ${s.phone || ''}`.trim",
+          "lineNumber": 149
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 156
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 157
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useState",
+          "lineNumber": 158
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useRef",
+          "lineNumber": 159
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useRef",
+          "lineNumber": 160
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useRef",
+          "lineNumber": 161
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useRef",
+          "lineNumber": 163
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useRef",
+          "lineNumber": 164
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useEffect",
+          "lineNumber": 166
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "window.matchMedia",
+          "lineNumber": 167
+        },
+        {
+          "caller": "update",
+          "callee": "setIsMobile",
+          "lineNumber": 168
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "update",
+          "lineNumber": 169
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "media.addEventListener",
+          "lineNumber": 170
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "media.removeEventListener",
+          "lineNumber": 171
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useEffect",
+          "lineNumber": 174
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setLoading",
+          "lineNumber": 176
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setRenderHeavy",
+          "lineNumber": 177
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setEditing",
+          "lineNumber": 178
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setEditSection",
+          "lineNumber": 179
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 180
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setExchangeType",
+          "lineNumber": 181
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setExchangeAttachments",
+          "lineNumber": 182
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "warrantyService.getById(warrantyId)\n        .then(res => {\n          if (res.data.success) {\n            const next = res.data.data;\n            lastWarrantyRef.current = next;\n            // Commit payload on next frame to avoid blocking the first half of Drawer animation.\n            window.requestAnimationFrame(() => setWarranty(next));\n          }\n        })\n        .finally",
+          "lineNumber": 185
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "warrantyService.getById(warrantyId)\n        .then",
+          "lineNumber": 185
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "warrantyService.getById",
+          "lineNumber": 185
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "window.requestAnimationFrame",
+          "lineNumber": 191
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setWarranty",
+          "lineNumber": 191
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setLoading",
+          "lineNumber": 194
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setWarranty",
+          "lineNumber": 197
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setRenderHeavy",
+          "lineNumber": 199
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setEditing",
+          "lineNumber": 200
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setEditSection",
+          "lineNumber": 201
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 202
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useEffect",
+          "lineNumber": 206
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setIsClosing",
+          "lineNumber": 208
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "window.setTimeout",
+          "lineNumber": 210
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setRenderHeavy",
+          "lineNumber": 210
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "window.clearTimeout",
+          "lineNumber": 211
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useEffect",
+          "lineNumber": 214
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "form.setFieldsValue",
+          "lineNumber": 216
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "parseFormDate",
+          "lineNumber": 218
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "parseFormDate",
+          "lineNumber": 219
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "parseFormDate",
+          "lineNumber": 220
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useEffect",
+          "lineNumber": 225
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "supplierService.getList({ page: 1, limit: 200 }).then((res) => {\n      if (res.data?.success) setSuppliers(res.data.data?.rows || []);\n    }).catch",
+          "lineNumber": 228
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "supplierService.getList({ page: 1, limit: 200 }).then",
+          "lineNumber": 228
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "supplierService.getList",
+          "lineNumber": 228
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSuppliers",
+          "lineNumber": 229
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "nhanVienService.getList().then((res) => {\n      if (res.data?.success) setStaffList(res.data.data || []);\n    }).catch",
+          "lineNumber": 231
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "nhanVienService.getList().then",
+          "lineNumber": 231
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "nhanVienService.getList",
+          "lineNumber": 231
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setStaffList",
+          "lineNumber": 232
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useEffect",
+          "lineNumber": 236
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "warrantyService.getSupplierLogs(warrantyId)\n      .then((res) => {\n        if (res.data?.success) setSupplierLogs(res.data.data || []);\n      })\n      .catch",
+          "lineNumber": 238
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "warrantyService.getSupplierLogs(warrantyId)\n      .then",
+          "lineNumber": 238
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "warrantyService.getSupplierLogs",
+          "lineNumber": 238
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogs",
+          "lineNumber": 240
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useCallback",
+          "lineNumber": 245
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useCallback",
+          "lineNumber": 249
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setWarranty",
+          "lineNumber": 252
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setEditing",
+          "lineNumber": 254
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 255
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setIsClosing",
+          "lineNumber": 256
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "onClose",
+          "lineNumber": 257
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "onRefresh",
+          "lineNumber": 258
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "useCallback",
+          "lineNumber": 261
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setIsClosing",
+          "lineNumber": 262
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setRenderHeavy",
+          "lineNumber": 263
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelModal",
+          "lineNumber": 264
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogEditOpen",
+          "lineNumber": 265
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 266
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "onClose",
+          "lineNumber": 267
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "t",
+          "lineNumber": 282
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "handleClose",
+          "lineNumber": 294
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeAttachments",
+          "lineNumber": 306
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(warranty.khachHang || '').trim().toLowerCase",
+          "lineNumber": 307
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(warranty.khachHang || '').trim",
+          "lineNumber": 307
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String",
+          "lineNumber": 307
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(warranty.soDienThoai || '').trim",
+          "lineNumber": 307
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String",
+          "lineNumber": 307
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "warrantyService.updateStatus",
+          "lineNumber": 311
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "message.success",
+          "lineNumber": 313
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "t",
+          "lineNumber": 313
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "markChanged",
+          "lineNumber": 314
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "setWarranty",
+          "lineNumber": 315
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "message.error",
+          "lineNumber": 319
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "t",
+          "lineNumber": 319
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "warrantyService.traHang",
+          "lineNumber": 325
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "dayjs().format",
+          "lineNumber": 325
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "dayjs",
+          "lineNumber": 325
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "message.success",
+          "lineNumber": 327
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "t",
+          "lineNumber": 327
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "markChanged",
+          "lineNumber": 328
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "setWarranty",
+          "lineNumber": 329
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "message.error",
+          "lineNumber": 333
+        },
+        {
+          "caller": "handleTraHang",
+          "callee": "t",
+          "lineNumber": 333
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "cancelReason.trim",
+          "lineNumber": 338
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "message.warning",
+          "lineNumber": 339
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "warrantyService.updateStatus",
+          "lineNumber": 343
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "message.success",
+          "lineNumber": 345
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "markChanged",
+          "lineNumber": 346
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "setWarranty",
+          "lineNumber": 347
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "setCancelModal",
+          "lineNumber": 349
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "setCancelReason",
+          "lineNumber": 350
+        },
+        {
+          "caller": "handleCancel",
+          "callee": "message.error",
+          "lineNumber": 353
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "Array.from(files || []).filter",
+          "lineNumber": 361
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "Array.from",
+          "lineNumber": 361
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "selectedFiles.some",
+          "lineNumber": 367
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes",
+          "lineNumber": 367
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "message.warning",
+          "lineNumber": 368
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "selectedFiles.some",
+          "lineNumber": 373
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "message.warning",
+          "lineNumber": 374
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "message.warning",
+          "lineNumber": 380
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "message.warning",
+          "lineNumber": 387
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "setAttachmentUploading",
+          "lineNumber": 393
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "Promise.all",
+          "lineNumber": 395
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "selectedFiles.map",
+          "lineNumber": 395
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "fileToDataUrl",
+          "lineNumber": 398
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "warrantyService.addAttachments",
+          "lineNumber": 401
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "markChanged",
+          "lineNumber": 403
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "setWarranty",
+          "lineNumber": 404
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "message.success",
+          "lineNumber": 405
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "message.error",
+          "lineNumber": 408
+        },
+        {
+          "caller": "handleUploadAttachments",
+          "callee": "setAttachmentUploading",
+          "lineNumber": 410
+        },
+        {
+          "caller": "handleDeleteAttachment",
+          "callee": "warrantyService.deleteAttachment",
+          "lineNumber": 418
+        },
+        {
+          "caller": "handleDeleteAttachment",
+          "callee": "markChanged",
+          "lineNumber": 420
+        },
+        {
+          "caller": "handleDeleteAttachment",
+          "callee": "setWarranty",
+          "lineNumber": 421
+        },
+        {
+          "caller": "handleDeleteAttachment",
+          "callee": "normalizeAttachments",
+          "lineNumber": 422
+        },
+        {
+          "caller": "handleDeleteAttachment",
+          "callee": "message.success",
+          "lineNumber": 423
+        },
+        {
+          "caller": "handleDeleteAttachment",
+          "callee": "message.error",
+          "lineNumber": 427
+        },
+        {
+          "caller": "loadCustomerList",
+          "callee": "setCustomerListLoading",
+          "lineNumber": 432
+        },
+        {
+          "caller": "loadCustomerList",
+          "callee": "customerService.list",
+          "lineNumber": 434
+        },
+        {
+          "caller": "loadCustomerList",
+          "callee": "setCustomerList",
+          "lineNumber": 435
+        },
+        {
+          "caller": "loadCustomerList",
+          "callee": "message.error",
+          "lineNumber": 437
+        },
+        {
+          "caller": "loadCustomerList",
+          "callee": "setCustomerListLoading",
+          "lineNumber": 439
+        },
+        {
+          "caller": "openCustomerTransfer",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 444
+        },
+        {
+          "caller": "openCustomerTransfer",
+          "callee": "loadCustomerList",
+          "lineNumber": 445
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "setCustomerTransferSubmitting",
+          "lineNumber": 450
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "warrantyService.transferCustomer",
+          "lineNumber": 452
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "markChanged",
+          "lineNumber": 454
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "setWarranty",
+          "lineNumber": 455
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 456
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "message.success",
+          "lineNumber": 457
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "message.error",
+          "lineNumber": 460
+        },
+        {
+          "caller": "handleTransferCustomer",
+          "callee": "setCustomerTransferSubmitting",
+          "lineNumber": 462
+        },
+        {
+          "caller": "startInlineEdit",
+          "callee": "form.setFieldsValue",
+          "lineNumber": 467
+        },
+        {
+          "caller": "startInlineEdit",
+          "callee": "parseFormDate",
+          "lineNumber": 469
+        },
+        {
+          "caller": "startInlineEdit",
+          "callee": "parseFormDate",
+          "lineNumber": 470
+        },
+        {
+          "caller": "startInlineEdit",
+          "callee": "parseFormDate",
+          "lineNumber": 471
+        },
+        {
+          "caller": "startInlineEdit",
+          "callee": "setEditSection",
+          "lineNumber": 473
+        },
+        {
+          "caller": "startInlineEdit",
+          "callee": "setEditing",
+          "lineNumber": 474
+        },
+        {
+          "caller": "cancelInlineEdit",
+          "callee": "setEditing",
+          "lineNumber": 478
+        },
+        {
+          "caller": "cancelInlineEdit",
+          "callee": "setEditSection",
+          "lineNumber": 479
+        },
+        {
+          "caller": "sectionActions",
+          "callee": "startInlineEdit",
+          "lineNumber": 495
+        },
+        {
+          "caller": "sectionActions",
+          "callee": "startInlineEdit",
+          "lineNumber": 501
+        },
+        {
+          "caller": "handleSave",
+          "callee": "form.getFieldsValue",
+          "lineNumber": 506
+        },
+        {
+          "caller": "handleSave",
+          "callee": "rawValues.ngayNhan.format",
+          "lineNumber": 509
+        },
+        {
+          "caller": "handleSave",
+          "callee": "rawValues.ngayMua.format",
+          "lineNumber": 510
+        },
+        {
+          "caller": "handleSave",
+          "callee": "rawValues.ngayHenTra.format",
+          "lineNumber": 511
+        },
+        {
+          "caller": "handleSave",
+          "callee": "warrantyService.update",
+          "lineNumber": 513
+        },
+        {
+          "caller": "handleSave",
+          "callee": "message.success",
+          "lineNumber": 515
+        },
+        {
+          "caller": "handleSave",
+          "callee": "markChanged",
+          "lineNumber": 516
+        },
+        {
+          "caller": "handleSave",
+          "callee": "setWarranty",
+          "lineNumber": 517
+        },
+        {
+          "caller": "handleSave",
+          "callee": "setEditing",
+          "lineNumber": 518
+        },
+        {
+          "caller": "handleSave",
+          "callee": "setEditSection",
+          "lineNumber": 519
+        },
+        {
+          "caller": "handleSave",
+          "callee": "message.error",
+          "lineNumber": 522
+        },
+        {
+          "caller": "handleSave",
+          "callee": "t",
+          "lineNumber": 522
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "values.note?.trim",
+          "lineNumber": 527
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "setLogSubmitting",
+          "lineNumber": 528
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "warrantyService.logProgress",
+          "lineNumber": 530
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "message.success",
+          "lineNumber": 532
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "markChanged",
+          "lineNumber": 533
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "setWarranty",
+          "lineNumber": 534
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "logForm.resetFields",
+          "lineNumber": 535
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "message.error",
+          "lineNumber": 538
+        },
+        {
+          "caller": "handleLogProgress",
+          "callee": "setLogSubmitting",
+          "lineNumber": 540
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "setExchangeSubmitting",
+          "lineNumber": 545
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "values.tenHangMoi?.trim",
+          "lineNumber": 550
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "values.soSeriMoi?.trim",
+          "lineNumber": 551
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "values.note?.trim",
+          "lineNumber": 552
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "exchangeAttachments.map",
+          "lineNumber": 553
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "values.reason?.trim",
+          "lineNumber": 557
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "values.note?.trim",
+          "lineNumber": 558
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "exchangeAttachments.map",
+          "lineNumber": 559
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "warrantyService.exchangeReturn",
+          "lineNumber": 561
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "message.success",
+          "lineNumber": 563
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "markChanged",
+          "lineNumber": 564
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "setWarranty",
+          "lineNumber": 565
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "setExchangeAttachments",
+          "lineNumber": 566
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "exchangeForm.resetFields",
+          "lineNumber": 567
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "message.error",
+          "lineNumber": 570
+        },
+        {
+          "caller": "handleExchangeReturn",
+          "callee": "setExchangeSubmitting",
+          "lineNumber": 572
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "Modal.confirm",
+          "lineNumber": 581
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "resolve",
+          "lineNumber": 586
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "resolve",
+          "lineNumber": 587
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "sendForm.validateFields",
+          "lineNumber": 593
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "setSendSubmitting",
+          "lineNumber": 594
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "values.sentAt.format",
+          "lineNumber": 597
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "dayjs().format",
+          "lineNumber": 597
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "dayjs",
+          "lineNumber": 597
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "values.expectedReturnAt.format",
+          "lineNumber": 598
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "warrantyService.sendToSupplier",
+          "lineNumber": 601
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "message.success",
+          "lineNumber": 603
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "markChanged",
+          "lineNumber": 604
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "setWarranty",
+          "lineNumber": 605
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "sendForm.resetFields",
+          "lineNumber": 606
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "warrantyService.getSupplierLogs",
+          "lineNumber": 607
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "setSupplierLogs",
+          "lineNumber": 608
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "message.error",
+          "lineNumber": 612
+        },
+        {
+          "caller": "handleSendToSupplier",
+          "callee": "setSendSubmitting",
+          "lineNumber": 614
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "Array.from",
+          "lineNumber": 619
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "message.warning",
+          "lineNumber": 623
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "Promise.all",
+          "lineNumber": 627
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "incoming.slice(0, remaining).map",
+          "lineNumber": 627
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "incoming.slice",
+          "lineNumber": 627
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "fileToDataUrl",
+          "lineNumber": 631
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "setExchangeAttachments",
+          "lineNumber": 633
+        },
+        {
+          "caller": "handleAddExchangeAttachments",
+          "callee": "message.error",
+          "lineNumber": 635
+        },
+        {
+          "caller": "handleExchangeUploadClick",
+          "callee": "exchangeFileInputRef.current.click",
+          "lineNumber": 641
+        },
+        {
+          "caller": "handleExchangeFileChange",
+          "callee": "Array.from(e.target.files || []).filter",
+          "lineNumber": 646
+        },
+        {
+          "caller": "handleExchangeFileChange",
+          "callee": "Array.from",
+          "lineNumber": 646
+        },
+        {
+          "caller": "handleExchangeFileChange",
+          "callee": "handleAddExchangeAttachments",
+          "lineNumber": 648
+        },
+        {
+          "caller": "renderExchangeAttachmentGrid",
+          "callee": "Boolean",
+          "lineNumber": 675
+        },
+        {
+          "caller": "renderExchangeAttachmentGrid",
+          "callee": "Boolean",
+          "lineNumber": 676
+        },
+        {
+          "caller": "renderExchangeAttachmentGrid",
+          "callee": "items.map",
+          "lineNumber": 681
+        },
+        {
+          "caller": "renderExchangeAttachmentGrid",
+          "callee": "setExchangeAttachments",
+          "lineNumber": 699
+        },
+        {
+          "caller": "renderExchangeAttachmentGrid",
+          "callee": "prev.filter",
+          "lineNumber": 699
+        },
+        {
+          "caller": "refreshWarrantyDetail",
+          "callee": "warrantyService.getById",
+          "lineNumber": 711
+        },
+        {
+          "caller": "refreshWarrantyDetail",
+          "callee": "setWarranty",
+          "lineNumber": 715
+        },
+        {
+          "caller": "openSupplierLogNoteEdit",
+          "callee": "setSupplierLogEditing",
+          "lineNumber": 722
+        },
+        {
+          "caller": "openSupplierLogNoteEdit",
+          "callee": "setSupplierLogNote",
+          "lineNumber": 723
+        },
+        {
+          "caller": "openSupplierLogNoteEdit",
+          "callee": "setSupplierLogSupplierId",
+          "lineNumber": 724
+        },
+        {
+          "caller": "openSupplierLogNoteEdit",
+          "callee": "setSupplierLogEditOpen",
+          "lineNumber": 725
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "setSupplierLogSaving",
+          "lineNumber": 730
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "warrantyService.updateSupplierLogNote",
+          "lineNumber": 732
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "markChanged",
+          "lineNumber": 737
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "setSupplierLogs",
+          "lineNumber": 738
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "rows.map",
+          "lineNumber": 738
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "refreshWarrantyDetail",
+          "lineNumber": 739
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "Promise.resolve",
+          "lineNumber": 741
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "onSaved",
+          "lineNumber": 741
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "console.error",
+          "lineNumber": 743
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "setSupplierLogEditOpen",
+          "lineNumber": 745
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "setSupplierLogEditing",
+          "lineNumber": 746
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "setSupplierLogNote",
+          "lineNumber": 747
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "setSupplierLogSupplierId",
+          "lineNumber": 748
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "message.success",
+          "lineNumber": 749
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "message.error",
+          "lineNumber": 752
+        },
+        {
+          "caller": "submitSupplierLogNote",
+          "callee": "setSupplierLogSaving",
+          "lineNumber": 754
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "warrantyService.deleteSupplierLog",
+          "lineNumber": 761
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "markChanged",
+          "lineNumber": 763
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "setSupplierLogs",
+          "lineNumber": 764
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "rows.filter",
+          "lineNumber": 764
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "message.success",
+          "lineNumber": 765
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "Promise.resolve",
+          "lineNumber": 767
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "onSaved",
+          "lineNumber": 767
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "console.error",
+          "lineNumber": 769
+        },
+        {
+          "caller": "handleDeleteSupplierLog",
+          "callee": "message.error",
+          "lineNumber": 773
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "warrantyService.deleteHistory",
+          "lineNumber": 780
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "markChanged",
+          "lineNumber": 782
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "setWarranty",
+          "lineNumber": 784
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "message.success",
+          "lineNumber": 786
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "Promise.resolve",
+          "lineNumber": 788
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "onSaved",
+          "lineNumber": 788
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "console.error",
+          "lineNumber": 790
+        },
+        {
+          "caller": "handleDeleteHistory",
+          "callee": "message.error",
+          "lineNumber": 794
+        },
+        {
+          "caller": "getSupplierForPrint",
+          "callee": "supplierLogs\n      .filter((log) => log.action === 'sent')\n      .sort",
+          "lineNumber": 799
+        },
+        {
+          "caller": "getSupplierForPrint",
+          "callee": "supplierLogs\n      .filter",
+          "lineNumber": 799
+        },
+        {
+          "caller": "getSupplierForPrint",
+          "callee": "dayjs(b.at).valueOf",
+          "lineNumber": 801
+        },
+        {
+          "caller": "getSupplierForPrint",
+          "callee": "dayjs",
+          "lineNumber": 801
+        },
+        {
+          "caller": "getSupplierForPrint",
+          "callee": "dayjs(a.at).valueOf",
+          "lineNumber": 801
+        },
+        {
+          "caller": "getSupplierForPrint",
+          "callee": "dayjs",
+          "lineNumber": 801
+        },
+        {
+          "caller": "getSupplierForPrint",
+          "callee": "suppliers.find",
+          "lineNumber": 802
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "getSupplierForPrint",
+          "lineNumber": 814
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "dayjs().format",
+          "lineNumber": 815
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "dayjs",
+          "lineNumber": 815
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "t",
+          "lineNumber": 817
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "t",
+          "lineNumber": 818
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "t",
+          "lineNumber": 819
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "t",
+          "lineNumber": 820
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "companyName\n      .split(/\\s+/)\n      .filter(Boolean)\n      .slice(-3)\n      .map((word) => word[0])\n      .join('')\n      .toUpperCase",
+          "lineNumber": 821
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "companyName\n      .split(/\\s+/)\n      .filter(Boolean)\n      .slice(-3)\n      .map((word) => word[0])\n      .join",
+          "lineNumber": 821
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "companyName\n      .split(/\\s+/)\n      .filter(Boolean)\n      .slice(-3)\n      .map",
+          "lineNumber": 821
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "companyName\n      .split(/\\s+/)\n      .filter(Boolean)\n      .slice",
+          "lineNumber": 821
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "companyName\n      .split(/\\s+/)\n      .filter",
+          "lineNumber": 821
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "companyName\n      .split",
+          "lineNumber": 821
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "Array.from",
+          "lineNumber": 837
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "Math.max",
+          "lineNumber": 837
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "productRows.reduce",
+          "lineNumber": 838
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "Number",
+          "lineNumber": 838
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "[\n      ...productRows.map((item, index) => {\n        const serial = escapeHtml(item.soSeri);\n        return `\n      <tr>\n        <td class=\"c\">${index + 1}</td>\n        <td>${escapeHtml(item.tenHang)}</td>\n        <td class=\"serial-cell\"><span class=\"sn\" title=\"${serial}\">${serial}</span></td>\n        <td>${escapeHtml(item.loi)}</td>\n        <td>${escapeHtml(item.ghiChu)}</td>\n        <td class=\"c\">${escapeHtml(item.soLuong)}</td>\n      </tr>`;\n      }),\n      ...emptyRows.map((_, index) => `\n      <tr>\n        <td class=\"c\">${productRows.length + index + 1}</td>\n        <td>&nbsp;</td>\n        <td>&nbsp;</td>\n        <td>&nbsp;</td>\n        <td>&nbsp;</td>\n        <td>&nbsp;</td>\n      </tr>`),\n    ].join",
+          "lineNumber": 839
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "productRows.map",
+          "lineNumber": 840
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 841
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 845
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 847
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 848
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 849
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "emptyRows.map",
+          "lineNumber": 852
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 867
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 916
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 917
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 917
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 917
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 921
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 923
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 930
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 931
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 932
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "escapeHtml",
+          "lineNumber": 950
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "window.open",
+          "lineNumber": 981
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "message.error",
+          "lineNumber": 983
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "printWindow.document.open",
+          "lineNumber": 986
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "printWindow.document.write",
+          "lineNumber": 987
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "printWindow.document.close",
+          "lineNumber": 988
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "printWindow.focus",
+          "lineNumber": 990
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "printWindow.print",
+          "lineNumber": 991
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "setTimeout",
+          "lineNumber": 993
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "printWindow.focus",
+          "lineNumber": 995
+        },
+        {
+          "caller": "printSupplierTicket",
+          "callee": "printWindow.print",
+          "lineNumber": 996
+        },
+        {
+          "caller": "handleUploadClick",
+          "callee": "fileInputRef.current.click",
+          "lineNumber": 1005
+        },
+        {
+          "caller": "handleFileChange",
+          "callee": "Array.from(e.target.files || []).filter",
+          "lineNumber": 1010
+        },
+        {
+          "caller": "handleFileChange",
+          "callee": "Array.from",
+          "lineNumber": 1010
+        },
+        {
+          "caller": "handleFileChange",
+          "callee": "handleUploadAttachments",
+          "lineNumber": 1012
+        },
+        {
+          "caller": "renderAttachmentGrid",
+          "callee": "attachments.map",
+          "lineNumber": 1042
+        },
+        {
+          "caller": "renderAttachmentGrid",
+          "callee": "handleDeleteAttachment",
+          "lineNumber": 1062
+        },
+        {
+          "caller": "renderAttachmentsCard",
+          "callee": "renderAttachmentGrid",
+          "lineNumber": 1080
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "formatDate",
+          "lineNumber": 1096
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "getStaffName",
+          "lineNumber": 1097
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "normalizeAttachments",
+          "lineNumber": 1110
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "normalizeAttachments",
+          "lineNumber": 1111
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "renderExchangeAttachmentGrid",
+          "lineNumber": 1112
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "normalizeAttachments",
+          "lineNumber": 1112
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "setExchangeType",
+          "lineNumber": 1134
+        },
+        {
+          "caller": "renderExchangeReturn",
+          "callee": "renderExchangeAttachmentGrid",
+          "lineNumber": 1165
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "String(entry?.note || '').toLowerCase",
+          "lineNumber": 1188
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "String",
+          "lineNumber": 1188
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "note.includes",
+          "lineNumber": 1189
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "note.includes",
+          "lineNumber": 1190
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "Object.keys(changes).map",
+          "lineNumber": 1194
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "Object.keys",
+          "lineNumber": 1194
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "String(k).toLowerCase",
+          "lineNumber": 1194
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "String",
+          "lineNumber": 1194
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "keys.every",
+          "lineNumber": 1195
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "key.includes",
+          "lineNumber": 1195
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "String(getUpdateHistoryDetail(entry) || '').trim().toLowerCase",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "String(getUpdateHistoryDetail(entry) || '').trim",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "String",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "isVisibleHistoryEntry",
+          "callee": "getUpdateHistoryDetail",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "getAttachmentHistoryDetail",
+          "callee": "normalizeHistoryText(entry.note)\n    .replaceAll",
+          "lineNumber": 1203
+        },
+        {
+          "caller": "getAttachmentHistoryDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1203
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "dayjs",
+          "lineNumber": 1211
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "d.isValid",
+          "lineNumber": 1212
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "d.format",
+          "lineNumber": 1212
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "String",
+          "lineNumber": 1212
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "String",
+          "lineNumber": 1215
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "String",
+          "lineNumber": 1217
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "Object.entries(changes).map",
+          "lineNumber": 1221
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "Object.entries",
+          "lineNumber": 1221
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "getFieldLabel",
+          "lineNumber": 1222
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "formatFieldValue",
+          "lineNumber": 1223
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "formatFieldValue",
+          "lineNumber": 1224
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "normalizeHistoryText(entry?.note || '').trim",
+          "lineNumber": 1236
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1236
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "rows.join",
+          "lineNumber": 1237
+        },
+        {
+          "caller": "getUpdateHistoryDetail",
+          "callee": "rows.join",
+          "lineNumber": 1238
+        },
+        {
+          "caller": "getCustomerHistoryDetail",
+          "callee": "[from.khachHang, from.soDienThoai].filter(Boolean).join",
+          "lineNumber": 1245
+        },
+        {
+          "caller": "getCustomerHistoryDetail",
+          "callee": "[from.khachHang, from.soDienThoai].filter",
+          "lineNumber": 1245
+        },
+        {
+          "caller": "getCustomerHistoryDetail",
+          "callee": "[to.khachHang, to.soDienThoai].filter(Boolean).join",
+          "lineNumber": 1246
+        },
+        {
+          "caller": "getCustomerHistoryDetail",
+          "callee": "[to.khachHang, to.soDienThoai].filter",
+          "lineNumber": 1246
+        },
+        {
+          "caller": "getCustomerHistoryDetail",
+          "callee": "normalizeHistoryText(entry?.note || '').trim",
+          "lineNumber": 1247
+        },
+        {
+          "caller": "getCustomerHistoryDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1247
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "buildInternalHistoryTimeline(warranty.history || [], warranty)\n    .map",
+          "lineNumber": 1253
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "buildInternalHistoryTimeline",
+          "lineNumber": 1253
+        },
+        {
+          "caller": "getStaffName",
+          "callee": "String(code).trim().toLowerCase",
+          "lineNumber": 1258
+        },
+        {
+          "caller": "getStaffName",
+          "callee": "String(code).trim",
+          "lineNumber": 1258
+        },
+        {
+          "caller": "getStaffName",
+          "callee": "String",
+          "lineNumber": 1258
+        },
+        {
+          "caller": "getStaffName",
+          "callee": "staffList.find",
+          "lineNumber": 1259
+        },
+        {
+          "caller": "getStaffName",
+          "callee": "String(item.maNV || '').trim().toLowerCase",
+          "lineNumber": 1259
+        },
+        {
+          "caller": "getStaffName",
+          "callee": "String(item.maNV || '').trim",
+          "lineNumber": 1259
+        },
+        {
+          "caller": "getStaffName",
+          "callee": "String",
+          "lineNumber": 1259
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "sectionActions",
+          "lineNumber": 1271
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "getStaffName",
+          "lineNumber": 1275
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1279
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1286
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1288
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "sectionActions",
+          "lineNumber": 1295
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "sectionActions",
+          "lineNumber": 1316
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "warranty.chiPhi.toLocaleString",
+          "lineNumber": 1341
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1356
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "renderAttachmentsCard",
+          "lineNumber": 1376
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "navigator.clipboard.writeText",
+          "lineNumber": 1391
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "message.success",
+          "lineNumber": 1392
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "document.createElement",
+          "lineNumber": 1394
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "document.body.appendChild",
+          "lineNumber": 1398
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "ta.focus",
+          "lineNumber": 1399
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "ta.select",
+          "lineNumber": 1400
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "document.execCommand",
+          "lineNumber": 1401
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "document.body.removeChild",
+          "lineNumber": 1402
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "message.success",
+          "lineNumber": 1403
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "renderExchangeReturn",
+          "lineNumber": 1418
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(option?.searchText || '').toLowerCase().includes",
+          "lineNumber": 1432
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(option?.searchText || '').toLowerCase",
+          "lineNumber": 1432
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String",
+          "lineNumber": 1432
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "input.toLowerCase",
+          "lineNumber": 1432
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "navigate",
+          "lineNumber": 1456
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1485
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1492
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1499
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "openSupplierLogNoteEdit",
+          "lineNumber": 1511
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "handleDeleteSupplierLog",
+          "lineNumber": 1517
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "visibleHistory.map",
+          "lineNumber": 1548
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "getAttachmentHistoryDetail",
+          "lineNumber": 1570
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1574
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1579
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1583
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1587
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1591
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1595
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1599
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1603
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1607
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "getCustomerHistoryDetail",
+          "lineNumber": 1611
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "getCustomerHistoryDetail",
+          "lineNumber": 1615
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "getUpdateHistoryDetail",
+          "lineNumber": 1619
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 1623
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "handleDeleteHistory",
+          "lineNumber": 1638
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "formatDate",
+          "lineNumber": 1652
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "getStaffName",
+          "lineNumber": 1652
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "renderHistoryDetail",
+          "lineNumber": 1654
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "getStatusBadgeColor",
+          "lineNumber": 1664
+        },
+        {
+          "caller": "handleMobileLog",
+          "callee": "mobileLogNote.trim",
+          "lineNumber": 1668
+        },
+        {
+          "caller": "handleMobileLog",
+          "callee": "message.warning",
+          "lineNumber": 1669
+        },
+        {
+          "caller": "handleMobileLog",
+          "callee": "handleLogProgress",
+          "lineNumber": 1672
+        },
+        {
+          "caller": "handleMobileLog",
+          "callee": "setMobileLogNote",
+          "lineNumber": 1673
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "formatDate",
+          "lineNumber": 1685
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "formatDate",
+          "lineNumber": 1690
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "formatDate",
+          "lineNumber": 1693
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "getStaffName",
+          "lineNumber": 1694
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "warranty.chiPhi.toLocaleString",
+          "lineNumber": 1706
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "formatDate",
+          "lineNumber": 1709
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "renderAttachmentGrid",
+          "lineNumber": 1716
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "navigator.clipboard.writeText",
+          "lineNumber": 1729
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "message.success",
+          "lineNumber": 1730
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.createElement",
+          "lineNumber": 1732
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.body.appendChild",
+          "lineNumber": 1734
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "ta.select",
+          "lineNumber": 1735
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.execCommand",
+          "lineNumber": 1736
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.body.removeChild",
+          "lineNumber": 1737
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "message.success",
+          "lineNumber": 1738
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "setEditing",
+          "lineNumber": 1749
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "navigate",
+          "lineNumber": 1750
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "navigator.clipboard.writeText",
+          "lineNumber": 1755
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "message.success",
+          "lineNumber": 1756
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.createElement",
+          "lineNumber": 1758
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.body.appendChild",
+          "lineNumber": 1762
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "ta.focus",
+          "lineNumber": 1763
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "ta.select",
+          "lineNumber": 1764
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.execCommand",
+          "lineNumber": 1765
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "document.body.removeChild",
+          "lineNumber": 1766
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "message.success",
+          "lineNumber": 1767
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "Dialog.confirm",
+          "lineNumber": 1775
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "setCancelModal",
+          "lineNumber": 1776
+        },
+        {
+          "caller": "renderMobileInfo",
+          "callee": "setEditing",
+          "lineNumber": 1797
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "formatDate",
+          "lineNumber": 1815
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "getStaffName",
+          "lineNumber": 1816
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "normalizeAttachments",
+          "lineNumber": 1830
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "normalizeAttachments",
+          "lineNumber": 1831
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "renderExchangeAttachmentGrid",
+          "lineNumber": 1832
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "normalizeAttachments",
+          "lineNumber": 1832
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "setExchangeType",
+          "lineNumber": 1854
+        },
+        {
+          "caller": "renderMobileExchangeReturn",
+          "callee": "renderExchangeAttachmentGrid",
+          "lineNumber": 1880
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "String(option?.searchText || '').toLowerCase().includes",
+          "lineNumber": 1901
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "String(option?.searchText || '').toLowerCase",
+          "lineNumber": 1901
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "String",
+          "lineNumber": 1901
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "input.toLowerCase",
+          "lineNumber": 1901
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "navigate",
+          "lineNumber": 1927
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "supplierLogs.map",
+          "lineNumber": 1928
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "formatDate",
+          "lineNumber": 1951
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "formatDate",
+          "lineNumber": 1955
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "formatDate",
+          "lineNumber": 1959
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "formatDate",
+          "lineNumber": 1963
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "openSupplierLogNoteEdit",
+          "lineNumber": 1972
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "Dialog.confirm",
+          "lineNumber": 1977
+        },
+        {
+          "caller": "renderMobileSupplier",
+          "callee": "handleDeleteSupplierLog",
+          "lineNumber": 1981
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "mobileHistory.map",
+          "lineNumber": 2013
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "getAttachmentHistoryDetail",
+          "lineNumber": 2056
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "getCustomerHistoryDetail",
+          "lineNumber": 2058
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "getUpdateHistoryDetail",
+          "lineNumber": 2060
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "normalizeHistoryText",
+          "lineNumber": 2061
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "e.stopPropagation",
+          "lineNumber": 2068
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "Dialog.confirm",
+          "lineNumber": 2069
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "handleDeleteHistory",
+          "lineNumber": 2071
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "formatDate",
+          "lineNumber": 2080
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "getStaffName",
+          "lineNumber": 2080
+        },
+        {
+          "caller": "renderMobileHistory",
+          "callee": "renderHistoryDetail",
+          "lineNumber": 2081
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "renderMobileInfo",
+          "lineNumber": 2107
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "renderMobileExchangeReturn",
+          "lineNumber": 2110
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "renderMobileSupplier",
+          "lineNumber": 2113
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "renderMobileHistory",
+          "lineNumber": 2116
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelModal",
+          "lineNumber": 2128
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelReason",
+          "lineNumber": 2128
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelReason",
+          "lineNumber": 2137
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogEditOpen",
+          "lineNumber": 2146
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogEditing",
+          "lineNumber": 2147
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogNote",
+          "lineNumber": 2148
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogSupplierId",
+          "lineNumber": 2149
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(option?.searchText || '').toLowerCase().includes",
+          "lineNumber": 2163
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(option?.searchText || '').toLowerCase",
+          "lineNumber": 2163
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String",
+          "lineNumber": 2163
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "input.toLowerCase",
+          "lineNumber": 2163
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogNote",
+          "lineNumber": 2173
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 2186
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "navigate",
+          "lineNumber": 2202
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelModal",
+          "lineNumber": 2208
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "handleClose",
+          "lineNumber": 2221
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelModal",
+          "lineNumber": 2236
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelReason",
+          "lineNumber": 2236
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCancelReason",
+          "lineNumber": 2245
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogEditOpen",
+          "lineNumber": 2255
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogEditing",
+          "lineNumber": 2256
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogNote",
+          "lineNumber": 2257
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogSupplierId",
+          "lineNumber": 2258
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(option?.searchText || '').toLowerCase().includes",
+          "lineNumber": 2272
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String(option?.searchText || '').toLowerCase",
+          "lineNumber": 2272
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "String",
+          "lineNumber": 2272
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "input.toLowerCase",
+          "lineNumber": 2272
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setSupplierLogNote",
+          "lineNumber": 2282
+        },
+        {
+          "caller": "WarrantyDetail",
+          "callee": "setCustomerPickerOpen",
+          "lineNumber": 2294
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 2,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/warranty/WarrantyPrint.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 302,
+      "nonEmptyLines": 281,
+      "functions": [
+        {
+          "name": "WarrantyPrint",
+          "startLine": 13,
+          "endLine": 302,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "WarrantyPrint",
+          "line": 13,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useTranslation",
+          "lineNumber": 14
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useParams",
+          "lineNumber": 15
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useSearchParams",
+          "lineNumber": 16
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "searchParams.get",
+          "lineNumber": 17
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "searchParams.get",
+          "lineNumber": 18
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useState",
+          "lineNumber": 19
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useState",
+          "lineNumber": 20
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useState",
+          "lineNumber": 21
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useRef",
+          "lineNumber": 23
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useReactToPrint",
+          "lineNumber": 25
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useEffect",
+          "lineNumber": 30
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "Promise.allSettled([\n      warrantyService.getById(id),\n      warrantyService.getSupplierLogs(id),\n      supplierService.getList({ pageSize: 1000 }),\n    ])\n      .then(([warrantyRes, logsRes, suppliersRes]) => {\n        if (!mounted) return;\n        if (warrantyRes.status === 'fulfilled' && warrantyRes.value.data.success) setWarranty(warrantyRes.value.data.data);\n        if (logsRes.status === 'fulfilled' && logsRes.value.data.success) setSupplierLogs(logsRes.value.data.data || []);\n        if (suppliersRes.status === 'fulfilled' && suppliersRes.value.data.success) setSuppliers(suppliersRes.value.data.data?.rows || suppliersRes.value.data.data || []);\n      })\n      .finally",
+          "lineNumber": 32
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "Promise.allSettled([\n      warrantyService.getById(id),\n      warrantyService.getSupplierLogs(id),\n      supplierService.getList({ pageSize: 1000 }),\n    ])\n      .then",
+          "lineNumber": 32
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "Promise.allSettled",
+          "lineNumber": 32
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "warrantyService.getById",
+          "lineNumber": 33
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "warrantyService.getSupplierLogs",
+          "lineNumber": 34
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "supplierService.getList",
+          "lineNumber": 35
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "setWarranty",
+          "lineNumber": 39
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "setSupplierLogs",
+          "lineNumber": 40
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "setSuppliers",
+          "lineNumber": 41
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "setLoading",
+          "lineNumber": 44
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useEffect",
+          "lineNumber": 49
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "setTimeout",
+          "lineNumber": 51
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "handlePrint",
+          "lineNumber": 52
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "useEffect",
+          "lineNumber": 57
+        },
+        {
+          "caller": "fitSerial",
+          "callee": "printRef.current?.querySelectorAll?.('.ncc-serial-cell .ncc-serial').forEach",
+          "lineNumber": 59
+        },
+        {
+          "caller": "fitSerial",
+          "callee": "printRef.current?.querySelectorAll",
+          "lineNumber": 59
+        },
+        {
+          "caller": "fitSerial",
+          "callee": "el.closest",
+          "lineNumber": 60
+        },
+        {
+          "caller": "fitSerial",
+          "callee": "Math.max",
+          "lineNumber": 65
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "fitSerial",
+          "lineNumber": 69
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "window.addEventListener",
+          "lineNumber": 70
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "window.addEventListener",
+          "lineNumber": 71
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "window.removeEventListener",
+          "lineNumber": 73
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "window.removeEventListener",
+          "lineNumber": 74
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 79
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "supplierLogs\n    .filter((log) => log.action === 'sent')\n    .sort",
+          "lineNumber": 82
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "supplierLogs\n    .filter",
+          "lineNumber": 82
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "new Date(b.at || 0).getTime",
+          "lineNumber": 84
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "new Date(a.at || 0).getTime",
+          "lineNumber": 84
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "suppliers.find",
+          "lineNumber": 85
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "window.history.back",
+          "lineNumber": 98
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 98
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 99
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 154
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 155
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 155
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "formatDate",
+          "lineNumber": 159
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "Array.from({ length: 4 }).map",
+          "lineNumber": 188
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "Array.from",
+          "lineNumber": 188
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "window.history.back",
+          "lineNumber": 206
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 206
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 208
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 215
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 216
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 217
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 218
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 221
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 221
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 224
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 225
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "(() => {\n              const d = warranty.ngayNhan;\n              if (!d) return '';\n              const formatted = formatDate(d, 'DD/MM/YYYY HH:mm');\n              return formatted.endsWith('00:00') ? formatDate(d, 'DD/MM/YYYY') : formatted;\n            })",
+          "lineNumber": 225
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "formatDate",
+          "lineNumber": 228
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "formatted.endsWith",
+          "lineNumber": 229
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "formatDate",
+          "lineNumber": 229
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 235
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 237
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 238
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 243
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 244
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 245
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 246
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 247
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 248
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 252
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 255
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 256
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 258
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "formatDate",
+          "lineNumber": 258
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 261
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 263
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 263
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "formatVND",
+          "lineNumber": 263
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "shouldShowDueDate",
+          "lineNumber": 266
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 266
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "formatDate",
+          "lineNumber": 266
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 267
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 271
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 276
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 283
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 285
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 288
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 290
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 295
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 296
+        },
+        {
+          "caller": "WarrantyPrint",
+          "callee": "t",
+          "lineNumber": 297
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/warranty/WarrantyProgress.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 24,
+      "nonEmptyLines": 21,
+      "functions": [
+        {
+          "name": "WarrantyProgress",
+          "startLine": 5,
+          "endLine": 24,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "WarrantyProgress",
+          "line": 5,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "WarrantyProgress",
+          "callee": "useTranslation",
+          "lineNumber": 6
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "baoHanh?.match",
+          "lineNumber": 7
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "parseInt",
+          "lineNumber": 10
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "dayjs",
+          "lineNumber": 11
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "dayjs",
+          "lineNumber": 12
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "now.diff",
+          "lineNumber": 13
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "Math.max",
+          "lineNumber": 14
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "Math.min",
+          "lineNumber": 15
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "Math.round",
+          "lineNumber": 15
+        },
+        {
+          "caller": "WarrantyProgress",
+          "callee": "t",
+          "lineNumber": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/constants/badgeConfig.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 23,
+      "functions": [
+        {
+          "name": "getStatusBadgeColor",
+          "startLine": 19,
+          "endLine": 21,
+          "params": [
+            "status"
+          ]
+        },
+        {
+          "name": "getBadgeColor",
+          "startLine": 23,
+          "endLine": 25,
+          "params": [
+            "type"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "BADGE_COLORS",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "getStatusBadgeColor",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "getBadgeColor",
+          "line": 23,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/constants/routes.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 14,
+      "exports": [
+        {
+          "name": "ROUTES",
+          "line": 1,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/constants/statusConfig.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 45,
+      "nonEmptyLines": 42,
+      "functions": [
+        {
+          "name": "label",
+          "startLine": 5,
+          "endLine": 5,
+          "params": [
+            "key"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "STATUS",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "STATUS_LABELS",
+          "line": 38,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "label",
+          "callee": "i18n.t",
+          "lineNumber": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/constants/warrantyOptions.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 20,
+      "exports": [
+        {
+          "name": "BAO_HANH_OPTIONS",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "LOAI_XU_LY_OPTIONS",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "LOAI_XU_LY_LABELS",
+          "line": 18,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/contexts/AuthContext.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 71,
+      "nonEmptyLines": 62,
+      "functions": [
+        {
+          "name": "AuthProvider",
+          "startLine": 14,
+          "endLine": 67,
+          "params": []
+        },
+        {
+          "name": "useAuth",
+          "startLine": 69,
+          "endLine": 71,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AuthProvider",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "useAuth",
+          "line": 69,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AuthProvider",
+          "callee": "useState",
+          "lineNumber": 15
+        },
+        {
+          "caller": "AuthProvider",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "refreshAuth",
+          "callee": "authService.me",
+          "lineNumber": 20
+        },
+        {
+          "caller": "refreshAuth",
+          "callee": "setCurrentStaff",
+          "lineNumber": 21
+        },
+        {
+          "caller": "refreshAuth",
+          "callee": "setCurrentStaff",
+          "lineNumber": 24
+        },
+        {
+          "caller": "refreshAuth",
+          "callee": "setAuthLoading",
+          "lineNumber": 27
+        },
+        {
+          "caller": "AuthProvider",
+          "callee": "useEffect",
+          "lineNumber": 31
+        },
+        {
+          "caller": "AuthProvider",
+          "callee": "localStorage.removeItem",
+          "lineNumber": 32
+        },
+        {
+          "caller": "AuthProvider",
+          "callee": "localStorage.removeItem",
+          "lineNumber": 33
+        },
+        {
+          "caller": "AuthProvider",
+          "callee": "refreshAuth",
+          "lineNumber": 34
+        },
+        {
+          "caller": "login",
+          "callee": "authService.login",
+          "lineNumber": 38
+        },
+        {
+          "caller": "login",
+          "callee": "setCurrentStaff",
+          "lineNumber": 40
+        },
+        {
+          "caller": "logout",
+          "callee": "authService.logout",
+          "lineNumber": 46
+        },
+        {
+          "caller": "logout",
+          "callee": "setCurrentStaff",
+          "lineNumber": 48
+        },
+        {
+          "caller": "useAuth",
+          "callee": "useContext",
+          "lineNumber": 70
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/hooks/useDebounce.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "functions": [
+        {
+          "name": "useDebounce",
+          "startLine": 3,
+          "endLine": 12,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useDebounce",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useDebounce",
+          "callee": "useState",
+          "lineNumber": 4
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "useEffect",
+          "lineNumber": 6
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "setTimeout",
+          "lineNumber": 7
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "setDebouncedValue",
+          "lineNumber": 7
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "clearTimeout",
+          "lineNumber": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/hooks/useIsMobile.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 22,
+      "functions": [
+        {
+          "name": "readMatch",
+          "startLine": 5,
+          "endLine": 8,
+          "params": []
+        },
+        {
+          "name": "useIsMobile",
+          "startLine": 10,
+          "endLine": 31,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useIsMobile",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "readMatch",
+          "callee": "window.matchMedia",
+          "lineNumber": 7
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "useState",
+          "lineNumber": 11
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "useEffect",
+          "lineNumber": 13
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "window.matchMedia",
+          "lineNumber": 16
+        },
+        {
+          "caller": "handleChange",
+          "callee": "setIsMobile",
+          "lineNumber": 17
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "setIsMobile",
+          "lineNumber": 19
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "media.addEventListener",
+          "lineNumber": 22
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "media.removeEventListener",
+          "lineNumber": 23
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "media.addListener",
+          "lineNumber": 26
+        },
+        {
+          "caller": "useIsMobile",
+          "callee": "media.removeListener",
+          "lineNumber": 27
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    }
+  ]
+}

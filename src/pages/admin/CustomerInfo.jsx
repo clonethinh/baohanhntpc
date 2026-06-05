@@ -443,7 +443,7 @@ export default function CustomerInfo() {
                   value={dateRange}
                   onChange={setDateRange}
                   style={{ width: '100%' }}
-                  format="DD/MM/YYYY"
+                  format="DD-MM-YYYY"
                 />
               </div>
             </div>

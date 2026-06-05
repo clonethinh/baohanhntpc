@@ -144,6 +144,14 @@ function timelineColor(type, index) {
   return index === 0 ? 'green' : 'gray';
 }
 
+function mapTimelineAction(log, t, loaiXuLy) {
+  const actionCode = log.actionType || log.action;
+  const key = actionCode === 'tra_hang'
+    ? `trackingResult.historyAction.tra_hang${loaiXuLy === 'sua_dv' ? '_sua_dv' : ''}`
+    : `trackingResult.historyAction.${actionCode}`;
+  return t(key, { defaultValue: log.action });
+}
+
 
 function CopyButton({ url }) {
   const { t } = useTranslation();
@@ -580,7 +588,7 @@ export default function TrackingResult() {
                   <div className={`${styles.mobileEventCard} ${i === 0 ? styles.mobileEventCardStart : ''} ${i === timelineItems.length - 1 && isDoneStage ? styles.mobileEventCardEnd : ''}`}>
                     <div className={styles.mobileEventHeader}>
                       <div className={styles.mobileEventTitleRow}>
-                        <b className={styles.mobileEventTitle}>{log.action}</b>
+                        <b className={styles.mobileEventTitle}>{mapTimelineAction(log, t, data.loaiXuLy)}</b>
                         {i === 0 && <span className={styles.mobileEventBadgeStart}>Bắt đầu</span>}
                         {i === timelineItems.length - 1 && isDoneStage && <span className={styles.mobileEventBadgeEnd}>Hoàn tất</span>}
                       </div>
@@ -1046,7 +1054,7 @@ export default function TrackingResult() {
                   color: timelineColor(log.actionType, i),
                   children: (
                     <div>
-                      <Text strong>{log.action}</Text>
+                      <Text strong>{mapTimelineAction(log, t, data.loaiXuLy)}</Text>
                       <div style={{ marginTop: 2 }}>
                         <ClockCircleOutlined style={{ fontSize: 12, marginRight: 4 }} />
                         <Text type="secondary">{log.time}</Text>

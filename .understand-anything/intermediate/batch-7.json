@@ -1,0 +1,849 @@
+{
+  "batchIndex": 7,
+  "nodes": [
+    {
+      "id": "file:src/hooks/useKeyboardShortcuts.js",
+      "type": "file",
+      "label": "useKeyboardShortcuts.js",
+      "path": "src/hooks/useKeyboardShortcuts.js",
+      "language": "javascript",
+      "lines": 37,
+      "description": "Custom React hook for global keyboard shortcuts. Handles Ctrl+N (new ticket), Ctrl+K (search focus), Ctrl+P (print), Escape (close drawer), and ? (show shortcuts). Uses useEffect to attach/detach keydown listener on window.",
+      "exports": ["useKeyboardShortcuts"],
+      "metadata": {
+        "category": "hook",
+        "functionCount": 1,
+        "exportCount": 1
+      }
+    },
+    {
+      "id": "file:src/hooks/useTheme.js",
+      "type": "file",
+      "label": "useTheme.js",
+      "path": "src/hooks/useTheme.js",
+      "language": "javascript",
+      "lines": 58,
+      "description": "Custom React hook for dark/light theme management. Persists theme to localStorage, syncs across tabs via storage events, and provides toggle function. Returns { isDark, toggle, theme } where theme is the antd theme config object.",
+      "exports": ["useTheme"],
+      "metadata": {
+        "category": "hook",
+        "functionCount": 4,
+        "exportCount": 1
+      }
+    },
+    {
+      "id": "file:src/hooks/useWarranties.js",
+      "type": "file",
+      "label": "useWarranties.js",
+      "path": "src/hooks/useWarranties.js",
+      "language": "javascript",
+      "lines": 29,
+      "description": "Custom React hook for fetching warranty list data from the API. Manages loading, error, and data states. Uses useCallback for the fetch function and useEffect to trigger initial fetch. Returns { data, loading, error, refetch }.",
+      "exports": ["useWarranties"],
+      "metadata": {
+        "category": "hook",
+        "functionCount": 1,
+        "exportCount": 1
+      }
+    },
+    {
+      "id": "config:src/i18n/index.js",
+      "type": "config",
+      "label": "i18n/index.js",
+      "path": "src/i18n/index.js",
+      "language": "javascript",
+      "lines": 35,
+      "description": "i18next internationalization configuration. Sets Vietnamese (vi) as default and fallback language. Defines 6 namespaces: ui, status, messages, validation, print, nav. Imports locale JSON files from ./locales/vi/. Uses LanguageDetector and react-i18next plugins.",
+      "exports": ["i18n"],
+      "metadata": {
+        "category": "config",
+        "namespaces": ["ui", "status", "messages", "validation", "print", "nav"],
+        "language": "vi"
+      }
+    },
+    {
+      "id": "file:src/i18n/locales/vi/ui.json.bak-field-labels",
+      "type": "file",
+      "label": "ui.json.bak-field-labels",
+      "path": "src/i18n/locales/vi/ui.json.bak-field-labels",
+      "language": "bak-field-labels",
+      "lines": 582,
+      "description": "Backup file of Vietnamese UI translation field labels. Contains 582 lines of translated UI strings. Not actively used by the application - serves as a reference/backup for the translation system.",
+      "exports": [],
+      "metadata": {
+        "category": "data",
+        "isBackup": true
+      }
+    },
+    {
+      "id": "file:src/lib/axios.js",
+      "type": "file",
+      "label": "axios.js",
+      "path": "src/lib/axios.js",
+      "language": "javascript",
+      "lines": 20,
+      "description": "Axios HTTP client configuration. Creates an axios instance with baseURL '/api', 300s timeout, credentials enabled, and JSON content type. Includes response interceptor that handles 429 rate limiting errors.",
+      "exports": ["api"],
+      "metadata": {
+        "category": "lib",
+        "baseURL": "/api",
+        "timeout": 300000
+      }
+    },
+    {
+      "id": "file:src/lib/zodSchemas.js",
+      "type": "file",
+      "label": "zodSchemas.js",
+      "path": "src/lib/zodSchemas.js",
+      "language": "javascript",
+      "lines": 24,
+      "description": "Zod validation schemas for warranty forms. Defines warrantyFormSchema with fields: khachHang, soDienThoai, diaChi, loaiPhieu, baoGiaSau, tenHang, soSeri, cauHinh, loiLucNhan, phuKien, chiPhi, baoHanh, loaiXuLy, ghiChu, ngayMua, ngayHenTra, maNhanVien. Uses i18n for validation messages.",
+      "exports": ["warrantyFormSchema"],
+      "metadata": {
+        "category": "lib",
+        "schemaCount": 1
+      }
+    },
+    {
+      "id": "file:src/main.jsx",
+      "type": "file",
+      "label": "main.jsx",
+      "path": "src/main.jsx",
+      "language": "javascript",
+      "lines": 11,
+      "description": "Application entry point. Initializes React 18 with createRoot, imports i18n configuration, global CSS styles, and renders the App component inside React.StrictMode.",
+      "exports": [],
+      "metadata": {
+        "category": "entry",
+        "isEntryPoint": true
+      }
+    },
+    {
+      "id": "file:src/pages/admin/CreateWarranty.jsx",
+      "type": "file",
+      "label": "CreateWarranty.jsx",
+      "path": "src/pages/admin/CreateWarranty.jsx",
+      "language": "javascript",
+      "lines": 528,
+      "description": "Admin page for creating new warranty tickets. Uses react-hook-form with zod validation. Features include: auto-generated next code, customer auto-complete with customerService.lookup, serial number duplicate warning, draft auto-save to localStorage, image attachment preview, and warranty date calculation using addBusinessDaysSkipSunday.",
+      "exports": ["CreateWarranty"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/admin/CustomerInfo.jsx",
+      "type": "file",
+      "label": "CustomerInfo.jsx",
+      "path": "src/pages/admin/CustomerInfo.jsx",
+      "language": "javascript",
+      "lines": 591,
+      "description": "Admin page for customer management. Features: customer search with autocomplete suggestions, customer list table with filtering, customer detail drawer showing warranty history, customer editing (name, phone, address), customer deletion, assigning unassigned warranties to customers, date range and status filtering of warranty history.",
+      "exports": ["CustomerInfo"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/admin/Dashboard.jsx",
+      "type": "file",
+      "label": "Dashboard.jsx",
+      "path": "src/pages/admin/Dashboard.jsx",
+      "language": "javascript",
+      "lines": 501,
+      "description": "Admin dashboard page. Displays summary statistics (total, in-progress, completed, waiting), recent warranty list, and timeline of recent activity. Uses nhanVienService, statsService, and warrantyService. Supports mobile view with antd-mobile components. Shows urgency indicators and due date warnings.",
+      "exports": ["Dashboard"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/admin/ImportExport.jsx",
+      "type": "file",
+      "label": "ImportExport.jsx",
+      "path": "src/pages/admin/ImportExport.jsx",
+      "language": "javascript",
+      "lines": 310,
+      "description": "Admin page for importing/exporting warranty data. Supports Excel file upload with preview, column mapping, and batch import. Export options for all warranties or filtered results. Includes delete-all functionality and backup/restore panel via BackupRestorePanel component.",
+      "exports": ["ImportExport"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/admin/StaffManagement.jsx",
+      "type": "file",
+      "label": "StaffManagement.jsx",
+      "path": "src/pages/admin/StaffManagement.jsx",
+      "language": "javascript",
+      "lines": 184,
+      "description": "Admin page for managing staff members. Features: list all staff, add new staff member, reset staff password, remove staff member. Uses nhanVienService and authService from warrantyService. Displays staff table with action buttons.",
+      "exports": ["StaffManagement"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/admin/Statistics.jsx",
+      "type": "file",
+      "label": "Statistics.jsx",
+      "path": "src/pages/admin/Statistics.jsx",
+      "language": "javascript",
+      "lines": 240,
+      "description": "Admin statistics page with charts. Displays warranty trends by date (bar/line chart), top products, and top customers. Uses @ant-design/charts for visualization. Supports period selection (last 7/30/90 days, this year, custom range). Adapts chart colors for dark/light theme via useTheme hook.",
+      "exports": ["Statistics"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/admin/Suppliers.jsx",
+      "type": "file",
+      "label": "Suppliers.jsx",
+      "path": "src/pages/admin/Suppliers.jsx",
+      "language": "javascript",
+      "lines": 544,
+      "description": "Admin page for supplier management. Features: list/create/update suppliers, toggle supplier active status, view supplier warranty assignments, send warranties to suppliers, track supplier repair status. Uses supplierService, warrantyService, and nhanVienService. Supports mobile view.",
+      "exports": ["Suppliers"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/admin/WarrantyList.jsx",
+      "type": "file",
+      "label": "WarrantyList.jsx",
+      "path": "src/pages/admin/WarrantyList.jsx",
+      "language": "javascript",
+      "lines": 610,
+      "description": "Admin warranty list page - the main ticket management view. Features: paginated table with search, status/type/staff/due-date filtering, priority flag toggle, bulk actions, sort options, copy ticket ID, print, delete. Uses useDebounce and useIsMobile hooks. Opens WarrantyDetail drawer for individual tickets. Supports mobile view with antd-mobile components.",
+      "exports": ["WarrantyList"],
+      "metadata": {
+        "category": "page",
+        "role": "admin",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/customer/CustomerPortal.jsx",
+      "type": "file",
+      "label": "CustomerPortal.jsx",
+      "path": "src/pages/customer/CustomerPortal.jsx",
+      "language": "javascript",
+      "lines": 356,
+      "description": "Customer-facing portal page. Allows customers to search for their warranty tickets by ticket number. Displays warranty status, progress tracking, and ticket details. Uses publicService for API calls. Supports dark/light theme toggle and mobile responsive view with antd-mobile components.",
+      "exports": ["CustomerPortal"],
+      "metadata": {
+        "category": "page",
+        "role": "customer",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/customer/TrackingResult.jsx",
+      "type": "file",
+      "label": "TrackingResult.jsx",
+      "path": "src/pages/customer/TrackingResult.jsx",
+      "language": "javascript",
+      "lines": 1228,
+      "description": "Customer-facing warranty tracking result page. Displays detailed warranty ticket information including status steps, repair history timeline, equipment details, attachments, and customer info. Uses publicService for data fetching, useTheme for dark mode, and CSS modules for styling. Supports print functionality and mobile-responsive layout with antd-mobile components.",
+      "exports": ["TrackingResult"],
+      "metadata": {
+        "category": "page",
+        "role": "customer",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/customer/TrackingResult.module.css",
+      "type": "file",
+      "label": "TrackingResult.module.css",
+      "path": "src/pages/customer/TrackingResult.module.css",
+      "language": "css",
+      "lines": 1124,
+      "description": "CSS module for the TrackingResult page. Contains 1124 lines of scoped styles for the warranty tracking result view, including status step indicators, timeline styling, responsive breakpoints for mobile, print-specific styles, and dark mode adaptations.",
+      "exports": [],
+      "metadata": {
+        "category": "style",
+        "isCSSModule": true
+      }
+    },
+    {
+      "id": "file:src/pages/customer/Tracuu.jsx",
+      "type": "file",
+      "label": "Tracuu.jsx",
+      "path": "src/pages/customer/Tracuu.jsx",
+      "language": "javascript",
+      "lines": 546,
+      "description": "Customer-facing warranty lookup page (Tra cứu = Search/Lookup). Allows customers to search for warranty tickets by ticket number or keywords. Shows search results list with status badges. Stores recent searches in localStorage. Uses publicService, useTheme hook, and getStatusBadgeColor. Supports mobile view with antd-mobile components.",
+      "exports": ["Tracuu"],
+      "metadata": {
+        "category": "page",
+        "role": "customer",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/pages/NotFound.jsx",
+      "type": "file",
+      "label": "NotFound.jsx",
+      "path": "src/pages/NotFound.jsx",
+      "language": "javascript",
+      "lines": 19,
+      "description": "404 Not Found page component. Displays a 404 result with translated title and buttons to navigate to home page or admin panel. Uses antd Result component, react-i18next for translations, and react-router-dom useNavigate.",
+      "exports": ["NotFound"],
+      "metadata": {
+        "category": "page",
+        "functionCount": 1
+      }
+    },
+    {
+      "id": "file:src/services/backupService.js",
+      "type": "file",
+      "label": "backupService.js",
+      "path": "src/services/backupService.js",
+      "language": "javascript",
+      "lines": 19,
+      "description": "Service module for database backup and restore operations. Exports backupService object with methods: status, list, history, create, restore, uploadRestore, uploadAssets, delete, view, metadata, downloadUrl, downloadAssetsUrl. All methods call the /api/admin/backups endpoints.",
+      "exports": ["backupService"],
+      "metadata": {
+        "category": "service",
+        "endpointPrefix": "/api/admin/backups",
+        "methodCount": 12
+      }
+    },
+    {
+      "id": "file:src/services/warrantyService.js",
+      "type": "file",
+      "label": "warrantyService.js",
+      "path": "src/services/warrantyService.js",
+      "language": "javascript",
+      "lines": 73,
+      "description": "Central API service module exporting 7 service objects: warrantyService (CRUD, import/export, supplier logs, attachments, history), customerService (list, unassigned, suggest, lookup, update, delete), statsService (summary, byDate, topProducts, topCustomers), publicService (track, search), supplierService (CRUD, status, warranties), nhanVienService (CRUD, password), authService (login, logout, me, changePassword). All use the shared axios instance from lib/axios.js.",
+      "exports": ["warrantyService", "customerService", "statsService", "publicService", "supplierService", "nhanVienService", "authService"],
+      "metadata": {
+        "category": "service",
+        "serviceCount": 7,
+        "endpointPrefix": "/api"
+      }
+    },
+    {
+      "id": "file:src/styles/global.css",
+      "type": "file",
+      "label": "global.css",
+      "path": "src/styles/global.css",
+      "language": "css",
+      "lines": 4022,
+      "description": "Global CSS stylesheet (4022 lines). Contains application-wide styles including CSS custom properties for theming (light/dark mode), typography, layout, component overrides for antd and antd-mobile, responsive breakpoints, print styles, animation keyframes, loading indicators, and utility classes.",
+      "exports": [],
+      "metadata": {
+        "category": "style",
+        "isGlobal": true
+      }
+    },
+    {
+      "id": "file:src/styles/print.css",
+      "type": "file",
+      "label": "print.css",
+      "path": "src/styles/print.css",
+      "language": "css",
+      "lines": 56,
+      "description": "Print-specific CSS stylesheet. Contains @media print rules that optimize the warranty ticket view for printing, hiding navigation elements, adjusting layout, and ensuring proper page breaks.",
+      "exports": [],
+      "metadata": {
+        "category": "style",
+        "isPrint": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/main.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "imports",
+      "label": "imports i18n configuration for initialization"
+    },
+    {
+      "source": "file:src/main.jsx",
+      "target": "file:src/styles/global.css",
+      "type": "imports",
+      "label": "imports global CSS styles"
+    },
+    {
+      "source": "config:src/i18n/index.js",
+      "target": "npm:i18next",
+      "type": "imports",
+      "label": "imports i18next core library"
+    },
+    {
+      "source": "config:src/i18n/index.js",
+      "target": "npm:react-i18next",
+      "type": "imports",
+      "label": "imports initReactI18next plugin"
+    },
+    {
+      "source": "config:src/i18n/index.js",
+      "target": "npm:i18next-browser-languagedetector",
+      "type": "imports",
+      "label": "imports LanguageDetector plugin"
+    },
+    {
+      "source": "file:src/lib/axios.js",
+      "target": "npm:axios",
+      "type": "imports",
+      "label": "imports axios to create HTTP client instance"
+    },
+    {
+      "source": "file:src/lib/zodSchemas.js",
+      "target": "npm:zod",
+      "type": "imports",
+      "label": "imports zod for schema validation"
+    },
+    {
+      "source": "file:src/lib/zodSchemas.js",
+      "target": "config:src/i18n/index.js",
+      "type": "imports",
+      "label": "imports i18n for translated validation messages"
+    },
+    {
+      "source": "file:src/hooks/useKeyboardShortcuts.js",
+      "target": "npm:react",
+      "type": "imports",
+      "label": "imports useEffect hook"
+    },
+    {
+      "source": "file:src/hooks/useTheme.js",
+      "target": "npm:react",
+      "type": "imports",
+      "label": "imports useState, useEffect, useCallback"
+    },
+    {
+      "source": "file:src/hooks/useTheme.js",
+      "target": "file:src/theme/antdTheme.js",
+      "type": "imports",
+      "label": "imports antdLightTheme and antdDarkTheme configs"
+    },
+    {
+      "source": "file:src/hooks/useWarranties.js",
+      "target": "npm:react",
+      "type": "imports",
+      "label": "imports useState, useEffect, useCallback"
+    },
+    {
+      "source": "file:src/hooks/useWarranties.js",
+      "target": "file:src/lib/axios.js",
+      "type": "imports",
+      "label": "imports api instance for warranty data fetching"
+    },
+    {
+      "source": "file:src/services/warrantyService.js",
+      "target": "file:src/lib/axios.js",
+      "type": "imports",
+      "label": "imports shared axios instance for all API calls"
+    },
+    {
+      "source": "file:src/services/backupService.js",
+      "target": "file:src/lib/axios.js",
+      "type": "imports",
+      "label": "imports shared axios instance for backup API calls"
+    },
+    {
+      "source": "file:src/pages/admin/CreateWarranty.jsx",
+      "target": "file:src/lib/zodSchemas.js",
+      "type": "imports",
+      "label": "imports warrantyFormSchema for form validation"
+    },
+    {
+      "source": "file:src/pages/admin/CreateWarranty.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports warrantyService and customerService"
+    },
+    {
+      "source": "file:src/pages/admin/CreateWarranty.jsx",
+      "target": "file:src/contexts/AuthContext.jsx",
+      "type": "imports",
+      "label": "imports useAuth hook for current user context"
+    },
+    {
+      "source": "file:src/pages/admin/CustomerInfo.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports customerService and warrantyService"
+    },
+    {
+      "source": "file:src/pages/admin/CustomerInfo.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "label": "imports STATUS_LABELS"
+    },
+    {
+      "source": "file:src/pages/admin/CustomerInfo.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/pages/admin/CustomerInfo.jsx",
+      "target": "file:src/utils/dateHelpers.js",
+      "type": "imports",
+      "label": "imports formatDate utility"
+    },
+    {
+      "source": "file:src/pages/admin/CustomerInfo.jsx",
+      "target": "file:src/components/warranty/WarrantyDetail.jsx",
+      "type": "imports",
+      "label": "imports WarrantyDetail component for detail drawer"
+    },
+    {
+      "source": "file:src/pages/admin/CustomerInfo.jsx",
+      "target": "file:src/components/common/CustomerPickerModal.jsx",
+      "type": "imports",
+      "label": "imports CustomerPickerModal for assigning customers"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports nhanVienService, statsService, warrantyService"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "label": "imports STATUS constants"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/utils/urgency.js",
+      "type": "imports",
+      "label": "imports getUrgency utility"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/utils/dateHelpers.js",
+      "type": "imports",
+      "label": "imports formatDate, getWarrantyDueDate, shouldShowDueDate"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/utils/historyTimeline.js",
+      "type": "imports",
+      "label": "imports buildInternalHistoryTimeline, formatHistoryChanges"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/utils/historyDisplay.js",
+      "type": "imports",
+      "label": "imports normalizeHistoryNote"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/hooks/useIsMobile.js",
+      "type": "imports",
+      "label": "imports useIsMobile hook for responsive layout"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/components/warranty/StatusTag.jsx",
+      "type": "imports",
+      "label": "imports StatusTag component"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "file:src/components/warranty/WarrantyDetail.jsx",
+      "type": "imports",
+      "label": "imports WarrantyDetail component"
+    },
+    {
+      "source": "file:src/pages/admin/ImportExport.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports warrantyService for import/export operations"
+    },
+    {
+      "source": "file:src/pages/admin/ImportExport.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/pages/admin/ImportExport.jsx",
+      "target": "file:src/utils/excelHelpers.js",
+      "type": "imports",
+      "label": "imports parseExcelFile, mapExcelRows for Excel processing"
+    },
+    {
+      "source": "file:src/pages/admin/ImportExport.jsx",
+      "target": "file:src/lib/axios.js",
+      "type": "imports",
+      "label": "imports api instance for delete-all operation"
+    },
+    {
+      "source": "file:src/pages/admin/ImportExport.jsx",
+      "target": "file:src/components/admin/BackupRestorePanel.jsx",
+      "type": "imports",
+      "label": "imports BackupRestorePanel component"
+    },
+    {
+      "source": "file:src/pages/admin/StaffManagement.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports authService and nhanVienService"
+    },
+    {
+      "source": "file:src/pages/admin/Statistics.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports statsService for chart data"
+    },
+    {
+      "source": "file:src/pages/admin/Statistics.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "label": "imports useTheme hook for dark-mode chart colors"
+    },
+    {
+      "source": "file:src/pages/admin/Suppliers.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports nhanVienService, supplierService, warrantyService"
+    },
+    {
+      "source": "file:src/pages/admin/Suppliers.jsx",
+      "target": "file:src/components/warranty/StatusTag.jsx",
+      "type": "imports",
+      "label": "imports StatusTag component"
+    },
+    {
+      "source": "file:src/pages/admin/Suppliers.jsx",
+      "target": "file:src/components/warranty/WarrantyDetail.jsx",
+      "type": "imports",
+      "label": "imports WarrantyDetail component"
+    },
+    {
+      "source": "file:src/pages/admin/Suppliers.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/hooks/useDebounce.js",
+      "type": "imports",
+      "label": "imports useDebounce hook for search input"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/hooks/useIsMobile.js",
+      "type": "imports",
+      "label": "imports useIsMobile hook for responsive layout"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports warrantyService and nhanVienService"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "label": "imports STATUS constants"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/constants/warrantyOptions.js",
+      "type": "imports",
+      "label": "imports LOAI_XU_LY_OPTIONS, LOAI_XU_LY_LABELS"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/utils/urgency.js",
+      "type": "imports",
+      "label": "imports getUrgency utility"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/utils/dateHelpers.js",
+      "type": "imports",
+      "label": "imports formatDate, getWarrantyDueDate, shouldShowDueDate"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/components/warranty/StatusTag.jsx",
+      "type": "imports",
+      "label": "imports StatusTag component"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "file:src/components/warranty/WarrantyDetail.jsx",
+      "type": "imports",
+      "label": "imports WarrantyDetail component"
+    },
+    {
+      "source": "file:src/pages/customer/CustomerPortal.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "label": "imports useTheme hook for dark/light toggle"
+    },
+    {
+      "source": "file:src/pages/customer/CustomerPortal.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports publicService for ticket tracking"
+    },
+    {
+      "source": "file:src/pages/customer/CustomerPortal.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/pages/customer/TrackingResult.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports publicService for ticket data"
+    },
+    {
+      "source": "file:src/pages/customer/TrackingResult.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "label": "imports STATUS constants"
+    },
+    {
+      "source": "file:src/pages/customer/TrackingResult.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/pages/customer/TrackingResult.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "label": "imports useTheme hook for dark mode support"
+    },
+    {
+      "source": "file:src/pages/customer/TrackingResult.jsx",
+      "target": "file:src/utils/historyDisplay.js",
+      "type": "imports",
+      "label": "imports normalizeHistoryNote utility"
+    },
+    {
+      "source": "file:src/pages/customer/TrackingResult.jsx",
+      "target": "file:src/pages/customer/TrackingResult.module.css",
+      "type": "imports",
+      "label": "imports CSS module for scoped styling"
+    },
+    {
+      "source": "file:src/pages/customer/Tracuu.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "label": "imports useTheme hook for dark/light toggle"
+    },
+    {
+      "source": "file:src/pages/customer/Tracuu.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports publicService for ticket search"
+    },
+    {
+      "source": "file:src/pages/customer/Tracuu.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/pages/NotFound.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook from i18n for translated text"
+    },
+    {
+      "source": "file:src/pages/admin/CreateWarranty.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for form labels and messages"
+    },
+    {
+      "source": "file:src/pages/admin/CustomerInfo.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    },
+    {
+      "source": "file:src/pages/admin/Dashboard.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for dashboard labels"
+    },
+    {
+      "source": "file:src/pages/admin/ImportExport.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    },
+    {
+      "source": "file:src/pages/admin/StaffManagement.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    },
+    {
+      "source": "file:src/pages/admin/Statistics.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for chart labels"
+    },
+    {
+      "source": "file:src/pages/admin/Suppliers.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    },
+    {
+      "source": "file:src/pages/admin/WarrantyList.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    },
+    {
+      "source": "file:src/pages/customer/CustomerPortal.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    },
+    {
+      "source": "file:src/pages/customer/TrackingResult.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    },
+    {
+      "source": "file:src/pages/customer/Tracuu.jsx",
+      "target": "config:src/i18n/index.js",
+      "type": "uses",
+      "label": "uses useTranslation hook for UI labels"
+    }
+  ]
+}

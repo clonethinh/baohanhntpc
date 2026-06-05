@@ -1,0 +1,182 @@
+{
+  "projectRoot": "/mnt/baohanhntpc",
+  "batchFiles": [
+    {
+      "path": "fixdates.cjs",
+      "language": "javascript",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "nginx.conf",
+      "language": "conf",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "phieuguincc/nccdemo.html",
+      "language": "html",
+      "sizeLines": 248,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "prisma/migrations/20260525_add_audit_indexes/migration.sql",
+      "language": "sql",
+      "sizeLines": 45,
+      "fileCategory": "data"
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "language": "prisma",
+      "sizeLines": 158,
+      "fileCategory": "data"
+    },
+    {
+      "path": "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz",
+      "language": "tgz",
+      "sizeLines": 26732,
+      "fileCategory": "code"
+    },
+    {
+      "path": "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz.sha256",
+      "language": "sha256",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/audit_history.js",
+      "language": "javascript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/backfill_supplier_names.js",
+      "language": "javascript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/check_timeline.js",
+      "language": "javascript",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/inspect_supplier_logs.js",
+      "language": "javascript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/inspect_users.js",
+      "language": "javascript",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/inspect_warranties.js",
+      "language": "javascript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/reset_passwords_v2.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/reset_passwords.js",
+      "language": "javascript",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/verify_recovery.js",
+      "language": "javascript",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/bootstrap-auth.mjs",
+      "language": "javascript",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/cleanup-current-data.mjs",
+      "language": "javascript",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/cleanup-orphan-uploads.js",
+      "language": "javascript",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/migrate_fix_mojibake_notes.py",
+      "language": "python",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/migrate_fix_priority_mojibake_notes.py",
+      "language": "python",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/migrateData.js",
+      "language": "javascript",
+      "sizeLines": 199,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/App.jsx",
+      "language": "javascript",
+      "sizeLines": 134,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/admin/BackupRestorePanel.jsx",
+      "language": "javascript",
+      "sizeLines": 276,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/AiAssistant.jsx",
+      "language": "javascript",
+      "sizeLines": 423,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "fixdates.cjs": [],
+    "nginx.conf": [],
+    "phieuguincc/nccdemo.html": [],
+    "prisma/migrations/20260525_add_audit_indexes/migration.sql": [],
+    "prisma/schema.prisma": [],
+    "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz": [],
+    "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz.sha256": [],
+    "scratch/audit_history.js": [],
+    "scratch/backfill_supplier_names.js": [],
+    "scratch/check_timeline.js": [],
+    "scratch/inspect_supplier_logs.js": [],
+    "scratch/inspect_users.js": [],
+    "scratch/inspect_warranties.js": [],
+    "scratch/reset_passwords_v2.js": [],
+    "scratch/reset_passwords.js": [],
+    "scratch/verify_recovery.js": [],
+    "scripts/bootstrap-auth.mjs": [],
+    "scripts/cleanup-current-data.mjs": [],
+    "scripts/cleanup-orphan-uploads.js": [],
+    "scripts/migrate_fix_mojibake_notes.py": [],
+    "scripts/migrate_fix_priority_mojibake_notes.py": [],
+    "scripts/migrateData.js": [],
+    "src/App.jsx": [],
+    "src/components/admin/BackupRestorePanel.jsx": [],
+    "src/components/common/AiAssistant.jsx": []
+  }
+}

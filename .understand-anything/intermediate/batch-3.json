@@ -1,0 +1,97 @@
+{
+  "batchIndex": 3,
+  "nodes": [
+    {
+      "id": "config:src/i18n/locales/vi/messages.json",
+      "type": "config",
+      "name": "Vietnamese Messages Locale",
+      "filePath": "src/i18n/locales/vi/messages.json",
+      "summary": "Vietnamese i18n message strings for user-facing notifications. Contains 4 sections: success (create/update/delete/copy confirmations), error (load/save/not-found/copy failures), confirm (delete/return/cancel confirmations), and phieu (ticket creation with interpolation placeholder {{so}}). 23 lines total.",
+      "tags": ["i18n", "vietnamese", "messages", "notifications", "locale"],
+      "complexity": 1
+    },
+    {
+      "id": "config:src/i18n/locales/vi/nav.json",
+      "type": "config",
+      "name": "Vietnamese Navigation Locale",
+      "filePath": "src/i18n/locales/vi/nav.json",
+      "summary": "Vietnamese i18n navigation strings. Contains 3 sections: page (page titles for dashboard, warranty tickets, customers, staff, suppliers, statistics, import/export, tracking), menu (sidebar menu labels mirroring page names), and action (switch staff, open menu, shortcuts). 29 lines total.",
+      "tags": ["i18n", "vietnamese", "navigation", "menu", "locale"],
+      "complexity": 1
+    },
+    {
+      "id": "config:src/i18n/locales/vi/print.json",
+      "type": "config",
+      "name": "Vietnamese Print Template Locale",
+      "filePath": "src/i18n/locales/vi/print.json",
+      "summary": "Vietnamese i18n strings for printable warranty receipt/ticket. Contains 41 top-level keys covering company info (name, address, tax, hotline, website), receipt layout fields (document number, customer/product/warranty sections, QR scan), and template placeholders for signatures. Includes interpolation for warranty progress ({{remaining}}/{{total}} months). 46 lines.",
+      "tags": ["i18n", "vietnamese", "print", "receipt", "warranty-ticket", "locale"],
+      "complexity": 2
+    },
+    {
+      "id": "config:src/i18n/locales/vi/status.json",
+      "type": "config",
+      "name": "Vietnamese Status Labels Locale",
+      "filePath": "src/i18n/locales/vi/status.json",
+      "summary": "Vietnamese i18n strings for status enums used across the app. Contains 3 sections: trangThai (ticket statuses: received, processing, done, canceled), loaiXuLy (handling types: warranty, service repair, replacement, other), and baoHanh (warranty durations: 1/3/12/24/36/60 months, custom). 25 lines.",
+      "tags": ["i18n", "vietnamese", "status", "enums", "locale"],
+      "complexity": 1
+    },
+    {
+      "id": "config:src/i18n/locales/vi/ui.json",
+      "type": "config",
+      "name": "Vietnamese UI Strings Locale",
+      "filePath": "src/i18n/locales/vi/ui.json",
+      "summary": "The largest Vietnamese i18n file (594 lines, 24 sections). Covers the entire UI: app branding, buttons, common labels, table headers, form fields, admin password gate, error boundary, keyboard shortcuts, staff picker, search, notifications, 404 page, public warranty tracking (with result display), admin pages for customers/warranty list/staff/statistics/dashboard/create-warranty/import-export/suppliers, and an AI assistant module with thought/answer prompts. Heavy use of interpolation placeholders ({{count}}, {{date}}, {{code}}, etc.).",
+      "tags": ["i18n", "vietnamese", "ui", "forms", "admin", "tracking", "ai-assistant", "locale"],
+      "complexity": 4
+    },
+    {
+      "id": "config:src/i18n/locales/vi/validation.json",
+      "type": "config",
+      "name": "Vietnamese Validation Messages Locale",
+      "filePath": "src/i18n/locales/vi/validation.json",
+      "summary": "Vietnamese i18n validation error messages. 14 flat keys covering required-field errors (customer, product name, serial, received issue, warranty term, return date, staff), format validations (invalid phone, invalid email, invalid date), and business rules (document number already exists, cost must be positive/non-negative). 16 lines.",
+      "tags": ["i18n", "vietnamese", "validation", "form-validation", "locale"],
+      "complexity": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "config:src/i18n/index.js",
+      "to": "config:src/i18n/locales/vi/messages.json",
+      "type": "depends_on",
+      "label": "loads Vietnamese message translations"
+    },
+    {
+      "from": "config:src/i18n/index.js",
+      "to": "config:src/i18n/locales/vi/nav.json",
+      "type": "depends_on",
+      "label": "loads Vietnamese navigation translations"
+    },
+    {
+      "from": "config:src/i18n/index.js",
+      "to": "config:src/i18n/locales/vi/print.json",
+      "type": "depends_on",
+      "label": "loads Vietnamese print template translations"
+    },
+    {
+      "from": "config:src/i18n/index.js",
+      "to": "config:src/i18n/locales/vi/status.json",
+      "type": "depends_on",
+      "label": "loads Vietnamese status label translations"
+    },
+    {
+      "from": "config:src/i18n/index.js",
+      "to": "config:src/i18n/locales/vi/ui.json",
+      "type": "depends_on",
+      "label": "loads Vietnamese UI string translations"
+    },
+    {
+      "from": "config:src/i18n/index.js",
+      "to": "config:src/i18n/locales/vi/validation.json",
+      "type": "depends_on",
+      "label": "loads Vietnamese validation message translations"
+    }
+  ]
+}

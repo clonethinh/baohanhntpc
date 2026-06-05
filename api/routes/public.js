@@ -52,7 +52,7 @@ function rateLimit(req, res, next) {
   next();
 }
 
-function safeDate(val, fmt = 'DD/MM/YYYY HH:mm') {
+function safeDate(val, fmt = 'DD-MM-YYYY HH:mm') {
   if (!val) return fmt.includes('HH') ? '' : null;
   const d = dayjs(val);
   return d.isValid() ? d.format(fmt) : (fmt.includes('HH') ? '' : null);
@@ -140,9 +140,9 @@ router.get('/track', async (req, res) => {
           soChungTu: String(w.soChungTu || ''),
           trangThai: String(w.trangThai || 'da_nhan'),
           tenHang: normalizeText(w.tenHang || ''),
-          ngayNhan: safeDate(w.ngayNhan, 'DD/MM/YYYY'),
-          ngayHenTra: safeDate(w.ngayHenTra, 'DD/MM/YYYY'),
-          ngayTra: safeDate(w.ngayTra, 'DD/MM/YYYY'),
+          ngayNhan: safeDate(w.ngayNhan, 'DD-MM-YYYY'),
+          ngayHenTra: safeDate(w.ngayHenTra, 'DD-MM-YYYY'),
+          ngayTra: safeDate(w.ngayTra, 'DD-MM-YYYY'),
         }));
 
       return res.json({ success: true, mode: 'phone', data: { phone, total: items.length, items } });
@@ -200,10 +200,10 @@ router.get('/track/:soChungTu', async (req, res) => {
       loiLucNhan: String(warrantyObj.loiLucNhan || ''),
       phuKien: String(warrantyObj.phuKien || ''),
       baoHanh: String(warrantyObj.baoHanh || ''),
-      ngayMua: safeDate(warrantyObj.ngayMua, 'DD/MM/YYYY'),
-      ngayHenTra: safeDate(warrantyObj.ngayHenTra, 'DD/MM/YYYY'),
+      ngayMua: safeDate(warrantyObj.ngayMua, 'DD-MM-YYYY'),
+      ngayHenTra: safeDate(warrantyObj.ngayHenTra, 'DD-MM-YYYY'),
       ngayHenTraRaw: warrantyObj.ngayHenTra || '',
-      ngayTra: safeDate(warrantyObj.ngayTra, 'DD/MM/YYYY'),
+      ngayTra: safeDate(warrantyObj.ngayTra, 'DD-MM-YYYY'),
       ngayTraRaw: warrantyObj.ngayTra || '',
       trangThai: String(warrantyObj.trangThai || 'da_nhan'),
       doiTra: formatPublicDoiTra(warrantyObj.doiTra),

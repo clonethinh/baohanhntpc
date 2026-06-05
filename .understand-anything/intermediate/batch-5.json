@@ -1,0 +1,701 @@
+{
+  "batchIndex": 5,
+  "nodes": [
+    {
+      "id": "file:fixdates.cjs",
+      "type": "file",
+      "label": "fixdates.cjs",
+      "language": "javascript",
+      "category": "code",
+      "description": "One-off utility script to fix malformed date strings (ngayNhan, ngayHenTra, ngayMua) in api/db.json. Converts DD/MM/YYYY to ISO format.",
+      "properties": {
+        "lines": 33,
+        "functionCount": 0,
+        "isScript": true,
+        "dataTarget": "api/db.json"
+      }
+    },
+    {
+      "id": "file:nginx.conf",
+      "type": "file",
+      "label": "nginx.conf",
+      "language": "conf",
+      "category": "config",
+      "description": "Nginx reverse proxy configuration for Docker deployment. Serves React SPA static files and proxies /api requests to backend-api:3003. Configures 50MB upload limit and 300s timeouts.",
+      "properties": {
+        "lines": 61,
+        "proxyTarget": "backend-api:3003",
+        "staticRoot": "/usr/share/nginx/html",
+        "clientMaxBodySize": "50M"
+      }
+    },
+    {
+      "id": "file:phieuguincc/nccdemo.html",
+      "type": "file",
+      "label": "nccdemo.html",
+      "language": "html",
+      "category": "markup",
+      "description": "HTML template for supplier warranty dispatch slip (Phiếu gửi bảo hành/sửa chữa). Half-A4 page layout with print-optimized CSS for sending items to suppliers.",
+      "properties": {
+        "lines": 248,
+        "purpose": "Supplier warranty slip print template"
+      }
+    },
+    {
+      "id": "migration:prisma/migrations/20260525_add_audit_indexes/migration.sql",
+      "type": "migration",
+      "label": "20260525_add_audit_indexes",
+      "language": "sql",
+      "category": "data",
+      "description": "Prisma migration adding audit_logs table and 23 performance indexes across nhan_vien, suppliers, supplier_logs, warranties, and audit_logs tables.",
+      "properties": {
+        "lines": 45,
+        "tablesCreated": ["audit_logs"],
+        "indexCount": 23,
+        "indexesOnTables": ["nhan_vien", "suppliers", "supplier_logs", "warranties", "audit_logs"]
+      }
+    },
+    {
+      "id": "schema:prisma/schema.prisma",
+      "type": "schema",
+      "label": "schema.prisma",
+      "language": "prisma",
+      "category": "data",
+      "description": "Prisma ORM schema defining the PostgreSQL database for the NTPC warranty system. Models: NhanVien (staff), Supplier, SupplierLog, Warranty (core entity), AuditLog. Uses PostgreSQL with JSON fields for flexible data (attachments, history, doiTra).",
+      "properties": {
+        "lines": 158,
+        "provider": "postgresql",
+        "models": ["NhanVien", "Supplier", "SupplierLog", "Warranty", "AuditLog"],
+        "generator": "prisma-client-js",
+        "binaryTargets": ["native", "linux-musl-openssl-3.0.x"]
+      }
+    },
+    {
+      "id": "file:repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz",
+      "type": "file",
+      "label": "pgdata-before-pg_resetwal-20260525-175610.tgz",
+      "language": "binary",
+      "category": "data",
+      "description": "Compressed PostgreSQL data directory backup taken before pg_resetwal operation on 2026-05-25. Disaster recovery artifact.",
+      "properties": {
+        "lines": 26732,
+        "isBinary": true,
+        "backupDate": "2026-05-25",
+        "purpose": "Pre-pg_resetwal PostgreSQL data backup"
+      }
+    },
+    {
+      "id": "file:repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz.sha256",
+      "type": "file",
+      "label": "pgdata backup SHA256 checksum",
+      "language": "text",
+      "category": "data",
+      "description": "SHA-256 checksum file for verifying integrity of the pgdata backup archive.",
+      "properties": {
+        "lines": 1,
+        "purpose": "Integrity verification checksum"
+      }
+    },
+    {
+      "id": "file:scratch/audit_history.js",
+      "type": "file",
+      "label": "scratch/audit_history.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch/debug script to inspect warranty audit history from PostgreSQL via Prisma. Filters out supplier-related noise entries using isSupplierNoise() helper.",
+      "properties": {
+        "lines": 41,
+        "functionCount": 2,
+        "isScript": true,
+        "functions": ["isSupplierNoise", "main"]
+      }
+    },
+    {
+      "id": "file:scratch/backfill_supplier_names.js",
+      "type": "file",
+      "label": "scratch/backfill_supplier_names.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script to backfill empty supplierName fields in SupplierLog records by matching supplierId to Supplier table.",
+      "properties": {
+        "lines": 41,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["main"]
+      }
+    },
+    {
+      "id": "file:scratch/check_timeline.js",
+      "type": "file",
+      "label": "scratch/check_timeline.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script to debug timeline rendering for a specific warranty ticket (23052026NTPC9). Uses both Prisma and readDb to compare data sources and calls buildInternalHistoryTimeline.",
+      "properties": {
+        "lines": 46,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["main"]
+      }
+    },
+    {
+      "id": "file:scratch/inspect_supplier_logs.js",
+      "type": "file",
+      "label": "scratch/inspect_supplier_logs.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script to list all SupplierLog records from PostgreSQL for debugging.",
+      "properties": {
+        "lines": 20,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["main"]
+      }
+    },
+    {
+      "id": "file:scratch/inspect_users.js",
+      "type": "file",
+      "label": "scratch/inspect_users.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script to inspect NhanVien (staff) records from PostgreSQL, showing hashed passwords and verifying auth state.",
+      "properties": {
+        "lines": 26,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["main"]
+      }
+    },
+    {
+      "id": "file:scratch/inspect_warranties.js",
+      "type": "file",
+      "label": "scratch/inspect_warranties.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script to list all active (non-deleted) Warranty records from PostgreSQL.",
+      "properties": {
+        "lines": 29,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["main"]
+      }
+    },
+    {
+      "id": "file:scratch/reset_passwords_v2.js",
+      "type": "file",
+      "label": "scratch/reset_passwords_v2.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script v2 to reset all NhanVien passwords to a hardcoded value using hashPassword from auth module.",
+      "properties": {
+        "lines": 35,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["main"]
+      }
+    },
+    {
+      "id": "file:scratch/reset_passwords.js",
+      "type": "file",
+      "label": "scratch/reset_passwords.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script to reset all NhanVien passwords to a hardcoded value using hashPassword from auth module.",
+      "properties": {
+        "lines": 40,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["main"]
+      }
+    },
+    {
+      "id": "file:scratch/verify_recovery.js",
+      "type": "file",
+      "label": "scratch/verify_recovery.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Scratch script to verify two-way sync and self-healing recovery features by reading DB, modifying data, and testing syncLocalBackup/autoSelfHealingSync.",
+      "properties": {
+        "lines": 48,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["runVerification"]
+      }
+    },
+    {
+      "id": "file:scripts/bootstrap-auth.mjs",
+      "type": "file",
+      "label": "scripts/bootstrap-auth.mjs",
+      "language": "javascript",
+      "category": "code",
+      "description": "Bootstrap script to ensure auth state is initialized. Loads .env, reads DB, calls ensureAuthState(), writes back, and dumps NhanVien auth info.",
+      "properties": {
+        "lines": 34,
+        "functionCount": 1,
+        "isScript": true,
+        "functions": ["loadEnv"]
+      }
+    },
+    {
+      "id": "file:scripts/cleanup-current-data.mjs",
+      "type": "file",
+      "label": "scripts/cleanup-current-data.mjs",
+      "language": "javascript",
+      "category": "code",
+      "description": "Data cleanup script that creates a safety backup then removes non-essential warranty records from db.json, keeping only a whitelist of specific tickets.",
+      "properties": {
+        "lines": 105,
+        "isScript": true
+      }
+    },
+    {
+      "id": "file:scripts/cleanup-orphan-uploads.js",
+      "type": "file",
+      "label": "scripts/cleanup-orphan-uploads.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Script to find and optionally delete orphaned upload files in api/uploads/warranties/ that are no longer referenced by any warranty record in db.json.",
+      "properties": {
+        "lines": 100,
+        "isScript": true,
+        "dataTarget": "api/db.json"
+      }
+    },
+    {
+      "id": "file:scripts/migrate_fix_mojibake_notes.py",
+      "type": "file",
+      "label": "scripts/migrate_fix_mojibake_notes.py",
+      "language": "python",
+      "category": "code",
+      "description": "Python migration script to fix mojibake (corrupted Vietnamese encoding) in warranty history notes within api/db.json. Creates timestamped backup before modification.",
+      "properties": {
+        "lines": 79,
+        "isScript": true,
+        "dataTarget": "api/db.json"
+      }
+    },
+    {
+      "id": "file:scripts/migrate_fix_priority_mojibake_notes.py",
+      "type": "file",
+      "label": "scripts/migrate_fix_priority_mojibake_notes.py",
+      "language": "python",
+      "category": "code",
+      "description": "Python migration script to fix mojibake specifically in priority-related notes (e.g., 'Đánh dấu ưu tiên') within api/db.json.",
+      "properties": {
+        "lines": 55,
+        "isScript": true,
+        "dataTarget": "api/db.json"
+      }
+    },
+    {
+      "id": "file:scripts/migrateData.js",
+      "type": "file",
+      "label": "scripts/migrateData.js",
+      "language": "javascript",
+      "category": "code",
+      "description": "Data migration script to transfer warranty, customer, supplier, and staff records from api/db.json (JSON file DB) to PostgreSQL via Prisma. Handles data normalization and type conversion.",
+      "properties": {
+        "lines": 199,
+        "isScript": true,
+        "dataTarget": "PostgreSQL via Prisma",
+        "sourceTarget": "api/db.json"
+      }
+    },
+    {
+      "id": "file:src/App.jsx",
+      "type": "file",
+      "label": "App.jsx",
+      "language": "javascript",
+      "category": "code",
+      "description": "Main React application component. Configures routing (React Router v6), theming (antd ConfigProvider with Vietnamese locale), authentication guards (RequireStaff, RequireAdminRole), and lazy-loads all page components. Routes: /tra-cuu (customer lookup), /admin/* (dashboard, warranty CRUD, customer info, staff management, suppliers, statistics, import/export).",
+      "properties": {
+        "lines": 134,
+        "isEntryPoint": true,
+        "routes": [
+          "/",
+          "/tra-cuu",
+          "/tra-cuu/:soChungTu",
+          "/admin/dashboard",
+          "/admin/phieu",
+          "/admin/phieu/:id/in",
+          "/admin/tao-phieu",
+          "/admin/khach-hang",
+          "/admin/nhan-vien",
+          "/admin/nha-cung-cap",
+          "/admin/thong-ke",
+          "/admin/import-export"
+        ],
+        "guardComponents": ["RequireStaff", "RequireAdminRole", "AdminRoute", "AdminOnlyRoute"]
+      }
+    },
+    {
+      "id": "file:src/components/admin/BackupRestorePanel.jsx",
+      "type": "file",
+      "label": "BackupRestorePanel",
+      "language": "javascript",
+      "category": "component",
+      "description": "Admin panel for backup and restore operations. Supports creating manual backups, listing/viewing/restoring/deleting backups, uploading JSON backups and asset packages (images), editing backup metadata (pin/note), and viewing backup/restore history. Uses backupService API.",
+      "properties": {
+        "lines": 276,
+        "exportName": "BackupRestorePanel",
+        "isDefault": true,
+        "uiFramework": "antd",
+        "features": ["create backup", "restore backup", "upload backup", "upload assets", "view backup", "delete backup", "edit metadata", "history view"]
+      }
+    },
+    {
+      "id": "file:src/components/common/AiAssistant.jsx",
+      "type": "file",
+      "label": "AiAssistant",
+      "language": "javascript",
+      "category": "component",
+      "description": "AI-powered chat assistant component using @ant-design/x. Provides interactive help including: warranty lookup by code (NTPC format), statistics summary, staff listing, warranty policy info, and contact details. Uses Bubble, Sender, Prompts, ThoughtChain from ant-design-x. Available to both customers and staff with role-based prompt options.",
+      "properties": {
+        "lines": 423,
+        "exportName": "AiAssistant",
+        "isDefault": true,
+        "uiFramework": "antd + @ant-design/x",
+        "features": ["warranty tracking", "statistics", "staff listing", "policy info", "contact info"],
+        "usesI18n": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/contexts/AuthContext.jsx",
+      "type": "imports",
+      "label": "imports AuthProvider, useAuth"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "label": "imports useTheme"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/hooks/useKeyboardShortcuts.js",
+      "type": "imports",
+      "label": "imports useKeyboardShortcuts"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/components/common/ErrorBoundary.jsx",
+      "type": "imports",
+      "label": "imports ErrorBoundary"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/components/common/SkeletonCard.jsx",
+      "type": "imports",
+      "label": "imports SkeletonCard (lazy fallback)"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/components/common/StaffPickerModal.jsx",
+      "type": "imports",
+      "label": "imports StaffPickerModal (auth gate)"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/components/common/ShortcutsModal.jsx",
+      "type": "imports",
+      "label": "imports ShortcutsModal"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/components/layout/AdminLayout.jsx",
+      "type": "imports",
+      "label": "imports AdminLayout"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/components/layout/CustomerLayout.jsx",
+      "type": "imports",
+      "label": "imports CustomerLayout"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/Dashboard.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports Dashboard"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/WarrantyList.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports WarrantyList"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/CreateWarranty.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports CreateWarranty"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/CustomerInfo.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports CustomerInfo"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/Statistics.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports Statistics"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/ImportExport.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports ImportExport"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/StaffManagement.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports StaffManagement"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/admin/Suppliers.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports Suppliers"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/components/warranty/WarrantyPrint.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports WarrantyPrint"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/customer/Tracuu.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports Tracuu"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/customer/TrackingResult.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports TrackingResult"
+    },
+    {
+      "source": "file:src/App.jsx",
+      "target": "file:src/pages/NotFound.jsx",
+      "type": "lazy-imports",
+      "label": "lazy imports NotFound"
+    },
+    {
+      "source": "file:src/components/admin/BackupRestorePanel.jsx",
+      "target": "file:src/services/backupService.js",
+      "type": "imports",
+      "label": "imports backupService"
+    },
+    {
+      "source": "file:src/components/admin/BackupRestorePanel.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:src/components/common/AiAssistant.jsx",
+      "target": "file:src/contexts/AuthContext.jsx",
+      "type": "imports",
+      "label": "imports useAuth"
+    },
+    {
+      "source": "file:src/components/common/AiAssistant.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "label": "imports useTheme"
+    },
+    {
+      "source": "file:src/components/common/AiAssistant.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "label": "imports nhanVienService, publicService, statsService"
+    },
+    {
+      "source": "file:src/components/common/AiAssistant.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "label": "imports getStatusBadgeColor"
+    },
+    {
+      "source": "file:scratch/audit_history.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient (Warranty model)"
+    },
+    {
+      "source": "file:scratch/backfill_supplier_names.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient (Supplier, SupplierLog models)"
+    },
+    {
+      "source": "file:scratch/check_timeline.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient"
+    },
+    {
+      "source": "file:scratch/check_timeline.js",
+      "target": "file:src/utils/historyTimeline.js",
+      "type": "imports",
+      "label": "imports buildInternalHistoryTimeline"
+    },
+    {
+      "source": "file:scratch/check_timeline.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports readDb"
+    },
+    {
+      "source": "file:scratch/inspect_supplier_logs.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient (SupplierLog model)"
+    },
+    {
+      "source": "file:scratch/inspect_users.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient (NhanVien model)"
+    },
+    {
+      "source": "file:scratch/inspect_users.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports verifyPassword, hashPassword"
+    },
+    {
+      "source": "file:scratch/inspect_warranties.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient (Warranty model)"
+    },
+    {
+      "source": "file:scratch/reset_passwords_v2.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient (NhanVien model)"
+    },
+    {
+      "source": "file:scratch/reset_passwords_v2.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports hashPassword"
+    },
+    {
+      "source": "file:scratch/reset_passwords.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient (NhanVien model)"
+    },
+    {
+      "source": "file:scratch/reset_passwords.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports hashPassword"
+    },
+    {
+      "source": "file:scratch/verify_recovery.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports syncLocalBackup, autoSelfHealingSync, readDb, DB_PATH"
+    },
+    {
+      "source": "file:scripts/bootstrap-auth.mjs",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports readDb, writeDb, prisma"
+    },
+    {
+      "source": "file:scripts/bootstrap-auth.mjs",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports ensureAuthState"
+    },
+    {
+      "source": "file:scripts/cleanup-current-data.mjs",
+      "target": "file:api/lib/backup.js",
+      "type": "imports",
+      "label": "imports createBackup"
+    },
+    {
+      "source": "file:scripts/cleanup-current-data.mjs",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports DB_PATH, atomicWriteJsonFile"
+    },
+    {
+      "source": "file:scripts/cleanup-orphan-uploads.js",
+      "target": "file:api/db.json",
+      "type": "reads",
+      "label": "reads db.json to find referenced uploads"
+    },
+    {
+      "source": "file:scripts/migrate_fix_mojibake_notes.py",
+      "target": "file:api/db.json",
+      "type": "reads-writes",
+      "label": "reads and fixes mojibake in db.json"
+    },
+    {
+      "source": "file:scripts/migrate_fix_priority_mojibake_notes.py",
+      "target": "file:api/db.json",
+      "type": "reads-writes",
+      "label": "reads and fixes priority mojibake in db.json"
+    },
+    {
+      "source": "file:scripts/migrateData.js",
+      "target": "schema:prisma/schema.prisma",
+      "type": "uses-schema",
+      "label": "uses PrismaClient to migrate data to PostgreSQL"
+    },
+    {
+      "source": "file:scripts/migrateData.js",
+      "target": "file:api/db.json",
+      "type": "reads",
+      "label": "reads source data from db.json"
+    },
+    {
+      "source": "file:fixdates.cjs",
+      "target": "file:api/db.json",
+      "type": "reads-writes",
+      "label": "reads and fixes date formats in db.json"
+    },
+    {
+      "source": "file:nginx.conf",
+      "target": "file:src/App.jsx",
+      "type": "serves",
+      "label": "serves React SPA build output"
+    },
+    {
+      "source": "file:nginx.conf",
+      "target": "file:api/server.js",
+      "type": "proxies",
+      "label": "proxies /api requests to backend-api:3003"
+    },
+    {
+      "source": "migration:prisma/migrations/20260525_add_audit_indexes/migration.sql",
+      "target": "schema:prisma/schema.prisma",
+      "type": "implements",
+      "label": "adds audit_logs table and indexes defined in schema"
+    },
+    {
+      "source": "file:phieuguincc/nccdemo.html",
+      "target": "file:src/components/warranty/WarrantyPrint.jsx",
+      "type": "related",
+      "label": "HTML template for supplier dispatch slip (related to warranty printing)"
+    },
+    {
+      "source": "file:repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz.sha256",
+      "target": "file:repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz",
+      "type": "verifies",
+      "label": "SHA256 checksum for backup integrity verification"
+    }
+  ]
+}

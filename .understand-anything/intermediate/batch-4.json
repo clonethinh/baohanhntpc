@@ -1,0 +1,537 @@
+{
+  "batchIndex": 4,
+  "nodes": [
+    {
+      "id": "config:.claude/settings.local.json",
+      "type": "config",
+      "label": ".claude/settings.local.json",
+      "path": ".claude/settings.local.json",
+      "language": "json",
+      "description": "Claude Code local settings defining allowed Bash permissions (npm, node, python).",
+      "metrics": { "lines": 11, "sections": 1 }
+    },
+    {
+      "id": "config:.understand-anything/.understandignore",
+      "type": "config",
+      "label": ".understandignore",
+      "path": ".understand-anything/.understandignore",
+      "language": "gitignore",
+      "description": "Gitignore-style patterns for excluding files/dirs from codebase analysis (env, backups, uploads, tests).",
+      "metrics": { "lines": 34 }
+    },
+    {
+      "id": "service:api.Dockerfile",
+      "type": "service",
+      "label": "api.Dockerfile",
+      "path": "api.Dockerfile",
+      "language": "dockerfile",
+      "description": "Docker build for the Express.js API backend. Uses node:20-alpine, installs Prisma dependencies, generates Prisma Client, copies api/ and src/ directories, exposes port 3003.",
+      "metrics": { "lines": 40 }
+    },
+    {
+      "id": "file:api/lib/db.js",
+      "type": "file",
+      "label": "api/lib/db.js",
+      "path": "api/lib/db.js",
+      "language": "javascript",
+      "description": "Database abstraction layer bridging JSON file fallback and PostgreSQL via Prisma. Provides readDb, writeDb, getCollection, setCollection, addToCollection, autoSelfHealingSync, syncLocalBackup. Normalizes nhanVien rows and supplier logs.",
+      "metrics": { "lines": 559, "functions": 0, "exports": 0 },
+      "exports": ["readDb", "writeDb", "getCollection", "setCollection", "addToCollection", "autoSelfHealingSync", "syncLocalBackup", "prisma", "DB_PATH", "atomicWriteJsonFile"]
+    },
+    {
+      "id": "file:api/lib/auth.js",
+      "type": "file",
+      "label": "api/lib/auth.js",
+      "path": "api/lib/auth.js",
+      "language": "javascript",
+      "description": "Authentication and authorization library. Implements JWT-based session cookies (HMAC-SHA256), password hashing (scrypt), login rate limiting, middleware (attachUser, requireAuth, requireRole), and staff management (findActiveStaff, authenticateStaff, ensureAuthState).",
+      "metrics": { "lines": 298, "functions": 26, "exports": 11 },
+      "exports": ["COOKIE_NAME", "authenticateStaff", "attachUser", "clearSessionCookie", "ensureAuthState", "getStaffRole", "hashPassword", "requireAuth", "requireRole", "sanitizeStaff", "verifyPassword"]
+    },
+    {
+      "id": "file:api/lib/audit.js",
+      "type": "file",
+      "label": "api/lib/audit.js",
+      "path": "api/lib/audit.js",
+      "language": "javascript",
+      "description": "Audit logging utility. Exports writeAuditLog which records actor info (maNV, tenNV, IP, user-agent), action, entity, entityId, summary, and before/after snapshots to the AuditLog table via Prisma.",
+      "metrics": { "lines": 33, "functions": 2, "exports": 1 },
+      "exports": ["writeAuditLog"]
+    },
+    {
+      "id": "file:api/lib/backup.js",
+      "type": "file",
+      "label": "api/lib/backup.js",
+      "path": "api/lib/backup.js",
+      "language": "javascript",
+      "description": "Comprehensive backup/restore system. Supports minute/hourly/daily/monthly/manual/uploaded backup types with retention policies. Handles JSON snapshots, asset bundles (tgz), SHA-256 checksums, deduplication via hard links, restore drills, and scheduled cleanup via startBackupScheduler.",
+      "metrics": { "lines": 777, "functions": 43, "exports": 15 },
+      "exports": ["BACKUP_ROOT", "createBackup", "listBackups", "getBackupFile", "getBackupAssetFile", "restoreBackup", "restoreUploadedBackup", "restoreUploadedAssets", "deleteBackup", "updateBackupMetadata", "viewBackup", "getHistory", "cleanupOldBackups", "getBackupStatus", "startBackupScheduler"]
+    },
+    {
+      "id": "file:api/lib/customerMaster.js",
+      "type": "file",
+      "label": "api/lib/customerMaster.js",
+      "path": "api/lib/customerMaster.js",
+      "language": "javascript",
+      "description": "Customer master data builder. Exports buildCustomerMasterFromWarranties which aggregates warranty records into a deduplicated customer list with auto-generated codes (KH00001 format), tracking last seen date and active status.",
+      "metrics": { "lines": 118, "functions": 2, "exports": 1 },
+      "exports": ["buildCustomerMasterFromWarranties"]
+    },
+    {
+      "id": "file:api/lib/customers.js",
+      "type": "file",
+      "label": "api/lib/customers.js",
+      "path": "api/lib/customers.js",
+      "language": "javascript",
+      "description": "Customer utility functions for warranty lookups. Provides customer key generation, warranty-customer association, customer aggregation stats, name suggestions, and customer search by query/key.",
+      "metrics": { "lines": 141, "functions": 11, "exports": 6 },
+      "exports": ["customerLabel", "getCustomerRows", "getWarrantyCustomerKey", "hasCustomer", "buildCustomerNameSuggestions", "findCustomerByQuery", "findCustomerByKey"]
+    },
+    {
+      "id": "file:api/lib/restore_drill.js",
+      "type": "file",
+      "label": "api/lib/restore_drill.js",
+      "path": "api/lib/restore_drill.js",
+      "language": "javascript",
+      "description": "Restore drill/test utility. Runs a full restore simulation inside a Prisma transaction: deletes all data, re-inserts from backup JSON, validates counts, then rolls back. Exports runRestoreDrill.",
+      "metrics": { "lines": 186, "functions": 1, "exports": 1 },
+      "exports": ["runRestoreDrill"]
+    },
+    {
+      "id": "file:api/lib/validators.js",
+      "type": "file",
+      "label": "api/lib/validators.js",
+      "path": "api/lib/validators.js",
+      "language": "javascript",
+      "description": "Zod validation schemas for warranty, status updates, return processing, exchange/return, supplier, supplier send, and supplier return operations.",
+      "metrics": { "lines": 95, "functions": 0, "exports": 7 },
+      "exports": ["warrantySchema", "statusUpdateSchema", "traHangSchema", "exchangeReturnSchema", "supplierSchema", "supplierSendSchema", "supplierReturnSchema"]
+    },
+    {
+      "id": "file:api/routes/auth.js",
+      "type": "file",
+      "label": "api/routes/auth.js",
+      "path": "api/routes/auth.js",
+      "language": "javascript",
+      "description": "Express router for /api/auth endpoints. Provides POST /login, POST /logout, GET /me, POST /change-password. Uses auth middleware and db read/write.",
+      "metrics": { "lines": 68, "functions": 0, "imports": 2 },
+      "endpoints": ["POST /api/auth/login", "POST /api/auth/logout", "GET /api/auth/me", "POST /api/auth/change-password"]
+    },
+    {
+      "id": "file:api/routes/backups.js",
+      "type": "file",
+      "label": "api/routes/backups.js",
+      "path": "api/routes/backups.js",
+      "language": "javascript",
+      "description": "Express router for /api/admin/backups endpoints. Provides backup CRUD operations: list, create, view, download, restore, delete, upload, history, status, metadata. Logs actions via writeAuditLog.",
+      "metrics": { "lines": 93, "functions": 2, "imports": 2 },
+      "endpoints": ["GET /api/admin/backups/status", "GET /api/admin/backups/history", "POST /api/admin/backups/create", "POST /api/admin/backups/restore", "DELETE /api/admin/backups/:id"]
+    },
+    {
+      "id": "file:api/routes/customers.js",
+      "type": "file",
+      "label": "api/routes/customers.js",
+      "path": "api/routes/customers.js",
+      "language": "javascript",
+      "description": "Express router for /api/customers endpoints. Provides customer list, search, detail, update, and name suggestions. Integrates customer master data from warranties.",
+      "metrics": { "lines": 205, "functions": 1, "imports": 4 },
+      "endpoints": ["GET /api/customers/list", "GET /api/customers/search", "GET /api/customers/:key", "PUT /api/customers/:key"]
+    },
+    {
+      "id": "file:api/routes/nhanVien.js",
+      "type": "file",
+      "label": "api/routes/nhanVien.js",
+      "path": "api/routes/nhanVien.js",
+      "language": "javascript",
+      "description": "Express router for /api/nhan-vien (staff) endpoints. Provides staff listing, credential verification, creation, update, and deactivation. Uses Prisma directly for CRUD.",
+      "metrics": { "lines": 149, "functions": 2, "imports": 3 },
+      "endpoints": ["GET /api/nhan-vien", "POST /api/nhan-vien/verify", "POST /api/nhan-vien", "PUT /api/nhan-vien/:maNV", "DELETE /api/nhan-vien/:maNV"]
+    },
+    {
+      "id": "file:api/routes/public.js",
+      "type": "file",
+      "label": "api/routes/public.js",
+      "path": "api/routes/public.js",
+      "language": "javascript",
+      "description": "Express router for /api/public endpoints (no auth required). Provides public warranty lookup by phone/code with rate limiting. Includes Vietnamese text normalization, history timeline display, and exchange/return formatting.",
+      "metrics": { "lines": 235, "functions": 9, "imports": 2 },
+      "endpoints": ["GET /api/public/warranty/:id", "GET /api/public/search", "POST /api/public/lookup"]
+    },
+    {
+      "id": "file:api/routes/stats.js",
+      "type": "file",
+      "label": "api/routes/stats.js",
+      "path": "api/routes/stats.js",
+      "language": "javascript",
+      "description": "Express router for /api/stats endpoints. Provides dashboard summary (total, processing, returned today, near deadline), daily stats, and monthly trends from warranty data.",
+      "metrics": { "lines": 128, "functions": 0, "imports": 1 },
+      "endpoints": ["GET /api/stats/summary", "GET /api/stats/daily", "GET /api/stats/monthly"]
+    },
+    {
+      "id": "file:api/routes/suppliers.js",
+      "type": "file",
+      "label": "api/routes/suppliers.js",
+      "path": "api/routes/suppliers.js",
+      "language": "javascript",
+      "description": "Express router for /api/suppliers endpoints. Manages supplier CRUD, auto-generates supplier codes (NCC00001 format), and validates via Zod supplierSchema. Uses Prisma and audit logging.",
+      "metrics": { "lines": 191, "functions": 2, "imports": 3 },
+      "endpoints": ["GET /api/suppliers", "POST /api/suppliers", "PUT /api/suppliers/:id", "DELETE /api/suppliers/:id"]
+    },
+    {
+      "id": "file:api/routes/warranties.js",
+      "type": "file",
+      "label": "api/routes/warranties.js",
+      "path": "api/routes/warranties.js",
+      "language": "javascript",
+      "description": "Main warranty routes (1557 lines, largest route file). Handles full warranty lifecycle: create, list with filtering/sorting/pagination, detail, update, status transitions, return processing, exchange/return, supplier send/return, soft delete, file attachments (DataURL to disk), Excel import/export, customer auto-linking, and history timeline generation.",
+      "metrics": { "lines": 1557, "functions": 13, "imports": 6 },
+      "endpoints": ["GET /api/warranties", "POST /api/warranties", "GET /api/warranties/:id", "PUT /api/warranties/:id", "DELETE /api/warranties/:id", "POST /api/warranties/:id/status", "POST /api/warranties/:id/return", "POST /api/warranties/:id/exchange", "POST /api/warranties/import-excel", "GET /api/warranties/export"]
+    },
+    {
+      "id": "file:api/routes/warranties.js.bak-customers-master",
+      "type": "file",
+      "label": "api/routes/warranties.js.bak-customers-master",
+      "path": "api/routes/warranties.js.bak-customers-master",
+      "language": "javascript",
+      "description": "Backup of warranties.js before customer master refactoring. Contains earlier version of warranty routes.",
+      "metrics": { "lines": 1195 }
+    },
+    {
+      "id": "file:api/seedData.js",
+      "type": "file",
+      "label": "api/seedData.js",
+      "path": "api/seedData.js",
+      "language": "javascript",
+      "description": "Seed data generator for initial database population. Exports arrays of sample warranty tickets and staff (nhanVien) with realistic Vietnamese data, dates, statuses, and history entries.",
+      "metrics": { "lines": 251, "functions": 4, "exports": 2 },
+      "exports": ["warranties", "nhanVien"]
+    },
+    {
+      "id": "file:api/server.js",
+      "type": "file",
+      "label": "api/server.js",
+      "path": "api/server.js",
+      "language": "javascript",
+      "description": "Main Express.js API server entry point. Configures CORS (LAN-aware), helmet security, JSON body parsing (50MB limit), static file serving for uploads. Imports all route modules, applies auth middleware chain, seeds database on startup, provides /api/health endpoint with DB and filesystem checks.",
+      "metrics": { "lines": 238, "functions": 2 },
+      "endpoints": ["GET /api/health"]
+    },
+    {
+      "id": "doc:docs/superpowers/plans/2026-05-20-react-i18next-rollout.md",
+      "type": "doc",
+      "label": "React i18next Rollout Plan",
+      "path": "docs/superpowers/plans/2026-05-20-react-i18next-rollout.md",
+      "language": "markdown",
+      "description": "Detailed 10-task implementation plan for migrating the React frontend to i18next internationalization. Covers dependency installation, foundation setup, constants/validation migration, component migration, cleanup, and browser verification.",
+      "metrics": { "lines": 1139, "sections": 14 }
+    },
+    {
+      "id": "doc:docs/superpowers/specs/2026-05-20-react-i18next-rollout-design.md",
+      "type": "doc",
+      "label": "React i18next Rollout Design",
+      "path": "docs/superpowers/specs/2026-05-20-react-i18next-rollout-design.md",
+      "language": "markdown",
+      "description": "Design specification for React i18next rollout. Defines goals, scope, i18n architecture (react-i18next + i18next-browser-languagedetector), namespace rules, migration strategy, component patterns, verification steps, and risk controls.",
+      "metrics": { "lines": 150, "sections": 9 }
+    },
+    {
+      "id": "data:filebaohanh.xlsx",
+      "type": "data",
+      "label": "filebaohanh.xlsx",
+      "path": "filebaohanh.xlsx",
+      "language": "xlsx",
+      "description": "Excel spreadsheet containing warranty ticket data (506 rows). Likely source for Excel import feature in warranty management.",
+      "metrics": { "lines": 507 }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge:server->db",
+      "source": "file:api/server.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports readDb, writeDb, autoSelfHealingSync, prisma"
+    },
+    {
+      "id": "edge:server->auth",
+      "source": "file:api/server.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports attachUser, ensureAuthState, requireAuth, requireRole"
+    },
+    {
+      "id": "edge:server->seedData",
+      "source": "file:api/server.js",
+      "target": "file:api/seedData.js",
+      "type": "imports",
+      "label": "imports warranties, nhanVien seed data"
+    },
+    {
+      "id": "edge:server->backup",
+      "source": "file:api/server.js",
+      "target": "file:api/lib/backup.js",
+      "type": "imports",
+      "label": "imports startBackupScheduler"
+    },
+    {
+      "id": "edge:server->route-warranties",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/warranties.js",
+      "type": "uses",
+      "label": "mounts at /api/warranties"
+    },
+    {
+      "id": "edge:server->route-nhanVien",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/nhanVien.js",
+      "type": "uses",
+      "label": "mounts at /api/nhan-vien"
+    },
+    {
+      "id": "edge:server->route-auth",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/auth.js",
+      "type": "uses",
+      "label": "mounts at /api/auth"
+    },
+    {
+      "id": "edge:server->route-stats",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/stats.js",
+      "type": "uses",
+      "label": "mounts at /api/stats"
+    },
+    {
+      "id": "edge:server->route-customers",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/customers.js",
+      "type": "uses",
+      "label": "mounts at /api/customers"
+    },
+    {
+      "id": "edge:server->route-public",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/public.js",
+      "type": "uses",
+      "label": "mounts at /api/public (no auth)"
+    },
+    {
+      "id": "edge:server->route-suppliers",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/suppliers.js",
+      "type": "uses",
+      "label": "mounts at /api/suppliers"
+    },
+    {
+      "id": "edge:server->route-backups",
+      "source": "file:api/server.js",
+      "target": "file:api/routes/backups.js",
+      "type": "uses",
+      "label": "mounts at /api/admin/backups (admin role required)"
+    },
+    {
+      "id": "edge:route-auth->auth",
+      "source": "file:api/routes/auth.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports authenticateStaff, clearSessionCookie, hashPassword, requireAuth, sanitizeStaff"
+    },
+    {
+      "id": "edge:route-auth->db",
+      "source": "file:api/routes/auth.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports readDb, writeDb"
+    },
+    {
+      "id": "edge:route-backups->backup",
+      "source": "file:api/routes/backups.js",
+      "target": "file:api/lib/backup.js",
+      "type": "imports",
+      "label": "imports createBackup, listBackups, getBackupFile, restoreBackup, deleteBackup, etc."
+    },
+    {
+      "id": "edge:route-backups->audit",
+      "source": "file:api/routes/backups.js",
+      "target": "file:api/lib/audit.js",
+      "type": "imports",
+      "label": "imports writeAuditLog"
+    },
+    {
+      "id": "edge:route-customers->db",
+      "source": "file:api/routes/customers.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports readDb, writeDb"
+    },
+    {
+      "id": "edge:route-customers->customers",
+      "source": "file:api/routes/customers.js",
+      "target": "file:api/lib/customers.js",
+      "type": "imports",
+      "label": "imports customerLabel, getCustomerRows, getWarrantyCustomerKey, hasCustomer, buildCustomerNameSuggestions, findCustomerByQuery, findCustomerByKey"
+    },
+    {
+      "id": "edge:route-customers->customerMaster",
+      "source": "file:api/routes/customers.js",
+      "target": "file:api/lib/customerMaster.js",
+      "type": "imports",
+      "label": "imports buildCustomerMasterFromWarranties"
+    },
+    {
+      "id": "edge:route-customers->auth",
+      "source": "file:api/routes/customers.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports requireRole"
+    },
+    {
+      "id": "edge:route-nhanVien->db",
+      "source": "file:api/routes/nhanVien.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports prisma"
+    },
+    {
+      "id": "edge:route-nhanVien->auth",
+      "source": "file:api/routes/nhanVien.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports authenticateStaff, getStaffRole, hashPassword, sanitizeStaff, requireRole"
+    },
+    {
+      "id": "edge:route-nhanVien->audit",
+      "source": "file:api/routes/nhanVien.js",
+      "target": "file:api/lib/audit.js",
+      "type": "imports",
+      "label": "imports writeAuditLog"
+    },
+    {
+      "id": "edge:route-public->db",
+      "source": "file:api/routes/public.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports readDb, getCollection"
+    },
+    {
+      "id": "edge:route-stats->db",
+      "source": "file:api/routes/stats.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports getCollection"
+    },
+    {
+      "id": "edge:route-suppliers->db",
+      "source": "file:api/routes/suppliers.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports prisma"
+    },
+    {
+      "id": "edge:route-suppliers->validators",
+      "source": "file:api/routes/suppliers.js",
+      "target": "file:api/lib/validators.js",
+      "type": "imports",
+      "label": "imports supplierSchema"
+    },
+    {
+      "id": "edge:route-suppliers->audit",
+      "source": "file:api/routes/suppliers.js",
+      "target": "file:api/lib/audit.js",
+      "type": "imports",
+      "label": "imports writeAuditLog"
+    },
+    {
+      "id": "edge:route-warranties->db",
+      "source": "file:api/routes/warranties.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports readDb, getCollection, setCollection, addToCollection, prisma, syncLocalBackup"
+    },
+    {
+      "id": "edge:route-warranties->audit",
+      "source": "file:api/routes/warranties.js",
+      "target": "file:api/lib/audit.js",
+      "type": "imports",
+      "label": "imports writeAuditLog"
+    },
+    {
+      "id": "edge:route-warranties->customers",
+      "source": "file:api/routes/warranties.js",
+      "target": "file:api/lib/customers.js",
+      "type": "imports",
+      "label": "imports customerLabel, getCustomerRows, getWarrantyCustomerKey, findCustomerByKey"
+    },
+    {
+      "id": "edge:route-warranties->customerMaster",
+      "source": "file:api/routes/warranties.js",
+      "target": "file:api/lib/customerMaster.js",
+      "type": "imports",
+      "label": "imports buildCustomerMasterFromWarranties"
+    },
+    {
+      "id": "edge:route-warranties->validators",
+      "source": "file:api/routes/warranties.js",
+      "target": "file:api/lib/validators.js",
+      "type": "imports",
+      "label": "imports warrantySchema, statusUpdateSchema, traHangSchema, exchangeReturnSchema, supplierSendSchema, supplierReturnSchema"
+    },
+    {
+      "id": "edge:route-warranties->auth",
+      "source": "file:api/routes/warranties.js",
+      "target": "file:api/lib/auth.js",
+      "type": "imports",
+      "label": "imports requireRole"
+    },
+    {
+      "id": "edge:audit->db",
+      "source": "file:api/lib/audit.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports prisma for audit log writes"
+    },
+    {
+      "id": "edge:backup->db",
+      "source": "file:api/lib/backup.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "imports DB_PATH, readDb, atomicWriteJsonFile"
+    },
+    {
+      "id": "edge:auth->db",
+      "source": "file:api/lib/auth.js",
+      "target": "file:api/lib/db.js",
+      "type": "imports",
+      "label": "uses readDb/writeDb for staff lookups and password updates"
+    },
+    {
+      "id": "edge:dockerfile->server",
+      "source": "service:api.Dockerfile",
+      "target": "file:api/server.js",
+      "type": "builds",
+      "label": "CMD [\"node\", \"api/server.js\"]"
+    },
+    {
+      "id": "edge:dockerfile->db-js",
+      "source": "service:api.Dockerfile",
+      "target": "file:api/lib/db.js",
+      "type": "builds",
+      "label": "copies api/ directory containing db.js and Prisma schema"
+    },
+    {
+      "id": "edge:warranties-backup->warranties",
+      "source": "file:api/routes/warranties.js.bak-customers-master",
+      "target": "file:api/routes/warranties.js",
+      "type": "backup_of",
+      "label": "backup before customer master refactoring"
+    },
+    {
+      "id": "edge:i18n-plan->i18n-spec",
+      "source": "doc:docs/superpowers/plans/2026-05-20-react-i18next-rollout.md",
+      "target": "doc:docs/superpowers/specs/2026-05-20-react-i18next-rollout-design.md",
+      "type": "references",
+      "label": "implementation plan references design specification"
+    }
+  ]
+}

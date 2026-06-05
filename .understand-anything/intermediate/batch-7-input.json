@@ -1,0 +1,182 @@
+{
+  "projectRoot": "/mnt/baohanhntpc",
+  "batchFiles": [
+    {
+      "path": "src/hooks/useKeyboardShortcuts.js",
+      "language": "javascript",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useTheme.js",
+      "language": "javascript",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useWarranties.js",
+      "language": "javascript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/i18n/index.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/i18n/locales/vi/ui.json.bak-field-labels",
+      "language": "bak-field-labels",
+      "sizeLines": 582,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/lib/axios.js",
+      "language": "javascript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/lib/zodSchemas.js",
+      "language": "javascript",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/main.jsx",
+      "language": "javascript",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/CreateWarranty.jsx",
+      "language": "javascript",
+      "sizeLines": 528,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/CustomerInfo.jsx",
+      "language": "javascript",
+      "sizeLines": 591,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/Dashboard.jsx",
+      "language": "javascript",
+      "sizeLines": 501,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/ImportExport.jsx",
+      "language": "javascript",
+      "sizeLines": 310,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/StaffManagement.jsx",
+      "language": "javascript",
+      "sizeLines": 184,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/Statistics.jsx",
+      "language": "javascript",
+      "sizeLines": 240,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/Suppliers.jsx",
+      "language": "javascript",
+      "sizeLines": 544,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/WarrantyList.jsx",
+      "language": "javascript",
+      "sizeLines": 610,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/customer/CustomerPortal.jsx",
+      "language": "javascript",
+      "sizeLines": 356,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/customer/TrackingResult.jsx",
+      "language": "javascript",
+      "sizeLines": 1228,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/customer/TrackingResult.module.css",
+      "language": "css",
+      "sizeLines": 1124,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/customer/Tracuu.jsx",
+      "language": "javascript",
+      "sizeLines": 546,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/NotFound.jsx",
+      "language": "javascript",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/services/backupService.js",
+      "language": "javascript",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/services/warrantyService.js",
+      "language": "javascript",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/styles/global.css",
+      "language": "css",
+      "sizeLines": 4022,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/styles/print.css",
+      "language": "css",
+      "sizeLines": 56,
+      "fileCategory": "markup"
+    }
+  ],
+  "batchImportData": {
+    "src/hooks/useKeyboardShortcuts.js": [],
+    "src/hooks/useTheme.js": [],
+    "src/hooks/useWarranties.js": [],
+    "src/i18n/index.js": [],
+    "src/i18n/locales/vi/ui.json.bak-field-labels": [],
+    "src/lib/axios.js": [],
+    "src/lib/zodSchemas.js": [],
+    "src/main.jsx": [],
+    "src/pages/admin/CreateWarranty.jsx": [],
+    "src/pages/admin/CustomerInfo.jsx": [],
+    "src/pages/admin/Dashboard.jsx": [],
+    "src/pages/admin/ImportExport.jsx": [],
+    "src/pages/admin/StaffManagement.jsx": [],
+    "src/pages/admin/Statistics.jsx": [],
+    "src/pages/admin/Suppliers.jsx": [],
+    "src/pages/admin/WarrantyList.jsx": [],
+    "src/pages/customer/CustomerPortal.jsx": [],
+    "src/pages/customer/TrackingResult.jsx": [],
+    "src/pages/customer/TrackingResult.module.css": [],
+    "src/pages/customer/Tracuu.jsx": [],
+    "src/pages/NotFound.jsx": [],
+    "src/services/backupService.js": [],
+    "src/services/warrantyService.js": [],
+    "src/styles/global.css": [],
+    "src/styles/print.css": []
+  }
+}

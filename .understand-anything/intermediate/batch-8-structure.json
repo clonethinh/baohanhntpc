@@ -1,0 +1,2014 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 23,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/theme/antdTheme.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 76,
+      "nonEmptyLines": 71,
+      "exports": [
+        {
+          "name": "antdLightTheme",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "antdDarkTheme",
+          "line": 63,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/copy.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "copyText",
+          "startLine": 1,
+          "endLine": 35,
+          "params": [
+            "text"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "copyText",
+          "line": 1,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "copyText",
+          "callee": "navigator.clipboard.writeText",
+          "lineNumber": 4
+        },
+        {
+          "caller": "copyText",
+          "callee": "document.createElement",
+          "lineNumber": 12
+        },
+        {
+          "caller": "copyText",
+          "callee": "el.setAttribute",
+          "lineNumber": 14
+        },
+        {
+          "caller": "copyText",
+          "callee": "document.body.appendChild",
+          "lineNumber": 19
+        },
+        {
+          "caller": "copyText",
+          "callee": "el.focus",
+          "lineNumber": 20
+        },
+        {
+          "caller": "copyText",
+          "callee": "el.select",
+          "lineNumber": 21
+        },
+        {
+          "caller": "copyText",
+          "callee": "document.execCommand",
+          "lineNumber": 22
+        },
+        {
+          "caller": "copyText",
+          "callee": "document.body.removeChild",
+          "lineNumber": 23
+        },
+        {
+          "caller": "copyText",
+          "callee": "window.prompt",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/dateHelpers.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 46,
+      "functions": [
+        {
+          "name": "formatDate",
+          "startLine": 10,
+          "endLine": 14,
+          "params": [
+            "dateStr"
+          ]
+        },
+        {
+          "name": "formatDateTime",
+          "startLine": 16,
+          "endLine": 20,
+          "params": [
+            "dateStr"
+          ]
+        },
+        {
+          "name": "parseExcelDate",
+          "startLine": 22,
+          "endLine": 33,
+          "params": [
+            "serial"
+          ]
+        },
+        {
+          "name": "addBusinessDaysSkipSunday",
+          "startLine": 35,
+          "endLine": 45,
+          "params": [
+            "startDate"
+          ]
+        },
+        {
+          "name": "getWarrantyDueDate",
+          "startLine": 47,
+          "endLine": 51,
+          "params": [
+            "warranty"
+          ]
+        },
+        {
+          "name": "shouldShowDueDate",
+          "startLine": 53,
+          "endLine": 55,
+          "params": [
+            "warranty"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "formatDate",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "formatDateTime",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "parseExcelDate",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "addBusinessDaysSkipSunday",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "getWarrantyDueDate",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "shouldShowDueDate",
+          "line": 53,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "formatDate",
+          "callee": "dayjs",
+          "lineNumber": 12
+        },
+        {
+          "caller": "formatDate",
+          "callee": "d.isValid",
+          "lineNumber": 13
+        },
+        {
+          "caller": "formatDate",
+          "callee": "d.tz('Asia/Ho_Chi_Minh').format",
+          "lineNumber": 13
+        },
+        {
+          "caller": "formatDate",
+          "callee": "d.tz",
+          "lineNumber": 13
+        },
+        {
+          "caller": "formatDateTime",
+          "callee": "dayjs",
+          "lineNumber": 18
+        },
+        {
+          "caller": "formatDateTime",
+          "callee": "d.isValid",
+          "lineNumber": 19
+        },
+        {
+          "caller": "formatDateTime",
+          "callee": "d.tz('Asia/Ho_Chi_Minh').format",
+          "lineNumber": 19
+        },
+        {
+          "caller": "formatDateTime",
+          "callee": "d.tz",
+          "lineNumber": 19
+        },
+        {
+          "caller": "parseExcelDate",
+          "callee": "serial.split",
+          "lineNumber": 24
+        },
+        {
+          "caller": "parseExcelDate",
+          "callee": "dayjs(date).format",
+          "lineNumber": 30
+        },
+        {
+          "caller": "parseExcelDate",
+          "callee": "dayjs",
+          "lineNumber": 30
+        },
+        {
+          "caller": "addBusinessDaysSkipSunday",
+          "callee": "dayjs",
+          "lineNumber": 36
+        },
+        {
+          "caller": "addBusinessDaysSkipSunday",
+          "callee": "date.add",
+          "lineNumber": 40
+        },
+        {
+          "caller": "addBusinessDaysSkipSunday",
+          "callee": "date.day",
+          "lineNumber": 41
+        },
+        {
+          "caller": "addBusinessDaysSkipSunday",
+          "callee": "date.format",
+          "lineNumber": 44
+        },
+        {
+          "caller": "getWarrantyDueDate",
+          "callee": "addBusinessDaysSkipSunday",
+          "lineNumber": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/excelHelpers.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 139,
+      "nonEmptyLines": 126,
+      "functions": [
+        {
+          "name": "parseExcelFile",
+          "startLine": 4,
+          "endLine": 22,
+          "params": [
+            "file"
+          ]
+        },
+        {
+          "name": "parseDateValue",
+          "startLine": 24,
+          "endLine": 42,
+          "params": [
+            "val"
+          ]
+        },
+        {
+          "name": "mapExcelRows",
+          "startLine": 44,
+          "endLine": 139,
+          "params": [
+            "rawRows"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "parseExcelFile",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "mapExcelRows",
+          "line": 44,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseExcelFile",
+          "callee": "XLSX.read",
+          "lineNumber": 10
+        },
+        {
+          "caller": "parseExcelFile",
+          "callee": "XLSX.utils.sheet_to_json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "parseExcelFile",
+          "callee": "resolve",
+          "lineNumber": 14
+        },
+        {
+          "caller": "parseExcelFile",
+          "callee": "reject",
+          "lineNumber": 16
+        },
+        {
+          "caller": "parseExcelFile",
+          "callee": "reject",
+          "lineNumber": 19
+        },
+        {
+          "caller": "parseExcelFile",
+          "callee": "reader.readAsArrayBuffer",
+          "lineNumber": 20
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "Math.round",
+          "lineNumber": 27
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs(date).format",
+          "lineNumber": 28
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs",
+          "lineNumber": 28
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs().format",
+          "lineNumber": 28
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs",
+          "lineNumber": 28
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "String(val).trim",
+          "lineNumber": 30
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "String",
+          "lineNumber": 30
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "str.match",
+          "lineNumber": 31
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "month.padStart",
+          "lineNumber": 35
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "day.padStart",
+          "lineNumber": 35
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "hour.padStart",
+          "lineNumber": 35
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "month.padStart",
+          "lineNumber": 37
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "day.padStart",
+          "lineNumber": 37
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs().format",
+          "lineNumber": 37
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs",
+          "lineNumber": 37
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "isNaN",
+          "lineNumber": 40
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dt.getTime",
+          "lineNumber": 40
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs(dt).format",
+          "lineNumber": 40
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs",
+          "lineNumber": 40
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs().format",
+          "lineNumber": 40
+        },
+        {
+          "caller": "parseDateValue",
+          "callee": "dayjs",
+          "lineNumber": 40
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "firstRow.some",
+          "lineNumber": 48
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(cell || '').toLowerCase().trim",
+          "lineNumber": 49
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(cell || '').toLowerCase",
+          "lineNumber": 49
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 49
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "s.includes",
+          "lineNumber": 50
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "s.includes",
+          "lineNumber": 50
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "s.includes",
+          "lineNumber": 50
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "s.includes",
+          "lineNumber": 50
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "rawRows.slice",
+          "lineNumber": 52
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "row.every",
+          "lineNumber": 59
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "isNaN",
+          "lineNumber": 62
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "Number",
+          "lineNumber": 62
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "records.push",
+          "lineNumber": 66
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "Number",
+          "lineNumber": 68
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "parseDateValue",
+          "lineNumber": 69
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[2] || 'admin').trim",
+          "lineNumber": 70
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 70
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[3] || '').trim",
+          "lineNumber": 71
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 71
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[4] || '').trim",
+          "lineNumber": 72
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 72
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[5] || '').trim",
+          "lineNumber": 87
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 87
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[6] || '').trim",
+          "lineNumber": 88
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 88
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[7] || '').trim",
+          "lineNumber": 89
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 89
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[8] || '').trim",
+          "lineNumber": 90
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 90
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[9] || '').trim",
+          "lineNumber": 91
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 91
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "parseInt",
+          "lineNumber": 92
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[11] || '').trim",
+          "lineNumber": 93
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 93
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[12] || '').trim",
+          "lineNumber": 94
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 94
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "parseDateValue",
+          "lineNumber": 95
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "parseDateValue",
+          "lineNumber": 96
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(ngayTraRaw).includes",
+          "lineNumber": 100
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 100
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "parseDateValue",
+          "lineNumber": 103
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[16]).trim",
+          "lineNumber": 109
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 109
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "tra.includes",
+          "lineNumber": 110
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "tra.includes",
+          "lineNumber": 110
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[17]).trim().toLowerCase",
+          "lineNumber": 115
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String(row[17]).trim",
+          "lineNumber": 115
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "String",
+          "lineNumber": 115
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "statusVal.includes",
+          "lineNumber": 116
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "statusVal.includes",
+          "lineNumber": 116
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "statusVal.includes",
+          "lineNumber": 118
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "statusVal.includes",
+          "lineNumber": 120
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "statusVal.includes",
+          "lineNumber": 120
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "statusVal.includes",
+          "lineNumber": 122
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "statusVal.includes",
+          "lineNumber": 122
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "records.push",
+          "lineNumber": 129
+        },
+        {
+          "caller": "mapExcelRows",
+          "callee": "records.map",
+          "lineNumber": 131
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/fieldLabels.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 12,
+      "functions": [
+        {
+          "name": "getFieldLabel",
+          "startLine": 5,
+          "endLine": 8,
+          "params": [
+            "field"
+          ]
+        },
+        {
+          "name": "getFieldLabels",
+          "startLine": 10,
+          "endLine": 15,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "getFieldLabel",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "getFieldLabels",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getFieldLabels",
+          "callee": "fields.reduce",
+          "lineNumber": 11
+        },
+        {
+          "caller": "getFieldLabels",
+          "callee": "getFieldLabel",
+          "lineNumber": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/formatters.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 11,
+      "functions": [
+        {
+          "name": "formatVND",
+          "startLine": 1,
+          "endLine": 4,
+          "params": [
+            "amount"
+          ]
+        },
+        {
+          "name": "maskName",
+          "startLine": 6,
+          "endLine": 12,
+          "params": [
+            "name"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "formatVND",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "maskName",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "formatVND",
+          "callee": "new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format",
+          "lineNumber": 3
+        },
+        {
+          "caller": "maskName",
+          "callee": "name.split",
+          "lineNumber": 8
+        },
+        {
+          "caller": "maskName",
+          "callee": "'*'.repeat",
+          "lineNumber": 9
+        },
+        {
+          "caller": "maskName",
+          "callee": "parts.slice(0, -1).join",
+          "lineNumber": 11
+        },
+        {
+          "caller": "maskName",
+          "callee": "parts.slice",
+          "lineNumber": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/generateChungTu.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 7,
+      "functions": [
+        {
+          "name": "generateChungTuPreview",
+          "startLine": 3,
+          "endLine": 8,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "generateChungTuPreview",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "generateChungTuPreview",
+          "callee": "dayjs().format",
+          "lineNumber": 4
+        },
+        {
+          "caller": "generateChungTuPreview",
+          "callee": "dayjs",
+          "lineNumber": 4
+        },
+        {
+          "caller": "generateChungTuPreview",
+          "callee": "existingCodes.filter",
+          "lineNumber": 5
+        },
+        {
+          "caller": "generateChungTuPreview",
+          "callee": "c.startsWith",
+          "lineNumber": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/historyDisplay.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 22,
+      "nonEmptyLines": 21,
+      "functions": [
+        {
+          "name": "normalizeHistoryNote",
+          "startLine": 1,
+          "endLine": 11,
+          "params": [
+            "text"
+          ]
+        },
+        {
+          "name": "mapLoaiXuLyValue",
+          "startLine": 13,
+          "endLine": 22,
+          "params": [
+            "raw"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "normalizeHistoryNote",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "mapLoaiXuLyValue",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('soSeri:', 'Số seri:')\n    .replaceAll('soSeri :', 'Số seri:')\n    .replaceAll('bao_hanh', 'Bảo hành')\n    .replaceAll('sua_dv', 'Sửa dịch vụ')\n    .replaceAll('Sửa DV', 'Sửa dịch vụ')\n    .replaceAll('tra_bao_hanh', 'Trả bảo hành')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('soSeri:', 'Số seri:')\n    .replaceAll('soSeri :', 'Số seri:')\n    .replaceAll('bao_hanh', 'Bảo hành')\n    .replaceAll('sua_dv', 'Sửa dịch vụ')\n    .replaceAll('Sửa DV', 'Sửa dịch vụ')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('soSeri:', 'Số seri:')\n    .replaceAll('soSeri :', 'Số seri:')\n    .replaceAll('bao_hanh', 'Bảo hành')\n    .replaceAll('sua_dv', 'Sửa dịch vụ')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('soSeri:', 'Số seri:')\n    .replaceAll('soSeri :', 'Số seri:')\n    .replaceAll('bao_hanh', 'Bảo hành')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('soSeri:', 'Số seri:')\n    .replaceAll('soSeri :', 'Số seri:')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('soSeri:', 'Số seri:')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String(text || '')\n    .replaceAll",
+          "lineNumber": 2
+        },
+        {
+          "caller": "normalizeHistoryNote",
+          "callee": "String",
+          "lineNumber": 2
+        },
+        {
+          "caller": "mapLoaiXuLyValue",
+          "callee": "String(raw || '').trim",
+          "lineNumber": 14
+        },
+        {
+          "caller": "mapLoaiXuLyValue",
+          "callee": "String",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/historyTimeline.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 292,
+      "nonEmptyLines": 266,
+      "functions": [
+        {
+          "name": "normalizeText",
+          "startLine": 52,
+          "endLine": 54,
+          "params": [
+            "text"
+          ]
+        },
+        {
+          "name": "isSupplierNoise",
+          "startLine": 56,
+          "endLine": 63,
+          "params": [
+            "entry"
+          ]
+        },
+        {
+          "name": "formatDateValue",
+          "startLine": 65,
+          "endLine": 69,
+          "params": [
+            "raw"
+          ]
+        },
+        {
+          "name": "formatFieldValue",
+          "startLine": 71,
+          "endLine": 78,
+          "params": [
+            "field",
+            "raw"
+          ]
+        },
+        {
+          "name": "formatHistoryChanges",
+          "startLine": 80,
+          "endLine": 112,
+          "params": []
+        },
+        {
+          "name": "customerDetail",
+          "startLine": 114,
+          "endLine": 123,
+          "params": [
+            "entry"
+          ]
+        },
+        {
+          "name": "resolveSupplierHistoryNote",
+          "startLine": 125,
+          "endLine": 164,
+          "params": [
+            "entry"
+          ]
+        },
+        {
+          "name": "timelineColor",
+          "startLine": 166,
+          "endLine": 173,
+          "params": [
+            "action"
+          ]
+        },
+        {
+          "name": "toHistoryTimelineItem",
+          "startLine": 175,
+          "endLine": 255,
+          "params": [
+            "entry"
+          ]
+        },
+        {
+          "name": "buildInternalHistoryTimeline",
+          "startLine": 257,
+          "endLine": 271,
+          "params": []
+        },
+        {
+          "name": "buildPublicHistoryTimeline",
+          "startLine": 273,
+          "endLine": 292,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "INTERNAL_HISTORY_ACTIONS",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "PUBLIC_HISTORY_ACTIONS",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "formatHistoryChanges",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "toHistoryTimelineItem",
+          "line": 175,
+          "isDefault": false
+        },
+        {
+          "name": "buildInternalHistoryTimeline",
+          "line": 257,
+          "isDefault": false
+        },
+        {
+          "name": "buildPublicHistoryTimeline",
+          "line": 273,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "normalizeText",
+          "callee": "normalizeVietnameseText(text || '').trim",
+          "lineNumber": 53
+        },
+        {
+          "caller": "normalizeText",
+          "callee": "normalizeVietnameseText",
+          "lineNumber": 53
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String(entry?.note || '').toLowerCase",
+          "lineNumber": 57
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String",
+          "lineNumber": 57
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "note.includes",
+          "lineNumber": 58
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "note.includes",
+          "lineNumber": 59
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "Object.keys(changes).map",
+          "lineNumber": 61
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "Object.keys",
+          "lineNumber": 61
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String(key).toLowerCase",
+          "lineNumber": 61
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "String",
+          "lineNumber": 61
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "keys.every",
+          "lineNumber": 62
+        },
+        {
+          "caller": "isSupplierNoise",
+          "callee": "key.includes",
+          "lineNumber": 62
+        },
+        {
+          "caller": "formatDateValue",
+          "callee": "dayjs",
+          "lineNumber": 67
+        },
+        {
+          "caller": "formatDateValue",
+          "callee": "d.isValid",
+          "lineNumber": 68
+        },
+        {
+          "caller": "formatDateValue",
+          "callee": "d.format",
+          "lineNumber": 68
+        },
+        {
+          "caller": "formatDateValue",
+          "callee": "String",
+          "lineNumber": 68
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "formatDateValue",
+          "lineNumber": 73
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "mapLoaiXuLyValue",
+          "lineNumber": 74
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "String",
+          "lineNumber": 75
+        },
+        {
+          "caller": "formatFieldValue",
+          "callee": "String",
+          "lineNumber": 77
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Object.entries(changes)\n    .filter(([field]) => {\n      if (!publicMode) return true;\n      return !PUBLIC_BLOCKED_FIELDS.has(field) && !String(field).toLowerCase().includes('supplierlogs');\n    })\n    .map(([field, value]) => {\n      if (field === 'attachments') {\n        const fromNum = Number(value?.from ?? 0);\n        const toNum = Number(value?.to ?? 0);\n        if (Number.isFinite(fromNum) && Number.isFinite(toNum)) {\n          if (toNum > fromNum) return `Đã thêm ${toNum - fromNum} ảnh: ${fromNum} → ${toNum}`;\n          if (toNum < fromNum) return `Đã xóa ${fromNum - toNum} ảnh: ${fromNum} → ${toNum}`;\n          return `Ảnh đính kèm: ${fromNum}`;\n        }\n      }\n      const label = getFieldLabel(field);\n      const fromValue = formatFieldValue(field, value?.from);\n      const toValue = formatFieldValue(field, value?.to);\n      if (field === 'ngayHenTra' && value?.from === 'none') {\n        return `${label}: ${toValue}`;\n      }\n      if (field === 'ngayHenTra' && value?.to === 'none') {\n        return `${label}: ${toValue}`;\n      }\n      if (!fromValue && toValue) return `${label}: ${toValue}`;\n      if (fromValue && !toValue) return `${label}: ${fromValue}`;\n      if (!fromValue && !toValue) return `${label}:`;\n      return `${label}: ${fromValue} → ${toValue}`;\n    })\n    .filter(Boolean)\n    .join",
+          "lineNumber": 81
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Object.entries(changes)\n    .filter(([field]) => {\n      if (!publicMode) return true;\n      return !PUBLIC_BLOCKED_FIELDS.has(field) && !String(field).toLowerCase().includes('supplierlogs');\n    })\n    .map(([field, value]) => {\n      if (field === 'attachments') {\n        const fromNum = Number(value?.from ?? 0);\n        const toNum = Number(value?.to ?? 0);\n        if (Number.isFinite(fromNum) && Number.isFinite(toNum)) {\n          if (toNum > fromNum) return `Đã thêm ${toNum - fromNum} ảnh: ${fromNum} → ${toNum}`;\n          if (toNum < fromNum) return `Đã xóa ${fromNum - toNum} ảnh: ${fromNum} → ${toNum}`;\n          return `Ảnh đính kèm: ${fromNum}`;\n        }\n      }\n      const label = getFieldLabel(field);\n      const fromValue = formatFieldValue(field, value?.from);\n      const toValue = formatFieldValue(field, value?.to);\n      if (field === 'ngayHenTra' && value?.from === 'none') {\n        return `${label}: ${toValue}`;\n      }\n      if (field === 'ngayHenTra' && value?.to === 'none') {\n        return `${label}: ${toValue}`;\n      }\n      if (!fromValue && toValue) return `${label}: ${toValue}`;\n      if (fromValue && !toValue) return `${label}: ${fromValue}`;\n      if (!fromValue && !toValue) return `${label}:`;\n      return `${label}: ${fromValue} → ${toValue}`;\n    })\n    .filter",
+          "lineNumber": 81
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Object.entries(changes)\n    .filter(([field]) => {\n      if (!publicMode) return true;\n      return !PUBLIC_BLOCKED_FIELDS.has(field) && !String(field).toLowerCase().includes('supplierlogs');\n    })\n    .map",
+          "lineNumber": 81
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Object.entries(changes)\n    .filter",
+          "lineNumber": 81
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Object.entries",
+          "lineNumber": 81
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "PUBLIC_BLOCKED_FIELDS.has",
+          "lineNumber": 84
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "String(field).toLowerCase().includes",
+          "lineNumber": 84
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "String(field).toLowerCase",
+          "lineNumber": 84
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "String",
+          "lineNumber": 84
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Number",
+          "lineNumber": 88
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Number",
+          "lineNumber": 89
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Number.isFinite",
+          "lineNumber": 90
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "Number.isFinite",
+          "lineNumber": 90
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "getFieldLabel",
+          "lineNumber": 96
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "formatFieldValue",
+          "lineNumber": 97
+        },
+        {
+          "caller": "formatHistoryChanges",
+          "callee": "formatFieldValue",
+          "lineNumber": 98
+        },
+        {
+          "caller": "customerDetail",
+          "callee": "[from.khachHang, from.soDienThoai].filter(Boolean).join",
+          "lineNumber": 117
+        },
+        {
+          "caller": "customerDetail",
+          "callee": "[from.khachHang, from.soDienThoai].filter",
+          "lineNumber": 117
+        },
+        {
+          "caller": "customerDetail",
+          "callee": "[to.khachHang, to.soDienThoai].filter(Boolean).join",
+          "lineNumber": 118
+        },
+        {
+          "caller": "customerDetail",
+          "callee": "[to.khachHang, to.soDienThoai].filter",
+          "lineNumber": 118
+        },
+        {
+          "caller": "customerDetail",
+          "callee": "normalizeText",
+          "lineNumber": 119
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "Array.isArray",
+          "lineNumber": 126
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String(entry?.changes?.supplierLogs?.logId || '').trim",
+          "lineNumber": 132
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 132
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "supplierLogs.find",
+          "lineNumber": 134
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 134
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String(direct.supplierName || direct.supplier || '').trim",
+          "lineNumber": 136
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 136
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String(direct.note || '').trim",
+          "lineNumber": 137
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 137
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String(entry.by || '').trim",
+          "lineNumber": 143
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 143
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "dayjs(entry.at).valueOf",
+          "lineNumber": 144
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "dayjs",
+          "lineNumber": 144
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "supplierLogs\n    .filter((log) => log?.action === targetAction)\n    .map((log) => ({ ...log, ts: dayjs(log.at).valueOf() }))\n    .filter((log) => Number.isFinite(log.ts))\n    .sort",
+          "lineNumber": 145
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "supplierLogs\n    .filter((log) => log?.action === targetAction)\n    .map((log) => ({ ...log, ts: dayjs(log.at).valueOf() }))\n    .filter",
+          "lineNumber": 145
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "supplierLogs\n    .filter((log) => log?.action === targetAction)\n    .map",
+          "lineNumber": 145
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "supplierLogs\n    .filter",
+          "lineNumber": 145
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "dayjs(log.at).valueOf",
+          "lineNumber": 147
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "dayjs",
+          "lineNumber": 147
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "Number.isFinite",
+          "lineNumber": 148
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "candidates.filter",
+          "lineNumber": 153
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String(log.createdBy || log.updatedBy || '').trim",
+          "lineNumber": 153
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 153
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "Number.isFinite",
+          "lineNumber": 155
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "pool.find",
+          "lineNumber": 156
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String(picked.supplierName || picked.supplier || '').trim",
+          "lineNumber": 160
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 160
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String(picked.note || '').trim",
+          "lineNumber": 161
+        },
+        {
+          "caller": "resolveSupplierHistoryNote",
+          "callee": "String",
+          "lineNumber": 161
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "isSupplierNoise",
+          "lineNumber": 177
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "PUBLIC_HISTORY_ACTIONS.has",
+          "lineNumber": 178
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "INTERNAL_HISTORY_ACTIONS.has",
+          "lineNumber": 179
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "normalizeText(entry.note)\n    .replaceAll('Xóa ảnh đính kèm', 'Đã xóa ảnh đính kèm')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('bao_hanh', 'Bảo hành')\n    .replaceAll('sua_dv', 'Sửa dịch vụ')\n    .replaceAll('tra_bao_hanh', 'Trả bảo hành')\n    .replaceAll",
+          "lineNumber": 182
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "normalizeText(entry.note)\n    .replaceAll('Xóa ảnh đính kèm', 'Đã xóa ảnh đính kèm')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('bao_hanh', 'Bảo hành')\n    .replaceAll('sua_dv', 'Sửa dịch vụ')\n    .replaceAll",
+          "lineNumber": 182
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "normalizeText(entry.note)\n    .replaceAll('Xóa ảnh đính kèm', 'Đã xóa ảnh đính kèm')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll('bao_hanh', 'Bảo hành')\n    .replaceAll",
+          "lineNumber": 182
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "normalizeText(entry.note)\n    .replaceAll('Xóa ảnh đính kèm', 'Đã xóa ảnh đính kèm')\n    .replaceAll('loaiXuLy:', 'Loại xử lý:')\n    .replaceAll",
+          "lineNumber": 182
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "normalizeText(entry.note)\n    .replaceAll('Xóa ảnh đính kèm', 'Đã xóa ảnh đính kèm')\n    .replaceAll",
+          "lineNumber": 182
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "normalizeText(entry.note)\n    .replaceAll",
+          "lineNumber": 182
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "normalizeText",
+          "lineNumber": 182
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "formatHistoryChanges",
+          "lineNumber": 205
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "resolveSupplierHistoryNote",
+          "lineNumber": 214
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "resolveSupplierHistoryNote",
+          "lineNumber": 217
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "customerDetail",
+          "lineNumber": 220
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "customerDetail",
+          "lineNumber": 223
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "formatHistoryChanges",
+          "lineNumber": 225
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "Boolean",
+          "lineNumber": 226
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "[changesText, note].filter(Boolean).join",
+          "lineNumber": 228
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "[changesText, note].filter",
+          "lineNumber": 228
+        },
+        {
+          "caller": "toHistoryTimelineItem",
+          "callee": "timelineColor",
+          "lineNumber": 253
+        },
+        {
+          "caller": "buildInternalHistoryTimeline",
+          "callee": "(history || [])\n    .map((entry, index) => toHistoryTimelineItem(entry, warranty, { publicMode: false, index }))\n    .filter(Boolean)\n    .filter",
+          "lineNumber": 258
+        },
+        {
+          "caller": "buildInternalHistoryTimeline",
+          "callee": "(history || [])\n    .map((entry, index) => toHistoryTimelineItem(entry, warranty, { publicMode: false, index }))\n    .filter",
+          "lineNumber": 258
+        },
+        {
+          "caller": "buildInternalHistoryTimeline",
+          "callee": "(history || [])\n    .map",
+          "lineNumber": 258
+        },
+        {
+          "caller": "buildInternalHistoryTimeline",
+          "callee": "toHistoryTimelineItem",
+          "lineNumber": 259
+        },
+        {
+          "caller": "buildInternalHistoryTimeline",
+          "callee": "Object.keys",
+          "lineNumber": 265
+        },
+        {
+          "caller": "buildPublicHistoryTimeline",
+          "callee": "(history || [])\n    .map((entry, index) => toHistoryTimelineItem(entry, warranty, { publicMode: true, index }))\n    .filter(Boolean)\n    .filter((item) => {\n      // Ẩn các mục lịch sử chỉ thuần túy là thêm/xóa ảnh đính kèm đối với khách hàng tra cứu công khai\n      if (item.actionType === 'update') {\n        const changeKeys = Object.keys(item.changes || {});\n        const isAttachmentOnly = changeKeys.length === 1 && changeKeys[0] === 'attachments';\n        if (isAttachmentOnly) return false;\n      }\n      return true;\n    })\n    .map",
+          "lineNumber": 274
+        },
+        {
+          "caller": "buildPublicHistoryTimeline",
+          "callee": "(history || [])\n    .map((entry, index) => toHistoryTimelineItem(entry, warranty, { publicMode: true, index }))\n    .filter(Boolean)\n    .filter",
+          "lineNumber": 274
+        },
+        {
+          "caller": "buildPublicHistoryTimeline",
+          "callee": "(history || [])\n    .map((entry, index) => toHistoryTimelineItem(entry, warranty, { publicMode: true, index }))\n    .filter",
+          "lineNumber": 274
+        },
+        {
+          "caller": "buildPublicHistoryTimeline",
+          "callee": "(history || [])\n    .map",
+          "lineNumber": 274
+        },
+        {
+          "caller": "buildPublicHistoryTimeline",
+          "callee": "toHistoryTimelineItem",
+          "lineNumber": 275
+        },
+        {
+          "caller": "buildPublicHistoryTimeline",
+          "callee": "Object.keys",
+          "lineNumber": 280
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 6,
+        "functionCount": 11,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/historyTimeline.js.bak-field-labels",
+      "language": "bak-field-labels",
+      "fileCategory": "code",
+      "totalLines": 248,
+      "nonEmptyLines": 228,
+      "metrics": {}
+    },
+    {
+      "path": "src/utils/i18nOptions.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 21,
+      "functions": [
+        {
+          "name": "tStatus",
+          "startLine": 3,
+          "endLine": 5,
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "makeWarrantyOptions",
+          "startLine": 7,
+          "endLine": 23,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "tStatus",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "makeWarrantyOptions",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "tStatus",
+          "callee": "i18n.t",
+          "lineNumber": 4
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 10
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 11
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 12
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 13
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 14
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 15
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 16
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "['bao_hanh', 'sua_dv', 'doi_moi', 'khac'].map",
+          "lineNumber": 18
+        },
+        {
+          "caller": "makeWarrantyOptions",
+          "callee": "i18n.t",
+          "lineNumber": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/urgency.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 12,
+      "functions": [
+        {
+          "name": "getUrgency",
+          "startLine": 4,
+          "endLine": 13,
+          "params": [
+            "warranty"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getUrgency",
+          "line": 4,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getUrgency",
+          "callee": "getWarrantyDueDate",
+          "lineNumber": 6
+        },
+        {
+          "caller": "getUrgency",
+          "callee": "dayjs(dueDate).diff",
+          "lineNumber": 8
+        },
+        {
+          "caller": "getUrgency",
+          "callee": "dayjs",
+          "lineNumber": 8
+        },
+        {
+          "caller": "getUrgency",
+          "callee": "dayjs",
+          "lineNumber": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils/vietnameseText.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 32,
+      "functions": [
+        {
+          "name": "legacy",
+          "startLine": 1,
+          "endLine": 1,
+          "params": [
+            "escaped"
+          ]
+        },
+        {
+          "name": "normalizeVietnameseText",
+          "startLine": 32,
+          "endLine": 35,
+          "params": [
+            "text"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "normalizeVietnameseText",
+          "line": 32,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "legacy",
+          "callee": "JSON.parse",
+          "lineNumber": 1
+        },
+        {
+          "caller": "normalizeVietnameseText",
+          "callee": "REPLACEMENTS.reduce",
+          "lineNumber": 34
+        },
+        {
+          "caller": "normalizeVietnameseText",
+          "callee": "out.replaceAll",
+          "lineNumber": 34
+        },
+        {
+          "caller": "normalizeVietnameseText",
+          "callee": "String",
+          "lineNumber": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/fieldLabels.smoke.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 20,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/generateChungTu.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 23,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/i18n.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 35,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/setup.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/StatusTag.test.jsx",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 18,
+      "nonEmptyLines": 16,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/urgency.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 29,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/vietnameseUi.test.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 23,
+      "callGraph": [
+        {
+          "caller": "legacy",
+          "callee": "JSON.parse",
+          "lineNumber": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "vite.config.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 13,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "vitest.config.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 10,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "web.Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 26,
+      "metrics": {}
+    }
+  ]
+}

@@ -198,7 +198,7 @@ export function toHistoryTimelineItem(entry, warranty = {}, { publicMode = false
     title = `Chuyển sang "${STATUS_LABELS[toStatus] || toStatus || ''}"`;
     detail = note;
   } else if (action === 'tra_hang') {
-    title = 'Đánh dấu đã xong';
+    title = warranty.loaiXuLy === 'sua_dv' ? 'Đã sửa chữa xong' : 'Đã bảo hành xong';
     detail = note;
   } else if (action === 'exchange') {
     title = 'Đổi hàng';
@@ -250,6 +250,7 @@ export function toHistoryTimelineItem(entry, warranty = {}, { publicMode = false
     at: entry.at || warranty.updatedAt || warranty.createdAt,
     by: entry.by,
     changes: entry.changes || {},
+    loaiXuLy: warranty.loaiXuLy,
     color: timelineColor(action),
   };
 }

@@ -1,0 +1,863 @@
+{
+  "scriptCompleted": true,
+  "files": [
+    {
+      "path": ".claude/settings.local.json",
+      "language": "json",
+      "sizeLines": 11,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".dockerignore",
+      "language": "unknown",
+      "sizeLines": 13,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "language": "yaml",
+      "sizeLines": 33,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api.Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/audit.js",
+      "language": "javascript",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/auth.js",
+      "language": "javascript",
+      "sizeLines": 298,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/backup.js",
+      "language": "javascript",
+      "sizeLines": 777,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/customerMaster.js",
+      "language": "javascript",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/customers.js",
+      "language": "javascript",
+      "sizeLines": 141,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/db.js",
+      "language": "javascript",
+      "sizeLines": 559,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/restore_drill.js",
+      "language": "javascript",
+      "sizeLines": 186,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/validators.js",
+      "language": "javascript",
+      "sizeLines": 95,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/auth.js",
+      "language": "javascript",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/backups.js",
+      "language": "javascript",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/customers.js",
+      "language": "javascript",
+      "sizeLines": 205,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/nhanVien.js",
+      "language": "javascript",
+      "sizeLines": 149,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/public.js",
+      "language": "javascript",
+      "sizeLines": 235,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/stats.js",
+      "language": "javascript",
+      "sizeLines": 128,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/suppliers.js",
+      "language": "javascript",
+      "sizeLines": 191,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/warranties.js",
+      "language": "javascript",
+      "sizeLines": 1557,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/warranties.js.bak-customers-master",
+      "language": "bak-customers-master",
+      "sizeLines": 1195,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/seedData.js",
+      "language": "javascript",
+      "sizeLines": 251,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/server.js",
+      "language": "javascript",
+      "sizeLines": 238,
+      "fileCategory": "code"
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "sizeLines": 101,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-20-react-i18next-rollout.md",
+      "language": "markdown",
+      "sizeLines": 1139,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-20-react-i18next-rollout-design.md",
+      "language": "markdown",
+      "sizeLines": 150,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "filebaohanh.xlsx",
+      "language": "xlsx",
+      "sizeLines": 506,
+      "fileCategory": "code"
+    },
+    {
+      "path": "fixdates.cjs",
+      "language": "javascript",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "get-tunnel.bat",
+      "language": "batch",
+      "sizeLines": 53,
+      "fileCategory": "script"
+    },
+    {
+      "path": "get-tunnel.sh",
+      "language": "shell",
+      "sizeLines": 40,
+      "fileCategory": "script"
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "sizeLines": 16,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "nginx.conf",
+      "language": "conf",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "sizeLines": 56,
+      "fileCategory": "config"
+    },
+    {
+      "path": "phieuguincc/nccdemo.html",
+      "language": "html",
+      "sizeLines": 248,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "prisma/migrations/20260525_add_audit_indexes/migration.sql",
+      "language": "sql",
+      "sizeLines": 45,
+      "fileCategory": "data"
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "language": "prisma",
+      "sizeLines": 158,
+      "fileCategory": "data"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 734,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz",
+      "language": "tgz",
+      "sizeLines": 26732,
+      "fileCategory": "code"
+    },
+    {
+      "path": "repair-backups/pgdata-before-pg_resetwal-20260525-175610.tgz.sha256",
+      "language": "sha256",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/audit_history.js",
+      "language": "javascript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/backfill_supplier_names.js",
+      "language": "javascript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/check_timeline.js",
+      "language": "javascript",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/inspect_supplier_logs.js",
+      "language": "javascript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/inspect_users.js",
+      "language": "javascript",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/inspect_warranties.js",
+      "language": "javascript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/reset_passwords_v2.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/reset_passwords.js",
+      "language": "javascript",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scratch/verify_recovery.js",
+      "language": "javascript",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/bootstrap-auth.mjs",
+      "language": "javascript",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/cleanup-current-data.mjs",
+      "language": "javascript",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/cleanup-orphan-uploads.js",
+      "language": "javascript",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/migrate_fix_mojibake_notes.py",
+      "language": "python",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/migrate_fix_priority_mojibake_notes.py",
+      "language": "python",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "scripts/migrateData.js",
+      "language": "javascript",
+      "sizeLines": 199,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/App.jsx",
+      "language": "javascript",
+      "sizeLines": 134,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/admin/BackupRestorePanel.jsx",
+      "language": "javascript",
+      "sizeLines": 276,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/AiAssistant.jsx",
+      "language": "javascript",
+      "sizeLines": 423,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/ChangePasswordModal.jsx",
+      "language": "javascript",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/CustomerPickerModal.jsx",
+      "language": "javascript",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/ErrorBoundary.jsx",
+      "language": "javascript",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/FloatingZalo.jsx",
+      "language": "javascript",
+      "sizeLines": 387,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/ShortcutsModal.jsx",
+      "language": "javascript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/SkeletonCard.jsx",
+      "language": "javascript",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/StaffPickerModal.jsx",
+      "language": "javascript",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/AdminLayout.jsx",
+      "language": "javascript",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/AppHeader.jsx",
+      "language": "javascript",
+      "sizeLines": 166,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/AppSider.jsx",
+      "language": "javascript",
+      "sizeLines": 123,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/CustomerLayout.jsx",
+      "language": "javascript",
+      "sizeLines": 182,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/GlobalSearch.jsx",
+      "language": "javascript",
+      "sizeLines": 406,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/NotificationBell.jsx",
+      "language": "javascript",
+      "sizeLines": 395,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/MobileStatusTag.jsx",
+      "language": "javascript",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/StatusTag.jsx",
+      "language": "javascript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/WarrantyDetail.jsx",
+      "language": "javascript",
+      "sizeLines": 2299,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/WarrantyPrint.jsx",
+      "language": "javascript",
+      "sizeLines": 302,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/WarrantyProgress.jsx",
+      "language": "javascript",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/badgeConfig.js",
+      "language": "javascript",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/routes.js",
+      "language": "javascript",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/statusConfig.js",
+      "language": "javascript",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/warrantyOptions.js",
+      "language": "javascript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/contexts/AuthContext.jsx",
+      "language": "javascript",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useDebounce.js",
+      "language": "javascript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useIsMobile.js",
+      "language": "javascript",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useKeyboardShortcuts.js",
+      "language": "javascript",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useTheme.js",
+      "language": "javascript",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useWarranties.js",
+      "language": "javascript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/i18n/index.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/i18n/locales/vi/messages.json",
+      "language": "json",
+      "sizeLines": 23,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/nav.json",
+      "language": "json",
+      "sizeLines": 29,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/print.json",
+      "language": "json",
+      "sizeLines": 46,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/status.json",
+      "language": "json",
+      "sizeLines": 25,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/ui.json",
+      "language": "json",
+      "sizeLines": 594,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/ui.json.bak-field-labels",
+      "language": "bak-field-labels",
+      "sizeLines": 582,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/i18n/locales/vi/validation.json",
+      "language": "json",
+      "sizeLines": 16,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/lib/axios.js",
+      "language": "javascript",
+      "sizeLines": 20,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/lib/zodSchemas.js",
+      "language": "javascript",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/main.jsx",
+      "language": "javascript",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/CreateWarranty.jsx",
+      "language": "javascript",
+      "sizeLines": 528,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/CustomerInfo.jsx",
+      "language": "javascript",
+      "sizeLines": 591,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/Dashboard.jsx",
+      "language": "javascript",
+      "sizeLines": 501,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/ImportExport.jsx",
+      "language": "javascript",
+      "sizeLines": 310,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/StaffManagement.jsx",
+      "language": "javascript",
+      "sizeLines": 184,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/Statistics.jsx",
+      "language": "javascript",
+      "sizeLines": 240,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/Suppliers.jsx",
+      "language": "javascript",
+      "sizeLines": 544,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/admin/WarrantyList.jsx",
+      "language": "javascript",
+      "sizeLines": 610,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/customer/CustomerPortal.jsx",
+      "language": "javascript",
+      "sizeLines": 356,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/customer/TrackingResult.jsx",
+      "language": "javascript",
+      "sizeLines": 1228,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/customer/TrackingResult.module.css",
+      "language": "css",
+      "sizeLines": 1124,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/pages/customer/Tracuu.jsx",
+      "language": "javascript",
+      "sizeLines": 546,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/pages/NotFound.jsx",
+      "language": "javascript",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/services/backupService.js",
+      "language": "javascript",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/services/warrantyService.js",
+      "language": "javascript",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/styles/global.css",
+      "language": "css",
+      "sizeLines": 4022,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/styles/print.css",
+      "language": "css",
+      "sizeLines": 56,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/theme/antdTheme.js",
+      "language": "javascript",
+      "sizeLines": 76,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/copy.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/dateHelpers.js",
+      "language": "javascript",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/excelHelpers.js",
+      "language": "javascript",
+      "sizeLines": 139,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/fieldLabels.js",
+      "language": "javascript",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/formatters.js",
+      "language": "javascript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/generateChungTu.js",
+      "language": "javascript",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/historyDisplay.js",
+      "language": "javascript",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/historyTimeline.js",
+      "language": "javascript",
+      "sizeLines": 292,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/historyTimeline.js.bak-field-labels",
+      "language": "bak-field-labels",
+      "sizeLines": 248,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/i18nOptions.js",
+      "language": "javascript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/urgency.js",
+      "language": "javascript",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils/vietnameseText.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/fieldLabels.smoke.test.js",
+      "language": "javascript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/generateChungTu.test.js",
+      "language": "javascript",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/i18n.test.js",
+      "language": "javascript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/setup.js",
+      "language": "javascript",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/StatusTag.test.jsx",
+      "language": "javascript",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/urgency.test.js",
+      "language": "javascript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tests/vietnameseUi.test.js",
+      "language": "javascript",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "vite.config.js",
+      "language": "javascript",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "vitest.config.js",
+      "language": "javascript",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "web.Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    }
+  ],
+  "totalFiles": 137,
+  "filteredByIgnore": 0,
+  "estimatedComplexity": "moderate",
+  "stats": {
+    "filesScanned": 137,
+    "byCategory": {
+      "config": 8,
+      "infra": 3,
+      "code": 114,
+      "docs": 3,
+      "script": 2,
+      "markup": 5,
+      "data": 2
+    },
+    "byLanguage": {
+      "json": 8,
+      "unknown": 2,
+      "yaml": 2,
+      "dockerfile": 2,
+      "javascript": 102,
+      "bak-customers-master": 1,
+      "markdown": 3,
+      "xlsx": 1,
+      "batch": 1,
+      "shell": 1,
+      "html": 2,
+      "conf": 1,
+      "sql": 1,
+      "prisma": 1,
+      "tgz": 1,
+      "sha256": 1,
+      "python": 2,
+      "bak-field-labels": 2,
+      "css": 3
+    }
+  }
+}

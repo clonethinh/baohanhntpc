@@ -1,0 +1,49 @@
+{
+  "projectRoot": "/mnt/baohanhntpc",
+  "batchFiles": [
+    {
+      "path": "src/i18n/locales/vi/messages.json",
+      "language": "json",
+      "sizeLines": 23,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/nav.json",
+      "language": "json",
+      "sizeLines": 29,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/print.json",
+      "language": "json",
+      "sizeLines": 46,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/status.json",
+      "language": "json",
+      "sizeLines": 25,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/ui.json",
+      "language": "json",
+      "sizeLines": 594,
+      "fileCategory": "config"
+    },
+    {
+      "path": "src/i18n/locales/vi/validation.json",
+      "language": "json",
+      "sizeLines": 16,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "src/i18n/locales/vi/messages.json": [],
+    "src/i18n/locales/vi/nav.json": [],
+    "src/i18n/locales/vi/print.json": [],
+    "src/i18n/locales/vi/status.json": [],
+    "src/i18n/locales/vi/ui.json": [],
+    "src/i18n/locales/vi/validation.json": []
+  }
+}

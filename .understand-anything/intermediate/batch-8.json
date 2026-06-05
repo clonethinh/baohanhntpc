@@ -1,0 +1,333 @@
+{
+  "batchIndex": 8,
+  "nodes": [
+    {
+      "id": "file:src/theme/antdTheme.js",
+      "type": "file",
+      "label": "antdTheme.js",
+      "path": "src/theme/antdTheme.js",
+      "language": "javascript",
+      "lines": 76,
+      "exports": ["antdLightTheme", "antdDarkTheme"],
+      "description": "Ant Design theme configuration with light and dark variants, Vietnamese-compatible font stack, and component-level overrides for Table, Menu, Card, Button, Statistic."
+    },
+    {
+      "id": "file:src/utils/copy.js",
+      "type": "file",
+      "label": "copy.js",
+      "path": "src/utils/copy.js",
+      "language": "javascript",
+      "lines": 35,
+      "exports": ["copyText"],
+      "description": "Clipboard copy utility. Uses navigator.clipboard API with fallback to textarea-based copy for older browsers."
+    },
+    {
+      "id": "file:src/utils/dateHelpers.js",
+      "type": "file",
+      "label": "dateHelpers.js",
+      "path": "src/utils/dateHelpers.js",
+      "language": "javascript",
+      "lines": 55,
+      "exports": ["formatDate", "formatDateTime", "parseExcelDate", "addBusinessDaysSkipSunday", "getWarrantyDueDate", "shouldShowDueDate"],
+      "description": "Date formatting and calculation utilities using dayjs. Handles Vietnam timezone (Asia/Ho_Chi_Minh), Excel serial date parsing, business day calculations skipping Sundays, and warranty due date logic."
+    },
+    {
+      "id": "file:src/utils/excelHelpers.js",
+      "type": "file",
+      "label": "excelHelpers.js",
+      "path": "src/utils/excelHelpers.js",
+      "language": "javascript",
+      "lines": 139,
+      "exports": ["parseExcelFile", "mapExcelRows"],
+      "description": "Excel file parsing and row mapping utilities using SheetJS (XLSX). parseExcelFile reads uploaded Excel files, mapExcelRows transforms raw Excel data into warranty record objects with status normalization and date parsing."
+    },
+    {
+      "id": "file:src/utils/fieldLabels.js",
+      "type": "file",
+      "label": "fieldLabels.js",
+      "path": "src/utils/fieldLabels.js",
+      "language": "javascript",
+      "lines": 15,
+      "exports": ["getFieldLabel", "getFieldLabels"],
+      "description": "Field label resolution utility. Maps internal field keys (e.g., khachHang, maNhanVien) to Vietnamese display labels with safe fallback to the original key."
+    },
+    {
+      "id": "file:src/utils/formatters.js",
+      "type": "file",
+      "label": "formatters.js",
+      "path": "src/utils/formatters.js",
+      "language": "javascript",
+      "lines": 12,
+      "exports": ["formatVND", "maskName"],
+      "description": "Formatting utilities: formatVND uses Intl.NumberFormat for Vietnamese Dong currency display, maskName masks personal names for privacy."
+    },
+    {
+      "id": "file:src/utils/generateChungTu.js",
+      "type": "file",
+      "label": "generateChungTu.js",
+      "path": "src/utils/generateChungTu.js",
+      "language": "javascript",
+      "lines": 8,
+      "exports": ["generateChungTuPreview"],
+      "description": "Generates sequential document/voucher codes (chung tu) in format DDMMYYYYNBHSC{N} based on today's date and existing codes."
+    },
+    {
+      "id": "file:src/utils/historyDisplay.js",
+      "type": "file",
+      "label": "historyDisplay.js",
+      "path": "src/utils/historyDisplay.js",
+      "language": "javascript",
+      "lines": 22,
+      "exports": ["normalizeHistoryNote", "mapLoaiXuLyValue"],
+      "description": "History display normalization. normalizeHistoryNote converts internal field keys and status codes to Vietnamese display text. mapLoaiXuLyValue maps processing type codes to display labels."
+    },
+    {
+      "id": "file:src/utils/historyTimeline.js",
+      "type": "file",
+      "label": "historyTimeline.js",
+      "path": "src/utils/historyTimeline.js",
+      "language": "javascript",
+      "lines": 292,
+      "exports": ["formatHistoryChanges"],
+      "description": "History timeline rendering utility. Generates human-readable change descriptions for warranty history entries, mapping field changes to Vietnamese labels."
+    },
+    {
+      "id": "file:src/utils/historyTimeline.js.bak-field-labels",
+      "type": "file",
+      "label": "historyTimeline.js.bak-field-labels",
+      "path": "src/utils/historyTimeline.js.bak-field-labels",
+      "language": "bak-field-labels",
+      "lines": 248,
+      "exports": [],
+      "description": "Backup of historyTimeline.js from before i18n field label migration. Retained for reference."
+    },
+    {
+      "id": "file:src/utils/i18nOptions.js",
+      "type": "file",
+      "label": "i18nOptions.js",
+      "path": "src/utils/i18nOptions.js",
+      "language": "javascript",
+      "lines": 23,
+      "exports": ["tStatus", "makeWarrantyOptions"],
+      "description": "i18n helper utilities. tStatus translates status keys via i18n. makeWarrantyOptions builds localized warranty period and processing type option lists for form dropdowns."
+    },
+    {
+      "id": "file:src/utils/urgency.js",
+      "type": "file",
+      "label": "urgency.js",
+      "path": "src/utils/urgency.js",
+      "language": "javascript",
+      "lines": 13,
+      "exports": ["getUrgency"],
+      "description": "Urgency classification utility. Returns urgency level (done, overdue, urgent, soon, normal) based on warranty status and due date proximity using dayjs."
+    },
+    {
+      "id": "file:src/utils/vietnameseText.js",
+      "type": "file",
+      "label": "vietnameseText.js",
+      "path": "src/utils/vietnameseText.js",
+      "language": "javascript",
+      "lines": 35,
+      "exports": ["normalizeVietnameseText"],
+      "description": "Vietnamese text normalization utility. Fixes mojibake and legacy ASCII representations of Vietnamese diacritics in history records using a comprehensive replacement table."
+    },
+    {
+      "id": "file:tests/fieldLabels.smoke.test.js",
+      "type": "file",
+      "label": "fieldLabels.smoke.test.js",
+      "path": "tests/fieldLabels.smoke.test.js",
+      "language": "javascript",
+      "lines": 23,
+      "exports": [],
+      "description": "Smoke tests for field labels and history changes formatting. Validates Vietnamese field label resolution and history change string generation."
+    },
+    {
+      "id": "file:tests/generateChungTu.test.js",
+      "type": "file",
+      "label": "generateChungTu.test.js",
+      "path": "tests/generateChungTu.test.js",
+      "language": "javascript",
+      "lines": 26,
+      "exports": [],
+      "description": "Unit tests for generateChungTuPreview. Validates correct format generation, sequential incrementing, and ignoring codes from other days."
+    },
+    {
+      "id": "file:tests/i18n.test.js",
+      "type": "file",
+      "label": "i18n.test.js",
+      "path": "tests/i18n.test.js",
+      "language": "javascript",
+      "lines": 41,
+      "exports": [],
+      "description": "Integration tests for i18n setup. Validates Vietnamese as default language, core namespace loading, interpolation, and i18n-backed constants/validation messages."
+    },
+    {
+      "id": "file:tests/setup.js",
+      "type": "file",
+      "label": "setup.js",
+      "path": "tests/setup.js",
+      "language": "javascript",
+      "lines": 1,
+      "exports": [],
+      "description": "Test setup file. Imports @testing-library/jest-dom for DOM matchers used across test suite."
+    },
+    {
+      "id": "file:tests/StatusTag.test.jsx",
+      "type": "file",
+      "label": "StatusTag.test.jsx",
+      "path": "tests/StatusTag.test.jsx",
+      "language": "javascript",
+      "lines": 18,
+      "exports": [],
+      "description": "Component tests for StatusTag. Validates correct label and color rendering for each warranty status and fallback for unknown statuses."
+    },
+    {
+      "id": "file:tests/urgency.test.js",
+      "type": "file",
+      "label": "urgency.test.js",
+      "path": "tests/urgency.test.js",
+      "language": "javascript",
+      "lines": 35,
+      "exports": [],
+      "description": "Unit tests for getUrgency. Covers done/overdue/urgent/soon/normal urgency levels based on warranty status and due date."
+    },
+    {
+      "id": "file:tests/vietnameseUi.test.js",
+      "type": "file",
+      "label": "vietnameseUi.test.js",
+      "path": "tests/vietnameseUi.test.js",
+      "language": "javascript",
+      "lines": 27,
+      "exports": [],
+      "description": "UI tests for Vietnamese text rendering. Validates theme font stack, legacy history text normalization, and shared Vietnamese normalizer for mojibake variants."
+    },
+    {
+      "id": "config:vite.config.js",
+      "type": "config",
+      "label": "vite.config.js",
+      "path": "vite.config.js",
+      "language": "javascript",
+      "lines": 14,
+      "exports": [],
+      "description": "Vite build configuration. Enables React plugin, sets dev server port 8888 with proxy rules forwarding /api and /uploads to localhost:3004."
+    },
+    {
+      "id": "config:vitest.config.js",
+      "type": "config",
+      "label": "vitest.config.js",
+      "path": "vitest.config.js",
+      "language": "javascript",
+      "lines": 11,
+      "exports": [],
+      "description": "Vitest test runner configuration. Uses jsdom environment, enables globals, and references tests/setup.js for test initialization."
+    },
+    {
+      "id": "service:web.Dockerfile",
+      "type": "service",
+      "label": "web.Dockerfile",
+      "path": "web.Dockerfile",
+      "language": "dockerfile",
+      "lines": 36,
+      "exports": [],
+      "description": "Multi-stage Docker build for frontend. Stage 1: Node 20 Alpine builds the Vite/React app. Stage 2: Nginx Alpine serves static files with custom nginx.conf."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/fieldLabels.smoke.test.js",
+      "target": "file:src/utils/fieldLabels.js",
+      "type": "tests",
+      "label": "tests getFieldLabel"
+    },
+    {
+      "source": "file:tests/fieldLabels.smoke.test.js",
+      "target": "file:src/utils/historyTimeline.js",
+      "type": "tests",
+      "label": "tests formatHistoryChanges"
+    },
+    {
+      "source": "file:tests/generateChungTu.test.js",
+      "target": "file:src/utils/generateChungTu.js",
+      "type": "tests",
+      "label": "tests generateChungTuPreview"
+    },
+    {
+      "source": "file:tests/i18n.test.js",
+      "target": "file:src/utils/i18nOptions.js",
+      "type": "tests",
+      "label": "tests i18n setup and translations"
+    },
+    {
+      "source": "file:tests/StatusTag.test.jsx",
+      "target": "file:src/theme/antdTheme.js",
+      "type": "related_to",
+      "label": "StatusTag depends on status config and theme"
+    },
+    {
+      "source": "file:tests/urgency.test.js",
+      "target": "file:src/utils/urgency.js",
+      "type": "tests",
+      "label": "tests getUrgency"
+    },
+    {
+      "source": "file:tests/vietnameseUi.test.js",
+      "target": "file:src/theme/antdTheme.js",
+      "type": "tests",
+      "label": "tests theme font stack"
+    },
+    {
+      "source": "file:tests/vietnameseUi.test.js",
+      "target": "file:src/utils/vietnameseText.js",
+      "type": "tests",
+      "label": "tests normalizeVietnameseText"
+    },
+    {
+      "source": "file:src/utils/urgency.js",
+      "target": "file:src/utils/dateHelpers.js",
+      "type": "imports",
+      "label": "imports getWarrantyDueDate from dateHelpers"
+    },
+    {
+      "source": "file:src/utils/i18nOptions.js",
+      "target": "file:src/utils/historyTimeline.js",
+      "type": "related_to",
+      "label": "shares i18n translation context with historyTimeline"
+    },
+    {
+      "source": "file:src/utils/fieldLabels.js",
+      "target": "file:src/utils/historyTimeline.js",
+      "type": "related_to",
+      "label": "provides field label mapping used by historyTimeline"
+    },
+    {
+      "source": "file:src/utils/historyDisplay.js",
+      "target": "file:src/utils/historyTimeline.js",
+      "type": "related_to",
+      "label": "normalizes history text consumed by historyTimeline"
+    },
+    {
+      "source": "file:src/utils/vietnameseText.js",
+      "target": "file:src/utils/historyDisplay.js",
+      "type": "related_to",
+      "label": "shares Vietnamese normalization logic with historyDisplay"
+    },
+    {
+      "source": "file:src/utils/excelHelpers.js",
+      "target": "file:src/utils/dateHelpers.js",
+      "type": "related_to",
+      "label": "both handle date parsing (Excel serial dates vs standard dates)"
+    },
+    {
+      "source": "config:vitest.config.js",
+      "target": "file:tests/setup.js",
+      "type": "configures",
+      "label": "references tests/setup.js as setupFiles"
+    },
+    {
+      "source": "service:web.Dockerfile",
+      "target": "config:vite.config.js",
+      "type": "uses",
+      "label": "runs npm build which uses vite.config.js"
+    }
+  ]
+}

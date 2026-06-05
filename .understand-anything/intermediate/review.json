@@ -1,0 +1,13 @@
+{
+  "issues": [],
+  "warnings": [
+    "Found 21 orphan nodes"
+  ],
+  "stats": {
+    "totalNodes": 141,
+    "totalEdges": 230,
+    "totalLayers": 10,
+    "tourSteps": 11,
+    "orphanNodes": 21
+  }
+}

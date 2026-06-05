@@ -1,0 +1,500 @@
+{
+  "batchIndex": 6,
+  "nodes": [
+    {
+      "id": "file:src/components/common/ChangePasswordModal.jsx",
+      "type": "file",
+      "label": "ChangePasswordModal.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Modal component for changing user password. Uses authService.changePassword API, antd Form, and i18n translations.",
+      "exports": ["ChangePasswordModal"],
+      "functions": ["ChangePasswordModal", "handleFinish"],
+      "lines": 69
+    },
+    {
+      "id": "file:src/components/common/CustomerPickerModal.jsx",
+      "type": "file",
+      "label": "CustomerPickerModal.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Modal for searching and selecting customers from a list. Filters by name, phone, and address. Uses antd List and Modal.",
+      "exports": ["CustomerPickerModal"],
+      "functions": ["CustomerPickerModal"],
+      "lines": 84
+    },
+    {
+      "id": "file:src/components/common/ErrorBoundary.jsx",
+      "type": "file",
+      "label": "ErrorBoundary.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "React error boundary class component. Catches rendering errors and shows a Result UI with reload option. Uses i18n for translations.",
+      "exports": ["ErrorBoundary"],
+      "functions": ["constructor", "getDerivedStateFromError", "render"],
+      "lines": 34
+    },
+    {
+      "id": "file:src/components/common/FloatingZalo.jsx",
+      "type": "file",
+      "label": "FloatingZalo.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Draggable floating Zalo chat button with mobile/desktop support. Handles touch/mouse drag, trash zone deletion, and deep-linking to Zalo app/web.",
+      "exports": ["FloatingZalo"],
+      "functions": ["FloatingZalo", "handleResize", "openZaloApp", "handleStart", "handleMove", "handleEnd"],
+      "lines": 387
+    },
+    {
+      "id": "file:src/components/common/ShortcutsModal.jsx",
+      "type": "file",
+      "label": "ShortcutsModal.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Modal displaying keyboard shortcuts table. Uses antd Modal/Table and i18n translations.",
+      "exports": ["ShortcutsModal"],
+      "functions": ["ShortcutsModal"],
+      "lines": 29
+    },
+    {
+      "id": "file:src/components/common/SkeletonCard.jsx",
+      "type": "file",
+      "label": "SkeletonCard.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Loading skeleton placeholder card using antd Skeleton and Card components.",
+      "exports": ["SkeletonCard"],
+      "functions": ["SkeletonCard"],
+      "lines": 9
+    },
+    {
+      "id": "file:src/components/common/StaffPickerModal.jsx",
+      "type": "file",
+      "label": "StaffPickerModal.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Modal for selecting/switching staff accounts. Authenticates via useAuth login, with form validation and i18n support.",
+      "exports": ["StaffPickerModal"],
+      "functions": ["StaffPickerModal", "handleFinish"],
+      "lines": 81
+    },
+    {
+      "id": "file:src/components/layout/AdminLayout.jsx",
+      "type": "file",
+      "label": "AdminLayout.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Admin layout shell with collapsible sidebar and header. Manages mobile sider popup state. Composes AppSider and AppHeader.",
+      "exports": ["AdminLayout"],
+      "functions": ["AdminLayout"],
+      "lines": 38
+    },
+    {
+      "id": "file:src/components/layout/AppHeader.jsx",
+      "type": "file",
+      "label": "AppHeader.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Application header with breadcrumb navigation, global search trigger, notification bell, language switcher, theme toggle, staff picker, and change-password modal.",
+      "exports": ["AppHeader"],
+      "functions": ["AppHeader", "changeStaff"],
+      "lines": 166
+    },
+    {
+      "id": "file:src/components/layout/AppSider.jsx",
+      "type": "file",
+      "label": "AppSider.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Admin sidebar navigation with menu items, urgency badges for warranty items, and mobile/desktop responsive rendering.",
+      "exports": ["AppSider"],
+      "functions": ["AppSider", "go", "renderBadge"],
+      "lines": 123
+    },
+    {
+      "id": "file:src/components/layout/CustomerLayout.jsx",
+      "type": "file",
+      "label": "CustomerLayout.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Customer-facing layout with header, tab navigation, theme toggle, language switcher, Zalo floating button, and responsive mobile/desktop rendering.",
+      "exports": ["CustomerLayout"],
+      "functions": ["CustomerLayout", "handleResize", "onBack", "handleTabChange"],
+      "lines": 182
+    },
+    {
+      "id": "file:src/components/layout/GlobalSearch.jsx",
+      "type": "file",
+      "label": "GlobalSearch.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Global search modal with debounced search across warranties. Displays results grouped by status with keyboard navigation. Integrates warrantyService and statusConfig.",
+      "exports": ["GlobalSearch"],
+      "functions": ["GlobalSearch"],
+      "lines": 406
+    },
+    {
+      "id": "file:src/components/layout/NotificationBell.jsx",
+      "type": "file",
+      "label": "NotificationBell.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Notification bell with popover showing urgent/overdue warranty alerts. Uses useWarranties hook, urgency calculation, and StatusTag for display.",
+      "exports": ["NotificationBell"],
+      "functions": ["NotificationBell"],
+      "lines": 395
+    },
+    {
+      "id": "file:src/components/warranty/MobileStatusTag.jsx",
+      "type": "file",
+      "label": "MobileStatusTag.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Mobile-optimized warranty status tag using antd-mobile Tag with status colors from badgeConfig.",
+      "exports": ["MobileStatusTag"],
+      "functions": ["MobileStatusTag"],
+      "lines": 15
+    },
+    {
+      "id": "file:src/components/warranty/StatusTag.jsx",
+      "type": "file",
+      "label": "StatusTag.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Desktop warranty status tag using antd Tag with colors from statusConfig.",
+      "exports": ["StatusTag"],
+      "functions": ["StatusTag"],
+      "lines": 12
+    },
+    {
+      "id": "file:src/components/warranty/WarrantyDetail.jsx",
+      "type": "file",
+      "label": "WarrantyDetail.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Large comprehensive warranty detail drawer with tabs for info, timeline, editing, status updates, file uploads, QR code, and customer/supplier management. Central component of the warranty workflow.",
+      "exports": ["WarrantyDetail"],
+      "functions": ["WarrantyDetail"],
+      "lines": 2299
+    },
+    {
+      "id": "file:src/components/warranty/WarrantyPrint.jsx",
+      "type": "file",
+      "label": "WarrantyPrint.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Printable warranty card page with QR code. Loads warranty and supplier data, formats for printing via react-to-print.",
+      "exports": ["WarrantyPrint"],
+      "functions": ["WarrantyPrint"],
+      "lines": 302
+    },
+    {
+      "id": "file:src/components/warranty/WarrantyProgress.jsx",
+      "type": "file",
+      "label": "WarrantyProgress.jsx",
+      "language": "javascript",
+      "category": "component",
+      "description": "Warranty progress indicator using antd Progress bar. Shows completion percentage based on warranty dates.",
+      "exports": ["WarrantyProgress"],
+      "functions": ["WarrantyProgress"],
+      "lines": 24
+    },
+    {
+      "id": "file:src/constants/badgeConfig.js",
+      "type": "file",
+      "label": "badgeConfig.js",
+      "language": "javascript",
+      "category": "config",
+      "description": "Badge color configuration for status and type indicators. Exports BADGE_COLORS, getStatusBadgeColor, and getBadgeColor functions.",
+      "exports": ["BADGE_COLORS", "getStatusBadgeColor", "getBadgeColor"],
+      "functions": ["getStatusBadgeColor", "getBadgeColor"],
+      "lines": 25
+    },
+    {
+      "id": "file:src/constants/routes.js",
+      "type": "file",
+      "label": "routes.js",
+      "language": "javascript",
+      "category": "config",
+      "description": "Application route constants. Exports ROUTES object with named route paths.",
+      "exports": ["ROUTES"],
+      "lines": 14
+    },
+    {
+      "id": "file:src/constants/statusConfig.js",
+      "type": "file",
+      "label": "statusConfig.js",
+      "language": "javascript",
+      "category": "config",
+      "description": "Warranty status configuration with status enum, labels, and color mappings. Imports i18n and badgeConfig.",
+      "exports": ["STATUS", "STATUS_LABELS"],
+      "lines": 45
+    },
+    {
+      "id": "file:src/constants/warrantyOptions.js",
+      "type": "file",
+      "label": "warrantyOptions.js",
+      "language": "javascript",
+      "category": "config",
+      "description": "Warranty form options configuration. Exports BAO_HANH_OPTIONS, LOAI_XU_LY_OPTIONS, and LOAI_XU_LY_LABELS with i18n support.",
+      "exports": ["BAO_HANH_OPTIONS", "LOAI_XU_LY_OPTIONS", "LOAI_XU_LY_LABELS"],
+      "lines": 23
+    },
+    {
+      "id": "file:src/contexts/AuthContext.jsx",
+      "type": "file",
+      "label": "AuthContext.jsx",
+      "language": "javascript",
+      "category": "context",
+      "description": "Authentication context provider. Manages current staff state, login/logout via authService, and provides useAuth hook. Persists staff in localStorage.",
+      "exports": ["AuthProvider", "useAuth"],
+      "lines": 71
+    },
+    {
+      "id": "file:src/hooks/useDebounce.js",
+      "type": "file",
+      "label": "useDebounce.js",
+      "language": "javascript",
+      "category": "hook",
+      "description": "Custom hook that debounces a value by a configurable delay (default 300ms).",
+      "exports": ["useDebounce"],
+      "functions": ["useDebounce"],
+      "lines": 12
+    },
+    {
+      "id": "file:src/hooks/useIsMobile.js",
+      "type": "file",
+      "label": "useIsMobile.js",
+      "language": "javascript",
+      "category": "hook",
+      "description": "Custom hook that tracks viewport width to determine mobile state. Listens to window resize events.",
+      "exports": ["useIsMobile"],
+      "functions": ["useIsMobile"],
+      "lines": 31
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/components/common/ChangePasswordModal.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "detail": "imports { authService } from warrantyService"
+    },
+    {
+      "source": "file:src/components/common/ErrorBoundary.jsx",
+      "target": "file:src/i18n/index.js",
+      "type": "imports",
+      "detail": "imports i18n from i18n/index.js"
+    },
+    {
+      "source": "file:src/components/common/StaffPickerModal.jsx",
+      "target": "file:src/contexts/AuthContext.jsx",
+      "type": "imports",
+      "detail": "imports { useAuth } from AuthContext"
+    },
+    {
+      "source": "file:src/components/layout/AdminLayout.jsx",
+      "target": "file:src/components/layout/AppSider.jsx",
+      "type": "imports",
+      "detail": "imports AppSider"
+    },
+    {
+      "source": "file:src/components/layout/AdminLayout.jsx",
+      "target": "file:src/components/layout/AppHeader.jsx",
+      "type": "imports",
+      "detail": "imports AppHeader"
+    },
+    {
+      "source": "file:src/components/layout/AppHeader.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "detail": "imports { useTheme }"
+    },
+    {
+      "source": "file:src/components/layout/AppHeader.jsx",
+      "target": "file:src/contexts/AuthContext.jsx",
+      "type": "imports",
+      "detail": "imports { useAuth } from AuthContext"
+    },
+    {
+      "source": "file:src/components/layout/AppHeader.jsx",
+      "target": "file:src/components/layout/NotificationBell.jsx",
+      "type": "imports",
+      "detail": "imports NotificationBell"
+    },
+    {
+      "source": "file:src/components/layout/AppHeader.jsx",
+      "target": "file:src/components/layout/GlobalSearch.jsx",
+      "type": "imports",
+      "detail": "imports GlobalSearch"
+    },
+    {
+      "source": "file:src/components/layout/AppHeader.jsx",
+      "target": "file:src/components/common/StaffPickerModal.jsx",
+      "type": "imports",
+      "detail": "imports StaffPickerModal"
+    },
+    {
+      "source": "file:src/components/layout/AppHeader.jsx",
+      "target": "file:src/components/common/ChangePasswordModal.jsx",
+      "type": "imports",
+      "detail": "imports ChangePasswordModal"
+    },
+    {
+      "source": "file:src/components/layout/AppSider.jsx",
+      "target": "file:src/hooks/useWarranties.js",
+      "type": "imports",
+      "detail": "imports { useWarranties }"
+    },
+    {
+      "source": "file:src/components/layout/CustomerLayout.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "detail": "imports { useTheme }"
+    },
+    {
+      "source": "file:src/components/layout/CustomerLayout.jsx",
+      "target": "file:src/components/common/FloatingZalo.jsx",
+      "type": "imports",
+      "detail": "imports FloatingZalo"
+    },
+    {
+      "source": "file:src/components/layout/GlobalSearch.jsx",
+      "target": "file:src/hooks/useDebounce.js",
+      "type": "imports",
+      "detail": "imports { useDebounce }"
+    },
+    {
+      "source": "file:src/components/layout/GlobalSearch.jsx",
+      "target": "file:src/hooks/useTheme.js",
+      "type": "imports",
+      "detail": "imports { useTheme }"
+    },
+    {
+      "source": "file:src/components/layout/GlobalSearch.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "detail": "imports { warrantyService }"
+    },
+    {
+      "source": "file:src/components/layout/GlobalSearch.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "detail": "imports { STATUS } from statusConfig"
+    },
+    {
+      "source": "file:src/components/layout/NotificationBell.jsx",
+      "target": "file:src/hooks/useWarranties.js",
+      "type": "imports",
+      "detail": "imports { useWarranties }"
+    },
+    {
+      "source": "file:src/components/layout/NotificationBell.jsx",
+      "target": "file:src/components/warranty/StatusTag.jsx",
+      "type": "imports",
+      "detail": "imports StatusTag"
+    },
+    {
+      "source": "file:src/components/layout/NotificationBell.jsx",
+      "target": "file:src/components/warranty/WarrantyDetail.jsx",
+      "type": "imports",
+      "detail": "imports WarrantyDetail"
+    },
+    {
+      "source": "file:src/components/warranty/MobileStatusTag.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "detail": "imports { STATUS, STATUS_LABELS }"
+    },
+    {
+      "source": "file:src/components/warranty/MobileStatusTag.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "detail": "imports { getStatusBadgeColor }"
+    },
+    {
+      "source": "file:src/components/warranty/StatusTag.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "detail": "imports { STATUS }"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyDetail.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "detail": "imports { customerService, nhanVienService, supplierService, warrantyService }"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyDetail.jsx",
+      "target": "file:src/constants/statusConfig.js",
+      "type": "imports",
+      "detail": "imports { STATUS }"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyDetail.jsx",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "detail": "imports { getStatusBadgeColor }"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyDetail.jsx",
+      "target": "file:src/constants/warrantyOptions.js",
+      "type": "imports",
+      "detail": "imports { LOAI_XU_LY_OPTIONS, LOAI_XU_LY_LABELS }"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyDetail.jsx",
+      "target": "file:src/components/warranty/StatusTag.jsx",
+      "type": "imports",
+      "detail": "imports StatusTag"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyDetail.jsx",
+      "target": "file:src/components/warranty/WarrantyProgress.jsx",
+      "type": "imports",
+      "detail": "imports WarrantyProgress"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyDetail.jsx",
+      "target": "file:src/components/common/CustomerPickerModal.jsx",
+      "type": "imports",
+      "detail": "imports CustomerPickerModal"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyPrint.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "detail": "imports { supplierService, warrantyService }"
+    },
+    {
+      "source": "file:src/components/warranty/WarrantyPrint.jsx",
+      "target": "file:src/constants/warrantyOptions.js",
+      "type": "imports",
+      "detail": "imports { LOAI_XU_LY_LABELS }"
+    },
+    {
+      "source": "file:src/constants/statusConfig.js",
+      "target": "file:src/i18n/index.js",
+      "type": "imports",
+      "detail": "imports i18n"
+    },
+    {
+      "source": "file:src/constants/statusConfig.js",
+      "target": "file:src/constants/badgeConfig.js",
+      "type": "imports",
+      "detail": "imports { getStatusBadgeColor }"
+    },
+    {
+      "source": "file:src/constants/warrantyOptions.js",
+      "target": "file:src/i18n/index.js",
+      "type": "imports",
+      "detail": "imports i18n"
+    },
+    {
+      "source": "file:src/contexts/AuthContext.jsx",
+      "target": "file:src/services/warrantyService.js",
+      "type": "imports",
+      "detail": "imports { authService }"
+    }
+  ]
+}

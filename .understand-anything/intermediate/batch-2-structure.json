@@ -1,0 +1,382 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": ".dockerignore",
+      "language": "unknown",
+      "fileCategory": "infra",
+      "totalLines": 13,
+      "nonEmptyLines": 13,
+      "metrics": {}
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 734,
+      "nonEmptyLines": 609,
+      "sections": [
+        {
+          "heading": "NTPC Warranty Management System",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Mục lục",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "1. Tổng quan dự án",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "Tên dự án",
+          "level": 3,
+          "line": 22
+        },
+        {
+          "heading": "Mục đích",
+          "level": 3,
+          "line": 25
+        },
+        {
+          "heading": "Đối tượng người dùng",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "2. Kiến trúc & Công nghệ",
+          "level": 2,
+          "line": 42
+        },
+        {
+          "heading": "Tech Stack chi tiết",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "Sơ đồ kiến trúc tổng thể",
+          "level": 3,
+          "line": 77
+        },
+        {
+          "heading": "Luồng dữ liệu chính (Data Flow)",
+          "level": 3,
+          "line": 104
+        },
+        {
+          "heading": "3. Cấu trúc thư mục",
+          "level": 2,
+          "line": 138
+        },
+        {
+          "heading": "4. Kỹ thuật & Pattern được áp dụng",
+          "level": 2,
+          "line": 286
+        },
+        {
+          "heading": "4.1 Architecture Patterns",
+          "level": 3,
+          "line": 288
+        },
+        {
+          "heading": "4.2 Authentication & Security",
+          "level": 3,
+          "line": 300
+        },
+        {
+          "heading": "4.3 Database & Persistence",
+          "level": 3,
+          "line": 318
+        },
+        {
+          "heading": "4.4 Backup & Restore",
+          "level": 3,
+          "line": 333
+        },
+        {
+          "heading": "4.5 State Management",
+          "level": 3,
+          "line": 349
+        },
+        {
+          "heading": "4.6 Validation",
+          "level": 3,
+          "line": 356
+        },
+        {
+          "heading": "4.7 Internationalization (i18n)",
+          "level": 3,
+          "line": 363
+        },
+        {
+          "heading": "4.8 File Upload & Images",
+          "level": 3,
+          "line": 370
+        },
+        {
+          "heading": "4.9 Audit Trail",
+          "level": 3,
+          "line": 377
+        },
+        {
+          "heading": "5. Giao diện (UI/UX)",
+          "level": 2,
+          "line": 385
+        },
+        {
+          "heading": "Các trang/màn hình chính",
+          "level": 3,
+          "line": 387
+        },
+        {
+          "heading": "Responsive Design",
+          "level": 3,
+          "line": 403
+        },
+        {
+          "heading": "Theme",
+          "level": 3,
+          "line": 409
+        },
+        {
+          "heading": "Accessibility",
+          "level": 3,
+          "line": 415
+        },
+        {
+          "heading": "6. Phân tích Điểm mạnh & Điểm yếu",
+          "level": 2,
+          "line": 423
+        },
+        {
+          "heading": "Điểm mạnh",
+          "level": 3,
+          "line": 425
+        },
+        {
+          "heading": "Điểm yếu & Hạn chế",
+          "level": 3,
+          "line": 440
+        },
+        {
+          "heading": "Đề xuất cải thiện",
+          "level": 3,
+          "line": 454
+        },
+        {
+          "heading": "7. Hướng dẫn cài đặt & chạy",
+          "level": 2,
+          "line": 470
+        },
+        {
+          "heading": "Yêu cầu hệ thống",
+          "level": 3,
+          "line": 472
+        },
+        {
+          "heading": "Cài đặt local (không Docker)",
+          "level": 3,
+          "line": 483
+        },
+        {
+          "heading": "Cài đặt với Docker Compose",
+          "level": 3,
+          "line": 510
+        },
+        {
+          "heading": "Biến môi trường (.env)",
+          "level": 3,
+          "line": 542
+        },
+        {
+          "heading": "Lệnh phát triển",
+          "level": 3,
+          "line": 559
+        },
+        {
+          "heading": "8. API & Tính năng chính",
+          "level": 2,
+          "line": 589
+        },
+        {
+          "heading": "Public API (không cần xác thực)",
+          "level": 3,
+          "line": 591
+        },
+        {
+          "heading": "Auth API",
+          "level": 3,
+          "line": 599
+        },
+        {
+          "heading": "Warranty API (cần xác thực)",
+          "level": 3,
+          "line": 608
+        },
+        {
+          "heading": "Customer API",
+          "level": 3,
+          "line": 636
+        },
+        {
+          "heading": "Staff API",
+          "level": 3,
+          "line": 647
+        },
+        {
+          "heading": "Supplier API",
+          "level": 3,
+          "line": 656
+        },
+        {
+          "heading": "Statistics API",
+          "level": 3,
+          "line": 666
+        },
+        {
+          "heading": "Backup API (admin only)",
+          "level": 3,
+          "line": 675
+        },
+        {
+          "heading": "Trạng thái phiếu bảo hành",
+          "level": 3,
+          "line": 689
+        },
+        {
+          "heading": "Quy trình gửi/nhận Nhà Cung Cấp",
+          "level": 3,
+          "line": 705
+        },
+        {
+          "heading": "License",
+          "level": 2,
+          "line": 728
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 48
+      }
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "fileCategory": "infra",
+      "totalLines": 101,
+      "nonEmptyLines": 96,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "services",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "networks",
+          "level": 1,
+          "line": 99
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "get-tunnel.bat",
+      "language": "batch",
+      "fileCategory": "script",
+      "totalLines": 53,
+      "nonEmptyLines": 45,
+      "metrics": {}
+    },
+    {
+      "path": "get-tunnel.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 40,
+      "nonEmptyLines": 35,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 16,
+      "nonEmptyLines": 16,
+      "metrics": {}
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 56,
+      "nonEmptyLines": 56,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "private",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "scripts",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "devDependencies",
+          "level": 1,
+          "line": 43
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    }
+  ]
+}

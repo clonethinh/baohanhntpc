@@ -15,7 +15,7 @@ const { Title, Text, Link } = Typography;
 function formatDateTime(value) {
   if (!value) return '-';
   const d = dayjs(value);
-  return d.isValid() ? d.format('DD/MM/YYYY HH:mm') : value;
+  return d.isValid() ? d.format('DD-MM-YYYY HH:mm') : value;
 }
 
 function getStatusLabel(t, status) {
@@ -420,7 +420,7 @@ export default function Suppliers() {
           <List>
             <List.Item title={t('field.ngayNhan')}>
               <MobileDatePicker value={mobileReturnedAt} onConfirm={setMobileReturnedAt} precision="minute">
-                {(value) => <MobileButton size="small">{dayjs(value || new Date()).format('DD/MM/YYYY HH:mm')}</MobileButton>}
+                {(value) => <MobileButton size="small">{dayjs(value || new Date()).format('DD-MM-YYYY HH:mm')}</MobileButton>}
               </MobileDatePicker>
             </List.Item>
             <List.Item title={t('field.ghiChu')}><MobileTextArea rows={2} value={mobileReceiveNote} onChange={setMobileReceiveNote} /></List.Item>
@@ -503,7 +503,7 @@ export default function Suppliers() {
       <Modal title={`${t('adminSuppliers.confirmReceived')}${selectedWarranty?.soChungTu ? ` - ${selectedWarranty.soChungTu}` : ''}`} open={receiveModalOpen} onOk={submitReceive} onCancel={() => setReceiveModalOpen(false)} okText={t('button.xacNhan')} cancelText={t('button.huy')}>
         <Form form={receiveForm} layout="vertical">
           <Form.Item label={t('field.ngayNhan')} name="returnedAt" rules={[{ required: true, message: t('adminSuppliers.chooseReceivedDate') }]}>
-            <DatePicker showTime style={{ width: '100%' }} format="DD/MM/YYYY HH:mm" />
+            <DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" />
           </Form.Item>
           <Form.Item label={t('field.ghiChu')} name="note">
             <Input.TextArea rows={2} placeholder={t('adminSuppliers.receiveNotePlaceholder')} />

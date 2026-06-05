@@ -156,7 +156,7 @@ export default function WarrantyPrint() {
               </div>
             </div>
             <div style={{ textAlign: 'right', fontSize: 8.8, fontWeight: 600 }}>
-              <div>Ngày in: <strong>{formatDate(new Date(), 'DD/MM/YYYY HH:mm')}</strong></div>
+              <div>Ngày in: <strong>{formatDate(new Date(), 'DD-MM-YYYY HH:mm')}</strong></div>
               <div style={{ marginTop: 5, fontSize: 7.5, fontWeight: 900, textTransform: 'uppercase' }}>Số chứng từ</div>
               <div style={{ fontFamily: 'Consolas, monospace', fontSize: 12, fontWeight: 800 }}>{warranty.soChungTu}</div>
             </div>
@@ -225,8 +225,8 @@ export default function WarrantyPrint() {
             <div>{t('date')}: {(() => {
               const d = warranty.ngayNhan;
               if (!d) return '';
-              const formatted = formatDate(d, 'DD/MM/YYYY HH:mm');
-              return formatted.endsWith('00:00') ? formatDate(d, 'DD/MM/YYYY') : formatted;
+              const formatted = formatDate(d, 'DD-MM-YYYY HH:mm');
+              return formatted.endsWith('00:00') ? formatDate(d, 'DD-MM-YYYY') : formatted;
             })()}</div>
           </div>
         </div>

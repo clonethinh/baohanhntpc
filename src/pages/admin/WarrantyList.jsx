@@ -22,7 +22,7 @@ import { STATUS } from '../../constants/statusConfig';
 import { getStatusBadgeColor } from '../../constants/badgeConfig';
 import { LOAI_XU_LY_OPTIONS, LOAI_XU_LY_LABELS } from '../../constants/warrantyOptions';
 import { getUrgency } from '../../utils/urgency';
-import { formatDate, getWarrantyDueDate, shouldShowDueDate } from '../../utils/dateHelpers';
+import { formatDate, getWarrantyDueDate, shouldShowDueDate, hasExplicitDueDate } from '../../utils/dateHelpers';
 import StatusTag from '../../components/warranty/StatusTag';
 import WarrantyDetail from '../../components/warranty/WarrantyDetail';
 import dayjs from 'dayjs';
@@ -439,7 +439,7 @@ export default function WarrantyList() {
               value={ngayNhanRange}
               onChange={setNgayNhanRange}
               style={{ width: '100%' }}
-              format="DD/MM/YYYY"
+              format="DD-MM-YYYY"
             />
           </div>
           <MobileSpace block justify="between">
@@ -456,7 +456,7 @@ export default function WarrantyList() {
           <MobileCard className="admin-mobile-card">{t('adminWarrantyList.emptyFiltered')}</MobileCard>
         ) : data.rows.map(w => {
           const urgency = getUrgency(w);
-          const dueText = shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-';
+          const dueText = hasExplicitDueDate(w) ? formatDate(getWarrantyDueDate(w)) : <span>Pending<span className="loading-dots" /></span>;
           return (
             <MobileCard key={w.id} className={`admin-mobile-ticket row-${urgency}`} onClick={() => handleOpenDetail(w.id)}>
               <div className="admin-mobile-ticket-head" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

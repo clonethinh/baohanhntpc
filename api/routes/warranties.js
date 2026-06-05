@@ -361,7 +361,7 @@ router.get('/export', async (req, res) => {
     const headers = ['STT', 'Ngay', 'MaNhanVien', 'SoChungTu', 'KhachHang', 'TenHang', 'SoSeri', 'CauHinh', 'LoiLucNhan', 'PhuKien', 'ChiPhi', 'BaoHanh', 'GhiChu', 'NgayMua', 'NgayHenTra', 'NgayTra', 'TraHang', 'TrangThai'];
     const rows = warranties.map(w => [
       w.stt,
-      dayjs(w.ngayNhan).format('DD/MM/YYYY HH:mm'),
+      dayjs(w.ngayNhan).format('DD-MM-YYYY HH:mm'),
       w.maNhanVien,
       w.soChungTu,
       w.khachHang,
@@ -373,9 +373,9 @@ router.get('/export', async (req, res) => {
       w.chiPhi,
       w.baoHanh,
       w.ghiChu,
-      w.ngayMua ? dayjs(w.ngayMua).format('DD/MM/YYYY') : '',
-      (w.ngayHenTra && w.ngayHenTra !== 'none') ? dayjs(w.ngayHenTra).format('DD/MM/YYYY') : '',
-      w.ngayTra ? dayjs(w.ngayTra).format('DD/MM/YYYY') : '',
+      w.ngayMua ? dayjs(w.ngayMua).format('DD-MM-YYYY') : '',
+      (w.ngayHenTra && w.ngayHenTra !== 'none') ? dayjs(w.ngayHenTra).format('DD-MM-YYYY') : '',
+      w.ngayTra ? dayjs(w.ngayTra).format('DD-MM-YYYY') : '',
       w.doiTra ? (w.doiTra.type === 'doi_hang' ? 'Đổi hàng' : 'Trả hàng') : '',
       w.trangThai,
     ]);
@@ -548,7 +548,9 @@ router.put('/:id', async (req, res) => {
         loaiPhieu: nextBody.loaiPhieu !== undefined ? String(nextBody.loaiPhieu) : old.loaiPhieu,
         baoHanh: nextBody.baoHanh !== undefined ? String(nextBody.baoHanh) : old.baoHanh,
         loaiXuLy: nextBody.loaiXuLy !== undefined ? String(nextBody.loaiXuLy) : old.loaiXuLy,
-        loaiXuLyKhac: nextBody.loaiXuLy === 'khac' ? String(nextBody.loaiXuLyKhac || '').trim() : '',
+        loaiXuLyKhac: nextBody.loaiXuLy !== undefined
+          ? (nextBody.loaiXuLy === 'khac' ? String(nextBody.loaiXuLyKhac || '').trim() : '')
+          : old.loaiXuLyKhac,
         ghiChu: nextBody.ghiChu !== undefined ? String(nextBody.ghiChu) : old.ghiChu,
         ngayMua: nextBody.ngayMua !== undefined ? String(nextBody.ngayMua) : old.ngayMua,
         ngayNhan: nextBody.ngayNhan !== undefined ? String(nextBody.ngayNhan) : old.ngayNhan,

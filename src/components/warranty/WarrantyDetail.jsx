@@ -507,8 +507,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       const values = {
         ...rawValues,
         ngayNhan: rawValues.ngayNhan ? rawValues.ngayNhan.format('YYYY-MM-DDTHH:mm:ss') : warranty.ngayNhan,
-        ngayMua: rawValues.ngayMua ? rawValues.ngayMua.format('YYYY-MM-DD') : '',
-        ngayHenTra: rawValues.ngayHenTra ? rawValues.ngayHenTra.format('YYYY-MM-DD') : 'none',
+        ngayMua: rawValues.ngayMua ? rawValues.ngayMua.format('YYYY-MM-DD') : (warranty.ngayMua || ''),
+        ngayHenTra: rawValues.ngayHenTra ? rawValues.ngayHenTra.format('YYYY-MM-DD') : (warranty.ngayHenTra || 'none'),
       };
       const res = await warrantyService.update(warranty.id, values);
       if (res.data.success) {
@@ -812,7 +812,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   const printSupplierTicket = () => {
     if (!supplierLogs.length) return;
     const supplierInfo = getSupplierForPrint();
-    const printedAt = dayjs().format('DD/MM/YYYY HH:mm');
+    const printedAt = dayjs().format('DD-MM-YYYY HH:mm');
     const documentCode = warranty.soChungTu || warranty.id || '';
     const companyName = t('print:company');
     const companyAddress = t('print:address');
@@ -1093,7 +1093,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         <Card title={doiTra.type === 'doi_hang' ? 'Thông tin đổi hàng' : 'Thông tin trả hàng'}>
           <Descriptions layout="vertical" column={1}>
             <Descriptions.Item label="Loại xử lý">{doiTra.type === 'doi_hang' ? 'Đổi hàng' : 'Trả hàng'}</Descriptions.Item>
-            <Descriptions.Item label="Thời gian">{formatDate(doiTra.at, 'DD/MM/YYYY HH:mm')}</Descriptions.Item>
+            <Descriptions.Item label="Thời gian">{formatDate(doiTra.at, 'DD-MM-YYYY HH:mm')}</Descriptions.Item>
             <Descriptions.Item label="Nhân viên">{getStaffName(doiTra.by)}</Descriptions.Item>
             <Descriptions.Item label="Trạng thái"><StatusTag status={warranty.trangThai} /></Descriptions.Item>
             <Descriptions.Item label="Sản phẩm cũ">{doiTra.tenHangCu || '-'}</Descriptions.Item>
@@ -1206,13 +1206,19 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   const getUpdateHistoryDetail = (entry) => {
     const formatFieldValue = (field, raw) => {
       if (raw === null || raw === undefined || raw === '') return '';
-      if (field === 'ngayHenTra') {
+      if (field === 'ngayHenTra' || field === 'ngayNhan' || field === 'ngayTra' || field === 'ngayMua') {
         if (raw === 'none') return 'Đang cập nhập...';
         const d = dayjs(raw);
         return d.isValid() ? d.format('DD-MM-YYYY') : String(raw);
       }
       if (field === 'loaiXuLy') {
         return LOAI_XU_LY_LABELS?.[raw] || String(raw);
+      }
+      if (field === 'trangThai') {
+        return STATUS?.[raw]?.label || String(raw);
+      }
+      if (field === 'uuTien') {
+        return raw ? 'Có' : 'Không';
       }
       return String(raw);
     };
@@ -1275,12 +1281,12 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 <Descriptions.Item label="Nhân viên">{getStaffName(warranty.maNhanVien)}</Descriptions.Item>
                 <Descriptions.Item label="Ngày nhận">
                   {editing && editSection === 'summary'
-                    ? <Form.Item name="ngayNhan" style={{ marginBottom: 0 }}><DatePicker showTime style={{ width: '100%' }} format="DD/MM/YYYY HH:mm" /></Form.Item>
-                    : formatDate(warranty.ngayNhan, 'DD/MM/YYYY HH:mm')}
+                    ? <Form.Item name="ngayNhan" style={{ marginBottom: 0 }}><DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" /></Form.Item>
+                    : formatDate(warranty.ngayNhan, 'DD-MM-YYYY HH:mm')}
                 </Descriptions.Item>
                 {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && <Descriptions.Item label="Ngày hẹn trả">
                   {editing && editSection === 'summary'
-                    ? <Form.Item name="ngayHenTra" style={{ marginBottom: 0 }}><DatePicker allowClear style={{ width: '100%' }} format="DD/MM/YYYY" /></Form.Item>
+                    ? <Form.Item name="ngayHenTra" style={{ marginBottom: 0 }}><DatePicker allowClear style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
                     : (warranty.ngayHenTra === 'none'
                         ? <span>Đang cập nhập<span className="loading-dots" /></span>
                         : formatDate(warranty.ngayHenTra))}
@@ -1352,7 +1358,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 </Descriptions.Item>
                 <Descriptions.Item label="Ngày mua">
                   {editing && editSection === 'product'
-                    ? <Form.Item name="ngayMua" style={{ marginBottom: 0 }}><DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" /></Form.Item>
+                    ? <Form.Item name="ngayMua" style={{ marginBottom: 0 }}><DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
                     : formatDate(warranty.ngayMua)}
                 </Descriptions.Item>
               </Descriptions>
@@ -1438,10 +1444,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 />
               </Form.Item>
               <Form.Item label="Ngày gửi" name="sentAt" rules={[{ required: true, message: 'Chọn ngày gửi' }]}>
-                <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+                <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
               </Form.Item>
               <Form.Item label="Ngày hẹn nhận" name="expectedReturnAt">
-                <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+                <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
               </Form.Item>
               <Form.Item label="Ghi chú" name="note">
                 <Input.TextArea rows={3} placeholder="Ghi chú gửi NCC" />
@@ -1579,7 +1585,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               detail = normalizeHistoryText(h.note) || '';
             } else if (isTraHang) {
               color = 'green';
-              title = 'Đánh dấu đã xong';
+              title = t(`warrantyDetail.historyAction.tra_hang${warranty.loaiXuLy === 'sua_dv' ? '_sua_dv' : ''}`);
               detail = normalizeHistoryText(h.note) || '';
             } else if (isExchange) {
               color = 'green';
@@ -1649,7 +1655,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                   </div>
                   <div>
                     <ClockCircleOutlined style={{ fontSize: 12, marginRight: 4, color: '#999' }} />
-                    <Text type="secondary" style={{ fontSize: 12 }}>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</Text>
+                    <Text type="secondary" style={{ fontSize: 12 }}>{formatDate(h.at, 'DD-MM-YYYY - HH:mm')} · {getStaffName(h.by)}</Text>
                   </div>
                   {detail && <div style={{ marginTop: 4, fontSize: 13, whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</div>}
                 </div>
@@ -1682,7 +1688,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
           <List.Item title="Khách hàng">{warranty.khachHang || '-'}</List.Item>
           <List.Item title="Số điện thoại">{warranty.soDienThoai || '-'}</List.Item>
           <List.Item title="Địa chỉ">{warranty.diaChi || '-'}</List.Item>
-          <List.Item title="Ngày nhận">{formatDate(warranty.ngayNhan, 'DD/MM/YYYY HH:mm')}</List.Item>
+          <List.Item title="Ngày nhận">{formatDate(warranty.ngayNhan, 'DD-MM-YYYY HH:mm')}</List.Item>
           {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && (
             <List.Item title="Ngày hẹn trả">
               {warranty.ngayHenTra === 'none'
@@ -1789,8 +1795,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             <Form.Item label="Số seri" name="soSeri"><Input /></Form.Item>
             <Form.Item label="Lỗi lúc nhận" name="loiLucNhan"><TextArea rows={2} /></Form.Item>
             <Form.Item label="Phụ kiện" name="phuKien"><Input /></Form.Item>
-            <Form.Item label="Ngày nhận" name="ngayNhan"><DatePicker showTime style={{ width: '100%' }} format="DD/MM/YYYY HH:mm" /></Form.Item>
-            <Form.Item label="Ngày hẹn trả" name="ngayHenTra"><DatePicker allowClear style={{ width: '100%' }} format="DD/MM/YYYY" /></Form.Item>
+            <Form.Item label="Ngày nhận" name="ngayNhan"><DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" /></Form.Item>
+            <Form.Item label="Ngày hẹn trả" name="ngayHenTra"><DatePicker allowClear style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
             <Form.Item label="Ghi chú" name="ghiChu"><TextArea rows={2} /></Form.Item>
             <MobileSpace>
               <MobileButton color="primary" onClick={handleSave}>Lưu</MobileButton>
@@ -1812,7 +1818,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
           <MobileCard className="warranty-mobile-card" title={doiTra.type === 'doi_hang' ? 'Thông tin đổi hàng' : 'Thông tin trả hàng'}>
             <List>
               <List.Item title="Loại xử lý">{doiTra.type === 'doi_hang' ? 'Đổi hàng' : 'Trả hàng'}</List.Item>
-              <List.Item title="Thời gian">{formatDate(doiTra.at, 'DD/MM/YYYY HH:mm')}</List.Item>
+              <List.Item title="Thời gian">{formatDate(doiTra.at, 'DD-MM-YYYY HH:mm')}</List.Item>
               <List.Item title="Nhân viên">{getStaffName(doiTra.by)}</List.Item>
               <List.Item title="Sản phẩm cũ">{doiTra.tenHangCu || '-'}</List.Item>
               <List.Item title="Serial cũ">{doiTra.soSeriCu || '-'}</List.Item>
@@ -1907,10 +1913,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             />
           </Form.Item>
           <Form.Item label="Ngày gửi" name="sentAt" rules={[{ required: true, message: 'Chọn ngày gửi' }]}>
-            <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+            <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
           </Form.Item>
           <Form.Item label="Ngày hẹn nhận" name="expectedReturnAt">
-            <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+            <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
           </Form.Item>
           <Form.Item label="Ghi chú" name="note">
             <Input.TextArea rows={3} placeholder="Ghi chú gửi NCC" />
@@ -2032,7 +2038,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               : isStatus
                 ? `Chuyển sang "${STATUS[toStatus]?.label || toStatus}"`
                 : isTraHang
-                  ? 'Đánh dấu đã xong'
+                  ? t(`warrantyDetail.historyAction.tra_hang${warranty.loaiXuLy === 'sua_dv' ? '_sua_dv' : ''}`)
                   : isExchange
                     ? 'Đổi hàng'
                     : isReturn
@@ -2077,7 +2083,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     </span>
                   )}
                 </div>
-                <span>{formatDate(h.at, 'DD/MM/YYYY - HH:mm')} · {getStaffName(h.by)}</span>
+                <span>{formatDate(h.at, 'DD-MM-YYYY - HH:mm')} · {getStaffName(h.by)}</span>
                 {detail && <p style={{ whiteSpace: 'pre-line' }}>{renderHistoryDetail(detail)}</p>}
               </div>
             );

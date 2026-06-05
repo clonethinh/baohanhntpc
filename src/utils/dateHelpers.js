@@ -7,7 +7,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.locale('vi');
 
-export function formatDate(dateStr, format = 'DD/MM/YYYY') {
+export function formatDate(dateStr, format = 'DD-MM-YYYY') {
   if (!dateStr || dateStr === 'none') return '-';
   const d = dayjs(dateStr);
   return d.isValid() ? d.tz('Asia/Ho_Chi_Minh').format(format) : '-';
@@ -16,7 +16,7 @@ export function formatDate(dateStr, format = 'DD/MM/YYYY') {
 export function formatDateTime(dateStr) {
   if (!dateStr || dateStr === 'none') return '-';
   const d = dayjs(dateStr);
-  return d.isValid() ? d.tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY HH:mm') : '-';
+  return d.isValid() ? d.tz('Asia/Ho_Chi_Minh').format('DD-MM-YYYY HH:mm') : '-';
 }
 
 export function parseExcelDate(serial) {
@@ -51,5 +51,10 @@ export function getWarrantyDueDate(warranty) {
 }
 
 export function shouldShowDueDate(warranty) {
-  return warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && warranty?.ngayHenTra !== 'none';
+  if (warranty?.trangThai === 'da_tra' || warranty?.trangThai === 'huy') return false;
+  return !!getWarrantyDueDate(warranty);
+}
+
+export function hasExplicitDueDate(warranty) {
+  return !!(warranty?.ngayHenTra && warranty.ngayHenTra !== 'none');
 }

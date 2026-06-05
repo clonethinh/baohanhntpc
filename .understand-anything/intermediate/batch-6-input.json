@@ -1,0 +1,182 @@
+{
+  "projectRoot": "/mnt/baohanhntpc",
+  "batchFiles": [
+    {
+      "path": "src/components/common/ChangePasswordModal.jsx",
+      "language": "javascript",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/CustomerPickerModal.jsx",
+      "language": "javascript",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/ErrorBoundary.jsx",
+      "language": "javascript",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/FloatingZalo.jsx",
+      "language": "javascript",
+      "sizeLines": 387,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/ShortcutsModal.jsx",
+      "language": "javascript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/SkeletonCard.jsx",
+      "language": "javascript",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/common/StaffPickerModal.jsx",
+      "language": "javascript",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/AdminLayout.jsx",
+      "language": "javascript",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/AppHeader.jsx",
+      "language": "javascript",
+      "sizeLines": 166,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/AppSider.jsx",
+      "language": "javascript",
+      "sizeLines": 123,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/CustomerLayout.jsx",
+      "language": "javascript",
+      "sizeLines": 182,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/GlobalSearch.jsx",
+      "language": "javascript",
+      "sizeLines": 406,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/layout/NotificationBell.jsx",
+      "language": "javascript",
+      "sizeLines": 395,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/MobileStatusTag.jsx",
+      "language": "javascript",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/StatusTag.jsx",
+      "language": "javascript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/WarrantyDetail.jsx",
+      "language": "javascript",
+      "sizeLines": 2299,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/WarrantyPrint.jsx",
+      "language": "javascript",
+      "sizeLines": 302,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/warranty/WarrantyProgress.jsx",
+      "language": "javascript",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/badgeConfig.js",
+      "language": "javascript",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/routes.js",
+      "language": "javascript",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/statusConfig.js",
+      "language": "javascript",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants/warrantyOptions.js",
+      "language": "javascript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/contexts/AuthContext.jsx",
+      "language": "javascript",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useDebounce.js",
+      "language": "javascript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useIsMobile.js",
+      "language": "javascript",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/components/common/ChangePasswordModal.jsx": [],
+    "src/components/common/CustomerPickerModal.jsx": [],
+    "src/components/common/ErrorBoundary.jsx": [],
+    "src/components/common/FloatingZalo.jsx": [],
+    "src/components/common/ShortcutsModal.jsx": [],
+    "src/components/common/SkeletonCard.jsx": [],
+    "src/components/common/StaffPickerModal.jsx": [],
+    "src/components/layout/AdminLayout.jsx": [],
+    "src/components/layout/AppHeader.jsx": [],
+    "src/components/layout/AppSider.jsx": [],
+    "src/components/layout/CustomerLayout.jsx": [],
+    "src/components/layout/GlobalSearch.jsx": [],
+    "src/components/layout/NotificationBell.jsx": [],
+    "src/components/warranty/MobileStatusTag.jsx": [],
+    "src/components/warranty/StatusTag.jsx": [],
+    "src/components/warranty/WarrantyDetail.jsx": [],
+    "src/components/warranty/WarrantyPrint.jsx": [],
+    "src/components/warranty/WarrantyProgress.jsx": [],
+    "src/constants/badgeConfig.js": [],
+    "src/constants/routes.js": [],
+    "src/constants/statusConfig.js": [],
+    "src/constants/warrantyOptions.js": [],
+    "src/contexts/AuthContext.jsx": [],
+    "src/hooks/useDebounce.js": [],
+    "src/hooks/useIsMobile.js": []
+  }
+}

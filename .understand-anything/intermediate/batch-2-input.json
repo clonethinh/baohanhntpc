@@ -1,0 +1,56 @@
+{
+  "projectRoot": "/mnt/baohanhntpc",
+  "batchFiles": [
+    {
+      "path": ".dockerignore",
+      "language": "unknown",
+      "sizeLines": 13,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 734,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "sizeLines": 101,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "get-tunnel.bat",
+      "language": "batch",
+      "sizeLines": 53,
+      "fileCategory": "script"
+    },
+    {
+      "path": "get-tunnel.sh",
+      "language": "shell",
+      "sizeLines": 40,
+      "fileCategory": "script"
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "sizeLines": 16,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "sizeLines": 56,
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    ".dockerignore": [],
+    "README.md": [],
+    "docker-compose.yml": [],
+    "get-tunnel.bat": [],
+    "get-tunnel.sh": [],
+    "index.html": [],
+    "package.json": []
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "projectRoot": "/mnt/baohanhntpc",
+  "batchFiles": [
+    {
+      "path": ".claude/settings.local.json",
+      "language": "json",
+      "sizeLines": 11,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api.Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/audit.js",
+      "language": "javascript",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/auth.js",
+      "language": "javascript",
+      "sizeLines": 298,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/backup.js",
+      "language": "javascript",
+      "sizeLines": 777,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/customerMaster.js",
+      "language": "javascript",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/customers.js",
+      "language": "javascript",
+      "sizeLines": 141,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/db.js",
+      "language": "javascript",
+      "sizeLines": 559,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/restore_drill.js",
+      "language": "javascript",
+      "sizeLines": 186,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/lib/validators.js",
+      "language": "javascript",
+      "sizeLines": 95,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/auth.js",
+      "language": "javascript",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/backups.js",
+      "language": "javascript",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/customers.js",
+      "language": "javascript",
+      "sizeLines": 205,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/nhanVien.js",
+      "language": "javascript",
+      "sizeLines": 149,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/public.js",
+      "language": "javascript",
+      "sizeLines": 235,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/stats.js",
+      "language": "javascript",
+      "sizeLines": 128,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/suppliers.js",
+      "language": "javascript",
+      "sizeLines": 191,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/warranties.js",
+      "language": "javascript",
+      "sizeLines": 1557,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/routes/warranties.js.bak-customers-master",
+      "language": "bak-customers-master",
+      "sizeLines": 1195,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/seedData.js",
+      "language": "javascript",
+      "sizeLines": 251,
+      "fileCategory": "code"
+    },
+    {
+      "path": "api/server.js",
+      "language": "javascript",
+      "sizeLines": 238,
+      "fileCategory": "code"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-20-react-i18next-rollout.md",
+      "language": "markdown",
+      "sizeLines": 1139,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-05-20-react-i18next-rollout-design.md",
+      "language": "markdown",
+      "sizeLines": 150,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "filebaohanh.xlsx",
+      "language": "xlsx",
+      "sizeLines": 506,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    ".claude/settings.local.json": [],
+    ".understand-anything/.understandignore": [],
+    "api.Dockerfile": [],
+    "api/lib/audit.js": [],
+    "api/lib/auth.js": [],
+    "api/lib/backup.js": [],
+    "api/lib/customerMaster.js": [],
+    "api/lib/customers.js": [],
+    "api/lib/db.js": [],
+    "api/lib/restore_drill.js": [],
+    "api/lib/validators.js": [],
+    "api/routes/auth.js": [],
+    "api/routes/backups.js": [],
+    "api/routes/customers.js": [],
+    "api/routes/nhanVien.js": [],
+    "api/routes/public.js": [],
+    "api/routes/stats.js": [],
+    "api/routes/suppliers.js": [],
+    "api/routes/warranties.js": [],
+    "api/routes/warranties.js.bak-customers-master": [],
+    "api/seedData.js": [],
+    "api/server.js": [],
+    "docs/superpowers/plans/2026-05-20-react-i18next-rollout.md": [],
+    "docs/superpowers/specs/2026-05-20-react-i18next-rollout-design.md": [],
+    "filebaohanh.xlsx": []
+  }
+}

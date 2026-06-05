@@ -239,7 +239,37 @@
     "exchangeAlert": "Phiếu hoàn tất bằng đổi hàng",
     "returnAlert": "Phiếu hoàn tất bằng trả hàng",
     "warrantyCode": "Mã phiếu bảo hành",
-    "print": "In phiếu"
+    "print": "In phiếu",
+    "historyAction": {
+      "create": "Tạo phiếu",
+      "update": "Cập nhật thông tin",
+      "status": "Chuyển trạng thái",
+      "tra_hang": "Đã bảo hành xong",
+      "tra_hang_sua_dv": "Đã sửa chữa xong",
+      "exchange": "Đổi hàng",
+      "return": "Trả hàng",
+      "priority": "Cập nhật ưu tiên",
+      "supplier_sent": "Gửi nhà cung cấp",
+      "supplier_returned": "Nhận lại từ nhà cung cấp",
+      "log": "Cập nhật tiến trình",
+      "delete": "Xóa phiếu"
+    }
+  },
+  "warrantyDetail": {
+    "historyAction": {
+      "create": "Tạo phiếu",
+      "update": "Cập nhật thông tin",
+      "status": "Chuyển trạng thái",
+      "tra_hang": "Đã bảo hành xong",
+      "tra_hang_sua_dv": "Đã sửa chữa xong",
+      "exchange": "Đổi hàng",
+      "return": "Trả hàng",
+      "priority": "Cập nhật ưu tiên",
+      "supplier_sent": "Gửi nhà cung cấp",
+      "supplier_returned": "Nhận lại từ nhà cung cấp",
+      "log": "Cập nhật tiến trình",
+      "delete": "Xóa phiếu"
+    }
   },
   "adminCustomer": {
     "updateSuccess": "Đã cập nhật khách hàng",
@@ -371,7 +401,8 @@
       "create": "Tạo phiếu",
       "update": "Cập nhật thông tin",
       "status": "Chuyển trạng thái",
-      "tra_hang": "Đánh dấu đã xong",
+      "tra_hang": "Đã bảo hành xong",
+      "tra_hang_sua_dv": "Đã sửa chữa xong",
       "exchange": "Đổi hàng",
       "return": "Trả hàng",
       "priority": "Cập nhật ưu tiên",
@@ -397,7 +428,8 @@
     "priority": "Ưu tiên",
     "nearDue": "Gần hạn",
     "latestHistory": "Tiến trình & Lịch sử mới nhất",
-    "unknownCustomer": "Không rõ"
+    "unknownCustomer": "Không rõ",
+    "pending": "Đang chờ"
   },
   "adminCreateWarranty": {
     "title": "Tạo phiếu bảo hành",
