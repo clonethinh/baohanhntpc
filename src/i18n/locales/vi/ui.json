@@ -32,15 +32,6 @@
     "trungTamBaoHanh": "Trung tâm bảo hành",
     "heroSubtitle": "Nhập mã phiếu hoặc số điện thoại để xem tiến trình xử lý."
   },
-  "trackingResult": {
-    "anhN": "Ảnh {{n}}",
-    "moAnh": "Mở {{label}}",
-    "chonAnh": "Chọn {{label}}",
-    "watermark": "Nguyễn Tân PC - {{soChungTu}}",
-    "daCapNhatMoiNhat": "Đã cập nhật trạng thái mới nhất",
-    "khongTheLamMoi": "Không thể làm mới dữ liệu lúc này",
-    "chungTuKhacCungSdt": "Chứng từ khác cùng số điện thoại"
-  },
   "app": {
     "name": "Bảo Hành Nguyễn Tân PC",
     "brandShort": "BẢO HÀNH",
@@ -215,6 +206,13 @@
     "desktopStorageNote": "• Đối với các thiết bị lưu trữ như HDD, SSD, USB: quý khách vui lòng sao lưu dữ liệu trước khi gửi bảo hành. Chúng tôi không chịu trách nhiệm về mất mát dữ liệu trong quá trình kiểm tra hoặc bảo hành."
   },
   "trackingResult": {
+    "anhN": "Ảnh {{n}}",
+    "moAnh": "Mở {{label}}",
+    "chonAnh": "Chọn {{label}}",
+    "watermark": "Nguyễn Tân PC - {{soChungTu}}",
+    "daCapNhatMoiNhat": "Đã cập nhật trạng thái mới nhất",
+    "khongTheLamMoi": "Không thể làm mới dữ liệu lúc này",
+    "chungTuKhacCungSdt": "Chứng từ khác cùng số điện thoại",
     "copyLink": "Sao chép link",
     "copiedLink": "Đã sao chép link tra cứu",
     "notFoundTitle": "Không tìm thấy mã bảo hành",
