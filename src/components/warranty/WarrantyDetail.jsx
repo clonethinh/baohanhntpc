@@ -349,13 +349,13 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
   const handleCancel = async () => {
     if (!cancelReason.trim()) {
-      message.warning('Vui lòng nhập lý do hủy');
+      message.warning(t('warrantyDetail.toast.nhapLyDoHuy'));
       return;
     }
     try {
       const res = await warrantyService.updateStatus(warranty.id, { trangThai: 'huy', note: cancelReason });
       if (res.data.success) {
-        message.success('Đã hủy phiếu');
+        message.success(t('warrantyDetail.toast.daHuyPhieu'));
         markChanged();
         setWarranty(res.data.data);
         lastWarrantyRef.current = res.data.data;
@@ -363,7 +363,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         setCancelReason('');
       }
     } catch {
-      message.error('Lỗi khi hủy phiếu');
+      message.error(t('warrantyDetail.toast.loiHuyPhieu'));
     }
   };
 
@@ -378,26 +378,26 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       return;
     }
     if (selectedFiles.some(file => !['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type))) {
-      message.warning('Chỉ hỗ trợ ảnh JPG, PNG hoặc WEBP');
+      message.warning(t('warrantyDetail.toast.anhJpgPngWebp'));
       isUploadingRef.current = false;
       isGlobalUploading = false;
       return;
     }
     if (selectedFiles.some(file => file.size > 5 * 1024 * 1024)) {
-      message.warning('Mỗi ảnh tối đa 5MB');
+      message.warning(t('warrantyDetail.toast.anhToiDa5MB'));
       isUploadingRef.current = false;
       isGlobalUploading = false;
       return;
     }
     if (attachments.length >= 10) {
-      message.warning('Tối đa 10 ảnh đính kèm');
+      message.warning(t('warrantyDetail.toast.toiDa10Anh'));
       isUploadingRef.current = false;
       isGlobalUploading = false;
       return;
     }
     const remainingSlots = 10 - attachments.length;
     if (selectedFiles.length > remainingSlots) {
-      message.warning(`Chỉ có thể thêm tối đa ${remainingSlots} ảnh nữa`);
+      message.warning(t('warrantyDetail.toast.toiDaNAnh', { count: remainingSlots }));
       isUploadingRef.current = false;
       isGlobalUploading = false;
       return;
@@ -415,10 +415,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       if (res.data.success) {
         markChanged();
         setWarranty(res.data.data);
-        message.success('Đã thêm ảnh đính kèm');
+        message.success(t('warrantyDetail.toast.daThemAnh'));
       }
     } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Lỗi khi thêm ảnh');
+      message.error(err?.response?.data?.error?.message || t('warrantyDetail.toast.loiThemAnh'));
     } finally {
       setAttachmentUploading(false);
       isUploadingRef.current = false;
@@ -433,11 +433,11 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         markChanged();
         setWarranty(res.data.data);
         if (normalizeAttachments(res.data.data?.attachments).length === 0) {
-          message.success('Đã xóa ảnh đính kèm');
+          message.success(t('warrantyDetail.toast.daXoaAnh'));
         }
       }
     } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Lỗi khi xóa ảnh');
+      message.error(err?.response?.data?.error?.message || t('warrantyDetail.toast.loiXoaAnh'));
     }
   };
 
@@ -447,7 +447,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       const res = await customerService.list();
       if (res.data?.success) setCustomerList(res.data.data || []);
     } catch {
-      message.error('Không thể tải danh sách khách hàng');
+      message.error(t('warrantyDetail.toast.khongTaiKhachHang'));
     } finally {
       setCustomerListLoading(false);
     }
@@ -467,10 +467,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         markChanged();
         setWarranty(res.data.data);
         setCustomerPickerOpen(false);
-        message.success('Đã chuyển khách hàng cho CT');
+        message.success(t('warrantyDetail.toast.daChuyenKhach'));
       }
     } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Không thể chuyển khách hàng');
+      message.error(err?.response?.data?.error?.message || t('warrantyDetail.toast.khongChuyenKhach'));
     } finally {
       setCustomerTransferSubmitting(false);
     }
@@ -496,8 +496,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     if (editing && editSection === section) {
       return (
         <Space>
-          <Button size="small" type="primary" onClick={handleSave}>Lưu</Button>
-          <Button size="small" onClick={cancelInlineEdit}>Hủy</Button>
+          <Button size="small" type="primary" onClick={handleSave}>{t('button.luu')}</Button>
+          <Button size="small" onClick={cancelInlineEdit}>{t('button.huy')}</Button>
         </Space>
       );
     }
@@ -505,13 +505,13 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     if (section === 'customer') {
       return (
         <Space size={6}>
-          <Button size="small" icon={<EditOutlined />} onClick={() => startInlineEdit(section)}>Sửa</Button>
-          <Button size="small" icon={<SwapOutlined />} loading={customerTransferSubmitting} onClick={openCustomerTransfer}>Chuyển khách</Button>
+          <Button size="small" icon={<EditOutlined />} onClick={() => startInlineEdit(section)}>{t('button.sua')}</Button>
+          <Button size="small" icon={<SwapOutlined />} loading={customerTransferSubmitting} onClick={openCustomerTransfer}>{t('warrantyDetail.chuyenKhach')}</Button>
         </Space>
       );
     }
 
-    return <Button size="small" icon={<EditOutlined />} onClick={() => startInlineEdit(section)}>Sửa</Button>;
+    return <Button size="small" icon={<EditOutlined />} onClick={() => startInlineEdit(section)}>{t('button.sua')}</Button>;
   };
 
   async function handleSave() {
@@ -525,7 +525,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       };
       const res = await warrantyService.update(warranty.id, values);
       if (res.data.success) {
-        message.success('Cập nhật thành công');
+        message.success(t('warrantyDetail.toast.capNhatThanhCong'));
         markChanged();
         setWarranty(res.data.data);
         setEditing(false);
@@ -542,13 +542,13 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     try {
       const res = await warrantyService.logProgress(warranty.id, values.note);
       if (res.data.success) {
-        message.success('Đã thêm ghi chú tiến trình');
+        message.success(t('warrantyDetail.toast.daThemGhiChu'));
         markChanged();
         setWarranty(res.data.data);
         logForm.resetFields();
       }
     } catch {
-      message.error('Lỗi khi thêm ghi chú');
+      message.error(t('warrantyDetail.toast.loiThemGhiChu'));
     } finally {
       setLogSubmitting(false);
     }
@@ -592,10 +592,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       if (supplierLogs.length > 0) {
         const ok = await new Promise((resolve) => {
           Modal.confirm({
-            title: 'Xác nhận gửi NCC',
-            content: 'Đã có sự kiện trong lịch sử gửi / nhận NCC. Xác nhận gửi mới?',
-            okText: 'Xác nhận gửi',
-            cancelText: 'Hủy',
+            title: t('warrantyDetail.xacNhanGuiNCCTitle'),
+            content: t('warrantyDetail.xacNhanGuiNCCContent'),
+            okText: t('warrantyDetail.xacNhanGui', { defaultValue: 'Xác nhận gửi' }),
+            cancelText: t('button.huy'),
             onOk: () => resolve(true),
             onCancel: () => resolve(false),
           });
@@ -613,7 +613,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       };
       const res = await warrantyService.sendToSupplier(warranty.id, payload);
       if (res.data?.success) {
-        message.success('Đã gửi nhà cung cấp');
+        message.success(t('warrantyDetail.toast.daGuiNCC'));
         markChanged();
         setWarranty(res.data.data);
         sendForm.resetFields();
@@ -633,7 +633,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     if (!incoming.length) return;
     const remaining = 10 - exchangeAttachments.length;
     if (remaining <= 0) {
-      message.warning('Tối đa 10 ảnh đổi/trả hàng');
+      message.warning(t('warrantyDetail.toast.toiDa10AnhDoiTra'));
       return;
     }
     try {
@@ -645,7 +645,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       })));
       setExchangeAttachments((prev) => [...prev, ...mapped]);
     } catch {
-      message.error('Không thể đọc ảnh đính kèm');
+      message.error(t('warrantyDetail.toast.khongDocAnh'));
     }
   };
 
@@ -759,7 +759,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         setSupplierLogEditing(null);
         setSupplierLogNote('');
         setSupplierLogSupplierId('');
-        message.success('Đã cập nhật NCC');
+        message.success(t('warrantyDetail.toast.daCapNhatNCC'));
       }
     } catch (err) {
       message.error(err?.response?.data?.error?.message || 'Không thể cập nhật ghi chú NCC');
@@ -775,7 +775,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       if (res.data?.success) {
         markChanged();
         setSupplierLogs((rows) => rows.filter((row) => row.id !== log.id));
-        message.success('Đã xóa lịch sử NCC');
+        message.success(t('warrantyDetail.toast.daXoaLichSuNCC'));
         try {
           await Promise.resolve(onSaved?.(res.data.data || null));
         } catch (callbackErr) {
@@ -796,7 +796,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         if (res.data.data) {
           setWarranty(res.data.data);
         }
-        message.success('Đã xóa dòng lịch sử');
+        message.success(t('warrantyDetail.toast.daXoaDongLichSu'));
         try {
           await Promise.resolve(onSaved?.(res.data.data || null));
         } catch (callbackErr) {
@@ -993,7 +993,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 </html>`;
     const printWindow = window.open('', '_blank', 'width=900,height=700');
     if (!printWindow) {
-      message.error('Không thể mở cửa sổ in. Vui lòng cho phép popup.');
+      message.error(t('warrantyDetail.toast.khongMoCuaSoIn'));
       return;
     }
     printWindow.document.open();
@@ -1072,7 +1072,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               wrapperStyle={{ display: 'block', width: '100%' }}
               style={{ display: 'block', width: '100%', height: compact ? 112 : 118, objectFit: 'cover' }}
             />
-            <Popconfirm title="Xóa ảnh đính kèm này?" okText="Xóa" cancelText="Hủy" okButtonProps={{ danger: true }} onConfirm={() => handleDeleteAttachment(img.id)}>
+            <Popconfirm title={t('warrantyDetail.xoaAnh')} okText={t('button.xoa')} cancelText={t('button.huy')} okButtonProps={{ danger: true }} onConfirm={() => handleDeleteAttachment(img.id)}>
               <Button
                 size="small"
                 danger
@@ -1092,7 +1092,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       {attachments.length > 0 ? (
         renderAttachmentGrid(false)
       ) : (
-        <Text type="secondary">Chưa có ảnh đính kèm. Ảnh thêm tại đây sẽ hiển thị trên trang tra cứu khách hàng.</Text>
+        <Text type="secondary">{t('warrantyDetail.chuaCoAnhDayDu')}</Text>
       )}
     </Card>
   );
@@ -1105,25 +1105,25 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       return (
         <Card title={doiTra.type === 'doi_hang' ? 'Thông tin đổi hàng' : 'Thông tin trả hàng'}>
           <Descriptions layout="vertical" column={1}>
-            <Descriptions.Item label="Loại xử lý">{doiTra.type === 'doi_hang' ? 'Đổi hàng' : 'Trả hàng'}</Descriptions.Item>
-            <Descriptions.Item label="Thời gian">{formatDate(doiTra.at, 'DD-MM-YYYY HH:mm')}</Descriptions.Item>
-            <Descriptions.Item label="Nhân viên">{getStaffName(doiTra.by)}</Descriptions.Item>
-            <Descriptions.Item label="Trạng thái"><StatusTag status={warranty.trangThai} /></Descriptions.Item>
-            <Descriptions.Item label="Sản phẩm cũ">{doiTra.tenHangCu || '-'}</Descriptions.Item>
-            <Descriptions.Item label="Serial cũ">{doiTra.soSeriCu || '-'}</Descriptions.Item>
+            <Descriptions.Item label={t('warrantyDetail.historyAction.update') && t('field.loaiXuLy')}>{doiTra.type === 'doi_hang' ? t('warrantyDetail.doiHang') : t('warrantyDetail.traHang')}</Descriptions.Item>
+            <Descriptions.Item label={t('warrantyDetail.thoiGian')}>{formatDate(doiTra.at, 'DD-MM-YYYY HH:mm')}</Descriptions.Item>
+            <Descriptions.Item label={t('field.nhanVien')}>{getStaffName(doiTra.by)}</Descriptions.Item>
+            <Descriptions.Item label={t('field.trangThai')}><StatusTag status={warranty.trangThai} /></Descriptions.Item>
+            <Descriptions.Item label={t('warrantyDetail.sanPhamCu')}>{doiTra.tenHangCu || '-'}</Descriptions.Item>
+            <Descriptions.Item label={t('warrantyDetail.serialCu')}>{doiTra.soSeriCu || '-'}</Descriptions.Item>
             {doiTra.type === 'doi_hang' ? (
               <>
-                <Descriptions.Item label="Sản phẩm đổi sang">{doiTra.tenHangMoi || '-'}</Descriptions.Item>
-                <Descriptions.Item label="Serial mới">{doiTra.soSeriMoi || '-'}</Descriptions.Item>
+                <Descriptions.Item label={t('warrantyDetail.sanPhamDoiSang')}>{doiTra.tenHangMoi || '-'}</Descriptions.Item>
+                <Descriptions.Item label={t('warrantyDetail.serialMoi')}>{doiTra.soSeriMoi || '-'}</Descriptions.Item>
               </>
             ) : (
-              <Descriptions.Item label="Lý do trả hàng">{doiTra.reason || '-'}</Descriptions.Item>
+              <Descriptions.Item label={t('warrantyDetail.lyDoTraHang')}>{doiTra.reason || '-'}</Descriptions.Item>
             )}
-            {doiTra.note && <Descriptions.Item label="Ghi chú">{doiTra.note}</Descriptions.Item>}
-            <Descriptions.Item label={`Hình ảnh (${normalizeAttachments(doiTra.attachments).length})`}>
+            {doiTra.note && <Descriptions.Item label={t('field.ghiChu')}>{doiTra.note}</Descriptions.Item>}
+            <Descriptions.Item label={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh')} (${normalizeAttachments(doiTra.attachments).length})`}>
               {normalizeAttachments(doiTra.attachments).length > 0
                 ? renderExchangeAttachmentGrid(normalizeAttachments(doiTra.attachments))
-                : <Text type="secondary">Chưa có ảnh đính kèm.</Text>}
+                : <Text type="secondary">{t('warrantyDetail.chuaCoAnh')}</Text>}
             </Descriptions.Item>
           </Descriptions>
         </Card>
@@ -1131,52 +1131,52 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     }
 
     if (isClosed) {
-      return <Alert type="info" showIcon message="Phiếu đã xong hoặc đã hủy, không thể đổi/trả hàng." />;
+      return <Alert type="info" showIcon message={t('warrantyDetail.phieuXongKhongDoiTra')} />;
     }
 
     return (
-      <Card title="Xác nhận đổi/trả hàng">
+      <Card title={t('warrantyDetail.xacNhanDoiTra')}>
         <Form
           form={exchangeForm}
           layout="vertical"
           initialValues={{ type: 'doi_hang' }}
           onFinish={handleExchangeReturn}
         >
-          <Form.Item label="Loại xử lý" name="type">
+          <Form.Item label={t('field.loaiXuLy')} name="type">
             <Select
               onChange={value => setExchangeType(value)}
               options={[
-                { label: 'Đổi hàng', value: 'doi_hang' },
-                { label: 'Trả hàng', value: 'tra_hang' },
+                { label: t('warrantyDetail.doiHang'), value: 'doi_hang' },
+                { label: t('warrantyDetail.traHang'), value: 'tra_hang' },
               ]}
             />
           </Form.Item>
 
           {exchangeType === 'doi_hang' ? (
             <>
-              <Form.Item label="Tên sản phẩm đổi sang" name="tenHangMoi" rules={[{ required: true, message: 'Nhập tên sản phẩm đổi sang' }]}>
+              <Form.Item label={t('warrantyDetail.tenSanPhamDoiSang')} name="tenHangMoi" rules={[{ required: true, message: t('warrantyDetail.nhapTenSPDoiSang') }]}>
                 <Input placeholder="VD: SSD Kingston NV2 500GB" />
               </Form.Item>
-              <Form.Item label="Số serial mới" name="soSeriMoi" rules={[{ required: true, message: 'Nhập số serial mới' }]}>
+              <Form.Item label={t('warrantyDetail.soSerialMoi')} name="soSeriMoi" rules={[{ required: true, message: t('warrantyDetail.nhapSoSerialMoi') }]}>
                 <Input placeholder="VD: SN123456" />
               </Form.Item>
             </>
           ) : (
-            <Form.Item label="Lý do trả hàng" name="reason" rules={[{ required: true, message: 'Nhập lý do trả hàng' }]}>
-              <TextArea rows={3} placeholder="VD: Không có hàng thay thế, hoàn/trả theo thỏa thuận..." />
+            <Form.Item label={t('warrantyDetail.lyDoTraHang')} name="reason" rules={[{ required: true, message: t('warrantyDetail.nhapLyDoTraHang') }]}>
+              <TextArea rows={3} placeholder={t('warrantyDetail.vdDoiTra')} />
             </Form.Item>
           )}
 
-          <Form.Item label="Ghi chú" name="note">
-            <TextArea rows={2} placeholder="Ghi chú thêm nếu có" />
+          <Form.Item label={t('field.ghiChu')} name="note">
+            <TextArea rows={2} placeholder={t('warrantyDetail.ghiChuThemNeuCo')} />
           </Form.Item>
 
-          <Form.Item label={`Hình ảnh đính kèm (${exchangeAttachments.length}/10)`}>
+          <Form.Item label={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh đính kèm')} (${exchangeAttachments.length}/10)`}>
             <Space direction="vertical" size={10} style={{ display: 'flex' }}>
               {exchangeAttachmentUpload}
               {exchangeAttachments.length > 0
                 ? renderExchangeAttachmentGrid(exchangeAttachments, { removable: true })
-                : <Text type="secondary">Có thể đính kèm ảnh sản phẩm đổi/trả.</Text>}
+                : <Text type="secondary">{t('warrantyDetail.coTheDinhKemDoiTra')}</Text>}
             </Space>
           </Form.Item>
 
@@ -1184,11 +1184,11 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             type="warning"
             showIcon
             style={{ marginBottom: 16 }}
-            message="Sau khi xác nhận, phiếu sẽ tự chuyển sang Đã xong và không thể đổi/trả lần nữa."
+            message={t('warrantyDetail.sauXacNhanDoiTra')}
           />
 
           <Button type="primary" htmlType="submit" loading={exchangeSubmitting}>
-            {exchangeType === 'doi_hang' ? 'Xác nhận đổi hàng' : 'Xác nhận trả hàng'}
+            {exchangeType === 'doi_hang' ? t('warrantyDetail.xacNhanDoiHangBtn', { defaultValue: 'Xác nhận đổi hàng' }) : t('warrantyDetail.xacNhanTraHangBtn', { defaultValue: 'Xác nhận trả hàng' })}
           </Button>
         </Form>
       </Card>
@@ -1282,49 +1282,49 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   const items = [
     {
       key: 'info',
-      label: 'Thông tin',
+      label: t('warrantyDetail.tabThongTin'),
       children: (
         <Form form={form} layout="vertical" component={false}>
           <div>
           <Space direction="vertical" size={12} style={{ display: 'flex' }}>
-            <Card size="small" title="Tóm tắt" extra={sectionActions('summary')}>
+            <Card size="small" title={t('warrantyDetail.tomTat')} extra={sectionActions('summary')}>
               <Descriptions size="small" column={2}>
-                <Descriptions.Item label="Số chứng từ">{warranty.soChungTu}</Descriptions.Item>
-                <Descriptions.Item label="Trạng thái"><StatusTag status={warranty.trangThai} /></Descriptions.Item>
-                <Descriptions.Item label="Nhân viên">{getStaffName(warranty.maNhanVien)}</Descriptions.Item>
-                <Descriptions.Item label="Ngày nhận">
+                <Descriptions.Item label={t('field.soChungTu')}>{warranty.soChungTu}</Descriptions.Item>
+                <Descriptions.Item label={t('field.trangThai')}><StatusTag status={warranty.trangThai} /></Descriptions.Item>
+                <Descriptions.Item label={t('field.nhanVien')}>{getStaffName(warranty.maNhanVien)}</Descriptions.Item>
+                <Descriptions.Item label={t('field.ngayNhan')}>
                   {editing && editSection === 'summary'
                     ? <Form.Item name="ngayNhan" style={{ marginBottom: 0 }}><DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" /></Form.Item>
                     : formatDate(warranty.ngayNhan, 'DD-MM-YYYY HH:mm')}
                 </Descriptions.Item>
-                {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && <Descriptions.Item label="Ngày hẹn trả">
+                {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && <Descriptions.Item label={t('field.ngayHenTra')}>
                   {editing && editSection === 'summary'
                     ? <Form.Item name="ngayHenTra" style={{ marginBottom: 0 }}><DatePicker allowClear style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
                     : (warranty.ngayHenTra === 'none'
-                        ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                        ? <span>{t('warrantyDetail.dangCapNhap')}<span className="loading-dots" /></span>
                         : formatDate(warranty.ngayHenTra))}
                 </Descriptions.Item>}
-                <Descriptions.Item label="Ngày trả">{warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}</Descriptions.Item>
+                <Descriptions.Item label={t('field.ngayTra')}>{warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}</Descriptions.Item>
               </Descriptions>
             </Card>
 
             <Card
               size="small"
-              title="Khách hàng"
+              title={t('field.khachHang')}
               extra={sectionActions('customer')}
             >
               <Descriptions size="small" column={1}>
-                <Descriptions.Item label="Khách hàng">
+                <Descriptions.Item label={t('field.khachHang')}>
                   {editing && editSection === 'customer'
                     ? <Form.Item name="khachHang" style={{ marginBottom: 0 }}><Input /></Form.Item>
                     : (warranty.khachHang || '-')}
                 </Descriptions.Item>
-                <Descriptions.Item label="Số điện thoại">
+                <Descriptions.Item label={t('field.soDienThoai')}>
                   {editing && editSection === 'customer'
                     ? <Form.Item name="soDienThoai" style={{ marginBottom: 0 }}><Input /></Form.Item>
                     : (warranty.soDienThoai || '-')}
                 </Descriptions.Item>
-                <Descriptions.Item label="Địa chỉ">
+                <Descriptions.Item label={t('field.diaChi')}>
                   {editing && editSection === 'customer'
                     ? <Form.Item name="diaChi" style={{ marginBottom: 0 }}><TextArea rows={2} /></Form.Item>
                     : (warranty.diaChi || '-')}
@@ -1332,44 +1332,44 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               </Descriptions>
             </Card>
 
-            <Card size="small" title="Sản phẩm & xử lý" extra={sectionActions('product')}>
+            <Card size="small" title={t('warrantyDetail.sanPhamXuLy')} extra={sectionActions('product')}>
               <Descriptions size="small" column={1}>
-                <Descriptions.Item label="Tên hàng">
+                <Descriptions.Item label={t('field.tenHang')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="tenHang" style={{ marginBottom: 0 }}><Input /></Form.Item>
                     : (warranty.tenHang || '-')}
                 </Descriptions.Item>
-                <Descriptions.Item label="Số seri">
+                <Descriptions.Item label={t('field.soSeri')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="soSeri" style={{ marginBottom: 0 }}><Input /></Form.Item>
                     : (warranty.soSeri || '-')}
                 </Descriptions.Item>
-                <Descriptions.Item label="Lỗi lúc nhận">
+                <Descriptions.Item label={t('field.loiLucNhan')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="loiLucNhan" style={{ marginBottom: 0 }}><TextArea rows={2} /></Form.Item>
                     : (warranty.loiLucNhan || '-')}
                 </Descriptions.Item>
-                <Descriptions.Item label="Phụ kiện">
+                <Descriptions.Item label={t('field.phuKien')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="phuKien" style={{ marginBottom: 0 }}><Input /></Form.Item>
                     : (warranty.phuKien || '-')}
                 </Descriptions.Item>
-                <Descriptions.Item label="Chi phí">
+                <Descriptions.Item label={t('field.chiPhi')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="chiPhi" style={{ marginBottom: 0 }}><Input /></Form.Item>
-                    : (warranty.chiPhi ? `${warranty.chiPhi.toLocaleString('vi-VN')} đ` : 'Miễn phí')}
+                    : (warranty.chiPhi ? `${warranty.chiPhi.toLocaleString('vi-VN')} đ` : t('return.free', { ns: 'print', defaultValue: 'Miễn phí' }))}
                 </Descriptions.Item>
-                <Descriptions.Item label="Loại xử lý">
+                <Descriptions.Item label={t('field.loaiXuLy')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="loaiXuLy" style={{ marginBottom: 0 }}><Select options={LOAI_XU_LY_OPTIONS} /></Form.Item>
                     : <Tag>{LOAI_XU_LY_LABELS[warranty.loaiXuLy] || warranty.loaiXuLy}</Tag>}
                 </Descriptions.Item>
-                <Descriptions.Item label="Bảo hành">
+                <Descriptions.Item label={t('field.baoHanh')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="baoHanh" style={{ marginBottom: 0 }}><Input /></Form.Item>
                     : (warranty.baoHanh || '-')}
                 </Descriptions.Item>
-                <Descriptions.Item label="Ngày mua">
+                <Descriptions.Item label={t('field.ngayMua')}>
                   {editing && editSection === 'product'
                     ? <Form.Item name="ngayMua" style={{ marginBottom: 0 }}><DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
                     : formatDate(warranty.ngayMua)}
@@ -1378,12 +1378,12 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
               {(editing && editSection === 'product') || warranty.cauHinh || warranty.ghiChu ? (
                 <Descriptions size="small" column={1} style={{ marginTop: 8 }}>
-                  <Descriptions.Item label="Cấu hình">
+                  <Descriptions.Item label={t('field.cauHinh')}>
                     {editing && editSection === 'product'
                       ? <Form.Item name="cauHinh" style={{ marginBottom: 0 }}><Input /></Form.Item>
                       : (warranty.cauHinh || '-')}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Ghi chú">
+                  <Descriptions.Item label={t('field.ghiChu')}>
                     {editing && editSection === 'product'
                       ? <Form.Item name="ghiChu" style={{ marginBottom: 0 }}><TextArea rows={2} /></Form.Item>
                       : (warranty.ghiChu || '-')}
@@ -1397,7 +1397,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
           <WarrantyProgress baoHanh={warranty.baoHanh} ngayMua={warranty.ngayMua} />
           <div style={{ marginTop: 8 }}>
-            <Text type="secondary">QR Code tra cứu:</Text>
+            <Text type="secondary">{t('warrantyDetail.qrLabel')}</Text>
             <div style={{ marginTop: 6 }}>
               <QRCode value={trackingUrl} size={92} />
             </div>
@@ -1408,7 +1408,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 onClick={async () => {
                   try {
                     await navigator.clipboard.writeText(trackingUrl);
-                    message.success('Đã sao chép');
+                    message.success(t('warrantyDetail.toast.daSaoChep'));
                   } catch {
                     const ta = document.createElement('textarea');
                     ta.value = trackingUrl;
@@ -1419,7 +1419,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     ta.select();
                     document.execCommand('copy');
                     document.body.removeChild(ta);
-                    message.success('Đã sao chép');
+                    message.success(t('warrantyDetail.toast.daSaoChep'));
                   }
                 }}
               >
@@ -1433,92 +1433,92 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     },
     {
       key: 'exchange-return',
-      label: 'Đổi - Trả hàng',
+      label: t('warrantyDetail.tabDoiTra'),
       children: renderExchangeReturn(),
     },
 
     {
       key: 'supplier',
-      label: 'Gửi NCC',
+      label: t('warrantyDetail.tabGuiNCC'),
       children: (
         <div>
-          <Card size="small" title="Gửi nhà cung cấp" style={{ marginBottom: 16 }}>
+          <Card size="small" title={t('warrantyDetail.guiNhaCungCap')} style={{ marginBottom: 16 }}>
             <Form form={sendForm} layout="vertical">
-              <Form.Item label="Nhà cung cấp" name="supplierId" rules={[{ required: true, message: 'Chọn nhà cung cấp' }]}> 
+              <Form.Item label={t('warrantyDetail.chonNCC')} name="supplierId" rules={[{ required: true, message: t('warrantyDetail.chonNCC') }]}> 
                 <Select
                   showSearch
                   optionFilterProp="searchText"
                   filterOption={(input, option) => String(option?.searchText || '').toLowerCase().includes(input.toLowerCase())}
                   options={supplierSelectOptions}
-                  placeholder="Tìm theo mã, tên hoặc SĐT NCC"
+                  placeholder={t('warrantyDetail.timNCC')}
                   style={{ width: '100%' }}
                   popupMatchSelectWidth={false}
                   listHeight={280}
                 />
               </Form.Item>
-              <Form.Item label="Ngày gửi" name="sentAt" rules={[{ required: true, message: 'Chọn ngày gửi' }]}>
+              <Form.Item label={t('warrantyDetail.ngayGui')} name="sentAt" rules={[{ required: true, message: t('warrantyDetail.chonNgayGui') }]}>
                 <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
               </Form.Item>
-              <Form.Item label="Ngày hẹn nhận" name="expectedReturnAt">
+              <Form.Item label={t('warrantyDetail.ngayHenNhan')} name="expectedReturnAt">
                 <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
               </Form.Item>
-              <Form.Item label="Ghi chú" name="note">
-                <Input.TextArea rows={3} placeholder="Ghi chú gửi NCC" />
+              <Form.Item label={t('field.ghiChu')} name="note">
+                <Input.TextArea rows={3} placeholder={t('warrantyDetail.ghiChuGuiNCC')} />
               </Form.Item>
-              <Button type="primary" loading={sendSubmitting} onClick={handleSendToSupplier}>Xác nhận gửi</Button>
+              <Button type="primary" loading={sendSubmitting} onClick={handleSendToSupplier}>{t('warrantyDetail.xacNhanGui', { defaultValue: 'Xác nhận gửi' })}</Button>
             </Form>
           </Card>
 
           <Card
             size="small"
-            title="Lịch sử gửi / nhận NCC"
-            extra={supplierLogs.length > 0 ? <Button size="small" icon={<PrinterOutlined />} onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=supplier`)}>In phiếu gửi NCC</Button> : null}
+            title={t('warrantyDetail.lichSuNCC')}
+            extra={supplierLogs.length > 0 ? <Button size="small" icon={<PrinterOutlined />} onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=supplier`)}>{t('warrantyDetail.inPhieuGuiNCC')}</Button> : null}
           >
             <Table
               size="small"
               tableLayout="fixed"
               rowKey={(r) => `${r.id || 'log'}-${r.action || ''}-${r.at || ''}-${r.sentAt || ''}-${r.returnedAt || ''}`}
               dataSource={supplierLogs}
-              locale={{ emptyText: 'Trống' }}
+              locale={{ emptyText: t('warrantyDetail.trong') }}
               pagination={false}
               columns={[
                 {
-                  title: 'Sự kiện',
+                  title: t('warrantyDetail.suKien'),
                   dataIndex: 'action',
                   key: 'action',
                   width: 96,
-                  render: (v) => (v === 'sent' ? <Tag color="green">Đã gửi</Tag> : <Tag color="blue">Đã nhận</Tag>),
+                  render: (v) => (v === 'sent' ? <Tag color="green">{t('warrantyDetail.daGui')}</Tag> : <Tag color="blue">{t('warrantyDetail.daNhan')}</Tag>),
                 },
                 {
-                  title: 'Nhà cung cấp',
+                  title: t('field.khachHang') && t('warrantyDetail.historyAction.supplier_sent') && t('warrantyDetail.guiNhaCungCap').replace('Gửi ', ''),
                   dataIndex: 'supplierName',
                   key: 'supplierName',
                   width: 140,
                   ellipsis: true,
                 },
                 {
-                  title: 'Ngày gửi',
+                  title: t('warrantyDetail.ngayGui'),
                   dataIndex: 'sentAt',
                   key: 'sentAt',
                   width: 96,
                   render: (v) => formatDate(v),
                 },
                 {
-                  title: 'Hẹn nhận',
+                  title: t('warrantyDetail.henNhan'),
                   dataIndex: 'expectedReturnAt',
                   key: 'expectedReturnAt',
                   width: 96,
                   render: (v) => formatDate(v),
                 },
                 {
-                  title: 'Ngày nhận',
+                  title: t('field.ngayNhan'),
                   dataIndex: 'returnedAt',
                   key: 'returnedAt',
                   width: 96,
                   render: (v) => formatDate(v),
                 },
                 {
-                  title: 'Ghi chú',
+                  title: t('field.ghiChu'),
                   dataIndex: 'note',
                   key: 'note',
                   render: (v, record) => (
@@ -1527,15 +1527,15 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                         {v || ''}
                       </div>
                       <Space size={0}>
-                        <Button size="small" type="text" icon={<EditOutlined />} onClick={() => openSupplierLogNoteEdit(record)} aria-label="Sửa ghi chú NCC" />
+                        <Button size="small" type="text" icon={<EditOutlined />} onClick={() => openSupplierLogNoteEdit(record)} aria-label={t('warrantyDetail.suaGhiChuNCC')} />
                         <Popconfirm
-                          title="Xóa dòng lịch sử NCC này?"
-                          okText="Xóa"
-                          cancelText="Hủy"
+                          title={t('warrantyDetail.xoaLichSuNCC')}
+                          okText={t('button.xoa')}
+                          cancelText={t('button.huy')}
                           okButtonProps={{ danger: true }}
                           onConfirm={() => handleDeleteSupplierLog(record)}
                         >
-                          <Button size="small" type="text" danger icon={<CloseOutlined />} aria-label="Xóa lịch sử NCC" />
+                          <Button size="small" type="text" danger icon={<CloseOutlined />} aria-label={t('warrantyDetail.xoaLichSuNCC')} />
                         </Popconfirm>
                       </Space>
                     </Space>
@@ -1550,16 +1550,16 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
     {
       key: 'history',
-      label: 'Tiến trình & Lịch sử',
+      label: t('warrantyDetail.tienTrinhLichSu'),
       children: (
         <div>
-          <Card size="small" title="Cập nhật tiến trình" style={{ marginBottom: 16 }}>
+          <Card size="small" title={t('warrantyDetail.capNhatTienTrinh')} style={{ marginBottom: 16 }}>
             <Form form={logForm} layout="inline" onFinish={handleLogProgress}>
-              <Form.Item name="note" style={{ flex: 1, marginBottom: 0 }} rules={[{ required: true, message: 'Nhập ghi chú' }]}>
-                <Input.TextArea rows={2} placeholder="VD: Đã gửi lên hãng bảo hành, hãng đang xử lý..." />
+              <Form.Item name="note" style={{ flex: 1, marginBottom: 0 }} rules={[{ required: true, message: t('warrantyDetail.nhapGhiChu') }]}>
+                <Input.TextArea rows={2} placeholder={t('warrantyDetail.vdTienTrinh')} />
               </Form.Item>
               <Form.Item style={{ marginBottom: 0 }}>
-                <Button type="primary" htmlType="submit" icon={<SendOutlined />} loading={logSubmitting}>Thêm</Button>
+                <Button type="primary" htmlType="submit" icon={<SendOutlined />} loading={logSubmitting}>{t('warrantyDetail.them')}</Button>
               </Form.Item>
             </Form>
           </Card>
@@ -1650,9 +1650,9 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     <Text strong>{title}</Text>
                     {h.action !== 'create' && (
                       <Popconfirm
-                        title="Xóa dòng lịch sử này?"
-                        okText="Xóa"
-                        cancelText="Hủy"
+                        title={t('warrantyDetail.xoaLichSu')}
+                        okText={t('button.xoa')}
+                        cancelText={t('button.huy')}
                         okButtonProps={{ danger: true }}
                         onConfirm={() => handleDeleteHistory(historyIndex)}
                       >
@@ -1685,7 +1685,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
   const handleMobileLog = async () => {
     if (!mobileLogNote.trim()) {
-      message.warning('Nhập ghi chú tiến trình');
+      message.warning(t('warrantyDetail.toast.nhapGhiChuTienTrinh'));
       return;
     }
     await handleLogProgress({ note: mobileLogNote });
@@ -1694,51 +1694,51 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
   const renderMobileInfo = () => (
     <div className="warranty-mobile-detail-body">
-      <MobileCard className="warranty-mobile-card" title="Thông tin phiếu">
+      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.thongTinPhieu')}>
         <List>
-          <List.Item title="Số chứng từ">{warranty.soChungTu}</List.Item>
-          <List.Item title="Trạng thái"><MobileTag color={mobileStatusColor}>{statusConfig?.label || warranty.trangThai}</MobileTag></List.Item>
-          <List.Item title="Khách hàng">{warranty.khachHang || '-'}</List.Item>
-          <List.Item title="Số điện thoại">{warranty.soDienThoai || '-'}</List.Item>
-          <List.Item title="Địa chỉ">{warranty.diaChi || '-'}</List.Item>
-          <List.Item title="Ngày nhận">{formatDate(warranty.ngayNhan, 'DD-MM-YYYY HH:mm')}</List.Item>
+          <List.Item title={t('field.soChungTu')}>{warranty.soChungTu}</List.Item>
+          <List.Item title={t('field.trangThai')}><MobileTag color={mobileStatusColor}>{statusConfig?.label || warranty.trangThai}</MobileTag></List.Item>
+          <List.Item title={t('field.khachHang')}>{warranty.khachHang || '-'}</List.Item>
+          <List.Item title={t('field.soDienThoai')}>{warranty.soDienThoai || '-'}</List.Item>
+          <List.Item title={t('field.diaChi')}>{warranty.diaChi || '-'}</List.Item>
+          <List.Item title={t('field.ngayNhan')}>{formatDate(warranty.ngayNhan, 'DD-MM-YYYY HH:mm')}</List.Item>
           {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && (
-            <List.Item title="Ngày hẹn trả">
+            <List.Item title={t('field.ngayHenTra')}>
               {warranty.ngayHenTra === 'none'
-                ? <span>Đang cập nhập<span className="loading-dots" /></span>
+                ? <span>{t('warrantyDetail.dangCapNhap')}<span className="loading-dots" /></span>
                 : formatDate(warranty.ngayHenTra)}
             </List.Item>
           )}
-          <List.Item title="Ngày trả">{warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}</List.Item>
-          <List.Item title="Nhân viên">{getStaffName(warranty.maNhanVien)}</List.Item>
-          {warranty.ghiChu && <List.Item title="Ghi chú">{warranty.ghiChu}</List.Item>}
+          <List.Item title={t('field.ngayTra')}>{warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}</List.Item>
+          <List.Item title={t('field.nhanVien')}>{getStaffName(warranty.maNhanVien)}</List.Item>
+          {warranty.ghiChu && <List.Item title={t('field.ghiChu')}>{warranty.ghiChu}</List.Item>}
         </List>
       </MobileCard>
 
-      <MobileCard className="warranty-mobile-card" title="Sản phẩm">
+      <MobileCard className="warranty-mobile-card" title={t('field.sanPham')}>
         <List>
-          <List.Item title="Tên hàng">{warranty.tenHang || '-'}</List.Item>
-          <List.Item title="Số seri">{warranty.soSeri || '-'}</List.Item>
-          <List.Item title="Cấu hình">{warranty.cauHinh || '-'}</List.Item>
-          <List.Item title="Lỗi lúc nhận">{warranty.loiLucNhan || '-'}</List.Item>
-          <List.Item title="Phụ kiện">{warranty.phuKien || '-'}</List.Item>
-          <List.Item title="Chi phí">{warranty.chiPhi ? `${warranty.chiPhi.toLocaleString('vi-VN')} đ` : 'Miễn phí'}</List.Item>
-          <List.Item title="Loại xử lý">{LOAI_XU_LY_LABELS[warranty.loaiXuLy] || warranty.loaiXuLy || '-'}</List.Item>
-          <List.Item title="Bảo hành">{warranty.baoHanh || '-'}</List.Item>
-          <List.Item title="Ngày mua">{formatDate(warranty.ngayMua)}</List.Item>
+          <List.Item title={t('field.tenHang')}>{warranty.tenHang || '-'}</List.Item>
+          <List.Item title={t('field.soSeri')}>{warranty.soSeri || '-'}</List.Item>
+          <List.Item title={t('field.cauHinh')}>{warranty.cauHinh || '-'}</List.Item>
+          <List.Item title={t('field.loiLucNhan')}>{warranty.loiLucNhan || '-'}</List.Item>
+          <List.Item title={t('field.phuKien')}>{warranty.phuKien || '-'}</List.Item>
+          <List.Item title={t('field.chiPhi')}>{warranty.chiPhi ? `${warranty.chiPhi.toLocaleString('vi-VN')} đ` : t('return.free', { ns: 'print', defaultValue: 'Miễn phí' })}</List.Item>
+          <List.Item title={t('field.loaiXuLy')}>{LOAI_XU_LY_LABELS[warranty.loaiXuLy] || warranty.loaiXuLy || '-'}</List.Item>
+          <List.Item title={t('field.baoHanh')}>{warranty.baoHanh || '-'}</List.Item>
+          <List.Item title={t('field.ngayMua')}>{formatDate(warranty.ngayMua)}</List.Item>
         </List>
       </MobileCard>
 
-      <MobileCard className="warranty-mobile-card" title={`Hình ảnh đính kèm (${attachments.length}/10)`}>
+      <MobileCard className="warranty-mobile-card" title={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh đính kèm')} (${attachments.length}/10)`}>
         <div style={{ marginBottom: 10 }}>{uploadAttachmentButton}</div>
         {attachments.length > 0 ? (
           renderAttachmentGrid(true)
         ) : (
-          <Text type="secondary">Chưa có ảnh đính kèm.</Text>
+          <Text type="secondary">{t('warrantyDetail.chuaCoAnh')}</Text>
         )}
       </MobileCard>
 
-      <MobileCard className="warranty-mobile-card" title="QR Code tra cứu">
+      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.qrTitle')}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '10px 0' }}>
           <QRCode value={trackingUrl} size={128} />
           <MobileButton
@@ -1746,7 +1746,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             onClick={async () => {
               try {
                 await navigator.clipboard.writeText(trackingUrl);
-                message.success('Đã sao chép liên kết');
+                message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
               } catch {
                 const ta = document.createElement('textarea');
                 ta.value = trackingUrl;
@@ -1754,7 +1754,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 ta.select();
                 document.execCommand('copy');
                 document.body.removeChild(ta);
-                message.success('Đã sao chép liên kết');
+                message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
               }
             }}
           >
@@ -1763,9 +1763,9 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         </div>
       </MobileCard>
 
-      <MobileCard className="warranty-mobile-card" title="Thao tác nhanh">
+      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.thaoTacNhanh')}>
         <MobileSpace wrap>
-          <MobileButton size="small" onClick={() => setEditing(true)}>Sửa</MobileButton>
+          <MobileButton size="small" onClick={() => setEditing(true)}>{t('button.sua')}</MobileButton>
           <MobileButton size="small" onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>{t('print:actions.printReceive')}</MobileButton>
           {warranty.trangThai === 'da_tra' && (
             <MobileButton size="small" color="primary" onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=return`)}>{t('print:actions.printReturn')}</MobileButton>
@@ -1775,7 +1775,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             onClick={async () => {
               try {
                 await navigator.clipboard.writeText(trackingUrl);
-                message.success('Đã sao chép');
+                message.success(t('warrantyDetail.toast.daSaoChep'));
               } catch {
                 const ta = document.createElement('textarea');
                 ta.value = trackingUrl;
@@ -1786,7 +1786,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 ta.select();
                 document.execCommand('copy');
                 document.body.removeChild(ta);
-                message.success('Đã sao chép');
+                message.success(t('warrantyDetail.toast.daSaoChep'));
               }
             }}
           >
@@ -1794,29 +1794,29 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
           </MobileButton>
           {warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy' && (
             <>
-              <MobileButton size="small" color="primary" onClick={() => Dialog.confirm({ content: 'Đánh dấu bảo hành xong?', confirmText: 'Xong', cancelText: 'Hủy', onConfirm: handleTraHang })}>Xong</MobileButton>
-              <MobileButton size="small" color="danger" fill="outline" onClick={() => setCancelModal(true)}>Hủy</MobileButton>
+              <MobileButton size="small" color="primary" onClick={() => Dialog.confirm({ content: t('warrantyDetail.danhDauXong'), confirmText: t('print:actions.yes') && 'Xong', cancelText: t('button.huy'), onConfirm: handleTraHang })}>Xong</MobileButton>
+              <MobileButton size="small" color="danger" fill="outline" onClick={() => setCancelModal(true)}>{t('button.huy')}</MobileButton>
             </>
           )}
         </MobileSpace>
       </MobileCard>
 
       {editing && (
-        <MobileCard className="warranty-mobile-card" title="Sửa thông tin">
+        <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.suaThongTin')}>
           <Form form={form} layout="vertical">
-            <Form.Item label="Khách hàng" name="khachHang"><Input /></Form.Item>
-            <Form.Item label="Số điện thoại" name="soDienThoai"><Input /></Form.Item>
-            <Form.Item label="Địa chỉ" name="diaChi"><TextArea rows={2} /></Form.Item>
-            <Form.Item label="Tên hàng" name="tenHang"><Input /></Form.Item>
-            <Form.Item label="Số seri" name="soSeri"><Input /></Form.Item>
-            <Form.Item label="Lỗi lúc nhận" name="loiLucNhan"><TextArea rows={2} /></Form.Item>
-            <Form.Item label="Phụ kiện" name="phuKien"><Input /></Form.Item>
-            <Form.Item label="Ngày nhận" name="ngayNhan"><DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" /></Form.Item>
-            <Form.Item label="Ngày hẹn trả" name="ngayHenTra"><DatePicker allowClear style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
-            <Form.Item label="Ghi chú" name="ghiChu"><TextArea rows={2} /></Form.Item>
+            <Form.Item label={t('field.khachHang')} name="khachHang"><Input /></Form.Item>
+            <Form.Item label={t('field.soDienThoai')} name="soDienThoai"><Input /></Form.Item>
+            <Form.Item label={t('field.diaChi')} name="diaChi"><TextArea rows={2} /></Form.Item>
+            <Form.Item label={t('field.tenHang')} name="tenHang"><Input /></Form.Item>
+            <Form.Item label={t('field.soSeri')} name="soSeri"><Input /></Form.Item>
+            <Form.Item label={t('field.loiLucNhan')} name="loiLucNhan"><TextArea rows={2} /></Form.Item>
+            <Form.Item label={t('field.phuKien')} name="phuKien"><Input /></Form.Item>
+            <Form.Item label={t('field.ngayNhan')} name="ngayNhan"><DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" /></Form.Item>
+            <Form.Item label={t('field.ngayHenTra')} name="ngayHenTra"><DatePicker allowClear style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
+            <Form.Item label={t('field.ghiChu')} name="ghiChu"><TextArea rows={2} /></Form.Item>
             <MobileSpace>
-              <MobileButton color="primary" onClick={handleSave}>Lưu</MobileButton>
-              <MobileButton onClick={() => setEditing(false)}>Hủy</MobileButton>
+              <MobileButton color="primary" onClick={handleSave}>{t('button.luu')}</MobileButton>
+              <MobileButton onClick={() => setEditing(false)}>{t('button.huy')}</MobileButton>
             </MobileSpace>
           </Form>
         </MobileCard>
@@ -1833,26 +1833,26 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         <div className="warranty-mobile-detail-body">
           <MobileCard className="warranty-mobile-card" title={doiTra.type === 'doi_hang' ? 'Thông tin đổi hàng' : 'Thông tin trả hàng'}>
             <List>
-              <List.Item title="Loại xử lý">{doiTra.type === 'doi_hang' ? 'Đổi hàng' : 'Trả hàng'}</List.Item>
-              <List.Item title="Thời gian">{formatDate(doiTra.at, 'DD-MM-YYYY HH:mm')}</List.Item>
-              <List.Item title="Nhân viên">{getStaffName(doiTra.by)}</List.Item>
-              <List.Item title="Sản phẩm cũ">{doiTra.tenHangCu || '-'}</List.Item>
-              <List.Item title="Serial cũ">{doiTra.soSeriCu || '-'}</List.Item>
+              <List.Item title={t('field.loaiXuLy')}>{doiTra.type === 'doi_hang' ? t('warrantyDetail.doiHang') : t('warrantyDetail.traHang')}</List.Item>
+              <List.Item title={t('warrantyDetail.thoiGian')}>{formatDate(doiTra.at, 'DD-MM-YYYY HH:mm')}</List.Item>
+              <List.Item title={t('field.nhanVien')}>{getStaffName(doiTra.by)}</List.Item>
+              <List.Item title={t('warrantyDetail.sanPhamCu')}>{doiTra.tenHangCu || '-'}</List.Item>
+              <List.Item title={t('warrantyDetail.serialCu')}>{doiTra.soSeriCu || '-'}</List.Item>
               {doiTra.type === 'doi_hang' ? (
                 <>
-                  <List.Item title="Sản phẩm đổi sang">{doiTra.tenHangMoi || '-'}</List.Item>
-                  <List.Item title="Serial mới">{doiTra.soSeriMoi || '-'}</List.Item>
+                  <List.Item title={t('warrantyDetail.sanPhamDoiSang')}>{doiTra.tenHangMoi || '-'}</List.Item>
+                  <List.Item title={t('warrantyDetail.serialMoi')}>{doiTra.soSeriMoi || '-'}</List.Item>
                 </>
               ) : (
-                <List.Item title="Lý do trả hàng">{doiTra.reason || '-'}</List.Item>
+                <List.Item title={t('warrantyDetail.lyDoTraHang')}>{doiTra.reason || '-'}</List.Item>
               )}
-              {doiTra.note && <List.Item title="Ghi chú">{doiTra.note}</List.Item>}
+              {doiTra.note && <List.Item title={t('field.ghiChu')}>{doiTra.note}</List.Item>}
             </List>
             <div style={{ marginTop: 12 }}>
               <div style={{ marginBottom: 8, fontWeight: 700 }}>Hình ảnh ({normalizeAttachments(doiTra.attachments).length})</div>
               {normalizeAttachments(doiTra.attachments).length > 0
                 ? renderExchangeAttachmentGrid(normalizeAttachments(doiTra.attachments), { compact: true })
-                : <Text type="secondary">Chưa có ảnh đính kèm.</Text>}
+                : <Text type="secondary">{t('warrantyDetail.chuaCoAnh')}</Text>}
             </div>
           </MobileCard>
         </div>
@@ -1862,49 +1862,49 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     if (isClosed) {
       return (
         <div className="warranty-mobile-detail-body">
-          <MobileCard className="warranty-mobile-card">Phiếu đã xong hoặc đã hủy, không thể đổi/trả hàng.</MobileCard>
+          <MobileCard className="warranty-mobile-card">{t('warrantyDetail.phieuXongKhongDoiTra')}</MobileCard>
         </div>
       );
     }
 
     return (
       <div className="warranty-mobile-detail-body">
-        <MobileCard className="warranty-mobile-card" title="Xác nhận đổi/trả hàng">
+        <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.xacNhanDoiTra')}>
           <Form form={exchangeForm} layout="vertical" initialValues={{ type: 'doi_hang' }} onFinish={handleExchangeReturn}>
-            <Form.Item label="Loại xử lý" name="type">
+            <Form.Item label={t('field.loaiXuLy')} name="type">
               <Select
                 onChange={value => setExchangeType(value)}
                 options={[
-                  { label: 'Đổi hàng', value: 'doi_hang' },
-                  { label: 'Trả hàng', value: 'tra_hang' },
+                  { label: t('warrantyDetail.doiHang'), value: 'doi_hang' },
+                  { label: t('warrantyDetail.traHang'), value: 'tra_hang' },
                 ]}
               />
             </Form.Item>
             {exchangeType === 'doi_hang' ? (
               <>
-                <Form.Item label="Tên sản phẩm đổi sang" name="tenHangMoi" rules={[{ required: true, message: 'Nhập tên sản phẩm đổi sang' }]}>
+                <Form.Item label={t('warrantyDetail.tenSanPhamDoiSang')} name="tenHangMoi" rules={[{ required: true, message: t('warrantyDetail.nhapTenSPDoiSang') }]}>
                   <Input />
                 </Form.Item>
-                <Form.Item label="Số serial mới" name="soSeriMoi" rules={[{ required: true, message: 'Nhập số serial mới' }]}>
+                <Form.Item label={t('warrantyDetail.soSerialMoi')} name="soSeriMoi" rules={[{ required: true, message: t('warrantyDetail.nhapSoSerialMoi') }]}>
                   <Input />
                 </Form.Item>
               </>
             ) : (
-              <Form.Item label="Lý do trả hàng" name="reason" rules={[{ required: true, message: 'Nhập lý do trả hàng' }]}>
+              <Form.Item label={t('warrantyDetail.lyDoTraHang')} name="reason" rules={[{ required: true, message: t('warrantyDetail.nhapLyDoTraHang') }]}>
                 <TextArea rows={3} />
               </Form.Item>
             )}
-            <Form.Item label="Ghi chú" name="note"><TextArea rows={2} /></Form.Item>
-            <Form.Item label={`Hình ảnh đính kèm (${exchangeAttachments.length}/10)`}>
+            <Form.Item label={t('field.ghiChu')} name="note"><TextArea rows={2} /></Form.Item>
+            <Form.Item label={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh đính kèm')} (${exchangeAttachments.length}/10)`}>
               <Space direction="vertical" size={10} style={{ display: 'flex' }}>
                 {exchangeAttachmentUpload}
                 {exchangeAttachments.length > 0
                   ? renderExchangeAttachmentGrid(exchangeAttachments, { compact: true, removable: true })
-                  : <Text type="secondary">Có thể đính kèm ảnh sản phẩm đổi/trả.</Text>}
+                  : <Text type="secondary">{t('warrantyDetail.coTheDinhKemDoiTra')}</Text>}
               </Space>
             </Form.Item>
             <MobileButton block color="primary" type="submit" loading={exchangeSubmitting}>
-              {exchangeType === 'doi_hang' ? 'Xác nhận đổi hàng' : 'Xác nhận trả hàng'}
+              {exchangeType === 'doi_hang' ? t('warrantyDetail.xacNhanDoiHangBtn', { defaultValue: 'Xác nhận đổi hàng' }) : t('warrantyDetail.xacNhanTraHangBtn', { defaultValue: 'Xác nhận trả hàng' })}
             </MobileButton>
           </Form>
         </MobileCard>
@@ -1914,39 +1914,39 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
   const renderMobileSupplier = () => (
     <div className="warranty-mobile-detail-body">
-      <Card size="small" title="Gửi nhà cung cấp" className="warranty-mobile-supplier-form-card" style={{ marginBottom: 12 }}>
+      <Card size="small" title={t('warrantyDetail.guiNhaCungCap')} className="warranty-mobile-supplier-form-card" style={{ marginBottom: 12 }}>
         <Form form={sendForm} layout="vertical">
-          <Form.Item label="Nhà cung cấp" name="supplierId" rules={[{ required: true, message: 'Chọn nhà cung cấp' }]}>
+          <Form.Item label={t('warrantyDetail.chonNCC')} name="supplierId" rules={[{ required: true, message: t('warrantyDetail.chonNCC') }]}>
             <Select
               showSearch
               optionFilterProp="searchText"
               filterOption={(input, option) => String(option?.searchText || '').toLowerCase().includes(input.toLowerCase())}
               options={supplierSelectOptions}
-              placeholder="Tìm theo mã, tên hoặc SĐT NCC"
+              placeholder={t('warrantyDetail.timNCC')}
               style={{ width: '100%' }}
               popupMatchSelectWidth={false}
               listHeight={280}
             />
           </Form.Item>
-          <Form.Item label="Ngày gửi" name="sentAt" rules={[{ required: true, message: 'Chọn ngày gửi' }]}>
+          <Form.Item label={t('warrantyDetail.ngayGui')} name="sentAt" rules={[{ required: true, message: t('warrantyDetail.chonNgayGui') }]}>
             <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
           </Form.Item>
-          <Form.Item label="Ngày hẹn nhận" name="expectedReturnAt">
+          <Form.Item label={t('warrantyDetail.ngayHenNhan')} name="expectedReturnAt">
             <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
           </Form.Item>
-          <Form.Item label="Ghi chú" name="note">
-            <Input.TextArea rows={3} placeholder="Ghi chú gửi NCC" />
+          <Form.Item label={t('field.ghiChu')} name="note">
+            <Input.TextArea rows={3} placeholder={t('warrantyDetail.ghiChuGuiNCC')} />
           </Form.Item>
-          <Button type="primary" block loading={sendSubmitting} onClick={handleSendToSupplier}>Xác nhận gửi</Button>
+          <Button type="primary" block loading={sendSubmitting} onClick={handleSendToSupplier}>{t('warrantyDetail.xacNhanGui', { defaultValue: 'Xác nhận gửi' })}</Button>
         </Form>
       </Card>
 
-      <MobileCard className="warranty-mobile-card" title={`Lịch sử gửi / nhận NCC (${supplierLogs.length})`}>
+      <MobileCard className="warranty-mobile-card" title={`${t('warrantyDetail.lichSuNCC')} (${supplierLogs.length})`}>
         {supplierLogs.length === 0 ? (
-          <div style={{ padding: 12, textAlign: 'center', color: 'var(--ant-color-text-secondary, #667085)' }}>Trống</div>
+          <div style={{ padding: 12, textAlign: 'center', color: 'var(--ant-color-text-secondary, #667085)' }}>{t('warrantyDetail.trong')}</div>
         ) : (
           <div className="warranty-mobile-supplier-log-list">
-            <MobileButton block size="small" onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=supplier`)}>In phiếu gửi NCC</MobileButton>
+            <MobileButton block size="small" onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=supplier`)}>{t('warrantyDetail.inPhieuGuiNCC')}</MobileButton>
             {supplierLogs.map((log) => {
               const isSent = log.action === 'sent';
               const key = `${log.id || 'log'}-${log.action || ''}-${log.at || ''}-${log.sentAt || ''}-${log.returnedAt || ''}`;
@@ -1969,37 +1969,37 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
                   <div className="warranty-mobile-supplier-log-grid">
                     <div>
-                      <div>Ngày gửi</div>
+                      <div>{t('warrantyDetail.ngayGui')}</div>
                       <b>{formatDate(log.sentAt) || '-'}</b>
                     </div>
                     <div>
-                      <div>Hẹn nhận</div>
+                      <div>{t('warrantyDetail.henNhan')}</div>
                       <b>{formatDate(log.expectedReturnAt) || '-'}</b>
                     </div>
                     <div>
-                      <div>Ngày nhận</div>
+                      <div>{t('field.ngayNhan')}</div>
                       <b>{formatDate(log.returnedAt) || '-'}</b>
                     </div>
                     <div>
-                      <div>Cập nhật</div>
+                      <div>{t('button.capNhat')}</div>
                       <b>{formatDate(log.at) || '-'}</b>
                     </div>
                   </div>
 
                   <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', justifyContent: 'space-between' }}>
                     <div className="warranty-mobile-supplier-note">
-                      {log.note || 'Chưa có ghi chú'}
+                      {log.note || t('warrantyDetail.chuaCoGhiChu', { defaultValue: 'Chưa có ghi chú' })}
                     </div>
                     <MobileSpace wrap>
-                      <MobileButton size="mini" onClick={() => openSupplierLogNoteEdit(log)}>Sửa</MobileButton>
+                      <MobileButton size="mini" onClick={() => openSupplierLogNoteEdit(log)}>{t('button.sua')}</MobileButton>
                       <MobileButton
                         size="mini"
                         color="danger"
                         fill="outline"
                         onClick={() => Dialog.confirm({
-                          content: 'Xóa dòng lịch sử NCC này?',
-                          confirmText: 'Xóa',
-                          cancelText: 'Hủy',
+                          content: t('warrantyDetail.xoaLichSuNCC'),
+                          confirmText: t('button.xoa'),
+                          cancelText: t('button.huy'),
                           onConfirm: () => handleDeleteSupplierLog(log),
                         })}
                       >
@@ -2018,19 +2018,19 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
 
   const renderMobileHistory = () => (
     <div className="warranty-mobile-detail-body">
-      <MobileCard className="warranty-mobile-card" title="Cập nhật tiến trình">
+      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.capNhatTienTrinh')}>
         <MobileTextArea
           value={mobileLogNote}
           onChange={setMobileLogNote}
           rows={3}
-          placeholder="VD: Đã gửi hãng, đang xử lý..."
+          placeholder={t('warrantyDetail.vdTienTrinhNgan')}
         />
         <MobileButton block color="primary" loading={logSubmitting} onClick={handleMobileLog} style={{ marginTop: 10 }}>
-          Thêm tiến trình
+          {t('warrantyDetail.themTienTrinh', { defaultValue: 'Thêm tiến trình' })}
         </MobileButton>
       </MobileCard>
 
-      <MobileCard className="warranty-mobile-card" title="Lịch sử">
+      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.lichSu', { defaultValue: 'Lịch sử' })}>
         <div className="warranty-mobile-timeline">
           {mobileHistory.map(({ entry: h, index: historyIndex }) => {
             const isCreate = h.action === 'create';
@@ -2089,7 +2089,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     <span onClick={(e) => {
                       e.stopPropagation();
                       Dialog.confirm({
-                        content: 'Xóa dòng lịch sử này?',
+                        content: t('warrantyDetail.xoaLichSu'),
                         onConfirm: () => handleDeleteHistory(historyIndex),
                       });
                     }}>
@@ -2125,16 +2125,16 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             </NavBar>
             {renderHeavy ? (
               <MobileTabs>
-                <MobileTabs.Tab title="Thông tin" key="info">
+                <MobileTabs.Tab title={t('warrantyDetail.tabThongTin')} key="info">
                   {renderMobileInfo()}
                 </MobileTabs.Tab>
-                <MobileTabs.Tab title="Đổi - Trả" key="exchange-return">
+                <MobileTabs.Tab title={t('warrantyDetail.tabDoiTraNgan')} key="exchange-return">
                   {renderMobileExchangeReturn()}
                 </MobileTabs.Tab>
-                <MobileTabs.Tab title="Gửi NCC" key="supplier">
+                <MobileTabs.Tab title={t('warrantyDetail.tabGuiNCC')} key="supplier">
                   {renderMobileSupplier()}
                 </MobileTabs.Tab>
-                <MobileTabs.Tab title="Lịch sử" key="history">
+                <MobileTabs.Tab title={t('warrantyDetail.lichSu', { defaultValue: 'Lịch sử' })} key="history">
                   {renderMobileHistory()}
                 </MobileTabs.Tab>
               </MobileTabs>
@@ -2144,24 +2144,24 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               </div>
             )}
             <Modal
-              title="Hủy phiếu bảo hành"
+              title={t('warrantyDetail.huyPhieuTitle')}
               open={cancelModal}
               onOk={handleCancel}
               onCancel={() => { setCancelModal(false); setCancelReason(''); }}
-              okText="Xác nhận hủy"
-              cancelText="Đóng"
+              okText={t('warrantyDetail.xacNhanHuy', { defaultValue: 'Xác nhận hủy' })}
+              cancelText={t('button.dong')}
               okButtonProps={{ danger: true }}
             >
-              <p>Nhập lý do hủy phiếu này:</p>
+              <p>{t('warrantyDetail.nhapLyDoHuy')}</p>
               <Input.TextArea
                 rows={3}
                 value={cancelReason}
                 onChange={e => setCancelReason(e.target.value)}
-                placeholder="VD: Khách không sửa nữa, hết bảo hành..."
+                placeholder={t('warrantyDetail.vdLyDoHuy')}
               />
             </Modal>
             <Modal
-              title="Sửa nhà cung cấp / ghi chú NCC"
+              title={t('warrantyDetail.suaNCCTitle')}
               open={supplierLogEditOpen}
               onOk={submitSupplierLogNote}
               onCancel={() => {
@@ -2170,8 +2170,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 setSupplierLogNote('');
                 setSupplierLogSupplierId('');
               }}
-              okText="Lưu"
-              cancelText="Hủy"
+              okText={t('button.luu')}
+              cancelText={t('button.huy')}
               confirmLoading={supplierLogSaving}
               width={720}
             >
@@ -2184,7 +2184,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                   optionFilterProp="searchText"
                   filterOption={(input, option) => String(option?.searchText || '').toLowerCase().includes(input.toLowerCase())}
                   options={supplierSelectOptions}
-                  placeholder="Tìm theo mã, tên hoặc SĐT NCC"
+                  placeholder={t('warrantyDetail.timNCC')}
                   style={{ width: '100%' }}
                   popupMatchSelectWidth={false}
                   listHeight={280}
@@ -2193,7 +2193,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                   rows={4}
                   value={supplierLogNote}
                   onChange={(e) => setSupplierLogNote(e.target.value)}
-                  placeholder="Nhập ghi chú gửi / nhận NCC"
+                  placeholder={t('warrantyDetail.ghiChuGuiNhanNCC')}
                 />
               </Space>
             </Modal>
@@ -2201,7 +2201,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         </Popup>
         <CustomerPickerModal
           open={customerPickerOpen}
-          title="Chuyển khách hàng cho CT"
+          title={t('warrantyDetail.chuyenKhachTitle')}
           customers={customerList}
           loading={customerListLoading}
           excludedKey={currentCustomerKey}
@@ -2227,10 +2227,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 )}
                 {warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy' && (
                   <Space>
-                    <Popconfirm title="Đánh dấu bảo hành xong?" onConfirm={handleTraHang}>
+                    <Popconfirm title={t('warrantyDetail.danhDauXong')} onConfirm={handleTraHang}>
                       <Button size="small" type="primary" icon={<CheckCircleOutlined />}>Xong</Button>
                     </Popconfirm>
-                    <Button size="small" danger icon={<DeleteOutlined />} onClick={() => setCancelModal(true)}>Hủy</Button>
+                    <Button size="small" danger icon={<DeleteOutlined />} onClick={() => setCancelModal(true)}>{t('button.huy')}</Button>
                   </Space>
                 )}
               </>
@@ -2255,25 +2255,25 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       )}
 
       <Modal
-        title="Hủy phiếu bảo hành"
+        title={t('warrantyDetail.huyPhieuTitle')}
         open={cancelModal}
         onOk={handleCancel}
         onCancel={() => { setCancelModal(false); setCancelReason(''); }}
-        okText="Xác nhận hủy"
-        cancelText="Đóng"
+        okText={t('warrantyDetail.xacNhanHuy', { defaultValue: 'Xác nhận hủy' })}
+        cancelText={t('button.dong')}
         okButtonProps={{ danger: true }}
       >
-        <p>Nhập lý do hủy phiếu này:</p>
+        <p>{t('warrantyDetail.nhapLyDoHuy')}</p>
         <Input.TextArea
           rows={3}
           value={cancelReason}
           onChange={e => setCancelReason(e.target.value)}
-          placeholder="VD: Khách không sửa nữa, hết bảo hành..."
+          placeholder={t('warrantyDetail.vdLyDoHuy')}
         />
       </Modal>
 
       <Modal
-        title="Sửa nhà cung cấp / ghi chú NCC"
+        title={t('warrantyDetail.suaNCCTitle')}
         open={supplierLogEditOpen}
         onOk={submitSupplierLogNote}
         onCancel={() => {
@@ -2282,8 +2282,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
           setSupplierLogNote('');
           setSupplierLogSupplierId('');
         }}
-        okText="Lưu"
-        cancelText="Hủy"
+        okText={t('button.luu')}
+        cancelText={t('button.huy')}
         confirmLoading={supplierLogSaving}
         width={720}
       >
@@ -2296,7 +2296,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             optionFilterProp="searchText"
             filterOption={(input, option) => String(option?.searchText || '').toLowerCase().includes(input.toLowerCase())}
             options={supplierSelectOptions}
-            placeholder="Tìm theo mã, tên hoặc SĐT NCC"
+            placeholder={t('warrantyDetail.timNCC')}
             style={{ width: '100%' }}
             popupMatchSelectWidth={false}
             listHeight={280}
@@ -2305,14 +2305,14 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             rows={4}
             value={supplierLogNote}
             onChange={(e) => setSupplierLogNote(e.target.value)}
-            placeholder="Nhập ghi chú gửi / nhận NCC"
+            placeholder={t('warrantyDetail.ghiChuGuiNhanNCC')}
           />
         </Space>
       </Modal>
 
       <CustomerPickerModal
         open={customerPickerOpen}
-        title="Chuyển khách hàng cho CT"
+        title={t('warrantyDetail.chuyenKhachTitle')}
         customers={customerList}
         loading={customerListLoading}
         excludedKey={currentCustomerKey}
