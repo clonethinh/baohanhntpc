@@ -2155,7 +2155,7 @@ html[data-theme='dark'] .ntpc-mobile-contact-map{
   margin-top: 8px;
 }
 
-.admin-mobile-ticket-body span {
+.admin-mobile-ticket-body > span {
   display: -webkit-box;
   overflow: hidden;
   color: #293626;

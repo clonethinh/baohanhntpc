@@ -481,10 +481,13 @@ export default function WarrantyList() {
                 <b>{w.khachHang || '-'}</b>
                 <span>{w.tenHang || '-'}</span>
                 <small>
-                  Serial: {w.soSeri || '-'} · Hẹn trả:{' '}
-                  {w.ngayHenTra === 'none'
-                    ? <span>Pending<span className="loading-dots" /></span>
-                    : (shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-')}
+                  Serial: {w.soSeri || '-'} ·{' '}
+                  <span style={{ whiteSpace: 'nowrap' }}>
+                    Hẹn trả:&nbsp;
+                    {w.ngayHenTra === 'none'
+                      ? <span>Pending<span className="loading-dots" /></span>
+                      : (shouldShowDueDate(w) ? formatDate(getWarrantyDueDate(w)) : '-')}
+                  </span>
                 </small>
               </div>
               <MobileSpace wrap className="admin-mobile-ticket-actions">
