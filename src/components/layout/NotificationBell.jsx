@@ -138,6 +138,44 @@ export default function NotificationBell() {
     </Space>
   );
 
+  const renderBody = (w, urgency, dueDate, urgencyText, onOpen) => (
+    <div style={{ minWidth: 0, width: '100%' }}>
+      <Space size={6} wrap style={{ marginBottom: 2 }}>
+        <Typography.Link strong onClick={onOpen}>
+          {w.soChungTu}
+        </Typography.Link>
+        <StatusTag status={w.trangThai} />
+      </Space>
+
+      <div style={{ display: 'grid', gap: 1 }}>
+        <Space size={6} wrap>
+          <Text strong ellipsis={{ tooltip: w.khachHang }}>
+            {w.khachHang || t('notification.unknownCustomer')}
+          </Text>
+          {w.soDienThoai && (
+            <Typography.Link
+              href={`tel:${w.soDienThoai}`}
+              onClick={(e) => e.stopPropagation()}
+              style={{ fontSize: 13 }}
+            >
+              {w.soDienThoai}
+            </Typography.Link>
+          )}
+        </Space>
+        <Text type="secondary" ellipsis={{ tooltip: w.tenHang }}>
+          {w.tenHang || t('notification.noProductName')}
+        </Text>
+        {w.loiLucNhan && (
+          <Text type="secondary" ellipsis={{ tooltip: w.loiLucNhan }} style={{ fontSize: 12 }}>
+            {t('notification.faultLabel')}: {w.loiLucNhan}
+          </Text>
+        )}
+      </div>
+
+      {renderTags(w, urgency, dueDate, urgencyText)}
+    </div>
+  );
+
   const content = (
     <div style={{ width: 420, maxWidth: 'calc(100vw - 48px)' }}>
       {mergedItems.length === 0 ? (
@@ -184,25 +222,7 @@ export default function NotificationBell() {
                       </Space>,
                     ]}
                   >
-                    <div style={{ minWidth: 0, width: '100%' }}>
-                      <Space size={6} wrap style={{ marginBottom: 2 }}>
-                        <Typography.Link strong onClick={() => openDetail(w.id)}>
-                          {w.soChungTu}
-                        </Typography.Link>
-                        <StatusTag status={w.trangThai} />
-                      </Space>
-
-                      <div style={{ display: 'grid', gap: 1 }}>
-                        <Text strong ellipsis={{ tooltip: w.khachHang }}>
-                          {w.khachHang || t('notification.unknownCustomer')}
-                        </Text>
-                        <Text type="secondary" ellipsis={{ tooltip: w.tenHang }}>
-                          {w.tenHang || t('notification.noProductName')}
-                        </Text>
-                      </div>
-
-                      {renderTags(w, u, dueDate, urgencyText)}
-                    </div>
+                    {renderBody(w, u, dueDate, urgencyText, () => openDetail(w.id))}
                   </List.Item>
                 );
               }}
@@ -308,31 +328,10 @@ export default function NotificationBell() {
                   </Space>,
                 ]}
               >
-                <div style={{ minWidth: 0, width: '100%' }}>
-                  <Space size={6} wrap style={{ marginBottom: 2 }}>
-                    <Typography.Link
-                      strong
-                      onClick={() => {
-                        setDrawerOpen(false);
-                        openDetail(w.id);
-                      }}
-                    >
-                      {w.soChungTu}
-                    </Typography.Link>
-                    <StatusTag status={w.trangThai} />
-                  </Space>
-
-                  <div style={{ display: 'grid', gap: 1 }}>
-                    <Text strong ellipsis={{ tooltip: w.khachHang }}>
-                      {w.khachHang || t('notification.unknownCustomer')}
-                    </Text>
-                    <Text type="secondary" ellipsis={{ tooltip: w.tenHang }}>
-                      {w.tenHang || t('notification.noProductName')}
-                    </Text>
-                  </div>
-
-                  {renderTags(w, u, dueDate, urgencyText)}
-                </div>
+                {renderBody(w, u, dueDate, urgencyText, () => {
+                  setDrawerOpen(false);
+                  openDetail(w.id);
+                })}
               </List.Item>
             );
           }}
