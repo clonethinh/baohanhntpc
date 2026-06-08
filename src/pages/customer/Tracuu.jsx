@@ -38,14 +38,10 @@ function recentCode(item) {
 function recentTime(item) {
   return typeof item === 'string' ? '' : formatLookupTime(item?.time);
 }
-const STATUS_LABELS = {
-  da_nhan: 'Đã nhận',
-  dang_xu_ly: 'Đang xử lý',
-  cho_xu_ly: 'Chờ xử lý',
-  cho_lien_he: 'Chờ liên hệ',
-  da_tra: 'Đã trả',
-  huy: 'Hủy',
-};
+function statusLabel(t, status) {
+  const key = normalizeStatusKey(status);
+  return t(`statusLabel.${key}`, { defaultValue: String(status || '').replace(/_/g, ' ') });
+}
 
 function normalizeStatusKey(status) {
   const key = String(status || '').trim();
@@ -140,7 +136,7 @@ export default function Tracuu() {
     setFilterStatus('all');
 
     if (!raw) {
-      setError('Vui lòng nhập mã phiếu hoặc số điện thoại.');
+      setError(t('tracuu.nhapMaHoacSdt'));
       return;
     }
 
@@ -151,7 +147,7 @@ export default function Tracuu() {
     }
 
     if (!isPhoneQuery(raw)) {
-      setError('Mã phiếu hoặc số điện thoại không hợp lệ.');
+      setError(t('tracuu.maHoacSdtKhongHopLe'));
       return;
     }
 
@@ -162,12 +158,12 @@ export default function Tracuu() {
       if (res.data?.success && res.data?.mode === 'phone') {
         const rows = Array.isArray(res.data?.data?.items) ? res.data.data.items : [];
         setPhoneResults({ phone: res.data?.data?.phone || phone, total: rows.length, items: rows });
-        if (!rows.length) setError('Không tìm thấy phiếu theo số điện thoại này.');
+        if (!rows.length) setError(t('tracuu.khongTimThayTheoSdt'));
       } else {
-        setError(res.data?.message || 'Không tìm thấy dữ liệu.');
+        setError(res.data?.message || t('tracuu.khongTimThayDuLieu'));
       }
     } catch (err) {
-      setError(err?.response?.data?.message || 'Không thể tra cứu lúc này.');
+      setError(err?.response?.data?.message || t('tracuu.khongTheTraCuu'));
     } finally {
       setSearching(false);
     }
@@ -218,12 +214,12 @@ export default function Tracuu() {
     }
     if (!phoneResults) return null;
     return (
-      <MobileCard title={`Chứng từ theo số điện thoại ${phoneResults.phone} (${phoneResults.total})`} className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-phone-card" style={{ marginBottom: 16 }}>
+      <MobileCard title={t('tracuu.chungTuTheoSdt', { phone: phoneResults.phone, total: phoneResults.total })} className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-phone-card" style={{ marginBottom: 16 }}>
         <div style={{ marginBottom: 12, marginTop: -2 }}>
           <CapsuleTabs activeKey={filterStatus} onChange={setFilterStatus} style={{ '--capsule-border-radius': '8px' }}>
-            <CapsuleTabs.Tab title={`Tất cả (${phoneResults.items?.length || 0})`} key="all" />
-            <CapsuleTabs.Tab title={`Chờ xử lý (${phoneResults.items?.filter(x => !['da_tra', 'da_tra_hang', 'da_sua_xong', 'huy', 'da_huy'].includes(x.trangThai)).length || 0})`} key="pending" />
-            <CapsuleTabs.Tab title={`Đã xong (${phoneResults.items?.filter(x => ['da_tra', 'da_tra_hang', 'da_sua_xong'].includes(x.trangThai)).length || 0})`} key="completed" />
+            <CapsuleTabs.Tab title={t('tracuu.tatCa', { count: phoneResults.items?.length || 0 })} key="all" />
+            <CapsuleTabs.Tab title={t('tracuu.choXuLyTab', { count: phoneResults.items?.filter(x => !['da_tra', 'da_tra_hang', 'da_sua_xong', 'huy', 'da_huy'].includes(x.trangThai)).length || 0 })} key="pending" />
+            <CapsuleTabs.Tab title={t('tracuu.daXongTab', { count: phoneResults.items?.filter(x => ['da_tra', 'da_tra_hang', 'da_sua_xong'].includes(x.trangThai)).length || 0 })} key="completed" />
           </CapsuleTabs>
         </div>
         {visiblePhoneItems.length ? (
@@ -239,7 +235,7 @@ export default function Tracuu() {
                   <div className="tracuu-mobile-related-top">
                     <span className="tracuu-mobile-related-code">{item.soChungTu}</span>
                     <MobileTag color={statusColor(item.trangThai, 'mobile')}>
-                      {STATUS_LABELS[item.trangThai] || item.trangThai || '-'}
+                      {statusLabel(t, item.trangThai) || '-'}
                     </MobileTag>
                   </div>
                   <div className="tracuu-mobile-related-product">{item.tenHang || '-'}</div>
@@ -273,7 +269,7 @@ export default function Tracuu() {
             )}
           </>
         ) : (
-          <MobileEmpty description="Không có phiếu nào ở mục này." />
+          <MobileEmpty description={t('tracuu.khongCoPhieuMucNay')} />
         )}
       </MobileCard>
     );
@@ -283,9 +279,9 @@ export default function Tracuu() {
     <>
     <main className="mobile-only ntpc-mobile-page tracuu-mobile-v2">
       <section className="ntpc-mobile-hero ntpc-glass-card tracuu-mobile-hero-v2">
-        <div className="ntpc-mobile-eyebrow">Trung tâm bảo hành</div>
+        <div className="ntpc-mobile-eyebrow">{t('tracuu.trungTamBaoHanh', { defaultValue: 'Trung tâm bảo hành' })}</div>
         <h1>{t('tracking.title')}</h1>
-        <p>Nhập mã phiếu hoặc số điện thoại để xem tiến trình xử lý.</p>
+        <p>{t('tracuu.heroSubtitle', { defaultValue: 'Nhập mã phiếu hoặc số điện thoại để xem tiến trình xử lý.' })}</p>
       </section>
 
       <MobileCard className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-search-card" style={{ marginBottom: 12 }}>
@@ -297,7 +293,7 @@ export default function Tracuu() {
 
           <div className="ntpc-searchbar-container tracuu-mobile-searchbar">
             <SearchBar
-              placeholder="Nhập mã phiếu hoặc số điện thoại"
+              placeholder={t('tracuu.nhapMaPhieuHoacSdt')}
               value={code}
               onChange={(value) => {
                 setCode(value);
@@ -319,7 +315,7 @@ export default function Tracuu() {
       {renderMobileResults()}
 
       {recent.length > 0 && (
-        <MobileCard title="Tra cứu gần đây" className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-recent-card" style={{ marginBottom: 12 }}>
+        <MobileCard title={t('tracuu.traCuuGanDay')} className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-recent-card" style={{ marginBottom: 12 }}>
           <div className="tracuu-mobile-recent-list">
             {recent.map((item, index) => {
               const codeValue = recentCode(item);
@@ -330,13 +326,13 @@ export default function Tracuu() {
                   rightActions={[
                     {
                       key: 'delete',
-                      text: 'Xóa',
+                      text: t('button.xoa'),
                       color: 'danger',
                       onClick: () => {
                         const next = recent.filter((x) => recentCode(x) !== codeValue);
                         setRecent(next);
                         writeRecent(next);
-                        Toast.show({ content: 'Đã xóa khỏi lịch sử' });
+                        Toast.show({ content: t('tracuu.daXoaKhoiLichSu') });
                       }
                     }
                   ]}
@@ -357,9 +353,9 @@ export default function Tracuu() {
             size="small"
             fill="outline"
             onClick={() => Dialog.confirm({
-              content: 'Xóa toàn bộ lịch sử tra cứu?',
-              confirmText: 'Xóa',
-              cancelText: 'Hủy',
+              content: t('tracuu.xoaToanBoLichSu'),
+              confirmText: t('button.xoa'),
+              cancelText: t('button.huy'),
               onConfirm: clearRecent
             })}
             className="tracuu-mobile-clear-btn"
@@ -369,7 +365,7 @@ export default function Tracuu() {
         </MobileCard>
       )}
 
-      <MobileCard title="Hỗ trợ nhanh" className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-support-card" style={{ marginBottom: 12 }}>
+      <MobileCard title={t('tracuu.hoTroNhanh')} className="ntpc-mobile-card ntpc-glass-card tracuu-mobile-support-card" style={{ marginBottom: 12 }}>
         <div className="tracuu-mobile-support-stack">
           <a className="tracuu-mobile-support-row tracuu-mobile-support-row-primary" href="tel:0937632000">
             <div>
@@ -464,14 +460,14 @@ export default function Tracuu() {
           </Card>
 
           {phoneResults ? (
-            <Card className="tracuu-old-card" variant="borderless" title={`Kết quả theo SĐT ${phoneResults.phone} (${phoneResults.total})`}>
+            <Card className="tracuu-old-card" variant="borderless" title={t('tracuu.ketQuaTheoSdt', { phone: phoneResults.phone, total: phoneResults.total })}>
               <List
-                locale={{ emptyText: <Empty description="Không có phiếu liên quan SĐT này." /> }}
+                locale={{ emptyText: <Empty description={t('tracuu.khongCoPhieuLienQuanSdt')} /> }}
                 dataSource={phoneResults.items || []}
                 renderItem={(item) => (
                   <List.Item className="tracuu-old-result-item" onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}>
                     <List.Item.Meta
-                      title={<Space><b>{item.soChungTu}</b><Tag color={statusColor(item.trangThai)}>{STATUS_LABELS[item.trangThai] || item.trangThai || '-'}</Tag></Space>}
+                      title={<Space><b>{item.soChungTu}</b><Tag color={statusColor(item.trangThai)}>{statusLabel(t, item.trangThai) || '-'}</Tag></Space>}
                       description={(
                         <div className="tracuu-result-meta">
                           <div className="tracuu-result-product">{item.tenHang || '-'}</div>

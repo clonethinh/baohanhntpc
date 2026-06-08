@@ -86,23 +86,25 @@ function parseTrackDate(value) {
   return parsed.isValid() ? parsed : null;
 }
 
-const STATUS_LABELS = {
-  da_nhan: 'Đã nhận',
-  tiep_nhan: 'Đã nhận',
-  dang_xu_ly: 'Đang xử lý',
-  cho_xu_ly: 'Đã nhận',
-  cho_lien_he: 'Đang xử lý',
-  cho_linh_kien: 'Chờ linh kiện',
-  da_sua_xong: 'Đã sửa xong',
-  da_tra: 'Đã xong',
-  da_tra_hang: 'Đã xong',
-  huy: 'Đã hủy',
-  da_huy: 'Đã hủy',
+const STATUS_KEY_MAP = {
+  da_nhan: 'da_nhan',
+  tiep_nhan: 'da_nhan',
+  dang_xu_ly: 'dang_xu_ly',
+  cho_xu_ly: 'da_nhan',
+  cho_lien_he: 'dang_xu_ly',
+  cho_linh_kien: 'cho_linh_kien',
+  da_sua_xong: 'da_sua_xong',
+  da_tra: 'da_xong',
+  da_tra_hang: 'da_xong',
+  huy: 'da_huy',
+  da_huy: 'da_huy',
 };
 
-function formatStatus(status) {
-  const key = String(status || '').trim();
-  return STATUS_LABELS[key] || key.replace(/_/g, ' ');
+function formatStatus(t, status) {
+  const raw = String(status || '').trim();
+  const key = STATUS_KEY_MAP[raw];
+  if (key) return t(`statusLabel.${key}`);
+  return raw.replace(/_/g, ' ');
 }
 
 function normalizeStatusKey(status) {
@@ -366,7 +368,7 @@ export default function TrackingResult() {
   const relatedTotalPages = Math.max(1, Math.ceil(relatedByPhone.length / relatedPageSize));
   const relatedVisibleItems = relatedByPhone.slice((relatedPage - 1) * relatedPageSize, relatedPage * relatedPageSize);
   const getImageLabel = (_img, idx) => {
-    return `Ảnh ${idx + 1}`;
+    return t('trackingResult.anhN', { n: idx + 1 });
   };
   const openMobileImageViewer = (idx) => {
     setImageViewerIndex(idx);
@@ -442,7 +444,7 @@ export default function TrackingResult() {
     <>
     <div className="mobile-only ntpc-mobile-page tracking-mobile" style={{ position: 'relative' }}>
       <Watermark
-        content={`Nguyễn Tân PC - ${data.soChungTu}`}
+        content={t('trackingResult.watermark', { soChungTu: data.soChungTu })}
         gapX={100}
         gapY={120}
         rotate={-30}
@@ -454,10 +456,10 @@ export default function TrackingResult() {
             const res = await publicService.track(soChungTu);
             if (res.data.success) {
               setData(res.data.data);
-              Toast.show({ content: 'Đã cập nhật trạng thái mới nhất', icon: 'success' });
+              Toast.show({ content: t('trackingResult.daCapNhatMoiNhat'), icon: 'success' });
             }
           } catch {
-            Toast.show({ content: 'Không thể làm mới dữ liệu lúc này', icon: 'fail' });
+            Toast.show({ content: t('trackingResult.khongTheLamMoi'), icon: 'fail' });
           }
         }}
       >
@@ -609,7 +611,7 @@ export default function TrackingResult() {
         {relatedByPhone.length > 0 && (
           <MobileCard className="ntpc-mobile-card ntpc-glass-card">
             <MobileCollapse defaultActiveKey={[]}>
-              <MobileCollapse.Panel key="related" title="Chứng từ khác cùng số điện thoại">
+              <MobileCollapse.Panel key="related" title={t('trackingResult.chungTuKhacCungSdt')}>
                 <div className={styles.mobileRelatedList}>
                   {relatedVisibleItems.map((item) => (
                     <button
@@ -621,7 +623,7 @@ export default function TrackingResult() {
                       <div className={styles.mobileRelatedTop}>
                         <span className={styles.mobileRelatedCode}>{item.soChungTu}</span>
                         <MobileTag round color={mobileStatusColor(item.trangThai)}>
-                          {formatStatus(item.trangThai)}
+                          {formatStatus(t, item.trangThai)}
                         </MobileTag>
                       </div>
                       <div className={styles.mobileRelatedProduct}>{normalizeProductName(item.tenHang) || '-'}</div>
@@ -698,11 +700,11 @@ export default function TrackingResult() {
                   type="button"
                   className={styles.mobileGalleryHero}
                   onClick={() => openMobileImageViewer(mobileGalleryIndex)}
-                  aria-label={`Mở ${getImageLabel(activeMobileImage, mobileGalleryIndex)}`}
+                  aria-label={t('trackingResult.moAnh', { label: getImageLabel(activeMobileImage, mobileGalleryIndex) })}
                 >
                   <img
                     src={activeMobileImage.url}
-                    alt={activeMobileImage.name || `Ảnh ${mobileGalleryIndex + 1}`}
+                    alt={activeMobileImage.name || t('trackingResult.anhN', { n: mobileGalleryIndex + 1 })}
                     className={styles.mobileGalleryHeroImage}
                   />
                   <div className={styles.mobileGalleryHeroTop}>
@@ -720,11 +722,11 @@ export default function TrackingResult() {
                     type="button"
                     className={`${styles.mobileGalleryThumb} ${idx === mobileGalleryIndex ? styles.mobileGalleryThumbActive : ''}`}
                     onClick={() => selectMobileGalleryImage(idx)}
-                    aria-label={`Chọn ${getImageLabel(img, idx)}`}
+                    aria-label={t('trackingResult.chonAnh', { label: getImageLabel(img, idx) })}
                   >
                     <img
                       src={img.url}
-                      alt={img.name || `Ảnh ${idx + 1}`}
+                      alt={img.name || t('trackingResult.anhN', { n: idx + 1 })}
                       className={styles.mobileGalleryThumbImage}
                     />
                     <span className={styles.mobileGalleryThumbLabel}>Ảnh {idx + 1}</span>
@@ -768,7 +770,7 @@ export default function TrackingResult() {
                   {publicImages[imageViewerIndex] && (
                     <img
                       src={publicImages[imageViewerIndex].url}
-                      alt={publicImages[imageViewerIndex].name || `Ảnh ${imageViewerIndex + 1}`}
+                      alt={publicImages[imageViewerIndex].name || t('trackingResult.anhN', { n: imageViewerIndex + 1 })}
                       className={styles.mobileOneHandViewerImage}
                     />
                   )}
@@ -791,7 +793,7 @@ export default function TrackingResult() {
                       }}
                       aria-label={`Xem ${getImageLabel(img, idx)}`}
                     >
-                      <img src={img.url} alt={img.name || `Ảnh ${idx + 1}`} className={styles.mobileOneHandViewerThumbImage} />
+                      <img src={img.url} alt={img.name || t('trackingResult.anhN', { n: idx + 1 })} className={styles.mobileOneHandViewerThumbImage} />
                     </button>
                   ))}
                 </div>
@@ -1074,7 +1076,7 @@ export default function TrackingResult() {
               items={[
                 {
                   key: 'related',
-                  label: 'Chứng từ khác cùng số điện thoại',
+                  label: t('trackingResult.chungTuKhacCungSdt'),
                   children: (
                     <DesktopList
                       className="tracking-related-desktop-list"
@@ -1082,7 +1084,7 @@ export default function TrackingResult() {
                       renderItem={(item, i) => (
                         <DesktopList.Item className="tracuu-old-result-item" onClick={() => navigate(`/tra-cuu/${item.soChungTu}`)}>
                           <DesktopList.Item.Meta
-                            title={<Space><b>{item.soChungTu}</b><Tag color={statusColor(item.trangThai)}>{formatStatus(item.trangThai)}</Tag></Space>}
+                            title={<Space><b>{item.soChungTu}</b><Tag color={statusColor(item.trangThai)}>{formatStatus(t, item.trangThai)}</Tag></Space>}
                             description={(
                               <div className="tracuu-result-meta">
                                 <div className="tracuu-result-product">{normalizeProductName(item.tenHang) || '-'}</div>
