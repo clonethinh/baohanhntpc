@@ -79,11 +79,11 @@ export default function CustomerLayout({ children }) {
         >
           {showBack ? (
             <span style={{ fontWeight: 700, fontSize: 16, color: isDark ? '#fff' : '#1f2a1d' }}>
-              Chi tiết bảo hành
+              {t('trackingResult.warrantyDetailTitle', { defaultValue: 'Chi tiết bảo hành' })}
             </span>
           ) : (
             <span style={{ fontWeight: 800, fontSize: 14, color: '#1677ff', letterSpacing: '0.5px' }}>
-              TRUNG TÂM BẢO HÀNH
+              {t('customerLayout.trungTamBaoHanh', { defaultValue: 'TRUNG TÂM BẢO HÀNH' })}
             </span>
           )}
         </NavBar>
@@ -132,8 +132,8 @@ export default function CustomerLayout({ children }) {
           <img src={isDark ? "/white.png" : "/logo.png"} alt="Nguyễn Tân PC" className="brand-logo" />
         </div>
 
-        <div className="brand-center" aria-label="TRUNG TÂM BẢO HÀNH">
-          TRUNG TÂM BẢO HÀNH
+        <div className="brand-center" aria-label={t('customerLayout.trungTamBaoHanh', { defaultValue: 'TRUNG TÂM BẢO HÀNH' })}>
+          {t('customerLayout.trungTamBaoHanh', { defaultValue: 'TRUNG TÂM BẢO HÀNH' })}
         </div>
 
         <Space size={6} className="brand-right">

@@ -38,12 +38,13 @@ function RequireStaff({ children }) {
 
 function RequireAdminRole({ children }) {
   const { isAdmin } = useAuth();
+  const { t } = useTranslation();
   if (!isAdmin) {
     return (
       <Result
         status="403"
         title="403"
-        subTitle="Tài khoản hiện tại không có quyền quản trị."
+        subTitle={t('app.noAdminPermission')}
       />
     );
   }

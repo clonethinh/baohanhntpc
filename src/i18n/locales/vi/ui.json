@@ -9,7 +9,9 @@
     "da_tra": "Đã trả",
     "da_xong": "Đã xong",
     "huy": "Hủy",
-    "da_huy": "Đã hủy"
+    "da_huy": "Đã hủy",
+    "tiep_nhan": "Tiếp nhận",
+    "da_tra_hang": "Đã trả hàng"
   },
   "tracuu": {
     "nhapMaHoacSdt": "Vui lòng nhập mã phiếu hoặc số điện thoại.",
@@ -37,7 +39,8 @@
     "brandShort": "BẢO HÀNH",
     "brandCompany": "NGUYỄN TÂN PC",
     "customerBrand": "BẢO HÀNH - NGUYỄN TÂN PC",
-    "companyFooter": "CÔNG TY TNHH MÁY TÍNH NGUYỄN TÂN | Hotline: 0903 602 240 | BẢO HÀNH - KỸ THUẬT : 0937 63 2000"
+    "companyFooter": "CÔNG TY TNHH MÁY TÍNH NGUYỄN TÂN | Hotline: 0903 602 240 | BẢO HÀNH - KỸ THUẬT : 0937 63 2000",
+    "noAdminPermission": "Tài khoản hiện tại không có quyền quản trị."
   },
   "button": {
     "luu": "Lưu",
@@ -56,6 +59,7 @@
     "vaoAdmin": "Vào Admin"
   },
   "action": {
+    "timKiem": "Tìm kiếm...",
     "doiNhanVien": "Đổi nhân viên",
     "moMenu": "Mở menu",
     "phimTat": "Phím tắt"
@@ -137,6 +141,7 @@
     "openShortcuts": "Mở danh sách phím tắt"
   },
   "staffPicker": {
+    "subtitle": "Nhập mã nhân viên và mật khẩu để tiếp tục.",
     "title": "Chọn nhân viên",
     "description": "Vui lòng chọn nhân viên để tiếp tục"
   },
@@ -206,6 +211,7 @@
     "desktopStorageNote": "• Đối với các thiết bị lưu trữ như HDD, SSD, USB: quý khách vui lòng sao lưu dữ liệu trước khi gửi bảo hành. Chúng tôi không chịu trách nhiệm về mất mát dữ liệu trong quá trình kiểm tra hoặc bảo hành."
   },
   "trackingResult": {
+    "warrantyDetailTitle": "Chi tiết bảo hành",
     "anhN": "Ảnh {{n}}",
     "moAnh": "Mở {{label}}",
     "chonAnh": "Chọn {{label}}",
@@ -582,6 +588,39 @@
     "backupList": "Danh sách backup",
     "historyList": "Lịch sử backup/restore",
     "totalBackup": "Tổng {{total}} backup"
+  },
+  "customerPortal": {
+    "notFoundByPhone": "Không tìm thấy chứng từ theo số điện thoại này",
+    "foundByPhone": "Tìm thấy {{count}} chứng từ theo SĐT. CT mới nhất: {{soChungTu}}. Chọn bên dưới để xem chi tiết.",
+    "searchTitle": "Tra cứu bảo hành",
+    "stepReceive": "Nhận hàng",
+    "stepProcess": "Xử lý",
+    "stepReturn": "Hoàn trả",
+    "viewFullPolicy": "Xem toàn bộ chính sách →",
+    "noHistory": "Chưa có lịch sử"
+  },
+  "customerLayout": {
+    "trungTamBaoHanh": "TRUNG TÂM BẢO HÀNH"
+  },
+  "customerPicker": {
+    "searchPlaceholder": "Tìm theo tên, SĐT hoặc địa chỉ",
+    "empty": "Không có khách hàng phù hợp"
+  },
+  "createWarranty": {
+    "chonThoiDiem": "Chọn thời điểm"
+  },
+  "globalSearch": {
+    "createWarrantyTitle": "Tạo phiếu bảo hành mới",
+    "createWarrantyDesc": "Tạo phiếu nhận máy, báo giá hoặc đổi trả",
+    "dashboardTitle": "Xem Bảng điều khiển (Dashboard)",
+    "dashboardDesc": "Báo cáo thống kê, tiến trình & lịch sử mới nhất",
+    "warrantyListTitle": "Xem danh sách phiếu bảo hành",
+    "warrantyListDesc": "Tra cứu, lọc và cập nhật tất cả phiếu bảo hành",
+    "shortcutsTitle": "Xem bảng hướng dẫn phím tắt",
+    "shortcutsDesc": "Hiển thị danh sách các phím tắt nhanh trong hệ thống",
+    "commandsSection": "LỆNH & PHÍM TẮT NHANH",
+    "warrantiesSection": "PHIẾU BẢO HÀNH TÌM THẤY",
+    "emptyHint": "Thử tìm kiếm theo Tên, Số điện thoại, Mã phiếu hoặc Số seri khác"
   },
   "adminStaff": {
     "addSuccess": "Đã thêm nhân viên.",

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button, Empty, Input, List, Modal, Space, Tag, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 const { Text } = Typography;
 
@@ -8,11 +9,12 @@ export default function CustomerPickerModal({
   open,
   customers = [],
   loading = false,
-  title = 'Chọn khách hàng',
+  title,
   excludedKey = '',
   onCancel,
   onSelect,
 }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
 
   const rows = useMemo(() => {
@@ -43,7 +45,7 @@ export default function CustomerPickerModal({
       <Space direction="vertical" size={12} style={{ display: 'flex' }}>
         <Input
           prefix={<SearchOutlined />}
-          placeholder="Tìm theo tên, SĐT hoặc địa chỉ"
+          placeholder={t('customerPicker.searchPlaceholder', { defaultValue: 'Tìm theo tên, SĐT hoặc địa chỉ' })}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           allowClear
@@ -51,7 +53,7 @@ export default function CustomerPickerModal({
         <List
           loading={loading}
           dataSource={rows}
-          locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có khách hàng phù hợp" /> }}
+          locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('customerPicker.empty', { defaultValue: 'Không có khách hàng phù hợp' })} /> }}
           style={{ maxHeight: 420, overflow: 'auto' }}
           renderItem={(item) => (
             <List.Item
@@ -70,8 +72,8 @@ export default function CustomerPickerModal({
                 }
                 description={
                   <Space direction="vertical" size={2}>
-                    <Text type="secondary">{item.soDienThoai || 'Chưa có SĐT'}</Text>
-                    <Text type="secondary">{item.diaChi || 'Chưa có địa chỉ'}</Text>
+                    <Text type="secondary">{item.soDienThoai || t('adminCustomer.noPhone')}</Text>
+                    <Text type="secondary">{item.diaChi || t('adminCustomer.noAddress')}</Text>
                   </Space>
                 }
               />

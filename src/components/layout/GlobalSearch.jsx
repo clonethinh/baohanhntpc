@@ -38,8 +38,8 @@ export default function GlobalSearch() {
     {
       id: 'create-warranty',
       type: 'action',
-      title: 'Tạo phiếu bảo hành mới',
-      desc: 'Tạo phiếu nhận máy, báo giá hoặc đổi trả',
+      title: t('globalSearch.createWarrantyTitle', { defaultValue: 'Tạo phiếu bảo hành mới' }),
+      desc: t('globalSearch.createWarrantyDesc', { defaultValue: 'Tạo phiếu nhận máy, báo giá hoặc đổi trả' }),
       icon: <PlusCircleOutlined style={{ color: isDark ? '#73d13d' : '#2f7a22', fontSize: 16 }} />,
       shortcut: 'Ctrl + N',
       onSelect: () => { setOpen(false); setSearch(''); navigate('/admin/tao-phieu'); }
@@ -47,24 +47,24 @@ export default function GlobalSearch() {
     {
       id: 'goto-dashboard',
       type: 'action',
-      title: 'Xem Bảng điều khiển (Dashboard)',
-      desc: 'Báo cáo thống kê, tiến trình & lịch sử mới nhất',
+      title: t('globalSearch.dashboardTitle', { defaultValue: 'Xem Bảng điều khiển (Dashboard)' }),
+      desc: t('globalSearch.dashboardDesc', { defaultValue: 'Báo cáo thống kê, tiến trình & lịch sử mới nhất' }),
       icon: <DashboardOutlined style={{ color: '#096dd9', fontSize: 16 }} />,
       onSelect: () => { setOpen(false); setSearch(''); navigate('/admin/dashboard'); }
     },
     {
       id: 'goto-list',
       type: 'action',
-      title: 'Xem danh sách phiếu bảo hành',
-      desc: 'Tra cứu, lọc và cập nhật tất cả phiếu bảo hành',
+      title: t('globalSearch.warrantyListTitle', { defaultValue: 'Xem danh sách phiếu bảo hành' }),
+      desc: t('globalSearch.warrantyListDesc', { defaultValue: 'Tra cứu, lọc và cập nhật tất cả phiếu bảo hành' }),
       icon: <FileTextOutlined style={{ color: isDark ? '#ffc069' : '#d46b08', fontSize: 16 }} />,
       onSelect: () => { setOpen(false); setSearch(''); navigate('/admin/phieu'); }
     },
     {
       id: 'show-shortcuts',
       type: 'action',
-      title: 'Xem bảng hướng dẫn phím tắt',
-      desc: 'Hiển thị danh sách các phím tắt nhanh trong hệ thống',
+      title: t('globalSearch.shortcutsTitle', { defaultValue: 'Xem bảng hướng dẫn phím tắt' }),
+      desc: t('globalSearch.shortcutsDesc', { defaultValue: 'Hiển thị danh sách các phím tắt nhanh trong hệ thống' }),
       icon: <QuestionCircleOutlined style={{ color: isDark ? '#b37feb' : '#722ed1', fontSize: 16 }} />,
       shortcut: '?',
       onSelect: () => { setOpen(false); setSearch(''); if (window.__showShortcuts) window.__showShortcuts(); }
@@ -154,12 +154,12 @@ export default function GlobalSearch() {
           {current.type === 'action' ? (
             <>
               <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: isDark ? '#b37feb' : '#722ed1' }} />
-              LỆNH & PHÍM TẮT NHANH
+              {t('globalSearch.commandsSection', { defaultValue: 'LỆNH & PHÍM TẮT NHANH' })}
             </>
           ) : (
             <>
               <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: isDark ? '#73d13d' : '#2f7a22' }} />
-              PHIẾU BẢO HÀNH TÌM THẤY
+              {t('globalSearch.warrantiesSection', { defaultValue: 'PHIẾU BẢO HÀNH TÌM THẤY' })}
             </>
           )}
         </div>
@@ -170,7 +170,7 @@ export default function GlobalSearch() {
       return (
         <div style={{ ...headerStyle, borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid #f0f5eb', marginTop: '6px', paddingTop: '16px' }}>
           <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: isDark ? '#73d13d' : '#2f7a22' }} />
-          PHIẾU BẢO HÀNH TÌM THẤY
+          {t('globalSearch.warrantiesSection', { defaultValue: 'PHIẾU BẢO HÀNH TÌM THẤY' })}
         </div>
       );
     }
@@ -236,7 +236,7 @@ export default function GlobalSearch() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: isDark ? '#a8b5a0' : '#74806d' }}>
           <SearchOutlined style={{ fontSize: 14, color: isDark ? '#73d13d' : '#2f7a22' }} />
           <span style={{ fontSize: 13, color: isDark ? '#a8b5a0' : '#74806d', fontWeight: 500 }}>
-            Tìm kiếm...
+            {t('action.timKiem', { defaultValue: 'Tìm kiếm...' })}
           </span>
         </div>
         <span
@@ -328,7 +328,7 @@ export default function GlobalSearch() {
                 {t('search.noResults')}
               </div>
               <div style={{ fontSize: '12px', color: isDark ? '#8a9984' : '#8c9485', marginTop: '4px' }}>
-                Thử tìm kiếm theo Tên, Số điện thoại, Mã phiếu hoặc Số seri khác
+                {t('globalSearch.emptyHint', { defaultValue: 'Thử tìm kiếm theo Tên, Số điện thoại, Mã phiếu hoặc Số seri khác' })}
               </div>
             </div>
           )}
