@@ -4,6 +4,7 @@ import { ConfigProvider, App as AntdApp, Result } from 'antd';
 import { ConfigProvider as MobileConfigProvider } from 'antd-mobile';
 import viVN from 'antd/locale/vi_VN';
 import viVNMob from 'antd-mobile/es/locales/vi-VN';
+import { useTranslation } from 'react-i18next';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { useTheme } from './hooks/useTheme';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
