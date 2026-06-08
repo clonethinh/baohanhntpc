@@ -79,13 +79,13 @@ export default function AppHeader({ onHamburger }) {
       {
         key: 'password',
         icon: <LockOutlined />,
-        label: 'Đổi mật khẩu',
+        label: t('ui:adminStaff.changePassword'),
         onClick: () => setPasswordOpen(true),
       },
       {
         key: 'logout',
         icon: <LogoutOutlined />,
-        label: 'Đăng xuất',
+        label: t('ui:button.dangXuat', { defaultValue: 'Đăng xuất' }),
         onClick: logout,
       },
     ],

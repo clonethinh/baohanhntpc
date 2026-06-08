@@ -438,7 +438,7 @@ export default function CreateWarranty() {
             <Col span={24}>
               <Form.Item label={t('field.ngayHenTra')} validateStatus={errors.ngayHenTra ? 'error' : ''} help={errors.ngayHenTra?.message}>
                 <Controller name="ngayHenTra" control={control} render={({ field }) => (
-                  <DatePicker allowClear placeholder="Chọn thời điểm" {...field} style={{ width: '100%' }} format="DD-MM-YYYY" value={field.value ? dayjs(field.value) : null} onChange={d => field.onChange(d ? d.format('YYYY-MM-DD') : '')} />
+                  <DatePicker allowClear placeholder={t('createWarranty.chonThoiDiem')} {...field} style={{ width: '100%' }} format="DD-MM-YYYY" value={field.value ? dayjs(field.value) : null} onChange={d => field.onChange(d ? d.format('YYYY-MM-DD') : '')} />
                 )} />
               </Form.Item>
             </Col>

@@ -28,7 +28,7 @@ export default function ChangePasswordModal({ open, onClose }) {
   return (
     <Modal
       open={open}
-      title="Đổi mật khẩu"
+      title={t('adminStaff.changePassword')}
       onCancel={() => {
         form.resetFields();
         onClose?.();

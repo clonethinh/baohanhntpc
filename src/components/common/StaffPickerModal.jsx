@@ -55,7 +55,7 @@ export default function StaffPickerModal({
       centered
     >
       <Typography.Paragraph type="secondary" style={{ marginTop: -4 }}>
-        Nhập mã nhân viên và mật khẩu để tiếp tục.
+        {t('staffPicker.subtitle', { defaultValue: 'Nhập mã nhân viên và mật khẩu để tiếp tục.' })}
       </Typography.Paragraph>
       <Form form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item

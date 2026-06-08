@@ -31,9 +31,9 @@ const STATUS_LABELS = {
   da_huy: 'Đã hủy',
 };
 
-function formatStatus(status) {
+function formatStatus(t, status) {
   const key = String(status || '').trim();
-  return STATUS_LABELS[key] || key.replace(/_/g, ' ');
+  return t(`statusLabel.${key}`, { defaultValue: key.replace(/_/g, ' ') });
 }
 
 function normalizeStatusKey(status) {
@@ -107,7 +107,7 @@ export default function CustomerPortal() {
         if (!items.length) {
           setPhoneMatches([]);
           setPhoneQuery('');
-          setError('Không tìm thấy chứng từ theo số điện thoại này');
+          setError(t('customerPortal.notFoundByPhone'));
           return;
         }
 
@@ -122,7 +122,7 @@ export default function CustomerPortal() {
 
         setPhoneMatches(sorted);
         setPhoneQuery(String(res.data?.data?.phone || raw));
-        setError(`Tìm thấy ${sorted.length} chứng từ theo SĐT. CT mới nhất: ${newest.soChungTu}. Chọn bên dưới để xem chi tiết.`);
+        setError(t('customerPortal.foundByPhone', { count: sorted.length, soChungTu: newest.soChungTu }));
         return;
       }
 
@@ -145,7 +145,7 @@ export default function CustomerPortal() {
         {/* Mini progress bar gợi ý hành trình bảo hành */}
         <div style={{ marginTop: 14 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 11, opacity: 0.75 }}>
-            <span>Nhận hàng</span><span>Xử lý</span><span>Hoàn trả</span>
+            <span>{t('customerPortal.stepReceive', { defaultValue: 'Nhận hàng' })}</span><span>{t('customerPortal.stepProcess', { defaultValue: 'Xử lý' })}</span><span>{t('customerPortal.stepReturn', { defaultValue: 'Hoàn trả' })}</span>
           </div>
           <ProgressBar percent={40} style={{ '--fill-color': '#1677ff', '--track-color': 'rgba(22,119,255,0.15)', '--track-width': '5px' }} />
         </div>
@@ -154,7 +154,7 @@ export default function CustomerPortal() {
       {/* Search card */}
       <MobileCard className="ntpc-mobile-card ntpc-glass-card" style={{ marginBottom: 12 }}>
         <MobileSpace direction="vertical" block style={{ '--gap': '12px' }}>
-          <div style={{ fontWeight: 800, fontSize: 15, color: isDark ? '#fff' : '#26361f' }}>Tra cứu bảo hành</div>
+          <div style={{ fontWeight: 800, fontSize: 15, color: isDark ? '#fff' : '#26361f' }}>{t('customerPortal.searchTitle', { defaultValue: 'Tra cứu bảo hành' })}</div>
           <div className="ntpc-searchbar-container" style={{ padding: '2px 4px', borderRadius: 12 }}>
             <SearchBar
               placeholder={t('tracking.legacyPlaceholder')}
@@ -189,7 +189,7 @@ export default function CustomerPortal() {
                   <MobileSpace direction="vertical" block style={{ '--gap': '4px' }}>
                     <span style={{ fontSize: 13, opacity: 0.8 }}>{normalizeProductName(item.tenHang)}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <MobileTag color={statusColor(item.trangThai)} fill="outline">{formatStatus(item.trangThai)}</MobileTag>
+                      <MobileTag color={statusColor(item.trangThai)} fill="outline">{formatStatus(t, item.trangThai)}</MobileTag>
                       {item.ngayNhan && <span style={{ fontSize: 11, opacity: 0.6 }}>{item.ngayNhan}</span>}
                     </div>
                   </MobileSpace>
@@ -279,7 +279,7 @@ export default function CustomerPortal() {
         <div style={{ padding: '8px 0 0' }}>
           <a href="https://nguyentanpc.com/pages/dieu-kien-bao-hanh" target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
             <MobileButton block fill="outline" style={{ borderRadius: 10, fontSize: 13, pointerEvents: 'none' }}>
-              Xem toàn bộ chính sách →
+              {t('customerPortal.viewFullPolicy', { defaultValue: 'Xem toàn bộ chính sách →' })}
             </MobileButton>
           </a>
         </div>
@@ -319,7 +319,7 @@ export default function CustomerPortal() {
               >
                 <Text strong>{item.soChungTu}</Text>
                 <Text type="secondary" ellipsis>{normalizeProductName(item.tenHang)}</Text>
-                <Tag color={statusColor(item.trangThai)} style={{ width: 'fit-content', marginInlineEnd: 0 }}>{formatStatus(item.trangThai)}</Tag>
+                <Tag color={statusColor(item.trangThai)} style={{ width: 'fit-content', marginInlineEnd: 0 }}>{formatStatus(t, item.trangThai)}</Tag>
                 <Text type="secondary">{item.ngayNhan || ''}</Text>
               </button>
             ))}
@@ -332,7 +332,7 @@ export default function CustomerPortal() {
         <Space wrap style={{ marginTop: 8 }}>
           {recentTracks.length ? recentTracks.map((track, i) => (
             <Tag key={i} style={{ cursor: 'pointer' }} onClick={() => navigate(`/tra-cuu/${track}`)}>{track}</Tag>
-          )) : <Text type="secondary">Chưa có lịch sử</Text>}
+          )) : <Text type="secondary">{t('customerPortal.noHistory', { defaultValue: 'Chưa có lịch sử' })}</Text>}
         </Space>
       </Card>
 
