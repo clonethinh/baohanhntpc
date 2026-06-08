@@ -297,7 +297,19 @@
     "historyTitle": "Lịch sử bảo hành ({{count}})",
     "editTitle": "Sửa thông tin khách hàng",
     "customerName": "Tên khách hàng",
-    "customerNameRequired": "Nhập tên khách hàng"
+    "customerNameRequired": "Nhập tên khách hàng",
+    "deletedDetached": "Đã xóa khách hàng khỏi {{count}} CT. CT đã chuyển vào Chưa có khách hàng.",
+    "deleteError": "Không thể xóa khách hàng",
+    "assignSuccess": "Đã gán khách hàng cho CT",
+    "assignError": "Không thể gán khách hàng",
+    "deleteTitle": "Xóa khách hàng?",
+    "deleteDesc": "Các CT sẽ không bị xóa và sẽ chuyển vào Chưa có khách hàng.",
+    "deleteConfirm": "Xóa khách hàng này khỏi danh sách? Các CT sẽ không bị xóa và sẽ chuyển vào Chưa có khách hàng.",
+    "chuaCoKhach": "Chưa có khách hàng",
+    "chuaCoKhachCount": "Chưa có khách hàng ({{count}})",
+    "khongCoCTChuaCoKhach": "Không có CT chưa có khách hàng",
+    "ganKhachChoCT": "Gán khách hàng cho CT",
+    "deleteCustomer": "Xóa khách hàng"
   },
   "adminWarrantyList": {
     "loadError": "Không thể tải danh sách phiếu.",
@@ -339,7 +351,12 @@
     "selectedTickets": "{{count}} phiếu đã chọn",
     "bulkDoneConfirm": "Đánh dấu {{count}} phiếu đã trả?",
     "bulkDoneButton": "Đánh dấu đã trả",
-    "clearSelection": "Hủy chọn"
+    "clearSelection": "Hủy chọn",
+    "selectAll": "Chọn tất cả",
+    "deselectAll": "Bỏ chọn hết"
+  },
+  "importExport": {
+    "importResult": "Kết quả import"
   },
   "adminStaff": {
     "addSuccess": "Đã thêm nhân viên.",
@@ -359,6 +376,11 @@
     "minPassword": "Tối thiểu 8 ký tự",
     "changePassword": "Đổi mật khẩu",
     "addStaff": "Thêm nhân viên",
+    "resetPasswordSuccess": "Đã đặt lại mật khẩu nhân viên",
+    "resetPasswordError": "Không đặt lại được mật khẩu",
+    "resetPasswordTitle": "Đặt lại mật khẩu {{maNV}}",
+    "password": "Mật khẩu",
+    "passwordRequired": "Nhập mật khẩu nhân viên",
     "staffCodeRequired": "Nhập tên đăng nhập",
     "staffCodePlaceholder": "Tên đăng nhập (vd: nv004)",
     "staffNameRequired": "Nhập tên NV",
@@ -516,6 +538,9 @@
     "nameRequired": "Nhập tên nhà cung cấp",
     "receivedSuccess": "Đã nhận từ nhà cung cấp và cập nhật tiến trình",
     "receiveError": "Không thể cập nhật nhận từ NCC",
+    "noteUpdateSuccess": "Đã cập nhật ghi chú",
+    "noteUpdateError": "Không thể cập nhật ghi chú",
+    "editNote": "Sửa ghi chú",
     "trackingTitle": "Theo dõi chứng từ · {{code}} {{name}}",
     "event": "Sự kiện",
     "sentToSupplier": "Đã gửi NCC",

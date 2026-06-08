@@ -187,7 +187,7 @@ export default function ImportExport() {
           </MobileCard>
 
           {importResult && (
-            <MobileCard title="Kết quả import">
+            <MobileCard title={t('importExport.importResult')}>
               <div style={{ display: 'grid', gap: 8 }}>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   <MobileTag color="success">Đã thêm: {importResult.inserted}</MobileTag>

@@ -159,7 +159,7 @@ export default function CustomerInfo() {
     try {
       const res = await customerService.deleteCustomer(row.key);
       const count = res.data?.data?.detached || 0;
-      message.success(`Đã xóa khách hàng khỏi ${count} CT. CT đã chuyển vào Chưa có khách hàng.`);
+      message.success(t('adminCustomer.deletedDetached', { count }));
       if (selectedCustomerKey === row.key) {
         setSelectedCustomerKey('');
         setCustomerInfo(null);
@@ -168,7 +168,7 @@ export default function CustomerInfo() {
       }
       await refreshCustomerData();
     } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Không thể xóa khách hàng');
+      message.error(err?.response?.data?.error?.message || t('adminCustomer.deleteError'));
     }
   };
 
@@ -183,13 +183,13 @@ export default function CustomerInfo() {
     setAssigningCustomer(true);
     try {
       await warrantyService.transferCustomer(assigningWarrantyId, customer.key);
-      message.success('Đã gán khách hàng cho CT');
+      message.success(t('adminCustomer.assignSuccess'));
       setCustomerPickerOpen(false);
       setAssigningWarrantyId('');
       await refreshCustomerData();
       if (search) lookupCustomer(search);
     } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Không thể gán khách hàng');
+      message.error(err?.response?.data?.error?.message || t('adminCustomer.assignError'));
     } finally {
       setAssigningCustomer(false);
     }
@@ -352,12 +352,12 @@ export default function CustomerInfo() {
                               size="mini"
                               color="danger"
                               fill="none"
-                              aria-label="Xóa khách hàng"
+                              aria-label={t('adminCustomer.deleteCustomer')}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 Dialog.confirm({
-                                  content: 'Xóa khách hàng này khỏi danh sách? Các CT sẽ không bị xóa và sẽ chuyển vào Chưa có khách hàng.',
-                                  confirmText: 'Xóa',
+                                  content: t('adminCustomer.deleteConfirm'),
+                                  confirmText: t('button.xoa'),
                                   cancelText: 'Hủy',
                                   onConfirm: () => handleDeleteCustomer(row),
                                 });
@@ -405,11 +405,11 @@ export default function CustomerInfo() {
           )}
         </MobileCard>
 
-        <MobileCard className="admin-mobile-card customer-mobile-section" title={`Chưa có khách hàng (${unassignedList.length})`} style={cardStyle}>
+        <MobileCard className="admin-mobile-card customer-mobile-section" title={t('adminCustomer.chuaCoKhachCount', { count: unassignedList.length })} style={cardStyle}>
           {unassignedLoading ? (
             <div className="admin-mobile-empty">{t('common.dangTai')}...</div>
           ) : unassignedList.length === 0 ? (
-            <div className="admin-mobile-empty">Không có CT chưa có khách hàng</div>
+            <div className="admin-mobile-empty">{t('adminCustomer.khongCoCTChuaCoKhach')}</div>
           ) : (
             <div style={{ display: 'grid', gap: 8 }}>
               {unassignedList.map(item => (
@@ -511,14 +511,14 @@ export default function CustomerInfo() {
                         <Space size={6}>
                           <Button size="small" shape="circle" icon={<EditOutlined />} aria-label={t('adminCustomer.editAria')} onClick={(e) => { e.stopPropagation(); openEditCustomer(row); }} />
                           <Popconfirm
-                            title="Xóa khách hàng?"
-                            description="Các CT sẽ không bị xóa và sẽ chuyển vào Chưa có khách hàng."
-                            okText="Xóa"
-                            cancelText="Hủy"
+                            title={t('adminCustomer.deleteTitle')}
+                            description={t('adminCustomer.deleteDesc')}
+                            okText={t('button.xoa')}
+                            cancelText={t('button.huy')}
                             okButtonProps={{ danger: true }}
                             onConfirm={() => handleDeleteCustomer(row)}
                           >
-                            <Button size="small" shape="circle" danger icon={<DeleteOutlined />} aria-label="Xóa khách hàng" onClick={(e) => e.stopPropagation()} />
+                            <Button size="small" shape="circle" danger icon={<DeleteOutlined />} aria-label={t('adminCustomer.deleteCustomer')} onClick={(e) => e.stopPropagation()} />
                           </Popconfirm>
                         </Space>
                       </div>
@@ -540,7 +540,7 @@ export default function CustomerInfo() {
 
         <Card
           className="customer-page-card customer-unassigned-card"
-          title="Chưa có khách hàng"
+          title={t('adminCustomer.chuaCoKhach')}
           style={cardStyle}
           extra={<Tag color={unassignedList.length ? 'orange' : 'default'}>{t('adminCustomer.ticketCount', { count: unassignedList.length })}</Tag>}
           styles={{ body: { padding: 8 } }}
@@ -552,7 +552,7 @@ export default function CustomerInfo() {
             size="small"
             loading={unassignedLoading}
             pagination={{ pageSize: 5, showTotal: total => t('adminCustomer.ticketCount', { count: total }) }}
-            locale={{ emptyText: 'Không có CT chưa có khách hàng' }}
+            locale={{ emptyText: t('adminCustomer.khongCoCTChuaCoKhach') }}
           />
         </Card>
 
@@ -571,7 +571,7 @@ export default function CustomerInfo() {
 
       <CustomerPickerModal
         open={customerPickerOpen}
-        title="Gán khách hàng cho CT"
+        title={t('adminCustomer.ganKhachChoCT')}
         customers={customerList}
         loading={listLoading}
         onCancel={() => {
