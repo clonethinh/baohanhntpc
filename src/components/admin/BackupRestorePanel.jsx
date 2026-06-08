@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, App, Button, Card, Col, Descriptions, Input, Row, Space, Table, Tag, Tooltip, Upload } from 'antd';
 import { CloudDownloadOutlined, DeleteOutlined, EyeOutlined, FileImageOutlined, PushpinOutlined, ReloadOutlined, RollbackOutlined, SafetyOutlined, UploadOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { backupService } from '../../services/backupService';
 import { getStatusBadgeColor } from '../../constants/badgeConfig';
 
@@ -24,6 +25,7 @@ const renderWarrantyStatus = (status) => {
 };
 
 export default function BackupRestorePanel() {
+  const { t } = useTranslation();
   const { message, modal } = App.useApp();
   const [loading, setLoading] = useState(false);
   const [backups, setBackups] = useState([]);
@@ -38,7 +40,7 @@ export default function BackupRestorePanel() {
       setBackups(list.data.data);
       setHistory(hist.data.data);
     } catch (err) {
-      message.error(err.response?.data?.message || 'Không tải được dữ liệu backup');
+      message.error(err.response?.data?.message || t('backup.loadError'));
     } finally {
       setLoading(false);
     }
@@ -50,10 +52,10 @@ export default function BackupRestorePanel() {
     setLoading(true);
     try {
       await backupService.create();
-      message.success('Đã tạo backup thủ công');
+      message.success(t('backup.createSuccess'));
       await loadAll();
     } catch (err) {
-      message.error(err.response?.data?.message || 'Tạo backup thất bại');
+      message.error(err.response?.data?.message || t('backup.createError'));
     } finally {
       setLoading(false);
     }
@@ -62,19 +64,19 @@ export default function BackupRestorePanel() {
   const confirmRestore = (relativePath) => {
     let value = '';
     modal.confirm({
-      title: 'Khôi phục dữ liệu?',
+      title: t('backup.restoreTitle'),
       content: <Space direction="vertical" style={{ width: '100%' }}>
-        <Alert type="warning" showIcon message="Dữ liệu hiện tại sẽ được sao lưu vào restore-safety trước khi thay thế." />
-        <div>Nhập <b>RESTORE</b> để xác nhận:</div>
+        <Alert type="warning" showIcon message={t('backup.restoreWarning')} />
+        <div>{t('backup.enterRestorePrefix')} <b>RESTORE</b> {t('backup.enterRestoreSuffix')}</div>
         <Input onChange={e => { value = e.target.value; }} placeholder="RESTORE" />
       </Space>,
-      okText: 'Khôi phục',
+      okText: t('backup.restoreOk'),
       okType: 'danger',
-      cancelText: 'Hủy',
+      cancelText: t('button.huy'),
       onOk: async () => {
-        if (value !== 'RESTORE') throw new Error('Cần nhập RESTORE');
+        if (value !== 'RESTORE') throw new Error(t('backup.needRestore'));
         await backupService.restore(relativePath);
-        message.success('Khôi phục thành công');
+        message.success(t('backup.restoreSuccess'));
         await loadAll();
       },
     });
@@ -83,22 +85,22 @@ export default function BackupRestorePanel() {
   const uploadRestore = async (file) => {
     let value = '';
     modal.confirm({
-      title: 'Upload và khôi phục dữ liệu?',
+      title: t('backup.uploadRestoreTitle'),
       content: <Space direction="vertical" style={{ width: '100%' }}>
-        <Alert type="warning" showIcon message="File JSON sẽ thay thế dữ liệu hiện tại. Hệ thống tự tạo restore-safety trước." />
-        <div>File: <b>{file.name}</b></div>
-        <div>Nhập <b>RESTORE</b> để xác nhận:</div>
+        <Alert type="warning" showIcon message={t('backup.uploadRestoreWarning')} />
+        <div>{t('backup.fileLabel')} <b>{file.name}</b></div>
+        <div>{t('backup.enterRestorePrefix')} <b>RESTORE</b> {t('backup.enterRestoreSuffix')}</div>
         <Input onChange={e => { value = e.target.value; }} placeholder="RESTORE" />
       </Space>,
-      okText: 'Upload và khôi phục',
+      okText: t('backup.uploadRestoreOk'),
       okType: 'danger',
-      cancelText: 'Hủy',
+      cancelText: t('button.huy'),
       onOk: async () => {
-        if (value !== 'RESTORE') throw new Error('Cần nhập RESTORE');
+        if (value !== 'RESTORE') throw new Error(t('backup.needRestore'));
         const text = await file.text();
         const data = JSON.parse(text);
         await backupService.uploadRestore(file.name, data);
-        message.success('Upload và khôi phục thành công');
+        message.success(t('backup.uploadRestoreSuccess'));
         await loadAll();
       },
     });
@@ -108,20 +110,20 @@ export default function BackupRestorePanel() {
   const uploadAssets = async (file) => {
     let value = '';
     modal.confirm({
-      title: 'Upload gói ảnh backup?',
+      title: t('backup.uploadAssetsTitle'),
       content: <Space direction="vertical" style={{ width: '100%' }}>
-        <Alert type="warning" showIcon message="Gói ảnh chỉ khôi phục file trong /uploads/warranties, không thay thế dữ liệu phiếu." />
-        <div>File: <b>{file.name}</b></div>
-        <div>Nhập <b>RESTORE</b> để xác nhận:</div>
+        <Alert type="warning" showIcon message={t('backup.uploadAssetsWarning')} />
+        <div>{t('backup.fileLabel')} <b>{file.name}</b></div>
+        <div>{t('backup.enterRestorePrefix')} <b>RESTORE</b> {t('backup.enterRestoreSuffix')}</div>
         <Input onChange={e => { value = e.target.value; }} placeholder="RESTORE" />
       </Space>,
-      okText: 'Upload gói ảnh',
+      okText: t('backup.uploadAssetsOk'),
       okType: 'danger',
-      cancelText: 'Hủy',
+      cancelText: t('button.huy'),
       onOk: async () => {
-        if (value !== 'RESTORE') throw new Error('Cần nhập RESTORE');
+        if (value !== 'RESTORE') throw new Error(t('backup.needRestore'));
         await backupService.uploadAssets(file.name, file);
-        message.success('Đã khôi phục gói ảnh');
+        message.success(t('backup.uploadAssetsSuccess'));
         await loadAll();
       },
     });
@@ -130,14 +132,14 @@ export default function BackupRestorePanel() {
 
   const deleteBackup = async (relativePath) => {
     modal.confirm({
-      title: 'Xóa backup?',
+      title: t('backup.deleteTitle'),
       content: relativePath,
-      okText: 'Xóa',
+      okText: t('button.xoa'),
       okType: 'danger',
-      cancelText: 'Hủy',
+      cancelText: t('button.huy'),
       onOk: async () => {
         await backupService.delete(relativePath);
-        message.success('Đã xóa backup');
+        message.success(t('backup.deleteSuccess'));
         await loadAll();
       },
     });
@@ -148,45 +150,45 @@ export default function BackupRestorePanel() {
       const res = await backupService.view(relativePath, 20);
       const data = res.data.data;
       modal.info({
-        title: `Xem backup: ${relativePath}`,
+        title: t('backup.viewTitle', { path: relativePath }),
         width: 900,
         content: <Space direction="vertical" style={{ width: '100%' }}>
           <Descriptions size="small" bordered column={2}>
-            <Descriptions.Item label="Phiếu bảo hành">{data.summary.warranties}</Descriptions.Item>
-            <Descriptions.Item label="Khách hàng">{data.summary.customers}</Descriptions.Item>
-            <Descriptions.Item label="Nhà cung cấp">{data.summary.suppliers}</Descriptions.Item>
-            <Descriptions.Item label="Nhân viên">{data.summary.nhanVien}</Descriptions.Item>
-            <Descriptions.Item label="Gói ảnh">{data.summary.assets?.exists ? `${data.summary.assets.count ?? '-'} file - ${fmtSize(data.summary.assets.size)}` : 'Không có'}</Descriptions.Item>
+            <Descriptions.Item label={t('backup.warranties')}>{data.summary.warranties}</Descriptions.Item>
+            <Descriptions.Item label={t('field.khachHang')}>{data.summary.customers}</Descriptions.Item>
+            <Descriptions.Item label={t('field.nhaCungCap')}>{data.summary.suppliers}</Descriptions.Item>
+            <Descriptions.Item label={t('field.nhanVien')}>{data.summary.nhanVien}</Descriptions.Item>
+            <Descriptions.Item label={t('backup.assets')}>{data.summary.assets?.exists ? `${data.summary.assets.count ?? '-'} file - ${fmtSize(data.summary.assets.size)}` : t('backup.none')}</Descriptions.Item>
           </Descriptions>
-          <b>Phiếu bảo hành mới nhất</b>
+          <b>{t('backup.latestWarranties')}</b>
           <Table size="small" rowKey={(r) => r.id || r.soChungTu || `${r.khachHang || ''}-${r.soSeri || ''}`} dataSource={data.preview.warranties} pagination={false} scroll={{ x: 800, y: 220 }} columns={[
-            { title: 'Số chứng từ', dataIndex: 'soChungTu', width: 140 },
-            { title: 'Khách hàng', dataIndex: 'khachHang', width: 160 },
-            { title: 'Tên hàng', dataIndex: 'tenHang', width: 220, ellipsis: true },
-            { title: 'Serial', dataIndex: 'soSeri', width: 140 },
-            { title: 'Trạng thái', dataIndex: 'trangThai', width: 130, render: renderWarrantyStatus },
+            { title: t('field.soChungTu'), dataIndex: 'soChungTu', width: 140 },
+            { title: t('field.khachHang'), dataIndex: 'khachHang', width: 160 },
+            { title: t('field.tenHang'), dataIndex: 'tenHang', width: 220, ellipsis: true },
+            { title: t('field.serial'), dataIndex: 'soSeri', width: 140 },
+            { title: t('field.trangThai'), dataIndex: 'trangThai', width: 130, render: renderWarrantyStatus },
           ]} />
-          <b>Khách hàng</b>
+          <b>{t('field.khachHang')}</b>
           <Table size="small" rowKey={(r) => r.key || r.id || r.maKhachHang || `${r.khachHang || ''}-${r.soDienThoai || ''}`} dataSource={data.preview.customers} pagination={false} scroll={{ x: 780, y: 180 }} columns={[
-            { title: 'Mã KH', dataIndex: 'maKhachHang', width: 100 },
-            { title: 'Khách hàng', dataIndex: 'khachHang', width: 180 },
-            { title: 'SĐT', dataIndex: 'soDienThoai', width: 140 },
-            { title: 'Địa chỉ', dataIndex: 'diaChi', width: 220, ellipsis: true },
-            { title: 'Số phiếu', dataIndex: 'totalWarranties', width: 100 },
+            { title: t('backup.maKH'), dataIndex: 'maKhachHang', width: 100 },
+            { title: t('field.khachHang'), dataIndex: 'khachHang', width: 180 },
+            { title: t('field.sdt'), dataIndex: 'soDienThoai', width: 140 },
+            { title: t('field.diaChi'), dataIndex: 'diaChi', width: 220, ellipsis: true },
+            { title: t('backup.soPhieu'), dataIndex: 'totalWarranties', width: 100 },
           ]} />
-          <b>Nhà cung cấp</b>
+          <b>{t('field.nhaCungCap')}</b>
           <Table size="small" rowKey={(r) => r.id || r.code || r.name} dataSource={data.preview.suppliers} pagination={false} scroll={{ x: 700, y: 180 }} columns={[
-            { title: 'Mã', dataIndex: 'code', width: 120 },
-            { title: 'Tên NCC', dataIndex: 'name', width: 220 },
-            { title: 'SĐT', dataIndex: 'phone', width: 140 },
-            { title: 'Trạng thái', dataIndex: 'isActive', width: 110, render: v => v === false ? <Tag color="red">Tắt</Tag> : <Tag color="green">Hoạt động</Tag> },
+            { title: t('backup.ma'), dataIndex: 'code', width: 120 },
+            { title: t('backup.tenNCC'), dataIndex: 'name', width: 220 },
+            { title: t('field.sdt'), dataIndex: 'phone', width: 140 },
+            { title: t('field.trangThai'), dataIndex: 'isActive', width: 110, render: v => v === false ? <Tag color="red">{t('backup.tat')}</Tag> : <Tag color="green">{t('backup.hoatDong')}</Tag> },
           ]} />
-          <b>Nhân viên</b>
+          <b>{t('field.nhanVien')}</b>
           <Table size="small" rowKey={(r) => r.id || r.maNV || r.tenNV} dataSource={data.preview.nhanVien} pagination={false} scroll={{ x: 500, y: 180 }} columns={[
-            { title: 'Mã NV', dataIndex: 'maNV', width: 120 },
-            { title: 'Tên NV', dataIndex: 'tenNV', width: 220 },
-            { title: 'Vai trò', dataIndex: 'role', width: 120 },
-            { title: 'Hoạt động', dataIndex: 'active', width: 100, render: v => v === false ? 'Không' : 'Có' },
+            { title: t('backup.maNV'), dataIndex: 'maNV', width: 120 },
+            { title: t('backup.tenNV'), dataIndex: 'tenNV', width: 220 },
+            { title: t('backup.vaiTro'), dataIndex: 'role', width: 120 },
+            { title: t('backup.hoatDongCol'), dataIndex: 'active', width: 100, render: v => v === false ? t('backup.khong') : t('backup.co') },
           ]} />
         </Space>,
       });
@@ -199,78 +201,78 @@ export default function BackupRestorePanel() {
     let pinned = !!row.pinned;
     let note = row.note || '';
     modal.confirm({
-      title: 'Giữ lại / Ghi chú backup',
+      title: t('backup.metadataTitle'),
       content: <Space direction="vertical" style={{ width: '100%' }}>
-        <Button icon={<PushpinOutlined />} onClick={() => { pinned = !pinned; message.info(pinned ? 'Sẽ giữ lại backup' : 'Sẽ bỏ giữ lại'); }}>
-          Bấm để đổi trạng thái giữ lại hiện tại: {row.pinned ? 'Đang giữ lại' : 'Chưa giữ'}
+        <Button icon={<PushpinOutlined />} onClick={() => { pinned = !pinned; message.info(pinned ? t('backup.willPin') : t('backup.willUnpin')); }}>
+          {t('backup.togglePinPrefix')} {row.pinned ? t('backup.pinned') : t('backup.notPinned')}
         </Button>
-        <Input.TextArea rows={3} defaultValue={note} placeholder="Ghi chú" onChange={e => { note = e.target.value; }} />
+        <Input.TextArea rows={3} defaultValue={note} placeholder={t('field.ghiChu')} onChange={e => { note = e.target.value; }} />
       </Space>,
-      okText: 'Lưu',
-      cancelText: 'Hủy',
+      okText: t('button.luu'),
+      cancelText: t('button.huy'),
       onOk: async () => {
         await backupService.metadata(row.relativePath, pinned, note);
-        message.success('Đã lưu metadata backup');
+        message.success(t('backup.metadataSuccess'));
         await loadAll();
       },
     });
   };
 
   const backupColumns = [
-    { title: 'Loại', dataIndex: 'type', width: 120, render: v => <Tag color={v === 'manual' ? 'blue' : v === 'restore-safety' ? 'red' : v === 'monthly' ? 'purple' : 'green'}>{v}</Tag> },
-    { title: 'File', dataIndex: 'filename', ellipsis: true, render: (_, r) => <Space direction="vertical" size={0}><span>{r.filename}</span>{r.pinned && <Tag color="gold">Giữ lại</Tag>}{r.note && <small>{r.note}</small>}</Space> },
-    { title: 'Thời gian', dataIndex: 'createdAt', width: 170, render: fmtTime },
-    { title: 'Dung lượng', dataIndex: 'size', width: 110, render: fmtSize },
-    { title: 'Ảnh', width: 130, render: (_, r) => r.assets?.exists ? <Tag color="cyan">{r.assets.count ?? '?'} file · {fmtSize(r.assets.size)}</Tag> : <Tag>Không</Tag> },
-    { title: 'SHA256', dataIndex: 'sha256', ellipsis: true, render: v => v ? <span title={v}>{v.slice(0, 12)}...</span> : '-' },
-    { title: 'Hành động', width: 230, render: (_, r) => <Space size={6}>
-      <Tooltip title="Xem backup"><Button size="small" shape="circle" icon={<EyeOutlined />} onClick={() => viewBackup(r.relativePath)} /></Tooltip>
-      <Tooltip title="Tải backup"><Button size="small" shape="circle" href={backupService.downloadUrl(r.relativePath)} icon={<CloudDownloadOutlined />} /></Tooltip>
-      {r.assets?.exists && <Tooltip title="Tải gói ảnh"><Button size="small" shape="circle" href={backupService.downloadAssetsUrl(r.relativePath)} icon={<FileImageOutlined />} /></Tooltip>}
-      <Tooltip title="Giữ lại / Ghi chú"><Button size="small" shape="circle" icon={<PushpinOutlined />} onClick={() => editMetadata(r)} /></Tooltip>
-      <Tooltip title="Khôi phục backup"><Button size="small" shape="circle" danger icon={<RollbackOutlined />} onClick={() => confirmRestore(r.relativePath)} /></Tooltip>
-      {r.type !== 'restore-safety' && !r.pinned && <Tooltip title="Xóa backup"><Button size="small" shape="circle" danger icon={<DeleteOutlined />} onClick={() => deleteBackup(r.relativePath)} /></Tooltip>}
+    { title: t('backup.colType'), dataIndex: 'type', width: 120, render: v => <Tag color={v === 'manual' ? 'blue' : v === 'restore-safety' ? 'red' : v === 'monthly' ? 'purple' : 'green'}>{v}</Tag> },
+    { title: t('backup.colFile'), dataIndex: 'filename', ellipsis: true, render: (_, r) => <Space direction="vertical" size={0}><span>{r.filename}</span>{r.pinned && <Tag color="gold">{t('backup.pinnedTag')}</Tag>}{r.note && <small>{r.note}</small>}</Space> },
+    { title: t('backup.colTime'), dataIndex: 'createdAt', width: 170, render: fmtTime },
+    { title: t('backup.colSize'), dataIndex: 'size', width: 110, render: fmtSize },
+    { title: t('backup.colImage'), width: 130, render: (_, r) => r.assets?.exists ? <Tag color="cyan">{r.assets.count ?? '?'} file · {fmtSize(r.assets.size)}</Tag> : <Tag>{t('backup.none')}</Tag> },
+    { title: t('backup.colSha'), dataIndex: 'sha256', ellipsis: true, render: v => v ? <span title={v}>{v.slice(0, 12)}...</span> : '-' },
+    { title: t('backup.colAction'), width: 230, render: (_, r) => <Space size={6}>
+      <Tooltip title={t('backup.viewBackup')}><Button size="small" shape="circle" icon={<EyeOutlined />} onClick={() => viewBackup(r.relativePath)} /></Tooltip>
+      <Tooltip title={t('backup.downloadBackup')}><Button size="small" shape="circle" href={backupService.downloadUrl(r.relativePath)} icon={<CloudDownloadOutlined />} /></Tooltip>
+      {r.assets?.exists && <Tooltip title={t('backup.downloadAssets')}><Button size="small" shape="circle" href={backupService.downloadAssetsUrl(r.relativePath)} icon={<FileImageOutlined />} /></Tooltip>}
+      <Tooltip title={t('backup.pinNote')}><Button size="small" shape="circle" icon={<PushpinOutlined />} onClick={() => editMetadata(r)} /></Tooltip>
+      <Tooltip title={t('backup.restoreBackup')}><Button size="small" shape="circle" danger icon={<RollbackOutlined />} onClick={() => confirmRestore(r.relativePath)} /></Tooltip>
+      {r.type !== 'restore-safety' && !r.pinned && <Tooltip title={t('backup.deleteBackup')}><Button size="small" shape="circle" danger icon={<DeleteOutlined />} onClick={() => deleteBackup(r.relativePath)} /></Tooltip>}
     </Space> },
   ];
 
   const historyColumns = [
-    { title: 'Thời gian', dataIndex: 'createdAt', width: 170, render: fmtTime },
-    { title: 'Hành động', dataIndex: 'action', width: 130 },
-    { title: 'Loại', dataIndex: 'type', width: 110, render: v => v ? <Tag>{v}</Tag> : '-' },
-    { title: 'Trạng thái', dataIndex: 'status', width: 110, render: v => <Tag color={v === 'success' ? 'success' : v === 'failed' ? 'error' : 'warning'}>{v}</Tag> },
-    { title: 'Nguồn/Safety', render: (_, r) => r.sourcePath || r.relativePath || r.safetyBackupPath || r.deletedPath || '-' },
-    { title: 'Thông báo', dataIndex: 'message', ellipsis: true },
+    { title: t('backup.colTime'), dataIndex: 'createdAt', width: 170, render: fmtTime },
+    { title: t('backup.colAction'), dataIndex: 'action', width: 130 },
+    { title: t('backup.colType'), dataIndex: 'type', width: 110, render: v => v ? <Tag>{v}</Tag> : '-' },
+    { title: t('field.trangThai'), dataIndex: 'status', width: 110, render: v => <Tag color={v === 'success' ? 'success' : v === 'failed' ? 'error' : 'warning'}>{v}</Tag> },
+    { title: t('backup.colSource'), render: (_, r) => r.sourcePath || r.relativePath || r.safetyBackupPath || r.deletedPath || '-' },
+    { title: t('backup.colMessage'), dataIndex: 'message', ellipsis: true },
   ];
 
-  return <Card title={<Space><SafetyOutlined /> Sao lưu / Khôi phục dữ liệu</Space>} style={{ marginTop: 16 }}>
+  return <Card title={<Space><SafetyOutlined /> {t('backup.cardTitle')}</Space>} style={{ marginTop: 16 }}>
     <Space direction="vertical" style={{ width: '100%' }} size="middle">
-      <Alert type="info" showIcon message="Backup tự động lưu JSON nhẹ và gói ảnh .assets.tgz riêng. Khi restore backup trên máy khác, restore JSON trước rồi upload gói ảnh nếu cần." />
+      <Alert type="info" showIcon message={t('backup.infoBanner')} />
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
-          <Descriptions bordered size="small" column={1} title="Trạng thái">
+          <Descriptions bordered size="small" column={1} title={t('backup.statusTitle')}>
             <Descriptions.Item label="DB">{status?.dbPath || 'api/db.json'}</Descriptions.Item>
-            <Descriptions.Item label="Dung lượng">{fmtSize(status?.dbSize)}</Descriptions.Item>
-            <Descriptions.Item label="Cập nhật DB">{fmtTime(status?.dbUpdatedAt)}</Descriptions.Item>
-            <Descriptions.Item label="Backup mới nhất">{status?.latestBackup?.relativePath || '-'}</Descriptions.Item>
-            <Descriptions.Item label="Tự động">{status?.scheduler?.enabled ? <Tag color="success">Đang chạy</Tag> : <Tag>Chưa chạy</Tag>}</Descriptions.Item>
+            <Descriptions.Item label={t('backup.colSize')}>{fmtSize(status?.dbSize)}</Descriptions.Item>
+            <Descriptions.Item label={t('backup.dbUpdated')}>{fmtTime(status?.dbUpdatedAt)}</Descriptions.Item>
+            <Descriptions.Item label={t('backup.latestBackup')}>{status?.latestBackup?.relativePath || '-'}</Descriptions.Item>
+            <Descriptions.Item label={t('backup.auto')}>{status?.scheduler?.enabled ? <Tag color="success">{t('backup.running')}</Tag> : <Tag>{t('backup.notRunning')}</Tag>}</Descriptions.Item>
           </Descriptions>
         </Col>
         <Col xs={24} lg={12}>
           <Space wrap>
-            <Button type="primary" icon={<SafetyOutlined />} loading={loading} onClick={createBackup}>Tạo backup ngay</Button>
-            <Button icon={<ReloadOutlined />} loading={loading} onClick={loadAll}>Tải lại</Button>
+            <Button type="primary" icon={<SafetyOutlined />} loading={loading} onClick={createBackup}>{t('backup.createNow')}</Button>
+            <Button icon={<ReloadOutlined />} loading={loading} onClick={loadAll}>{t('button.taiLai')}</Button>
             <Upload accept=".json,application/json" showUploadList={false} beforeUpload={uploadRestore}>
-              <Button danger icon={<UploadOutlined />}>Upload backup để restore</Button>
+              <Button danger icon={<UploadOutlined />}>{t('backup.uploadToRestore')}</Button>
             </Upload>
             <Upload accept=".tgz,.assets.tgz,application/gzip,application/x-gzip" showUploadList={false} beforeUpload={uploadAssets}>
-              <Button danger icon={<FileImageOutlined />}>Upload gói ảnh</Button>
+              <Button danger icon={<FileImageOutlined />}>{t('backup.uploadAssetsBtn')}</Button>
             </Upload>
           </Space>
         </Col>
       </Row>
 
-      <Table title={() => 'Danh sách backup'} rowKey="relativePath" loading={loading} dataSource={backups} columns={backupColumns} size="small" scroll={{ x: 1120, y: 420 }} pagination={{ pageSize: 20, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], showTotal: total => `Tổng ${total} backup` }} />
-      <Table title={() => 'Lịch sử backup/restore'} rowKey="id" loading={loading} dataSource={history} columns={historyColumns} size="small" scroll={{ x: 900 }} pagination={{ pageSize: 10 }} />
+      <Table title={() => t('backup.backupList')} rowKey="relativePath" loading={loading} dataSource={backups} columns={backupColumns} size="small" scroll={{ x: 1120, y: 420 }} pagination={{ pageSize: 20, showSizeChanger: true, pageSizeOptions: [10, 20, 50, 100], showTotal: total => t('backup.totalBackup', { total }) }} />
+      <Table title={() => t('backup.historyList')} rowKey="id" loading={loading} dataSource={history} columns={historyColumns} size="small" scroll={{ x: 900 }} pagination={{ pageSize: 10 }} />
     </Space>
   </Card>;
 }
