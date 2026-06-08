@@ -384,7 +384,7 @@ export default function WarrantyList() {
                   setSelectedRowKeys(data.rows.map(w => w.id));
                 }
               }}>
-                {selectedRowKeys.length === data.rows.length ? 'Bỏ chọn hết' : 'Chọn tất cả'}
+                {selectedRowKeys.length === data.rows.length ? t('adminWarrantyList.deselectAll') : t('adminWarrantyList.selectAll')}
               </MobileButton>
             )}
             <MobileButton size="small" onClick={() => {
@@ -417,7 +417,7 @@ export default function WarrantyList() {
               value={loaiXuLy ? [loaiXuLy] : []}
               onChange={(arr) => setLoaiXuLy(arr[0] || '')}
               options={[
-                { label: 'Tất cả', value: '' },
+                { label: t('common.tatCa'), value: '' },
                 ...LOAI_XU_LY_OPTIONS,
               ]}
             />
@@ -428,7 +428,7 @@ export default function WarrantyList() {
               value={maNhanVien ? [maNhanVien] : []}
               onChange={(arr) => setMaNhanVien(arr[0] || '')}
               options={[
-                { label: 'Tất cả', value: '' },
+                { label: t('common.tatCa'), value: '' },
                 ...staffList.map(nv => ({ label: nv.tenNV, value: nv.maNV })),
               ]}
             />
@@ -519,7 +519,7 @@ export default function WarrantyList() {
         <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200, background: 'var(--ant-color-bg-container)', padding: '12px 16px', boxShadow: '0 -2px 12px rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
           <span style={{ fontWeight: 700, fontSize: 14 }}>Đã chọn {selectedRowKeys.length} phiếu</span>
           <MobileSpace>
-            <MobileButton size="small" color="primary" onClick={() => confirmMobile(`Đánh dấu hoàn thành ${selectedRowKeys.length} phiếu?`, handleBulkTraHang)}>Xong hết</MobileButton>
+            <MobileButton size="small" color="primary" onClick={() => confirmMobile(t('adminWarrantyList.bulkDoneConfirm', { count: selectedRowKeys.length }), handleBulkTraHang)}>Xong hết</MobileButton>
             <MobileButton size="small" onClick={handleExport}><DownloadOutlined /></MobileButton>
             <MobileButton size="small" onClick={() => setSelectedRowKeys([])}>Bỏ chọn</MobileButton>
           </MobileSpace>

@@ -227,13 +227,13 @@ export default function Suppliers() {
     setNoteSaving(true);
     try {
       await warrantyService.updateSupplierLogNote(noteEditTarget.warrantyId, noteEditTarget.logId, { note: noteDraft || '' });
-      message.success('Đã cập nhật ghi chú');
+      message.success(t('adminSuppliers.noteUpdateSuccess'));
       setNoteModalOpen(false);
       setNoteEditTarget(null);
       setNoteDraft('');
       refreshTracking();
     } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Không thể cập nhật ghi chú');
+      message.error(err?.response?.data?.error?.message || t('adminSuppliers.noteUpdateError'));
     } finally {
       setNoteSaving(false);
     }
@@ -261,7 +261,7 @@ export default function Suppliers() {
                 { title: t('adminSuppliers.expectedReturnAt'), dataIndex: 'expectedReturnAt', key: 'expectedReturnAt', width: 140, render: formatDateTime },
                 { title: t('adminSuppliers.returnedAt'), dataIndex: 'returnedAt', key: 'returnedAt', width: 140, render: formatDateTime },
                 { title: t('field.nhanVien'), dataIndex: 'createdBy', key: 'createdBy', width: 160, render: getStaffName },
-                { title: t('field.ghiChu'), dataIndex: 'note', key: 'note', render: (value, historyRecord) => (<div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}><span style={{ whiteSpace: 'normal', wordBreak: 'break-word', flex: 1 }}>{value || '-'}</span><Button type="text" size="small" icon={<FormOutlined />} aria-label="Sửa ghi chú" onClick={() => openEditNote(record, historyRecord)} style={{ flex: '0 0 auto', marginTop: -2 }} /></div>) },
+                { title: t('field.ghiChu'), dataIndex: 'note', key: 'note', render: (value, historyRecord) => (<div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}><span style={{ whiteSpace: 'normal', wordBreak: 'break-word', flex: 1 }}>{value || '-'}</span><Button type="text" size="small" icon={<FormOutlined />} aria-label={t('adminSuppliers.editNote')} onClick={() => openEditNote(record, historyRecord)} style={{ flex: '0 0 auto', marginTop: -2 }} /></div>) },
               ]}
             />
           ),
@@ -512,7 +512,7 @@ export default function Suppliers() {
       </Modal>
 
       <Modal
-        title="Sửa ghi chú"
+        title={t('adminSuppliers.editNote')}
         open={noteModalOpen}
         confirmLoading={noteSaving}
         onOk={submitEditNote}
@@ -528,7 +528,7 @@ export default function Suppliers() {
           rows={4}
           value={noteDraft}
           onChange={(e) => setNoteDraft(e.target.value)}
-          placeholder="Nhập ghi chú"
+          placeholder={t('field.ghiChu')}
         />
       </Modal>
 

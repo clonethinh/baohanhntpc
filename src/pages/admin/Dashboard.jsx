@@ -220,7 +220,7 @@ export default function Dashboard() {
     {
       key: 'due-today',
       label: t('adminDashboard.viewDueToday'),
-      hint: `${insights.dueToday.length} phiếu`,
+      hint: t('adminCustomer.ticketCount', { count: insights.dueToday.length }),
       icon: <ClockCircleOutlined />,
       className: 'warn',
       onClick: () => navigate('/admin/phieu?dueType=today'),
@@ -228,7 +228,7 @@ export default function Dashboard() {
     {
       key: 'overdue',
       label: t('adminDashboard.viewOverdue'),
-      hint: `${insights.overdue.length} phiếu`,
+      hint: t('adminCustomer.ticketCount', { count: insights.overdue.length }),
       icon: <AlertOutlined />,
       className: 'danger',
       onClick: () => navigate('/admin/phieu?dueType=overdue'),
@@ -236,7 +236,7 @@ export default function Dashboard() {
     {
       key: 'priority',
       label: t('adminDashboard.viewPriority'),
-      hint: `${insights.priorityOpen.length} phiếu`,
+      hint: t('adminCustomer.ticketCount', { count: insights.priorityOpen.length }),
       icon: <StarOutlined />,
       className: 'priority',
       onClick: () => navigate('/admin/phieu?uuTien=1'),

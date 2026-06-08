@@ -78,13 +78,13 @@ export default function StaffManagement() {
     try {
       const res = await nhanVienService.resetPassword(resetTarget.maNV, values.newPassword);
       if (res.data.success) {
-        message.success('Đã đặt lại mật khẩu nhân viên');
+        message.success(t('adminStaff.resetPasswordSuccess'));
         resetForm.resetFields();
         setResetTarget(null);
         loadStaff();
       }
     } catch (err) {
-      message.error(err?.response?.data?.error?.message || 'Không đặt lại được mật khẩu');
+      message.error(err?.response?.data?.error?.message || t('adminStaff.resetPasswordError'));
     }
   };
 
@@ -115,8 +115,8 @@ export default function StaffManagement() {
           <Form.Item name="tenNV" rules={[{ required: true, message: t('adminStaff.staffNameRequired') }]}>
             <Input placeholder={t('adminStaff.staffNamePlaceholder')} />
           </Form.Item>
-          <Form.Item name="matKhau" rules={[{ required: true, message: 'Nhập mật khẩu nhân viên' }, { min: 8, message: t('adminStaff.minPassword') }]}>
-            <Input.Password placeholder="Mật khẩu" style={{ width: 160 }} autoComplete="new-password" />
+          <Form.Item name="matKhau" rules={[{ required: true, message: t('adminStaff.passwordRequired') }, { min: 8, message: t('adminStaff.minPassword') }]}>
+            <Input.Password placeholder={t('adminStaff.password')} style={{ width: 160 }} autoComplete="new-password" />
           </Form.Item>
           <Form.Item name="role" initialValue="staff">
             <Input placeholder="Role: staff/admin" style={{ width: 120 }} />
@@ -161,7 +161,7 @@ export default function StaffManagement() {
 
       <Modal
         open={!!resetTarget}
-        title={`Đặt lại mật khẩu ${resetTarget?.maNV || ''}`}
+        title={t('adminStaff.resetPasswordTitle', { maNV: resetTarget?.maNV || '' })}
         onCancel={() => {
           resetForm.resetFields();
           setResetTarget(null);
@@ -170,10 +170,10 @@ export default function StaffManagement() {
         destroyOnClose
       >
         <Form form={resetForm} layout="vertical" onFinish={handleResetPassword}>
-          <Form.Item name="newPassword" label="Mật khẩu mới" rules={[{ required: true, message: t('adminStaff.newPasswordRequired') }, { min: 8, message: t('adminStaff.minPassword') }]}>
+          <Form.Item name="newPassword" label={t('adminStaff.newPassword')} rules={[{ required: true, message: t('adminStaff.newPasswordRequired') }, { min: 8, message: t('adminStaff.minPassword') }]}>
             <Input.Password autoComplete="new-password" />
           </Form.Item>
-          <Form.Item name="confirmPassword" label="Xác nhận mật khẩu" rules={[{ required: true, message: t('adminStaff.confirmPasswordRequired') }]}>
+          <Form.Item name="confirmPassword" label={t('adminStaff.confirmPassword')} rules={[{ required: true, message: t('adminStaff.confirmPasswordRequired') }]}>
             <Input.Password autoComplete="new-password" />
           </Form.Item>
           <Button type="primary" htmlType="submit" block>Đặt lại mật khẩu</Button>
