@@ -320,6 +320,18 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     }
   };
 
+  const askPrintReturn = (warrantyObj) => {
+    const target = warrantyObj || warranty;
+    if (!target?.id) return;
+    Modal.confirm({
+      title: t('print:actions.printReturn'),
+      content: t('print:actions.askPrintReturn'),
+      okText: t('print:actions.yes'),
+      cancelText: t('print:actions.no'),
+      onOk: () => navigate(`/admin/phieu/${target.id}/in?type=return&new=1`),
+    });
+  };
+
   const handleTraHang = async () => {
     try {
       const res = await warrantyService.traHang(warranty.id, { ngayTra: dayjs().format('YYYY-MM-DD') });
@@ -328,6 +340,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         markChanged();
         setWarranty(res.data.data);
         lastWarrantyRef.current = res.data.data;
+        askPrintReturn(res.data.data);
       }
     } catch {
       message.error(t('messages:error.returnError'));
@@ -1753,7 +1766,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       <MobileCard className="warranty-mobile-card" title="Thao tác nhanh">
         <MobileSpace wrap>
           <MobileButton size="small" onClick={() => setEditing(true)}>Sửa</MobileButton>
-          <MobileButton size="small" onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>In</MobileButton>
+          <MobileButton size="small" onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>{t('print:actions.printReceive')}</MobileButton>
+          {warranty.trangThai === 'da_tra' && (
+            <MobileButton size="small" color="primary" onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=return`)}>{t('print:actions.printReturn')}</MobileButton>
+          )}
           <MobileButton
             size="small"
             onClick={async () => {
@@ -2205,7 +2221,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             <StatusTag status={warranty.trangThai} />
             {renderHeavy && (
               <>
-                <Button size="small" icon={<PrinterOutlined />} onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>In</Button>
+                <Button size="small" icon={<PrinterOutlined />} onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>{t('print:actions.printReceive')}</Button>
+                {warranty.trangThai === 'da_tra' && (
+                  <Button size="small" icon={<PrinterOutlined />} onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=return`)}>{t('print:actions.printReturn')}</Button>
+                )}
                 {warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy' && (
                   <Space>
                     <Popconfirm title="Đánh dấu bảo hành xong?" onConfirm={handleTraHang}>

@@ -24,7 +24,11 @@ export default function WarrantyPrint() {
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: warranty?.soChungTu || (warranty?.loaiPhieu === 'bien_nhan' ? 'bien-nhan' : 'phieu-bao-hanh'),
+    documentTitle: warranty?.soChungTu || (
+      printType === 'return' ? t('return.documentTitle')
+      : warranty?.loaiPhieu === 'bien_nhan' ? 'bien-nhan'
+      : 'phieu-bao-hanh'
+    ),
   });
 
   useEffect(() => {
@@ -90,6 +94,269 @@ export default function WarrantyPrint() {
     note: latestSentLog?.note || '',
   } : null;
   const supplierTotal = 1;
+  const warrantyBaseSubtitle = warranty?.loaiPhieu === 'bien_nhan'
+    ? t('return.fromReturnDate')
+    : t('return.fromPurchaseDate');
+
+  if (printType === 'return') {
+    const noContent = t('return.noContent');
+    const fallbackDate = noContent;
+    const splitDate = (value) => {
+      if (!value) return { dm: fallbackDate, y: '' };
+      const formatted = formatDate(value, 'DD-MM-YYYY');
+      if (!formatted || formatted === fallbackDate) return { dm: fallbackDate, y: '' };
+      const parts = formatted.split('-');
+      if (parts.length !== 3) return { dm: formatted, y: '' };
+      return { dm: `${parts[0]}-${parts[1]}`, y: parts[2] };
+    };
+    const dReceive = splitDate(warranty.ngayNhan);
+    const dReturn = splitDate(warranty.ngayTra);
+    const dPurchase = splitDate(warranty.ngayMua);
+    const printedAt = formatDate(new Date(), 'HH:mm · DD-MM-YYYY');
+
+    const handledFromSupplier = supplierLogs
+      .filter((log) => log.action === 'returned')
+      .sort((a, b) => new Date(b.returnedAt || b.at || 0).getTime() - new Date(a.returnedAt || a.at || 0).getTime())
+      .map((log) => String(log.note || '').trim())
+      .find(Boolean);
+    const handledFromHistory = (warranty.history || [])
+      .filter((h) => ['supplier_returned', 'log', 'exchange', 'return'].includes(h.action))
+      .sort((a, b) => new Date(b.at || 0).getTime() - new Date(a.at || 0).getTime())
+      .map((h) => String(h.note || '').trim())
+      .find(Boolean);
+    const handledContent = handledFromSupplier || handledFromHistory || String(warranty.ghiChu || '').trim() || noContent;
+
+    const productName = warranty.tenHang || noContent;
+    const productSerial = warranty.soSeri || noContent;
+    const issueAtReceive = warranty.loiLucNhan || noContent;
+    const newWarrantyTerm = warranty.baoHanh || noContent;
+    const costLabel = Number(warranty.chiPhi || 0) > 0 ? formatVND(warranty.chiPhi) : t('return.free');
+    const handlingTypeLabel = LOAI_XU_LY_LABELS[warranty.loaiXuLy] || warranty.loaiXuLy || t('return.stripFormValue');
+
+    return (
+      <div>
+        <div className="no-print" style={{ marginBottom: 16 }}>
+          <Button icon={<ArrowLeftOutlined />} onClick={() => window.history.back()}>{t('back')}</Button>
+          <Button type="primary" icon={<PrinterOutlined />} style={{ marginLeft: 8 }} onClick={handlePrint}>{t('actions.printReturn')}</Button>
+        </div>
+
+        <div ref={printRef} className="ret-v3-page">
+          <style>{`
+            .ret-v3-page {
+              width: 190mm;
+              margin: 0 auto;
+              background: #fff;
+              color: #000;
+              font-family: Tahoma, 'Segoe UI', Arial, sans-serif;
+              font-size: 11px;
+              line-height: 1.4;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .ret-v3-page * { box-sizing: border-box; }
+            .ret-v3-voucher {
+              width: 190mm;
+              min-height: 130mm;
+              margin: 0 auto;
+              border: 1.2px solid #000;
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+              background: #fff;
+              page-break-inside: avoid;
+            }
+            .ret-v3-head {
+              display: flex;
+              justify-content: flex-start;
+              align-items: flex-start;
+              padding: 4px 12px 3px;
+              border-bottom: 1.2px solid #000;
+            }
+            .ret-v3-company { display: flex; gap: 8px; align-items: flex-start; width: 100%; }
+            .ret-v3-logo {
+              width: 70px; height: 70px;
+              object-fit: contain;
+              flex-shrink: 0;
+              background: transparent;
+            }
+            .ret-v3-company .name { font-weight: 800; font-size: 13px; letter-spacing: .3px; }
+            .ret-v3-company .addr { font-size: 9.5px; color: #333; margin-top: 1px; line-height: 1.32; }
+            .ret-v3-doc { text-align: left; margin-left: 10px; min-width: 155px; flex-shrink: 0; }
+            .ret-v3-doc .lbl { font-size: 8px; text-transform: uppercase; letter-spacing: .5px; color: #555; }
+            .ret-v3-doc .no { font-family: 'Courier New', monospace; font-size: 15px; font-weight: 800; letter-spacing: 1.5px; }
+            .ret-v3-doc .time { font-size: 8.5px; color: #555; margin-top: 1px; }
+            .ret-v3-doc-inline { margin-top: 1px; }
+            .ret-v3-doc-inline .lbl { font-size: 8px; text-transform: uppercase; letter-spacing: .5px; color: #555; font-weight: 700; }
+            .ret-v3-doc-inline .no { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 800; letter-spacing: 1px; line-height: 1.15; }
+            .ret-v3-doc-inline .time { font-size: 8.5px; color: #555; line-height: 1.15; }
+            .ret-v3-title {
+              background: #000; color: #fff;
+              text-align: center;
+              padding: 1px 5px;
+              line-height: 1.1;
+              font-size: 13px; font-weight: 800;
+              text-transform: uppercase; letter-spacing: 2px;
+            }
+            .ret-v3-row { display: flex; border-bottom: 0.8px solid #000; }
+            .ret-v3-cust { flex: 1.4; padding: 7px 12px; border-right: 0.8px solid #000; }
+            .ret-v3-dates { flex: 1; padding: 7px 12px; display: flex; justify-content: space-between; }
+            .ret-v3-sec-lbl { font-size: 8px; text-transform: uppercase; letter-spacing: .5px; color: #555; font-weight: 700; margin-bottom: 3px; }
+            .ret-v3-cust .cname { font-size: 14px; font-weight: 800; margin-bottom: 3px; word-break: break-word; }
+            .ret-v3-cust .line { font-size: 10.5px; color: #222; word-break: break-word; }
+            .ret-v3-date-item { text-align: center; }
+            .ret-v3-date-item .d { font-size: 13px; font-weight: 800; }
+            .ret-v3-date-item .y { font-size: 9px; color: #555; }
+            .ret-v3-product { padding: 7px 12px; border-bottom: 0.8px solid #000; }
+            .ret-v3-product .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 8px; }
+            .ret-v3-product .pname { font-size: 13px; font-weight: 800; word-break: break-word; }
+            .ret-v3-product .sn { font-family: 'Courier New', monospace; font-size: 10px; border: 0.8px solid #000; padding: 1px 6px; border-radius: 3px; display: inline-block; margin-top: 2px; }
+            .ret-v3-qty { border: 1.2px solid #000; font-weight: 800; padding: 2px 10px; border-radius: 3px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+            .ret-v3-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .ret-v3-box { border: 0.8px solid #000; border-radius: 4px; padding: 5px 8px; }
+            .ret-v3-box .h { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 2px; }
+            .ret-v3-box .c { font-size: 10.5px; word-break: break-word; }
+            .ret-v3-box.dark { background: #eee; }
+            .ret-v3-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 0.8px solid #000; }
+            .ret-v3-strip > div { text-align: center; padding: 6px 4px; border-right: 0.8px solid #000; }
+            .ret-v3-strip > div:last-child { border-right: none; }
+            .ret-v3-strip .h { font-size: 8px; text-transform: uppercase; letter-spacing: .3px; color: #555; font-weight: 700; }
+            .ret-v3-strip .v { font-size: 12px; font-weight: 800; margin-top: 1px; }
+            .ret-v3-strip .sub { font-size: 8px; color: #555; }
+            .ret-v3-terms { padding: 5px 12px; border-bottom: 0.8px solid #000; }
+            .ret-v3-terms .h { font-size: 8.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 2px; }
+            .ret-v3-terms ul { list-style: none; margin: 0; padding: 0; }
+            .ret-v3-terms li { font-size: 9px; color: #222; padding-left: 12px; position: relative; line-height: 1.45; }
+            .ret-v3-terms li::before { content: "•"; position: absolute; left: 2px; }
+            .ret-v3-sign { display: grid; grid-template-columns: 90px 1fr 1fr; gap: 14px; padding: 8px 12px; align-items: start; margin-top: auto; }
+            .ret-v3-qr { text-align: center; }
+            .ret-v3-qr .code { font-size: 7.5px; color: #555; margin-top: 2px; word-break: break-all; line-height: 1.2; }
+            .ret-v3-sign-col { text-align: center; }
+            .ret-v3-sign-col .h { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .3px; }
+            .ret-v3-sign-col .note { font-size: 8.5px; font-style: italic; color: #555; margin-bottom: 26px; }
+            .ret-v3-sign-col .ln { display: none; }
+            .ret-v3-footer { font-size: 8.5px; color: #444; text-align: center; padding: 4px; border-top: 0.8px dashed #000; }
+            @media print {
+              @page { size: A4; margin: 10mm; }
+              body { background: #fff !important; padding: 0 !important; margin: 0 !important; }
+              .no-print { display: none !important; }
+              .ret-v3-page { box-shadow: none; }
+              .ret-v3-voucher { box-shadow: none; }
+            }
+            @media screen {
+              .ret-v3-page { padding: 12px 0; }
+              .ret-v3-voucher { box-shadow: 0 4px 15px rgba(0,0,0,.15); }
+            }
+          `}</style>
+
+          <div className="ret-v3-voucher">
+            <div className="ret-v3-head">
+              <div className="ret-v3-company">
+                <img className="ret-v3-logo" src="/logo.png" alt="Logo" />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="name">{t('company')}</div>
+                  <div className="addr">{t('return.companyAddress')}<br />{t('taxInfo')}</div>
+                </div>
+                <div className="ret-v3-doc">
+                  <div className="lbl">{t('return.documentNumber')}</div>
+                  <div className="no">{warranty.soChungTu}</div>
+                  <div className="time">{t('return.printDate')} {printedAt}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ret-v3-title">{t('return.title')}</div>
+
+            <div className="ret-v3-row">
+              <div className="ret-v3-cust">
+                <div className="ret-v3-sec-lbl">{t('return.customerSection')}</div>
+                <div className="cname">{warranty.khachHang || noContent}</div>
+                <div className="line">{t('return.phone')}: {warranty.soDienThoai || noContent}</div>
+                <div className="line">{t('return.address')}: {warranty.diaChi || noContent}</div>
+              </div>
+              <div className="ret-v3-dates">
+                <div className="ret-v3-date-item">
+                  <div className="ret-v3-sec-lbl">{t('return.receiveDate')}</div>
+                  <div className="d">{dReceive.dm}</div><div className="y">{dReceive.y}</div>
+                </div>
+                <div className="ret-v3-date-item">
+                  <div className="ret-v3-sec-lbl">{t('return.returnDate')}</div>
+                  <div className="d">{dReturn.dm}</div><div className="y">{dReturn.y}</div>
+                </div>
+                <div className="ret-v3-date-item">
+                  <div className="ret-v3-sec-lbl">{t('return.purchaseDate')}</div>
+                  <div className="d">{dPurchase.dm}</div><div className="y">{dPurchase.y}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ret-v3-product">
+              <div className="top">
+                <div>
+                  <div className="pname">{productName}</div>
+                  <div className="sn">{t('return.serialLabel')}: {productSerial}</div>
+                </div>
+                <div className="ret-v3-qty">{t('return.qtyLabel')}: 1</div>
+              </div>
+              <div className="ret-v3-grid2">
+                <div className="ret-v3-box">
+                  <div className="h">▲ {t('return.issueAtReceive')}</div>
+                  <div className="c">{issueAtReceive}</div>
+                </div>
+                <div className="ret-v3-box dark">
+                  <div className="h">✓ {t('return.handledContent')}</div>
+                  <div className="c">{handledContent}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ret-v3-strip">
+              <div>
+                <div className="h">{t('return.stripFormTitle')}</div>
+                <div className="v" style={{ fontSize: 11 }}>{handlingTypeLabel}</div>
+              </div>
+              <div>
+                <div className="h">{t('return.stripCostTitle')}</div>
+                <div className="v">{costLabel}</div>
+              </div>
+              <div>
+                <div className="h">{t('return.stripWarrantyTitle')}</div>
+                <div className="v">{newWarrantyTerm}</div>
+                <div className="sub">{warrantyBaseSubtitle}</div>
+              </div>
+            </div>
+
+            <div className="ret-v3-terms">
+              <div className="h">{t('return.ackSection')}</div>
+              <ul>
+                <li>{t('return.ackCheck')}</li>
+                <li>{t('return.ackScope')}</li>
+                <li>{t('return.ackKeep')}</li>
+              </ul>
+            </div>
+
+            <div className="ret-v3-sign">
+              <div className="ret-v3-qr">
+                <QRCodeSVG value={trackingUrl} size={64} level="M" />
+                <div className="code">tra-cuu/{warranty.soChungTu}</div>
+              </div>
+              <div className="ret-v3-sign-col">
+                <div className="h">{t('return.signStaff')}</div>
+                <div className="note">{t('return.signSub')}</div>
+                <div className="ln"></div>
+              </div>
+              <div className="ret-v3-sign-col">
+                <div className="h">{t('return.signCustomer')}</div>
+                <div className="note">{t('return.signSub')}</div>
+                <div className="ln"></div>
+              </div>
+            </div>
+
+            <div className="ret-v3-footer">{t('return.footerPolicy')}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (printType === 'supplier' && supplierInfo) {
     return (
