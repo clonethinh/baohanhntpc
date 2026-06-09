@@ -146,6 +146,25 @@ function timelineColor(type, index) {
   return index === 0 ? 'green' : 'gray';
 }
 
+function RelatedDateLine({ item, t }) {
+  const statusKey = normalizeStatusKey(item.trangThai);
+  if (statusKey === 'da_tra') {
+    return <span><CalendarOutlined /> {t('trackingResult.relatedReturned')}: {item.ngayTra || '-'}</span>;
+  }
+  if (statusKey === 'huy') {
+    return <span><CalendarOutlined /> {t('trackingResult.relatedDueDate')}: {item.ngayHenTra || '-'}</span>;
+  }
+  if (item.ngayHenTra) {
+    return <span><CalendarOutlined /> {t('trackingResult.relatedDueDate')}: {item.ngayHenTra}</span>;
+  }
+  return (
+    <span className="tracuu-related-updating">
+      <CalendarOutlined /> {t('trackingResult.relatedUpdating')}
+      <span className="tracuu-updating-dots"><i></i><i></i><i></i></span>
+    </span>
+  );
+}
+
 function mapTimelineAction(log, t, loaiXuLy) {
   const actionCode = log.actionType || log.action;
   const key = actionCode === 'tra_hang'
@@ -628,8 +647,8 @@ export default function TrackingResult() {
                       </div>
                       <div className={styles.mobileRelatedProduct}>{normalizeProductName(item.tenHang) || '-'}</div>
                       <div className={styles.mobileRelatedMeta}>
-                        <span>Nhận: {item.ngayNhan || '-'}</span>
-                        <span>Hẹn trả: {item.ngayHenTra || '-'}</span>
+                        <span>{t('trackingResult.relatedReceived')}: {item.ngayNhan || '-'}</span>
+                        <RelatedDateLine item={item} t={t} />
                       </div>
                     </button>
                   ))}
@@ -1089,8 +1108,8 @@ export default function TrackingResult() {
                               <div className="tracuu-result-meta">
                                 <div className="tracuu-result-product">{normalizeProductName(item.tenHang) || '-'}</div>
                                 <div className="tracuu-result-dates">
-                                  <span><CalendarOutlined /> Nhận: {item.ngayNhan || '-'}</span>
-                                  <span><CalendarOutlined /> Hẹn trả: {item.ngayHenTra || '-'}</span>
+                                  <span><CalendarOutlined /> {t('trackingResult.relatedReceived')}: {item.ngayNhan || '-'}</span>
+                                  <RelatedDateLine item={item} t={t} />
                                 </div>
                               </div>
                             )}

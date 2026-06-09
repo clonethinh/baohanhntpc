@@ -1791,6 +1791,48 @@ html[data-theme='dark'] .ntpc-mobile-contact-map{
 .admin-mobile-kpi.danger b { color: #c24135; }
 .admin-mobile-kpi.success b { color: #2f7d3a; }
 
+/* ===== Desktop KPI strip trang Thống kê ===== */
+.stats-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.stats-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border: 1px solid #e3eadb;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.stats-kpi-label {
+  color: #697463;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.stats-kpi-value {
+  color: #20301e;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (max-width: 991px) {
+  .stats-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
+html[data-theme='dark'] .stats-kpi {
+  border-color: #2a3326;
+  background: #161d14;
+}
+html[data-theme='dark'] .stats-kpi-label { color: #9aa890; }
+html[data-theme='dark'] .stats-kpi-value { color: #eef3e9; }
+
 .admin-mobile-action-list {
   display: grid;
   gap: 10px;
@@ -3195,6 +3237,43 @@ html[data-theme='dark'] .ntpc-mobile-actions {
 
 .tracuu-result-dates .anticon {
   color: #2f7a22;
+}
+
+/* Trạng thái "Đang cập nhật..." kèm loading dots ở danh sách chứng từ liên quan */
+.tracuu-related-updating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #d4691a;
+  font-style: italic;
+}
+.tracuu-related-updating .anticon {
+  color: #d4691a;
+}
+.tracuu-updating-dots {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  margin-left: 1px;
+}
+.tracuu-updating-dots i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+  animation: tracuuDotPulse 1.2s infinite ease-in-out both;
+}
+.tracuu-updating-dots i:nth-child(1) { animation-delay: -0.32s; }
+.tracuu-updating-dots i:nth-child(2) { animation-delay: -0.16s; }
+.tracuu-updating-dots i:nth-child(3) { animation-delay: 0s; }
+@keyframes tracuuDotPulse {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+html[data-theme='dark'] .tracuu-related-updating,
+html[data-theme='dark'] .tracuu-related-updating .anticon {
+  color: #f0a868;
 }
 
 .tracuu-result-chevron {
