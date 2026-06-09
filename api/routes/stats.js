@@ -125,4 +125,45 @@ router.get('/top-customers', async (req, res) => {
   }
 });
 
+router.get('/distribution', async (req, res) => {
+  try {
+    let warranties = await getCollection('warranties');
+    warranties = warranties.filter(w => !w.deletedAt);
+
+    const nhanVien = await getCollection('nhanVien');
+    const nvMap = {};
+    (nhanVien || []).forEach(nv => { if (nv && nv.maNV) nvMap[nv.maNV] = nv.tenNV || nv.maNV; });
+
+    const { from, to } = req.query;
+    let filtered = warranties;
+    if (from) filtered = filtered.filter(w => dayjs(w.ngayNhan).isAfter(dayjs(from).subtract(1, 'day')));
+    if (to) filtered = filtered.filter(w => dayjs(w.ngayNhan).isBefore(dayjs(to).add(1, 'day')));
+
+    const tally = (items, keyFn) => {
+      const m = {};
+      items.forEach(it => { const k = keyFn(it); if (k == null || k === '') return; m[k] = (m[k] || 0) + 1; });
+      return m;
+    };
+
+    const byStatus = tally(filtered, w => w.trangThai);
+    const byType = tally(filtered, w => w.loaiXuLy);
+    const byStaffRaw = tally(filtered, w => w.maNhanVien);
+    const byStaff = Object.entries(byStaffRaw)
+      .map(([maNV, count]) => ({ maNV, tenNV: nvMap[maNV] || maNV, count }))
+      .sort((a, b) => b.count - a.count);
+
+    res.json({
+      success: true,
+      data: {
+        byStatus: Object.entries(byStatus).map(([key, count]) => ({ key, count })),
+        byType: Object.entries(byType).map(([key, count]) => ({ key, count })),
+        byStaff,
+        total: filtered.length,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
+  }
+});
+
 export default router;

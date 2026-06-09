@@ -41,6 +41,7 @@ export const statsService = {
   byDate: (params) => api.get('/stats/by-date', { params }),
   topProducts: (params) => api.get('/stats/top-products', { params }),
   topCustomers: (params) => api.get('/stats/top-customers', { params }),
+  distribution: (params) => api.get('/stats/distribution', { params }),
 };
 
 export const publicService = {
