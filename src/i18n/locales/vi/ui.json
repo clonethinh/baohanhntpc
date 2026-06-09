@@ -659,7 +659,17 @@
     "staffCode": "Tên đăng nhập",
     "staffName": "Tên nhân viên",
     "action": "Thao tác",
-    "deleteConfirm": "Xóa nhân viên {{code}}?"
+    "deleteConfirm": "Xóa nhân viên {{code}}?",
+    "summaryTotal": "Tổng nhân viên",
+    "summaryAdmin": "Quản trị viên",
+    "summaryStaff": "Nhân viên",
+    "changeMyPassword": "Đổi mật khẩu tài khoản hiện tại",
+    "role": "Phân quyền",
+    "roleAdmin": "Quản trị viên",
+    "roleStaff": "Nhân viên",
+    "resetPassword": "Đặt lại mật khẩu",
+    "rolePlaceholder": "Chọn phân quyền",
+    "emptyStaff": "Chưa có nhân viên nào"
   },
   "adminStatistics": {
     "period": {
@@ -845,6 +855,13 @@
     "summaryTotal": "{{count}} NCC",
     "summaryActive": "{{count}} hoạt động",
     "summaryInactive": "{{count}} ngưng",
+    "pendingTotal": "Phiếu đang ở NCC",
+    "pendingSuppliers": "NCC đang giữ hàng",
+    "suppliersTotal": "Tổng NCC",
+    "pendingColumn": "Phiếu chưa xong",
+    "pendingBadge": "Còn {{count}} phiếu",
+    "doneBadge": "Đã xong",
+    "onlyPending": "Còn hàng",
     "contact": "Liên hệ",
     "disableConfirm": "Ngưng NCC này?",
     "enableConfirm": "Mở lại NCC này?",

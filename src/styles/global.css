@@ -1833,6 +1833,156 @@ html[data-theme='dark'] .stats-kpi {
 html[data-theme='dark'] .stats-kpi-label { color: #9aa890; }
 html[data-theme='dark'] .stats-kpi-value { color: #eef3e9; }
 
+/* ===== Trang Quản lý nhân viên ===== */
+.staff-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.staff-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.staff-kpi {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid #e3eadb;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.staff-kpi-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.staff-kpi-icon.total { background: #e7f0ff; color: #3b5bdb; }
+.staff-kpi-icon.admin { background: #e8ebff; color: #4150d6; }
+.staff-kpi-icon.staff { background: #e6f7ec; color: #2f9e44; }
+
+.staff-kpi-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.staff-kpi-label { color: #697463; font-size: 13px; line-height: 1.2; }
+.staff-kpi-value { color: #20301e; font-size: 26px; font-weight: 700; line-height: 1; }
+
+.staff-add-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0 16px;
+}
+.staff-pwd-form { max-width: 420px; }
+
+.staff-mobile-list { display: flex; flex-direction: column; gap: 10px; }
+.staff-mobile-card {
+  border: 1px solid #e3eadb;
+  border-radius: 14px;
+  background: #fff;
+  padding: 14px;
+}
+.staff-mobile-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.staff-mobile-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.staff-mobile-info b { color: #20301e; font-size: 15px; }
+.staff-mobile-info span { color: #8a948a; font-size: 12px; }
+.staff-mobile-actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #e3eadb;
+}
+.staff-mobile-empty { text-align: center; color: #8a948a; padding: 24px 0; }
+
+@media (max-width: 991px) {
+  .staff-kpi-strip { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .staff-kpi { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; }
+  .staff-add-grid { grid-template-columns: 1fr; gap: 0; }
+}
+
+html[data-theme='dark'] .staff-kpi,
+html[data-theme='dark'] .staff-mobile-card {
+  border-color: #2a3326;
+  background: #161d14;
+}
+html[data-theme='dark'] .staff-kpi-label { color: #9aa890; }
+html[data-theme='dark'] .staff-kpi-value,
+html[data-theme='dark'] .staff-mobile-info b { color: #eef3e9; }
+html[data-theme='dark'] .staff-mobile-info span { color: #8a948a; }
+html[data-theme='dark'] .staff-mobile-actions { border-top-color: #2a3326; }
+
+/* ===== Trang Nhà cung cấp ===== */
+.supplier-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.supplier-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border: 1px solid #e3eadb;
+  border-radius: 14px;
+  background: #fff;
+}
+.supplier-kpi.pending {
+  border-color: #f3d3a8;
+  background: #fff8ef;
+}
+.supplier-kpi-label { color: #697463; font-size: 13px; line-height: 1.2; }
+.supplier-kpi-value { color: #20301e; font-size: 28px; font-weight: 700; line-height: 1; }
+.supplier-kpi.pending .supplier-kpi-value { color: #d4691a; }
+
+.supplier-pending-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 12px;
+  background: #fa8c16;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+}
+.supplier-pending-done {
+  color: #8a948a;
+  font-size: 13px;
+}
+
+html[data-theme='dark'] .supplier-kpi {
+  border-color: #2a3326;
+  background: #161d14;
+}
+html[data-theme='dark'] .supplier-kpi.pending {
+  border-color: #5a4423;
+  background: #2a2113;
+}
+html[data-theme='dark'] .supplier-kpi-label { color: #9aa890; }
+html[data-theme='dark'] .supplier-kpi-value { color: #eef3e9; }
+html[data-theme='dark'] .supplier-kpi.pending .supplier-kpi-value { color: #f0a868; }
+html[data-theme='dark'] .supplier-pending-done { color: #7a857a; }
+
 .admin-mobile-action-list {
   display: grid;
   gap: 10px;

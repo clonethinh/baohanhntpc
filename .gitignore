@@ -17,3 +17,5 @@ pgdata
 .antigravitycli
 scratch/
 cloudflare-ddns.sh
+.hermes/
+.bak-*/

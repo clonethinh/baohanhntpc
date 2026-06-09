@@ -38,6 +38,7 @@ export default function Suppliers() {
   const [staffList, setStaffList] = useState([]);
   const [search, setSearch] = useState('');
   const [filterActive, setFilterActive] = useState('');
+  const [onlyPending, setOnlyPending] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [expandedSupplierId, setExpandedSupplierId] = useState(null);
@@ -94,16 +95,19 @@ export default function Suppliers() {
     return data.filter((row) => {
       if (filterActive === '1' && !row.isActive) return false;
       if (filterActive === '0' && row.isActive) return false;
+      if (onlyPending && !(Number(row.pendingCount) > 0)) return false;
       if (!q) return true;
       return [row.code, row.name, row.phone, row.contactPerson, row.address].some((v) => String(v || '').toLowerCase().includes(q));
-    });
-  }, [data, search, filterActive]);
+    }).sort((a, b) => (Number(b.pendingCount) || 0) - (Number(a.pendingCount) || 0));
+  }, [data, search, filterActive, onlyPending]);
 
   const summary = useMemo(() => {
     const total = filteredRows.length;
     const active = filteredRows.filter((r) => r.isActive).length;
-    return { total, active, inactive: total - active };
-  }, [filteredRows]);
+    const pendingTickets = data.reduce((sum, r) => sum + (Number(r.pendingCount) || 0), 0);
+    const pendingSuppliers = data.filter((r) => Number(r.pendingCount) > 0).length;
+    return { total, active, inactive: total - active, pendingTickets, pendingSuppliers, allTotal: data.length };
+  }, [filteredRows, data]);
 
   const openCreate = () => {
     setEditing(null);
@@ -372,7 +376,12 @@ export default function Suppliers() {
                       <div style={{ fontWeight: 700 }}>{row.code} {row.name}</div>
                       <div style={{ fontSize: 12, color: 'var(--adm-color-weak)' }}>{row.phone || '-'} · {row.contactPerson || '-'}</div>
                     </div>
-                    <MobileTag color={row.isActive ? 'success' : 'default'}>{row.isActive ? t('adminSuppliers.active') : t('adminSuppliers.inactive')}</MobileTag>
+                    <MobileSpace direction="vertical" align="end" style={{ '--gap': '4px' }}>
+                      {Number(row.pendingCount) > 0
+                        ? <MobileTag color="warning">{t('adminSuppliers.pendingBadge', { count: Number(row.pendingCount) })}</MobileTag>
+                        : <MobileTag color="success">{t('adminSuppliers.doneBadge')}</MobileTag>}
+                      <MobileTag color={row.isActive ? 'success' : 'default'}>{row.isActive ? t('adminSuppliers.active') : t('adminSuppliers.inactive')}</MobileTag>
+                    </MobileSpace>
                   </div>
                   <MobileSpace wrap style={{ marginTop: 10 }}>
                     <MobileButton size="mini" onClick={(e) => { e.stopPropagation(); openEdit(row); }}>{t('button.sua')}</MobileButton>
@@ -439,10 +448,28 @@ export default function Suppliers() {
       <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <Title level={4}>{t('adminSuppliers.title')}</Title>
 
-        <Card>
+        <div className="supplier-kpi-strip">
+          <div className="supplier-kpi pending">
+            <span className="supplier-kpi-label">{t('adminSuppliers.pendingTotal')}</span>
+            <b className="supplier-kpi-value">{summary.pendingTickets}</b>
+          </div>
+          <div className="supplier-kpi">
+            <span className="supplier-kpi-label">{t('adminSuppliers.pendingSuppliers')}</span>
+            <b className="supplier-kpi-value">{summary.pendingSuppliers}</b>
+          </div>
+          <div className="supplier-kpi">
+            <span className="supplier-kpi-label">{t('adminSuppliers.suppliersTotal')}</span>
+            <b className="supplier-kpi-value">{summary.allTotal}</b>
+          </div>
+        </div>
+
+        <Card style={{ marginTop: 16 }}>
           <Row gutter={12} align="middle">
             <Col flex="auto">
               <Input prefix={<SearchOutlined />} placeholder={t('adminSuppliers.searchDesktop')} value={search} onChange={(e) => setSearch(e.target.value)} />
+            </Col>
+            <Col>
+              <Button type={onlyPending ? 'primary' : 'default'} onClick={() => setOnlyPending((v) => !v)}>{t('adminSuppliers.onlyPending')}</Button>
             </Col>
             <Col>
               <Select style={{ width: 180 }} value={filterActive} onChange={setFilterActive} options={[{ label: t('adminSuppliers.allStatus'), value: '' }, { label: t('adminSuppliers.activeStatus'), value: '1' }, { label: t('adminSuppliers.inactiveStatus'), value: '0' }]} />
@@ -453,22 +480,28 @@ export default function Suppliers() {
           </Row>
         </Card>
 
-        <Card extra={<Space><Tag color="blue">{t('adminSuppliers.summaryTotal', { count: summary.total })}</Tag><Tag color="green">{t('adminSuppliers.summaryActive', { count: summary.active })}</Tag><Tag>{t('adminSuppliers.summaryInactive', { count: summary.inactive })}</Tag></Space>} styles={{ body: { padding: 12 } }}>
+        <Card style={{ marginTop: 8 }} extra={<Space><Tag color="blue">{t('adminSuppliers.summaryTotal', { count: summary.total })}</Tag><Tag color="green">{t('adminSuppliers.summaryActive', { count: summary.active })}</Tag><Tag>{t('adminSuppliers.summaryInactive', { count: summary.inactive })}</Tag></Space>} styles={{ body: { padding: 12 } }}>
           {loading ? <div style={{ padding: 24, color: token.colorTextSecondary }}>{t('adminCustomer.loading')}</div> : (
             <div style={{ display: 'grid', gap: 10 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '140px minmax(240px,1.2fr) 140px 180px 120px 110px', gap: 12, alignItems: 'center', padding: '10px 12px', borderRadius: 10, background: token.colorFillTertiary, color: token.colorTextSecondary, fontSize: 12, fontWeight: 600, textTransform: 'uppercase' }}>
-                <div>{t('adminSuppliers.supplierCode')}</div><div>{t('adminSuppliers.supplierName')}</div><div>{t('trackingResult.phone')}</div><div>{t('adminSuppliers.contact')}</div><div>{t('table.trangThai')}</div><div style={{ textAlign: 'right' }}>{t('adminStaff.action')}</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '130px minmax(190px,300px) 140px minmax(150px,1fr) 130px 110px 110px', gap: 12, alignItems: 'center', padding: '10px 12px', borderRadius: 10, background: token.colorFillTertiary, color: token.colorTextSecondary, fontSize: 12, fontWeight: 600, textTransform: 'uppercase' }}>
+                <div>{t('adminSuppliers.supplierCode')}</div><div>{t('adminSuppliers.supplierName')}</div><div>{t('trackingResult.phone')}</div><div>{t('adminSuppliers.contact')}</div><div>{t('adminSuppliers.pendingColumn')}</div><div>{t('table.trangThai')}</div><div style={{ textAlign: 'right' }}>{t('adminStaff.action')}</div>
               </div>
 
               {filteredRows.map((row) => {
                 const active = expandedSupplierId === row.id;
+                const pending = Number(row.pendingCount) || 0;
                 return (
                   <div key={row.id} style={{ border: active ? `1px solid ${token.colorPrimary}` : `1px solid ${token.colorBorderSecondary}`, borderRadius: 12, background: active ? token.colorPrimaryBg : token.colorBgContainer, overflow: 'visible' }}>
-                    <div role="button" tabIndex={0} onClick={() => openTracking(row)} onKeyDown={(e) => e.key === 'Enter' && openTracking(row)} style={{ display: 'grid', gridTemplateColumns: '140px minmax(240px,1.2fr) 140px 180px 120px 110px', gap: 12, alignItems: 'center', padding: '12px', cursor: 'pointer' }}>
+                    <div role="button" tabIndex={0} onClick={() => openTracking(row)} onKeyDown={(e) => e.key === 'Enter' && openTracking(row)} style={{ display: 'grid', gridTemplateColumns: '130px minmax(190px,300px) 140px minmax(150px,1fr) 130px 110px 110px', gap: 12, alignItems: 'center', padding: '12px', cursor: 'pointer' }}>
                       <div><Text strong>{row.code}</Text></div>
                       <div><Text strong>{row.name}</Text></div>
                       <div>{row.phone || '-'}</div>
                       <div>{row.contactPerson || '-'}</div>
+                      <div>
+                        {pending > 0
+                          ? <span className="supplier-pending-badge">{pending}</span>
+                          : <span className="supplier-pending-done">{t('adminSuppliers.doneBadge')}</span>}
+                      </div>
                       <div><Tag color={row.isActive ? 'green' : 'default'}>{row.isActive ? t('adminSuppliers.active') : t('adminSuppliers.inactive')}</Tag></div>
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                         <Button size="small" shape="circle" icon={<EditOutlined />} onClick={(e) => { e.stopPropagation(); openEdit(row); }} />

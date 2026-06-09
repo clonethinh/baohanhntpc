@@ -45,7 +45,27 @@ router.get('/', async (req, res) => {
       prisma.supplier.findMany({ where, orderBy: { updatedAt: 'desc' }, skip: (p - 1) * l, take: l }),
       prisma.supplier.count({ where }),
     ]);
-    res.json({ success: true, data: { rows: rows.map(normalizeSupplier), total, page: p, limit: l } });
+
+    // Tổng hợp số phiếu đang ở NCC / đã nhận lại theo từng nhà cung cấp
+    const supplierWarranties = await prisma.warranty.findMany({
+      where: { deletedAt: '' },
+      select: { supplierIdCurrent: true, supplierStatus: true },
+    });
+    const statsMap = {};
+    supplierWarranties.forEach((w) => {
+      const sid = w.supplierIdCurrent;
+      if (!sid) return;
+      if (!statsMap[sid]) statsMap[sid] = { pendingCount: 0, returnedCount: 0, totalRelated: 0 };
+      statsMap[sid].totalRelated += 1;
+      if (w.supplierStatus === 'sent') statsMap[sid].pendingCount += 1;
+      else if (w.supplierStatus === 'returned') statsMap[sid].returnedCount += 1;
+    });
+    const rowsWithStats = rows.map((r) => {
+      const s = statsMap[r.id] || { pendingCount: 0, returnedCount: 0, totalRelated: 0 };
+      return { ...normalizeSupplier(r), ...s };
+    });
+
+    res.json({ success: true, data: { rows: rowsWithStats, total, page: p, limit: l } });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Loi may chu' } });
   }
