@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { App, Card, Form, Grid, Modal, Row, Col, Space, Typography } from 'antd';
-import { BellOutlined } from '@ant-design/icons';
+import { App, Card, Form, Grid, Modal, Row, Col, Space, Typography, Tag } from 'antd';
+import { BellOutlined, NotificationOutlined, EyeOutlined, PictureOutlined, DesktopOutlined } from '@ant-design/icons';
 import { Card as MobileCard, Space as MobileSpace } from 'antd-mobile';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
@@ -13,6 +13,22 @@ import NotificationMobileForm from './customer-notifications/NotificationMobileF
 import NotificationMobileList from './customer-notifications/NotificationMobileList';
 
 const { Title, Text } = Typography;
+
+function SummaryCard({ icon, label, value, color }) {
+  return (
+    <Card styles={{ body: { padding: 18, borderRadius: 16 } }}>
+      <div style={{ display: 'grid', gap: 10 }}>
+        <Space size={10}>
+          <div style={{ width: 40, height: 40, borderRadius: 12, display: 'grid', placeItems: 'center', background: color.bg, color: color.fg }}>
+            {icon}
+          </div>
+          <Text type="secondary">{label}</Text>
+        </Space>
+        <Title level={3} style={{ margin: 0 }}>{value}</Title>
+      </div>
+    </Card>
+  );
+}
 
 export default function CustomerNotifications() {
   const { t } = useTranslation();
@@ -50,28 +66,36 @@ export default function CustomerNotifications() {
 
   if (isMobile) {
     return (
-      <div className="admin-mobile-page">
+      <div className="admin-mobile-page" style={{ display: 'grid', gap: 12 }}>
         <MobileCard className="admin-mobile-card" title={t('adminCustomerNotifications.title')}>
-          <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
-            <NotificationFilters
-              mobile
-              t={t}
-              search={admin.search}
-              setSearch={admin.setSearch}
-              displayType={admin.displayType}
-              setDisplayType={admin.setDisplayType}
-              activeFilter={admin.activeFilter}
-              setActiveFilter={admin.setActiveFilter}
-              effectiveStatus={admin.effectiveStatus}
-              setEffectiveStatus={admin.setEffectiveStatus}
-              displayOptions={admin.displayOptions}
-              activeOptions={admin.activeOptions}
-              effectiveOptions={admin.effectiveOptions}
-              handleSearch={admin.handleSearch}
-              openCreate={admin.openCreate}
-              resetFilters={admin.resetFilters}
-            />
-          </MobileSpace>
+          <div style={{ display: 'grid', gap: 10 }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <Tag color="blue">{t('adminCustomerNotifications.total')}: {admin.summary.total}</Tag>
+              <Tag color="green">{t('adminCustomerNotifications.visible')}: {admin.summary.visible}</Tag>
+              <Tag color="gold">{t('adminCustomerNotifications.popup')}: {admin.summary.popup}</Tag>
+              <Tag color="cyan">{t('adminCustomerNotifications.banner')}: {admin.summary.banner}</Tag>
+            </div>
+            <MobileSpace direction="vertical" block style={{ '--gap': '8px' }}>
+              <NotificationFilters
+                mobile
+                t={t}
+                search={admin.search}
+                setSearch={admin.setSearch}
+                displayType={admin.displayType}
+                setDisplayType={admin.setDisplayType}
+                activeFilter={admin.activeFilter}
+                setActiveFilter={admin.setActiveFilter}
+                effectiveStatus={admin.effectiveStatus}
+                setEffectiveStatus={admin.setEffectiveStatus}
+                displayOptions={admin.displayOptions}
+                activeOptions={admin.activeOptions}
+                effectiveOptions={admin.effectiveOptions}
+                handleSearch={admin.handleSearch}
+                openCreate={admin.openCreate}
+                resetFilters={admin.resetFilters}
+              />
+            </MobileSpace>
+          </div>
         </MobileCard>
 
         <NotificationMobileList
@@ -101,12 +125,23 @@ export default function CustomerNotifications() {
 
   return (
     <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <Title level={4}>{t('adminCustomerNotifications.title')}</Title>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'grid', gap: 4 }}>
+          <Title level={4} style={{ margin: 0 }}>{t('adminCustomerNotifications.title')}</Title>
+          <Text type="secondary">Quản lý banner và popup hiển thị cho khách hàng theo trạng thái và lịch hiển thị.</Text>
+        </div>
+        <Space wrap>
+          <Tag color="blue">{t('adminCustomerNotifications.banner')}: {admin.summary.banner}</Tag>
+          <Tag color="gold">{t('adminCustomerNotifications.popup')}: {admin.summary.popup}</Tag>
+          <Tag color="green">{t('adminCustomerNotifications.visible')}: {admin.summary.visible}</Tag>
+        </Space>
+      </div>
+
       <Row gutter={[12, 12]}>
-        <Col span={6}><Card><Text type="secondary">{t('adminCustomerNotifications.total')}</Text><Title level={3}>{admin.summary.total}</Title></Card></Col>
-        <Col span={6}><Card><Text type="secondary">{t('adminCustomerNotifications.visible')}</Text><Title level={3}>{admin.summary.visible}</Title></Card></Col>
-        <Col span={6}><Card><Text type="secondary">{t('adminCustomerNotifications.banner')}</Text><Title level={3}>{admin.summary.banner}</Title></Card></Col>
-        <Col span={6}><Card><Text type="secondary">{t('adminCustomerNotifications.popup')}</Text><Title level={3}>{admin.summary.popup}</Title></Card></Col>
+        <Col span={6}><SummaryCard icon={<NotificationOutlined />} label={t('adminCustomerNotifications.total')} value={admin.summary.total} color={{ bg: '#eff6ff', fg: '#2563eb' }} /></Col>
+        <Col span={6}><SummaryCard icon={<EyeOutlined />} label={t('adminCustomerNotifications.visible')} value={admin.summary.visible} color={{ bg: '#ecfdf5', fg: '#059669' }} /></Col>
+        <Col span={6}><SummaryCard icon={<PictureOutlined />} label={t('adminCustomerNotifications.banner')} value={admin.summary.banner} color={{ bg: '#ecfeff', fg: '#0891b2' }} /></Col>
+        <Col span={6}><SummaryCard icon={<DesktopOutlined />} label={t('adminCustomerNotifications.popup')} value={admin.summary.popup} color={{ bg: '#fff7ed', fg: '#ea580c' }} /></Col>
       </Row>
 
       <NotificationFilters
@@ -144,7 +179,7 @@ export default function CustomerNotifications() {
         open={admin.formOpen}
         onOk={admin.submit}
         onCancel={() => { setPendingEditorHtml(''); setEditorContent(''); admin.setFormOpen(false); }}
-        width={1100}
+        width={1180}
         okText={t('button.luu')}
         cancelText={t('button.huy')}
         okButtonProps={{ loading: admin.submitting }}
