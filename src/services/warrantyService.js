@@ -47,8 +47,17 @@ export const statsService = {
 export const publicService = {
   track: (soChungTu) => api.get(`/public/track/${soChungTu}`),
   search: (q) => api.get('/public/track', { params: { q } }),
+  getCustomerNotifications: () => api.get('/public/customer-notifications'),
 };
 
+export const customerNotificationService = {
+  list: (params) => api.get('/customer-notifications', { params }),
+  summary: (params) => api.get('/customer-notifications/summary', { params }),
+  create: (data) => api.post('/customer-notifications', data),
+  update: (id, data) => api.put(`/customer-notifications/${id}`, data),
+  setStatus: (id, isActive) => api.patch(`/customer-notifications/${id}/status`, { isActive }),
+  remove: (id) => api.delete(`/customer-notifications/${id}`),
+};
 
 export const supplierService = {
   getList: (params) => api.get('/suppliers', { params }),
