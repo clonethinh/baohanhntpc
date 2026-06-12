@@ -1,5 +1,5 @@
-import { Button, Col, Input, Row, Select, Space } from 'antd';
-import { PlusOutlined, SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Col, Input, Row, Select } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { Button as MobileButton, Input as MobileInput, Selector, Space as MobileSpace } from 'antd-mobile';
 import { Typography } from 'antd';
 
@@ -73,33 +73,37 @@ export default function NotificationFilters(props) {
   }
 
   return (
-    <Row gutter={[10, 10]} align="middle" wrap>
-      <Col flex="auto">
-        <Input
-          prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-          placeholder={t('adminCustomerNotifications.searchPlaceholder')}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onPressEnter={handleSearch}
-          allowClear
-        />
+    <Row gutter={[12, 12]} align="bottom" wrap>
+      <Col xs={24} md={12} lg={8} xl={6}>
+        <div className="notif-filter-field">
+          <span className="notif-filter-label">{t('button.timKiem')}</span>
+          <Input
+            prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
+            placeholder={t('adminCustomerNotifications.searchPlaceholder')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onPressEnter={handleSearch}
+            allowClear
+          />
+        </div>
       </Col>
-      <Col>
-        <Select style={{ width: 140 }} value={displayType} onChange={setDisplayType} options={displayOptions} />
+      <Col xs={24} md={12} lg={5} xl={4}>
+        <div className="notif-filter-field">
+          <span className="notif-filter-label">{t('adminCustomerNotifications.displayType')}</span>
+          <Select value={displayType} onChange={setDisplayType} options={displayOptions} />
+        </div>
       </Col>
-      <Col>
-        <Select style={{ width: 160 }} value={activeFilter} onChange={setActiveFilter} options={activeOptions} />
+      <Col xs={24} md={12} lg={5} xl={4}>
+        <div className="notif-filter-field">
+          <span className="notif-filter-label">{t('adminCustomerNotifications.activeStatus')}</span>
+          <Select value={activeFilter} onChange={setActiveFilter} options={activeOptions} />
+        </div>
       </Col>
-      <Col>
-        <Select style={{ width: 170 }} value={effectiveStatus} onChange={setEffectiveStatus} options={effectiveOptions} />
-      </Col>
-      <Col>
-        <Space size={6}>
-          <Button icon={<ReloadOutlined />} onClick={resetFilters} />
-          <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
-            {t('adminCustomerNotifications.add')}
-          </Button>
-        </Space>
+      <Col xs={24} md={12} lg={5} xl={4}>
+        <div className="notif-filter-field">
+          <span className="notif-filter-label">{t('adminCustomerNotifications.allEffectiveStatus')}</span>
+          <Select value={effectiveStatus} onChange={setEffectiveStatus} options={effectiveOptions} />
+        </div>
       </Col>
     </Row>
   );

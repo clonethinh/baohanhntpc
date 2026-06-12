@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { App, Card, Form, Grid, Modal, Space, Tag, Typography } from 'antd';
-import { BellOutlined, NotificationOutlined, EyeOutlined, PictureOutlined, DesktopOutlined } from '@ant-design/icons';
+import { App, Button, Card, Form, Grid, Modal, Space, Tag, Typography } from 'antd';
+import { BellOutlined, NotificationOutlined, EyeOutlined, PictureOutlined, DesktopOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Card as MobileCard, Space as MobileSpace } from 'antd-mobile';
 import { useTranslation } from 'react-i18next';
 import 'react-quill/dist/quill.snow.css';
@@ -133,42 +133,72 @@ export default function CustomerNotifications() {
   }
 
   return (
-    <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Header with title + KPI tags inline */}
+    <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Header: title (left) + actions (right) */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-        <Space size={12}>
+        <Space size={12} align="center">
           <NotificationOutlined style={{ fontSize: 22, color: '#2563eb' }} />
-          <div>
-            <Title level={4} style={{ margin: 0 }}>{t('adminCustomerNotifications.title')}</Title>
-          </div>
+          <Title level={4} style={{ margin: 0 }}>{t('adminCustomerNotifications.title')}</Title>
         </Space>
-        <div className="notif-kpi-strip">
-          <span className="notif-kpi"><NotificationOutlined /> {admin.summary.total}</span>
-          <span className="notif-kpi visible"><EyeOutlined /> {admin.summary.visible}</span>
-          <span className="notif-kpi banner"><PictureOutlined /> {admin.summary.banner}</span>
-          <span className="notif-kpi popup"><DesktopOutlined /> {admin.summary.popup}</span>
+        <Space size={8}>
+          <Button icon={<ReloadOutlined />} onClick={admin.resetFilters}>
+            {t('button.taiLai')}
+          </Button>
+          <Button type="primary" icon={<PlusOutlined />} onClick={admin.openCreate}>
+            {t('adminCustomerNotifications.add')}
+          </Button>
+        </Space>
+      </div>
+
+      {/* KPI grid: 4 cards, label + value */}
+      <div className="notif-kpi-strip-grid">
+        <div className="notif-kpi-card total">
+          <span className="notif-kpi-icon"><NotificationOutlined /></span>
+          <div className="notif-kpi-text">
+            <span className="notif-kpi-label">{t('adminCustomerNotifications.total')}</span>
+            <span className="notif-kpi-value">{admin.summary.total}</span>
+          </div>
+        </div>
+        <div className="notif-kpi-card visible">
+          <span className="notif-kpi-icon"><EyeOutlined /></span>
+          <div className="notif-kpi-text">
+            <span className="notif-kpi-label">{t('adminCustomerNotifications.visible')}</span>
+            <span className="notif-kpi-value">{admin.summary.visible}</span>
+          </div>
+        </div>
+        <div className="notif-kpi-card banner">
+          <span className="notif-kpi-icon"><PictureOutlined /></span>
+          <div className="notif-kpi-text">
+            <span className="notif-kpi-label">{t('adminCustomerNotifications.banner')}</span>
+            <span className="notif-kpi-value">{admin.summary.banner}</span>
+          </div>
+        </div>
+        <div className="notif-kpi-card popup">
+          <span className="notif-kpi-icon"><DesktopOutlined /></span>
+          <div className="notif-kpi-text">
+            <span className="notif-kpi-label">{t('adminCustomerNotifications.popup')}</span>
+            <span className="notif-kpi-value">{admin.summary.popup}</span>
+          </div>
         </div>
       </div>
 
-      {/* Filters row */}
-      <div style={{ paddingBottom: 16, borderBottom: '1px solid var(--ant-color-border-secondary, #f0f0f0)' }}>
-      <NotificationFilters
-        t={t}
-        search={admin.search}
-        setSearch={admin.setSearch}
-        displayType={admin.displayType}
-        setDisplayType={admin.setDisplayType}
-        activeFilter={admin.activeFilter}
-        setActiveFilter={admin.setActiveFilter}
-        effectiveStatus={admin.effectiveStatus}
-        setEffectiveStatus={admin.setEffectiveStatus}
-        displayOptions={admin.displayOptions}
-        activeOptions={admin.activeOptions}
-        effectiveOptions={admin.effectiveOptions}
-        handleSearch={admin.handleSearch}
-        openCreate={admin.openCreate}
-        resetFilters={admin.resetFilters}
-      />
+      {/* Filters row với label rõ ràng cho từng control */}
+      <div className="notif-filter-row" style={{ padding: '14px 16px', border: '1px solid var(--ant-color-border-secondary, #f0f0f0)', borderRadius: 12, background: 'var(--ant-color-bg-container, #fff)' }}>
+        <NotificationFilters
+          t={t}
+          search={admin.search}
+          setSearch={admin.setSearch}
+          displayType={admin.displayType}
+          setDisplayType={admin.setDisplayType}
+          activeFilter={admin.activeFilter}
+          setActiveFilter={admin.setActiveFilter}
+          effectiveStatus={admin.effectiveStatus}
+          setEffectiveStatus={admin.setEffectiveStatus}
+          displayOptions={admin.displayOptions}
+          activeOptions={admin.activeOptions}
+          effectiveOptions={admin.effectiveOptions}
+          handleSearch={admin.handleSearch}
+        />
       </div>
 
       {/* Table */}
