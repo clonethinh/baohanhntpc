@@ -932,7 +932,21 @@
     "previewBanner": "Xem trước banner",
     "previewPopup": "Xem trước popup",
     "emptyPreviewTitle": "...",
-    "chooseTime": "Chọn thời gian"
+    "chooseTime": "Chọn thời gian",
+    "contentSection": "Nội dung thông báo",
+    "contentSectionDesc": "Tiêu đề và nội dung sẽ hiển thị cho khách hàng.",
+    "displaySection": "Cách hiển thị",
+    "displaySectionDesc": "Chọn kiểu hiển thị và mức độ ưu tiên.",
+    "scheduleSection": "Lịch hiển thị",
+    "scheduleSectionDesc": "Thông báo hiển thị liên tục hoặc theo khoảng thời gian.",
+    "bannerHint": "Hiển thị dạng dải băng trên đầu trang",
+    "popupHint": "Hiển thị dạng cửa sổ nổi giữa màn hình",
+    "priorityHint": "Số lớn hơn sẽ hiển thị trước",
+    "statusOnHint": "Khách hàng đang nhìn thấy thông báo",
+    "statusOffHint": "Đã tắt, khách hàng không nhìn thấy",
+    "manualScheduleHint": "Hiển thị ngay đến khi bạn tắt thủ công",
+    "rangeScheduleHint": "Tự bật/tắt theo thời gian đã đặt",
+    "livePreview": "Xem trước trực tiếp"
   },
   "aiAssistant": {
     "launcher": "Trợ lý bảo hành AI",

@@ -1219,6 +1219,69 @@ html[data-theme='dark'] .ntpc-mobile-contact-map{
   will-change: transform;
 }
 
+.ntpc-rich-preview.ql-editor {
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.ntpc-rich-preview.ql-editor p,
+.ntpc-rich-preview.ql-editor ul,
+.ntpc-rich-preview.ql-editor ol,
+.ntpc-rich-preview.ql-editor h2,
+.ntpc-rich-preview.ql-editor h3 {
+  margin: 0;
+}
+
+.ntpc-rich-preview.ql-editor a {
+  color: #1677ff;
+  text-decoration: underline;
+}
+
+.ntpc-rich-preview.ql-editor ul,
+.ntpc-rich-preview.ql-editor ol {
+  padding-left: 1.5em;
+}
+
+.ntpc-rich-preview.ql-editor li {
+  margin-bottom: 0.2em;
+}
+
+.ntpc-rich-preview.ql-editor li:last-child {
+  margin-bottom: 0;
+}
+
+.ntpc-rich-preview.ql-editor p:empty::before {
+  content: '\00a0';
+}
+
+.ntpc-rich-preview.ql-editor p > br:only-child {
+  content: '';
+}
+
+.ntpc-rich-preview.ql-editor p + p,
+.ntpc-rich-preview.ql-editor p + ul,
+.ntpc-rich-preview.ql-editor p + ol,
+.ntpc-rich-preview.ql-editor ul + p,
+.ntpc-rich-preview.ql-editor ol + p,
+.ntpc-rich-preview.ql-editor h2 + p,
+.ntpc-rich-preview.ql-editor h3 + p {
+  margin-top: 0;
+}
+
+.ntpc-rich-preview.ql-editor > *:first-child {
+  margin-top: 0;
+}
+
+.ntpc-rich-preview.ql-editor > *:last-child {
+  margin-bottom: 0;
+}
+
+.ntpc-rich-preview.ql-editor.ql-blank::before {
+  display: none;
+}
+
 @keyframes ntpc-badge-float {
   0%, 100% {
     transform: translateY(0);
@@ -4248,4 +4311,171 @@ html[data-theme='dark'] .ntpc-mobile-card .adm-list-item:active {
 html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
 }
+
+/* ===== Trang Thông báo khách hàng ===== */
+.notif-kpi-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.notif-kpi {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+.notif-kpi.visible { color: #059669; background: #ecfdf5; border-color: #a7f3d0; }
+.notif-kpi.banner { color: #0891b2; background: #ecfeff; border-color: #a5f3fc; }
+.notif-kpi.popup { color: #ea580c; background: #fff7ed; border-color: #fed7aa; }
+
+.notif-table-card .ant-table-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.notif-table-card .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 12px;
+}
+.notif-table-card .ant-table-tbody > tr > td {
+  padding: 12px;
+}
+
+html[data-theme='dark'] .notif-kpi {
+  background: #1f2937;
+  border-color: #374151;
+  color: #9ca3af;
+}
+html[data-theme='dark'] .notif-kpi.visible { color: #34d399; background: #064e3b; border-color: #065f46; }
+html[data-theme='dark'] .notif-kpi.banner { color: #22d3ee; background: #083344; border-color: #155e75; }
+html[data-theme='dark'] .notif-kpi.popup { color: #fb923c; background: #431407; border-color: #7c2d12; }
+html[data-theme='dark'] .notif-table-card .ant-table-thead > tr > th {
+  background: #1a1a1a;
+}
+
+/* ===== Modal Sửa/Tạo thông báo — form sections ===== */
+.notif-form-section {
+  padding: 18px;
+  border: 1px solid #eef0f2;
+  border-radius: 14px;
+  background: #fcfcfd;
+  margin-bottom: 16px;
+}
+
+/* Radio dạng thẻ chọn lịch hiển thị */
+.notif-radio-card {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  margin: 0 !important;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  transition: all 0.15s ease;
+}
+.notif-radio-card:hover {
+  border-color: #93c5fd;
+  background: #f8fbff;
+}
+.notif-radio-card.ant-radio-wrapper-checked {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+.notif-radio-card > span:last-child {
+  flex: 1;
+}
+
+/* Preview dính theo cuộn */
+.notif-preview-sticky {
+  position: sticky;
+  top: 0;
+}
+
+/* Modal sửa/tạo thông báo — luôn nằm gọn trong viewport */
+.notif-edit-modal {
+  max-width: calc(100vw - 32px);
+}
+.notif-edit-modal .ant-modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 32px);
+}
+@media (max-width: 1240px) {
+  .notif-edit-modal { width: calc(100vw - 32px) !important; }
+}
+
+/* Dark mode */
+html[data-theme='dark'] .notif-form-section {
+  background: #161616;
+  border-color: #2a2a2a;
+}
+html[data-theme='dark'] .notif-radio-card {
+  background: #1a1a1a;
+  border-color: #333;
+}
+html[data-theme='dark'] .notif-radio-card:hover {
+  border-color: #1d4ed8;
+  background: #11203a;
+}
+html[data-theme='dark'] .notif-radio-card.ant-radio-wrapper-checked {
+  border-color: #3b82f6;
+  background: #11203a;
+}
+
+/* Preview frame trong modal */
+.notif-preview-frame {
+  border: 1px solid #eef0f2;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+}
+.notif-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafbfc;
+}
+.notif-preview-stage {
+  padding: 18px;
+  background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 10px, #f4f6f9 10px, #f4f6f9 20px);
+  min-height: 180px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.notif-preview-banner {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: #fff;
+  border-left: 4px solid #2563eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.notif-preview-popup {
+  width: 92%;
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.16);
+  border: 1px solid #eef0f2;
+}
+
+html[data-theme='dark'] .notif-preview-frame { background: #161616; border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-preview-head { background: #1a1a1a; border-bottom-color: #2a2a2a; }
+html[data-theme='dark'] .notif-preview-stage {
+  background: repeating-linear-gradient(45deg, #141414, #141414 10px, #181818 10px, #181818 20px);
+}
+html[data-theme='dark'] .notif-preview-banner,
+html[data-theme='dark'] .notif-preview-popup { background: #1e1e1e; border-color: #2a2a2a; }
 

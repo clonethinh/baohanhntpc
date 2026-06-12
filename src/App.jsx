@@ -25,6 +25,7 @@ const Statistics = lazy(() => import('./pages/admin/Statistics'));
 const ImportExport = lazy(() => import('./pages/admin/ImportExport'));
 const StaffManagement = lazy(() => import('./pages/admin/StaffManagement'));
 const Suppliers = lazy(() => import('./pages/admin/Suppliers'));
+const CustomerNotifications = lazy(() => import('./pages/admin/CustomerNotifications'));
 const WarrantyPrint = lazy(() => import('./components/warranty/WarrantyPrint'));
 const Tracuu = lazy(() => import('./pages/customer/Tracuu'));
 const TrackingResult = lazy(() => import('./pages/customer/TrackingResult'));
@@ -120,6 +121,7 @@ export default function App() {
                     <Route path="/admin/khach-hang" element={<AdminRoute><CustomerInfo /></AdminRoute>} />
                     <Route path="/admin/nhan-vien" element={<AdminOnlyRoute><StaffManagement /></AdminOnlyRoute>} />
                     <Route path="/admin/nha-cung-cap" element={<AdminRoute><Suppliers /></AdminRoute>} />
+                    <Route path="/admin/thong-bao-khach-hang" element={<AdminRoute><CustomerNotifications /></AdminRoute>} />
                     <Route path="/admin/thong-ke" element={<AdminRoute><Statistics /></AdminRoute>} />
                     <Route path="/admin/import-export" element={<AdminOnlyRoute><ImportExport /></AdminOnlyRoute>} />
                     <Route path="*" element={<NotFound />} />

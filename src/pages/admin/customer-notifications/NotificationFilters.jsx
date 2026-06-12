@@ -1,18 +1,9 @@
-import { Button, Card, Col, Input, Row, Select, Space, Typography } from 'antd';
-import { PlusOutlined, SearchOutlined, ReloadOutlined, FilterOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row, Select, Space } from 'antd';
+import { PlusOutlined, SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button as MobileButton, Input as MobileInput, Selector, Space as MobileSpace } from 'antd-mobile';
+import { Typography } from 'antd';
 
 const { Text } = Typography;
-
-function FilterSelectors({ displayType, setDisplayType, activeFilter, setActiveFilter, effectiveStatus, setEffectiveStatus, displayOptions, activeOptions, effectiveOptions }) {
-  return (
-    <>
-      <Col><Select style={{ width: 160 }} value={displayType} onChange={setDisplayType} options={displayOptions} /></Col>
-      <Col><Select style={{ width: 180 }} value={activeFilter} onChange={setActiveFilter} options={activeOptions} /></Col>
-      <Col><Select style={{ width: 200 }} value={effectiveStatus} onChange={setEffectiveStatus} options={effectiveOptions} /></Col>
-    </>
-  );
-}
 
 function MobileFilterSelectors({ displayType, setDisplayType, activeFilter, setActiveFilter, effectiveStatus, setEffectiveStatus, displayOptions, activeOptions, effectiveOptions, t }) {
   return (
@@ -82,46 +73,34 @@ export default function NotificationFilters(props) {
   }
 
   return (
-    <Card styles={{ body: { padding: 18 } }}>
-      <div style={{ display: 'grid', gap: 14 }}>
-        <Space size={8}>
-          <FilterOutlined style={{ color: '#2563eb' }} />
-          <Text strong>{t('adminCustomerNotifications.notification')}</Text>
-          <Text type="secondary">{t('adminCustomerNotifications.searchPlaceholder')}</Text>
+    <Row gutter={[10, 10]} align="middle" wrap>
+      <Col flex="auto">
+        <Input
+          prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
+          placeholder={t('adminCustomerNotifications.searchPlaceholder')}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onPressEnter={handleSearch}
+          allowClear
+        />
+      </Col>
+      <Col>
+        <Select style={{ width: 140 }} value={displayType} onChange={setDisplayType} options={displayOptions} />
+      </Col>
+      <Col>
+        <Select style={{ width: 160 }} value={activeFilter} onChange={setActiveFilter} options={activeOptions} />
+      </Col>
+      <Col>
+        <Select style={{ width: 170 }} value={effectiveStatus} onChange={setEffectiveStatus} options={effectiveOptions} />
+      </Col>
+      <Col>
+        <Space size={6}>
+          <Button icon={<ReloadOutlined />} onClick={resetFilters} />
+          <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
+            {t('adminCustomerNotifications.add')}
+          </Button>
         </Space>
-        <Row gutter={[12, 12]} align="middle">
-          <Col flex="auto">
-            <Input
-              size="large"
-              prefix={<SearchOutlined />}
-              placeholder={t('adminCustomerNotifications.searchPlaceholder')}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onPressEnter={handleSearch}
-            />
-          </Col>
-          <FilterSelectors
-            displayType={displayType}
-            setDisplayType={setDisplayType}
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
-            effectiveStatus={effectiveStatus}
-            setEffectiveStatus={setEffectiveStatus}
-            displayOptions={displayOptions}
-            activeOptions={activeOptions}
-            effectiveOptions={effectiveOptions}
-          />
-          <Col>
-            <Space>
-              <Button size="large" onClick={handleSearch}>{t('button.timKiem')}</Button>
-              <Button size="large" icon={<ReloadOutlined />} onClick={resetFilters}>{t('button.datLai')}</Button>
-            </Space>
-          </Col>
-          <Col>
-            <Button size="large" type="primary" icon={<PlusOutlined />} onClick={openCreate}>{t('adminCustomerNotifications.add')}</Button>
-          </Col>
-        </Row>
-      </div>
-    </Card>
+      </Col>
+    </Row>
   );
 }

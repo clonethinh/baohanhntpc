@@ -9,6 +9,7 @@ import {
   UserOutlined,
   TeamOutlined,
   ShopOutlined,
+  NotificationOutlined,
 } from '@ant-design/icons';
 import { Badge, Button as MobileButton, List } from 'antd-mobile';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,7 @@ const menuItemDefs = [
   { key: '/admin/khach-hang', icon: <UserOutlined />, labelKey: 'menu.khachHang' },
   { key: '/admin/nhan-vien', icon: <TeamOutlined />, labelKey: 'menu.nhanVien' },
   { key: '/admin/nha-cung-cap', icon: <ShopOutlined />, labelKey: 'menu.nhaCungCap' },
+  { key: '/admin/thong-bao-khach-hang', icon: <NotificationOutlined />, labelKey: 'menu.thongBaoKhachHang' },
   { key: '/admin/thong-ke', icon: <BarChartOutlined />, labelKey: 'menu.thongKe' },
   { key: '/admin/import-export', icon: <SwapOutlined />, labelKey: 'menu.importExport' },
   { key: '/tra-cuu', icon: <GlobalOutlined />, labelKey: 'menu.traCuu' },
