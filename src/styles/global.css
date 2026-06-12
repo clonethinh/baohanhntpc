@@ -4339,23 +4339,23 @@ html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
 .notif-kpi-strip-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 4px;
+  gap: 14px;
 }
 .notif-kpi-card {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
-  border: 1px solid #e5e7eb;
+  padding: 16px 18px;
+  border: 1px solid #d1d5db;
   border-radius: 12px;
   background: #fff;
-  min-height: 64px;
+  min-height: 72px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
   transition: border-color .15s ease, box-shadow .15s ease;
 }
 .notif-kpi-card:hover {
   border-color: #93c5fd;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, .04);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, .06);
 }
 .notif-kpi-card .notif-kpi-icon {
   display: inline-flex;
@@ -4389,10 +4389,11 @@ html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
 
 /* Filter bar: label phía trên control */
 .notif-filter-row {
-  padding: 14px 16px;
-  border: 1px solid #f0f0f0;
+  padding: 18px 20px;
+  border: 1px solid #d1d5db;
   border-radius: 12px;
   background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
 }
 .notif-filter-row .ant-form-item { margin-bottom: 0; }
 .notif-filter-row .notif-filter-field { display: flex; flex-direction: column; gap: 4px; }
@@ -4404,7 +4405,8 @@ html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
 }
 html[data-theme='dark'] .notif-filter-row {
   background: #1f1f1f;
-  border-color: #2a2a2a;
+  border-color: #333;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .4);
 }
 html[data-theme='dark'] .notif-filter-row .notif-filter-label { color: #9ca3af; }
 
@@ -4436,7 +4438,8 @@ html[data-theme='dark'] .notif-kpi.banner { color: #22d3ee; background: #083344;
 html[data-theme='dark'] .notif-kpi.popup { color: #fb923c; background: #431407; border-color: #7c2d12; }
 html[data-theme='dark'] .notif-kpi-card {
   background: #141414;
-  border-color: #2a2a2a;
+  border-color: #333;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .4);
 }
 html[data-theme='dark'] .notif-kpi-card:hover {
   border-color: #1d4ed8;

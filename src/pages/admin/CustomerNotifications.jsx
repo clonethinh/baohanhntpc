@@ -133,7 +133,7 @@ export default function CustomerNotifications() {
   }
 
   return (
-    <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className="desktop-only notif-page" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Header: title (left) + actions (right) */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
         <Space size={12} align="center">
