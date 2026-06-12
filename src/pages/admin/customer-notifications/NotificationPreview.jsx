@@ -25,7 +25,7 @@ export default function NotificationPreview({ title, content, displayType, t }) 
           <Text strong style={{ fontSize: 16, display: 'block', marginBottom: 8 }}>
             {title || t('adminCustomerNotifications.emptyPreviewTitle')}
           </Text>
-          <RichNotificationContent html={content || ''} style={{ lineHeight: 1.7, color: '#4b5563' }} />
+          <RichNotificationContent html={content || ''} className="notif-preview-content" style={{ lineHeight: 1.7 }} />
         </div>
       </div>
     </div>

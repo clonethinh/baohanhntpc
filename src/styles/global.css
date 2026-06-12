@@ -4560,4 +4560,55 @@ html[data-theme='dark'] .notif-preview-stage {
 }
 html[data-theme='dark'] .notif-preview-banner,
 html[data-theme='dark'] .notif-preview-popup { background: #1e1e1e; border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-preview-popup { box-shadow: 0 12px 40px rgba(0,0,0,.5); }
+
+/* Text nội dung preview — không hardcode màu nữa, dùng class theme-aware */
+.notif-preview-content { color: #4b5563; }
+html[data-theme='dark'] .notif-preview-content { color: #cbd5e1; }
+
+/* ===== Section icon (tiêu đề section trong form) ===== */
+.notif-section-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.notif-section-icon-blue   { background: #eff6ff; color: #2563eb; }
+.notif-section-icon-orange { background: #fff7ed; color: #ea580c; }
+.notif-section-icon-green  { background: #ecfdf5; color: #059669; }
+html[data-theme='dark'] .notif-section-icon-blue   { background: #11203a; color: #60a5fa; }
+html[data-theme='dark'] .notif-section-icon-orange { background: #431407; color: #fb923c; }
+html[data-theme='dark'] .notif-section-icon-green  { background: #064e3b; color: #34d399; }
+
+/* ===== ReactQuill snow theme — dark mode override ===== */
+/* Light mode: giữ nguyên mặc định của snow (nền trắng). Ở đây chỉ set fallback
+   để chắc chắn editor không bị trong suốt khi parent không có nền trắng. */
+.notif-quill.ql-snow .ql-editor { background: #fff; min-height: 200px; }
+html[data-theme='dark'] .notif-quill.ql-snow,
+html[data-theme='dark'] .notif-quill.ql-snow .ql-toolbar,
+html[data-theme='dark'] .notif-quill.ql-snow .ql-container,
+html[data-theme='dark'] .notif-quill.ql-snow .ql-editor {
+  background-color: #1e1e1e;
+  color: #e6e6e6;
+}
+html[data-theme='dark'] .notif-quill.ql-snow .ql-toolbar { border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-container { border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-stroke { stroke: #cbd5e1; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-fill { fill: #cbd5e1; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-picker { color: #cbd5e1; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-picker-label { color: #cbd5e1; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-picker-options { background-color: #262626; border-color: #2a2a2a; color: #e6e6e6; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-picker-item:hover { background-color: #303030; color: #fff; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-active .ql-stroke,
+html[data-theme='dark'] .notif-quill.ql-snow .ql-button.ql-active .ql-stroke { stroke: #60a5fa; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-active .ql-fill,
+html[data-theme='dark'] .notif-quill.ql-snow .ql-button.ql-active .ql-fill { fill: #60a5fa; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-tooltip { background-color: #262626; color: #e6e6e6; border-color: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-tooltip input[type=text] { background-color: #1e1e1e; color: #e6e6e6; border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-editor.ql-blank::before { color: #6b7280; font-style: italic; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-editor a { color: #60a5fa; }
+html[data-theme='dark'] .notif-quill.ql-snow .ql-editor pre.ql-syntax { background-color: #0f0f0f; color: #e6e6e6; }
 

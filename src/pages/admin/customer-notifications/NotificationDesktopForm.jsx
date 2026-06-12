@@ -6,10 +6,10 @@ import NotificationPreview from './NotificationPreview';
 
 const { Text } = Typography;
 
-function SectionHeader({ icon, title, desc, color }) {
+function SectionHeader({ icon, title, desc, variant = 'blue' }) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 14 }}>
-      <div style={{ width: 34, height: 34, borderRadius: 9, display: 'grid', placeItems: 'center', background: color.bg, color: color.fg, flexShrink: 0, fontSize: 16 }}>
+      <div className={`notif-section-icon notif-section-icon-${variant}`}>
         {icon}
       </div>
       <div style={{ display: 'grid', gap: 1 }}>
@@ -41,7 +41,7 @@ export default function NotificationDesktopForm({
               icon={<FileTextOutlined />}
               title={t('adminCustomerNotifications.contentSection')}
               desc={t('adminCustomerNotifications.contentSectionDesc')}
-              color={{ bg: '#eff6ff', fg: '#2563eb' }}
+              variant="blue"
             />
             <Form.Item name="title" label={t('adminCustomerNotifications.titleField')} rules={[{ required: true, message: t('adminCustomerNotifications.titleRequired') }]}>
               <Input size="large" placeholder={t('adminCustomerNotifications.titlePlaceholder')} maxLength={120} showCount />
@@ -64,7 +64,7 @@ export default function NotificationDesktopForm({
                 modules={RICH_TEXT_MODULES}
                 formats={RICH_TEXT_FORMATS}
                 onChange={(value) => { form.setFieldValue('content', value); }}
-                style={{ background: '#fff' }}
+                className="notif-quill"
               />
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function NotificationDesktopForm({
               icon={<AppstoreOutlined />}
               title={t('adminCustomerNotifications.displaySection')}
               desc={t('adminCustomerNotifications.displaySectionDesc')}
-              color={{ bg: '#fff7ed', fg: '#ea580c' }}
+              variant="orange"
             />
             <Form.Item name="displayType" label={t('adminCustomerNotifications.displayType')}>
               <Segmented
@@ -122,7 +122,7 @@ export default function NotificationDesktopForm({
               icon={<ClockCircleOutlined />}
               title={t('adminCustomerNotifications.scheduleSection')}
               desc={t('adminCustomerNotifications.scheduleSectionDesc')}
-              color={{ bg: '#ecfdf5', fg: '#059669' }}
+              variant="green"
             />
             <Form.Item name="scheduleType" style={{ marginBottom: scheduleType === 'range' ? 16 : 0 }}>
               <Radio.Group className="notif-schedule-radio" style={{ display: 'grid', gap: 10, width: '100%' }}>
