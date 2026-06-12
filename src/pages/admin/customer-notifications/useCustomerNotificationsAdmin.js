@@ -27,7 +27,6 @@ export default function useCustomerNotificationsAdmin({
   form,
   setEditorKey,
   setPendingEditorHtml,
-  setEditorContent,
 }) {
   const [data, setData] = useState(buildEmptyData());
   const [summary, setSummary] = useState(EMPTY_SUMMARY);
@@ -107,7 +106,6 @@ export default function useCustomerNotificationsAdmin({
     }
     setEditorKey((x) => x + 1);
     setPendingEditorHtml(values.content);
-    setEditorContent(values.content);
     form.setFieldsValue(values);
     setFormOpen(true);
   };
@@ -120,9 +118,9 @@ export default function useCustomerNotificationsAdmin({
       return;
     }
     const values = buildFormValuesFromRow(row);
+    try { localStorage.setItem('__dbgNotif_openEdit', JSON.stringify({content_pcount: (values.content?.match(/<p[\s>]/g) || []).length, content_first_100: values.content?.substring(0, 100), keys: Object.keys(values)})); } catch(e){}
     setEditorKey((x) => x + 1);
     setPendingEditorHtml(values.content);
-    setEditorContent(values.content);
     form.setFieldsValue(values);
     setFormOpen(true);
   };
@@ -140,8 +138,6 @@ export default function useCustomerNotificationsAdmin({
       if (editing) await customerNotificationService.update(editing.id, payload);
       else await customerNotificationService.create(payload);
       message.success(editing ? t('adminCustomerNotifications.updateSuccess') : t('adminCustomerNotifications.createSuccess'));
-      setPendingEditorHtml('');
-      setEditorContent('');
       setFormOpen(false);
       await fetchRows();
     } catch (err) {
