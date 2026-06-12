@@ -30,6 +30,7 @@ const routeLabelKeys = {
   '/admin/khach-hang': 'page.khachHang',
   '/admin/nhan-vien': 'page.nhanVien',
   '/admin/nha-cung-cap': 'page.nhaCungCap',
+  '/admin/thong-bao-khach-hang': 'page.thongBaoKhachHang',
   '/admin/thong-ke': 'page.thongKe',
   '/admin/import-export': 'page.importExport',
 };
