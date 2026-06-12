@@ -4388,6 +4388,12 @@ html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
 }
 
 /* Filter bar: label phía trên control */
+.notif-filter-row {
+  padding: 14px 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  background: #fff;
+}
 .notif-filter-row .ant-form-item { margin-bottom: 0; }
 .notif-filter-row .notif-filter-field { display: flex; flex-direction: column; gap: 4px; }
 .notif-filter-row .notif-filter-label {
@@ -4396,6 +4402,11 @@ html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
   font-weight: 600;
   line-height: 1.2;
 }
+html[data-theme='dark'] .notif-filter-row {
+  background: #1f1f1f;
+  border-color: #2a2a2a;
+}
+html[data-theme='dark'] .notif-filter-row .notif-filter-label { color: #9ca3af; }
 
 @media (max-width: 991px) {
   .notif-kpi-strip-grid { grid-template-columns: repeat(2, 1fr); }
@@ -4437,7 +4448,6 @@ html[data-theme='dark'] .notif-kpi-card.total .notif-kpi-icon { background: #112
 html[data-theme='dark'] .notif-kpi-card.visible .notif-kpi-icon { background: #064e3b; color: #34d399; }
 html[data-theme='dark'] .notif-kpi-card.banner .notif-kpi-icon { background: #083344; color: #22d3ee; }
 html[data-theme='dark'] .notif-kpi-card.popup .notif-kpi-icon { background: #431407; color: #fb923c; }
-html[data-theme='dark'] .notif-filter-row .notif-filter-label { color: #9ca3af; }
 html[data-theme='dark'] .notif-table-card .ant-table-thead > tr > th {
   background: #1a1a1a;
 }

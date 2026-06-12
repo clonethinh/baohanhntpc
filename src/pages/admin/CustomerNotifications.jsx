@@ -183,7 +183,7 @@ export default function CustomerNotifications() {
       </div>
 
       {/* Filters row với label rõ ràng cho từng control */}
-      <div className="notif-filter-row" style={{ padding: '14px 16px', border: '1px solid var(--ant-color-border-secondary, #f0f0f0)', borderRadius: 12, background: 'var(--ant-color-bg-container, #fff)' }}>
+      <div className="notif-filter-row">
         <NotificationFilters
           t={t}
           search={admin.search}
