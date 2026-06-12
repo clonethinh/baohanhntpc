@@ -135,6 +135,31 @@ model Warranty {
   @@index([updatedAt])
 }
 
+model CustomerNotification {
+  id           String   @id @default(uuid())
+  title        String   @map("title")
+  content      String   @default("") @map("content")
+  displayType  String   @default("banner") @map("display_type")
+  priority     Int      @default(0) @map("priority")
+  isActive     Boolean  @default(true) @map("is_active")
+  scheduleType String   @default("manual") @map("schedule_type")
+  startAt      DateTime? @map("start_at")
+  endAt        DateTime? @map("end_at")
+  createdBy    String   @default("") @map("created_by")
+  updatedBy    String   @default("") @map("updated_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("customer_notifications")
+  @@index([displayType])
+  @@index([isActive])
+  @@index([scheduleType])
+  @@index([priority])
+  @@index([startAt])
+  @@index([endAt])
+  @@index([updatedAt])
+}
+
 model AuditLog {
   id         String   @id @default(uuid())
   actorId    String   @default("") @map("actor_id")

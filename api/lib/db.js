@@ -62,21 +62,24 @@ function normalizeDbShape(data = {}) {
  */
 async function readDb() {
   try {
-    const [warranties, nhanVien, suppliers, supplierLogs] = await Promise.all([
+    const [warranties, nhanVien, suppliers, supplierLogs, customerNotifications] = await Promise.all([
       prisma.warranty.findMany({ orderBy: { stt: 'asc' } }),
       prisma.nhanVien.findMany({ orderBy: { maNV: 'asc' } }),
       prisma.supplier.findMany({ orderBy: { name: 'asc' } }),
       prisma.supplierLog.findMany({ orderBy: { createdAt: 'desc' } }),
+      prisma.customerNotification.findMany({ orderBy: [{ priority: 'desc' }, { updatedAt: 'desc' }] }),
     ]);
 
     let adminConfig = null;
     let customers = [];
+    let fallbackCustomerNotifications = [];
     if (fs.existsSync(DB_PATH)) {
       try {
         const raw = fs.readFileSync(DB_PATH, 'utf-8');
         const parsed = JSON.parse(raw);
         adminConfig = parsed.adminConfig || null;
         customers = parsed.customers || [];
+        fallbackCustomerNotifications = parsed.customerNotifications || [];
       } catch { /* ignore */ }
     }
 
@@ -86,6 +89,7 @@ async function readDb() {
       nhanVien: normalizeNhanVienRows(nhanVien),
       suppliers,
       supplierLogs: normalizeSupplierLogs(supplierLogs),
+      customerNotifications: customerNotifications.length ? customerNotifications : fallbackCustomerNotifications,
       adminConfig,
       customers
     };
@@ -99,7 +103,7 @@ async function readDb() {
         return normalizeDbShape(JSON.parse(raw));
       } catch { /* ignore */ }
     }
-    return { warranties: [], nhanVien: [], suppliers: [], supplierLogs: [], customers: [] };
+    return { warranties: [], nhanVien: [], suppliers: [], supplierLogs: [], customerNotifications: [], customers: [] };
   }
 }
 
@@ -248,6 +252,7 @@ async function getCollection(name) {
     if (name === 'nhanVien') return normalizeNhanVienRows(await prisma.nhanVien.findMany({ orderBy: { maNV: 'asc' } }));
     if (name === 'suppliers') return await prisma.supplier.findMany({ orderBy: { name: 'asc' } });
     if (name === 'supplierLogs') return await prisma.supplierLog.findMany({ orderBy: { createdAt: 'desc' } });
+    if (name === 'customerNotifications') return await prisma.customerNotification.findMany({ orderBy: [{ priority: 'desc' }, { updatedAt: 'desc' }] });
     if (name === 'customers') {
       const db = await readDb();
       return db.customers || [];

@@ -92,4 +92,54 @@ const supplierReturnSchema = z.object({
   note: z.string().optional().default(''),
 });
 
-export { warrantySchema, statusUpdateSchema, traHangSchema, exchangeReturnSchema, supplierSchema, supplierSendSchema, supplierReturnSchema };
+function htmlToText(value) {
+  return String(value || '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const customerNotificationSchema = z.object({
+  title: z.string().trim().min(1, 'Tieu de khong duoc de trong'),
+  content: z.string().trim().refine((value) => htmlToText(value).length > 0, 'Noi dung khong duoc de trong'),
+  displayType: z.enum(['banner', 'popup']).default('banner'),
+  priority: z.coerce.number().int().min(0, 'Muc do uu tien phai >= 0').default(0),
+  isActive: z.boolean().optional().default(true),
+  scheduleType: z.enum(['manual', 'range']).default('manual'),
+  startAt: z.string().optional().nullable().default(null),
+  endAt: z.string().optional().nullable().default(null),
+}).superRefine((data, ctx) => {
+  const startAt = String(data.startAt || '').trim();
+  const endAt = String(data.endAt || '').trim();
+  if (data.scheduleType === 'range') {
+    if (!startAt) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['startAt'], message: 'Chon thoi gian bat dau' });
+    }
+    if (!endAt) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endAt'], message: 'Chon thoi gian ket thuc' });
+    }
+    if (startAt && endAt) {
+      const startMs = new Date(startAt).getTime();
+      const endMs = new Date(endAt).getTime();
+      if (Number.isNaN(startMs)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['startAt'], message: 'Thoi gian bat dau khong hop le' });
+      }
+      if (Number.isNaN(endMs)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endAt'], message: 'Thoi gian ket thuc khong hop le' });
+      }
+      if (!Number.isNaN(startMs) && !Number.isNaN(endMs) && endMs < startMs) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endAt'], message: 'Thoi gian ket thuc phai sau thoi gian bat dau' });
+      }
+    }
+  }
+});
+
+export { warrantySchema, statusUpdateSchema, traHangSchema, exchangeReturnSchema, supplierSchema, supplierSendSchema, supplierReturnSchema, customerNotificationSchema };

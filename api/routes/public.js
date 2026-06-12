@@ -1,5 +1,5 @@
 ﻿import express from 'express';
-import { readDb, getCollection } from '../lib/db.js';
+import { readDb, getCollection, prisma } from '../lib/db.js';
 import dayjs from 'dayjs';
 import { buildPublicHistoryTimeline } from '../../src/utils/historyTimeline.js';
 
@@ -118,10 +118,53 @@ function normalizePhone(raw) {
   return only;
 }
 
+function isNotificationVisible(item, now = dayjs()) {
+  if (!item || item.isActive === false) return false;
+  if (item.scheduleType !== 'range') return true;
+  const start = item.startAt ? dayjs(item.startAt) : null;
+  const end = item.endAt ? dayjs(item.endAt) : null;
+  if (start && start.isValid() && now.isBefore(start)) return false;
+  if (end && end.isValid() && now.isAfter(end)) return false;
+  return true;
+}
+
+function toPublicNotification(item) {
+  return {
+    id: item.id,
+    title: item.title,
+    content: item.content,
+    displayType: item.displayType,
+    priority: item.priority || 0,
+    scheduleType: item.scheduleType || 'manual',
+    startAt: item.startAt ? dayjs(item.startAt).toISOString() : null,
+    endAt: item.endAt ? dayjs(item.endAt).toISOString() : null,
+    updatedAt: item.updatedAt ? dayjs(item.updatedAt).toISOString() : '',
+  };
+}
+
 function isPhoneQuery(raw) {
   const n = normalizePhone(raw).replace(/\D/g, '');
   return /^\d{9,11}$/.test(n);
 }
+
+router.get('/customer-notifications', async (_req, res) => {
+  try {
+    const rows = await prisma.customerNotification.findMany({
+      where: { isActive: true },
+      orderBy: [
+        { priority: 'desc' },
+        { startAt: 'desc' },
+        { createdAt: 'desc' },
+      ],
+    });
+    const activeRows = rows.filter((item) => isNotificationVisible(item));
+    const banners = activeRows.filter((item) => item.displayType === 'banner').map(toPublicNotification);
+    const popup = activeRows.filter((item) => item.displayType === 'popup')[0] || null;
+    return res.json({ success: true, data: { banners, popup: popup ? toPublicNotification(popup) : null } });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: err.message || 'Lỗi máy chủ, thử lại sau.' } });
+  }
+});
 
 router.get('/track', async (req, res) => {
   try {

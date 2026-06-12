@@ -40,6 +40,7 @@ const statsRoutes = (await import('./routes/stats.js')).default;
 const customersRoutes = (await import('./routes/customers.js')).default;
 const publicRoutes = (await import('./routes/public.js')).default;
 const suppliersRoutes = (await import('./routes/suppliers.js')).default;
+const customerNotificationsRoutes = (await import('./routes/customerNotifications.js')).default;
 const backupsRoutes = (await import('./routes/backups.js')).default;
 const { startBackupScheduler } = await import('./lib/backup.js');
 
@@ -224,6 +225,7 @@ app.use('/api/nhan-vien', nhanVienRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/customers', customersRoutes);
 app.use('/api/suppliers', suppliersRoutes);
+app.use('/api/customer-notifications', customerNotificationsRoutes);
 app.use('/api/admin/backups', requireRole('admin'), backupsRoutes);
 
 app.listen(PORT, () => {
