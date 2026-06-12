@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks/useTheme';
 import { useNavigate, useLocation } from 'react-router-dom';
 import FloatingZalo from '../common/FloatingZalo';
+import CustomerNotifications from '../customer/CustomerNotifications';
 
 const { Header, Footer, Content } = Layout;
 
@@ -90,6 +91,7 @@ export default function CustomerLayout({ children }) {
 
         {/* Content body */}
         <div style={{ flex: 1, padding: '14px 12px 0' }}>
+          <CustomerNotifications mobile />
           {children}
         </div>
 
@@ -162,8 +164,11 @@ export default function CustomerLayout({ children }) {
           </Tooltip>
         </Space>
       </Header>
-      <Content style={{ padding: '40px 16px', display: 'flex', justifyContent: 'center' }}>
-        {children}
+      <Content style={{ padding: '40px 16px', display: 'block' }}>
+        <CustomerNotifications />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          {children}
+        </div>
       </Content>
       <Footer style={{ textAlign: 'center', background: isDark ? '#141414' : '#fafafa' }}>
         <Typography.Text type="secondary">
