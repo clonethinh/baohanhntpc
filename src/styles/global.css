@@ -4586,29 +4586,28 @@ html[data-theme='dark'] .notif-section-icon-green  { background: #064e3b; color:
 /* ===== ReactQuill snow theme — dark mode override ===== */
 /* Light mode: giữ nguyên mặc định của snow (nền trắng). Ở đây chỉ set fallback
    để chắc chắn editor không bị trong suốt khi parent không có nền trắng. */
-.notif-quill.ql-snow .ql-editor { background: #fff; min-height: 200px; }
-html[data-theme='dark'] .notif-quill.ql-snow,
-html[data-theme='dark'] .notif-quill.ql-snow .ql-toolbar,
-html[data-theme='dark'] .notif-quill.ql-snow .ql-container,
-html[data-theme='dark'] .notif-quill.ql-snow .ql-editor {
+.notif-quill .ql-editor { background: #fff; min-height: 200px; }
+html[data-theme='dark'] .notif-quill .ql-toolbar,
+html[data-theme='dark'] .notif-quill .ql-container,
+html[data-theme='dark'] .notif-quill .ql-editor {
   background-color: #1e1e1e;
   color: #e6e6e6;
 }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-toolbar { border-color: #2a2a2a; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-container { border-color: #2a2a2a; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-stroke { stroke: #cbd5e1; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-fill { fill: #cbd5e1; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-picker { color: #cbd5e1; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-picker-label { color: #cbd5e1; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-picker-options { background-color: #262626; border-color: #2a2a2a; color: #e6e6e6; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-picker-item:hover { background-color: #303030; color: #fff; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-active .ql-stroke,
-html[data-theme='dark'] .notif-quill.ql-snow .ql-button.ql-active .ql-stroke { stroke: #60a5fa; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-active .ql-fill,
-html[data-theme='dark'] .notif-quill.ql-snow .ql-button.ql-active .ql-fill { fill: #60a5fa; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-tooltip { background-color: #262626; color: #e6e6e6; border-color: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-tooltip input[type=text] { background-color: #1e1e1e; color: #e6e6e6; border-color: #2a2a2a; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-editor.ql-blank::before { color: #6b7280; font-style: italic; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-editor a { color: #60a5fa; }
-html[data-theme='dark'] .notif-quill.ql-snow .ql-editor pre.ql-syntax { background-color: #0f0f0f; color: #e6e6e6; }
+html[data-theme='dark'] .notif-quill .ql-toolbar { border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-quill .ql-container { border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-quill .ql-stroke { stroke: #cbd5e1; }
+html[data-theme='dark'] .notif-quill .ql-fill { fill: #cbd5e1; }
+html[data-theme='dark'] .notif-quill .ql-picker { color: #cbd5e1; }
+html[data-theme='dark'] .notif-quill .ql-picker-label { color: #cbd5e1; }
+html[data-theme='dark'] .notif-quill .ql-picker-options { background-color: #262626; border-color: #2a2a2a; color: #e6e6e6; }
+html[data-theme='dark'] .notif-quill .ql-picker-item:hover { background-color: #303030; color: #fff; }
+html[data-theme='dark'] .notif-quill .ql-active .ql-stroke,
+html[data-theme='dark'] .notif-quill .ql-button.ql-active .ql-stroke { stroke: #60a5fa; }
+html[data-theme='dark'] .notif-quill .ql-active .ql-fill,
+html[data-theme='dark'] .notif-quill .ql-button.ql-active .ql-fill { fill: #60a5fa; }
+html[data-theme='dark'] .notif-quill .ql-tooltip { background-color: #262626; color: #e6e6e6; border-color: #2a2a2a; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+html[data-theme='dark'] .notif-quill .ql-tooltip input[type=text] { background-color: #1e1e1e; color: #e6e6e6; border-color: #2a2a2a; }
+html[data-theme='dark'] .notif-quill .ql-editor.ql-blank::before { color: #6b7280; font-style: italic; }
+html[data-theme='dark'] .notif-quill .ql-editor a { color: #60a5fa; }
+html[data-theme='dark'] .notif-quill .ql-editor pre.ql-syntax { background-color: #0f0f0f; color: #e6e6e6; }
 
