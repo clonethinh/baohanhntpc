@@ -19,3 +19,7 @@ scratch/
 cloudflare-ddns.sh
 .hermes/
 .bak-*/
+# scratch test files
+test_*.cjs
+.backup/
+.claude/
