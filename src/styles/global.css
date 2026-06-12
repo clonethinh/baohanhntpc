@@ -4336,6 +4336,13 @@ html[data-theme='dark'] .ntpc-mobile-card .adm-card-header::after {
 .notif-kpi.popup { color: #ea580c; background: #fff7ed; border-color: #fed7aa; }
 
 /* ===== Desktop KPI grid (4 cột) cho trang Thông báo khách hàng ===== */
+.notif-page {
+  /* Đảm bảo flexbox kể cả khi có rule `display: block !important` từ .desktop-only.
+     Vẫn giữ gap làm fallback; margin-top ở dưới là giải pháp chính. */
+  display: flex !important;
+  flex-direction: column;
+}
+.notif-page > * + * { margin-top: 24px; }
 .notif-kpi-strip-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
