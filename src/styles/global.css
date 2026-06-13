@@ -5654,3 +5654,120 @@ html[data-theme='dark'] .warranty-mobile-dirty-tag {
 }
 html[data-theme='dark'] .warranty-mobile-edit-section-title { color: #a6a6a6; }
 html[data-theme='dark'] .warranty-mobile-empty { color: #595959; }
+
+
+/* =====================================================================
+   WarrantyDetail mobile tab bar — custom sticky strip
+   Per NTPC mobile-service-tracking-ux skill:
+   - Touch targets >= 48px
+   - Active state semantic primary
+   - Badge counts semantic (primary cho nội dung, danger cho warning)
+   - Smooth transition + dark mode
+   ===================================================================== */
+.warranty-mobile-tabbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+.warranty-mobile-tabbar .tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 4px 12px;
+  min-height: 52px;
+  border: none;
+  background: transparent;
+  color: #8c8c8c;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+  font-family: inherit;
+}
+.warranty-mobile-tabbar .tab:active { background: #fafafa; }
+.warranty-mobile-tabbar .tab .icon {
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+.warranty-mobile-tabbar .tab .label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  letter-spacing: 0.1px;
+}
+.warranty-mobile-tabbar .tab .badge {
+  position: absolute;
+  top: 6px;
+  margin-left: 22px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: #1677ff;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  box-shadow: 0 0 0 2px #fff;
+}
+.warranty-mobile-tabbar .tab .badge.empty { display: none; }
+.warranty-mobile-tabbar .tab .badge.warn { background: #fa8c16; }
+.warranty-mobile-tabbar .tab .badge.muted { background: #8c8c8c; }
+
+.warranty-mobile-tabbar .tab.active {
+  color: #1677ff;
+  font-weight: 600;
+}
+.warranty-mobile-tabbar .tab.active .icon { transform: scale(1.08); }
+.warranty-mobile-tabbar .tab.active::after {
+  content: '';
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1677ff 0%, #4096ff 100%);
+  border-radius: 2px 2px 0 0;
+  animation: ntpc-tab-indicator 0.2s ease-out;
+}
+.warranty-mobile-tabbar .tab.active .badge { box-shadow: 0 0 0 2px #fff, 0 0 0 3px #1677ff; }
+
+@keyframes ntpc-tab-indicator {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+/* Tab content wrapper (no special styles — content provides its own padding) */
+.warranty-mobile-tab-content { display: block; }
+
+/* Dark mode */
+html[data-theme='dark'] .warranty-mobile-tabbar {
+  background: #1f1f1f;
+  border-bottom-color: #303030;
+  box-shadow: none;
+}
+html[data-theme='dark'] .warranty-mobile-tabbar .tab { color: #a6a6a6; }
+html[data-theme='dark'] .warranty-mobile-tabbar .tab:active { background: #262626; }
+html[data-theme='dark'] .warranty-mobile-tabbar .tab.active { color: #60a5fa; }
+html[data-theme='dark'] .warranty-mobile-tabbar .tab.active::after {
+  background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 100%);
+}
+html[data-theme='dark'] .warranty-mobile-tabbar .tab .badge {
+  background: #1677ff;
+  box-shadow: 0 0 0 2px #1f1f1f;
+}
+html[data-theme='dark'] .warranty-mobile-tabbar .tab.active .badge { box-shadow: 0 0 0 2px #1f1f1f, 0 0 0 3px #60a5fa; }
+html[data-theme='dark'] .warranty-mobile-tabbar .tab .badge.warn { background: #d89614; }

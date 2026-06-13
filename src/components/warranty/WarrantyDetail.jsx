@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Drawer, Tabs, Descriptions, Form, Input, Select, Button, Timeline, Tag, QRCode, Popconfirm, Space, Typography, App, Card, Modal, DatePicker, Alert, Table, Grid, Upload, Image, Skeleton } from 'antd';
-import { EditOutlined, PrinterOutlined, CheckCircleOutlined, DeleteOutlined, CopyOutlined, SendOutlined, ClockCircleOutlined, UploadOutlined, CloseOutlined, SwapOutlined, PhoneOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { EditOutlined, PrinterOutlined, CheckCircleOutlined, DeleteOutlined, CopyOutlined, SendOutlined, ClockCircleOutlined, UploadOutlined, CloseOutlined, SwapOutlined, PhoneOutlined, EnvironmentOutlined, FileTextOutlined, HistoryOutlined } from '@ant-design/icons';
 import {
   Button as MobileButton,
   Card as MobileCard,
@@ -143,6 +143,9 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   const [isClosing, setIsClosing] = useState(false);
   // Delay mounting the heaviest UI (tabs/forms) until after the open transition settles.
   const [renderHeavy, setRenderHeavy] = useState(false);
+  // Custom mobile tab bar state — replaces <MobileTabs> from antd-mobile for a more
+  // polished UX (sticky strip, badge counts, semantic active state).
+  const [mobileTab, setMobileTab] = useState('info');
   const supplierSelectOptions = suppliers
     .filter((s) => s.isActive !== false)
     .map((s) => {
@@ -2434,20 +2437,59 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
               </div>
             </div>
             {renderHeavy ? (
-              <MobileTabs>
-                <MobileTabs.Tab title={t('warrantyDetail.tabThongTin')} key="info">
-                  {renderMobileInfo()}
-                </MobileTabs.Tab>
-                <MobileTabs.Tab title={t('warrantyDetail.tabDoiTraNgan')} key="exchange-return">
-                  {renderMobileExchangeReturn()}
-                </MobileTabs.Tab>
-                <MobileTabs.Tab title={t('warrantyDetail.tabGuiNCC')} key="supplier">
-                  {renderMobileSupplier()}
-                </MobileTabs.Tab>
-                <MobileTabs.Tab title={t('warrantyDetail.lichSu', { defaultValue: 'Lịch sử' })} key="history">
-                  {renderMobileHistory()}
-                </MobileTabs.Tab>
-              </MobileTabs>
+              <>
+                <div className="warranty-mobile-tabbar" role="tablist">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={mobileTab === 'info'}
+                    className={`tab ${mobileTab === 'info' ? 'active' : ''}`}
+                    onClick={() => setMobileTab('info')}
+                  >
+                    <span className="icon"><FileTextOutlined /></span>
+                    <span className="label">{t('warrantyDetail.tabThongTin')}</span>
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={mobileTab === 'exchange-return'}
+                    className={`tab ${mobileTab === 'exchange-return' ? 'active' : ''}`}
+                    onClick={() => setMobileTab('exchange-return')}
+                  >
+                    <span className="icon"><SwapOutlined /></span>
+                    <span className="label">{t('warrantyDetail.tabDoiTraNgan')}</span>
+                    {warranty.doiTra && <span className="badge muted" title="Đã có đổi/trả">1</span>}
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={mobileTab === 'supplier'}
+                    className={`tab ${mobileTab === 'supplier' ? 'active' : ''}`}
+                    onClick={() => setMobileTab('supplier')}
+                  >
+                    <span className="icon"><SendOutlined /></span>
+                    <span className="label">{t('warrantyDetail.tabGuiNCC')}</span>
+                    {supplierLogs.length > 0 && <span className="badge warn">{supplierLogs.length}</span>}
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={mobileTab === 'history'}
+                    className={`tab ${mobileTab === 'history' ? 'active' : ''}`}
+                    onClick={() => setMobileTab('history')}
+                  >
+                    <span className="icon"><HistoryOutlined /></span>
+                    <span className="label">{t('warrantyDetail.lichSu', { defaultValue: 'Lịch sử' })}</span>
+                    {mobileHistory.length > 0 && <span className="badge">{mobileHistory.length}</span>}
+                  </button>
+                </div>
+                <div className="warranty-mobile-tab-content">
+                  {mobileTab === 'info' && renderMobileInfo()}
+                  {mobileTab === 'exchange-return' && renderMobileExchangeReturn()}
+                  {mobileTab === 'supplier' && renderMobileSupplier()}
+                  {mobileTab === 'history' && renderMobileHistory()}
+                </div>
+              </>
             ) : (
               <div style={{ padding: 12 }}>
                 <Skeleton active paragraph={{ rows: 10 }} />
