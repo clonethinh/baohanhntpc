@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Drawer, Tabs, Descriptions, Form, Input, Select, Button, Timeline, Tag, QRCode, Popconfirm, Space, Typography, App, Card, Modal, DatePicker, Alert, Table, Grid, Upload, Image, Skeleton } from 'antd';
-import { EditOutlined, PrinterOutlined, CheckCircleOutlined, DeleteOutlined, CopyOutlined, SendOutlined, ClockCircleOutlined, UploadOutlined, CloseOutlined, SwapOutlined } from '@ant-design/icons';
+import { EditOutlined, PrinterOutlined, CheckCircleOutlined, DeleteOutlined, CopyOutlined, SendOutlined, ClockCircleOutlined, UploadOutlined, CloseOutlined, SwapOutlined, PhoneOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import {
   Button as MobileButton,
   Card as MobileCard,
@@ -165,6 +165,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   // Snapshot of form values captured at the start of an inline edit session.
   // Used to detect dirty state (user-typed changes) vs the originally-loaded warranty.
   const [editSnapshot, setEditSnapshot] = useState(null);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   // Watch all form values. Form.useWatch only returns fields that are currently
   // mounted (i.e. the section being edited), which is exactly the scope we want
@@ -570,6 +571,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   };
 
   async function handleSave() {
+    if (saveLoading) return;
+    setSaveLoading(true);
     try {
       const rawValues = form.getFieldsValue();
       const values = {
@@ -589,6 +592,8 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       }
     } catch {
       message.error(t('messages:error.updateError'));
+    } finally {
+      setSaveLoading(false);
     }
   }
 
@@ -1739,6 +1744,16 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   const mobileStatusColor = getStatusBadgeColor(warranty.trangThai, 'mobile');
   const mobileHistory = visibleHistory;
 
+  const getMobileStatusVariant = (s) => {
+    if (s === 'da_tra') return 'success';
+    if (s === 'huy') return 'danger';
+    if (['dang_xu_ly', 'cho_xu_ly', 'cho_lien_he', 'cho_linh_kien'].includes(s)) return 'processing';
+    if (['cho_nhan', 'cho_tra'].includes(s)) return 'neutral';
+    return 'muted';
+  };
+  const mobileStatusVariant = getMobileStatusVariant(warranty.trangThai);
+  const isPriority = warranty.uuTien && warranty.uuTien !== 'thuong';
+
   const handleMobileLog = async () => {
     if (!mobileLogNote.trim()) {
       message.warning(t('warrantyDetail.toast.nhapGhiChuTienTrinh'));
@@ -1748,137 +1763,339 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     setMobileLogNote('');
   };
 
-  const renderMobileInfo = () => (
-    <div className="warranty-mobile-detail-body">
-      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.thongTinPhieu')}>
-        <List>
-          <List.Item title={t('field.soChungTu')}>{warranty.soChungTu}</List.Item>
-          <List.Item title={t('field.trangThai')}><MobileTag color={mobileStatusColor}>{statusConfig?.label || warranty.trangThai}</MobileTag></List.Item>
-          <List.Item title={t('field.khachHang')}>{warranty.khachHang || '-'}</List.Item>
-          <List.Item title={t('field.soDienThoai')}>{warranty.soDienThoai || '-'}</List.Item>
-          <List.Item title={t('field.diaChi')}>{warranty.diaChi || '-'}</List.Item>
-          <List.Item title={t('field.ngayNhan')}>{formatDate(warranty.ngayNhan, 'DD-MM-YYYY HH:mm')}</List.Item>
-          {warranty?.trangThai !== 'da_tra' && warranty?.trangThai !== 'huy' && (
-            <List.Item title={t('field.ngayHenTra')}>
-              {warranty.ngayHenTra === 'none'
-                ? <span>{t('warrantyDetail.dangCapNhap')}<span className="loading-dots" /></span>
-                : formatDate(warranty.ngayHenTra)}
-            </List.Item>
+  const renderMobileInfo = () => {
+    const customerInitials = String(warranty.khachHang || '?')
+      .trim()
+      .split(/\s+/)
+      .map((w) => w[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || '?';
+    const canEdit = warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy';
+    const isClosed = !canEdit;
+
+    return (
+      <div className="warranty-mobile-detail-body">
+        {/* STATUS HERO — semantic color, prominent */}
+        <div className={`warranty-mobile-status-hero ${mobileStatusVariant}`}>
+          <span className="dot" />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="status-label">{statusConfig?.label || warranty.trangThai}</div>
+            {warranty.ngayHenTra && canEdit && (
+              <div style={{ fontSize: 12, color: '#8c8c8c', marginTop: 2 }}>
+                {t('field.ngayHenTra')}: {warranty.ngayHenTra === 'none'
+                  ? t('warrantyDetail.dangCapNhap')
+                  : formatDate(warranty.ngayHenTra)}
+              </div>
+            )}
+          </div>
+          {isPriority && (
+            <span className="warranty-mobile-hero-priority">Ưu tiên</span>
           )}
-          <List.Item title={t('field.ngayTra')}>{warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}</List.Item>
-          <List.Item title={t('field.nhanVien')}>{getStaffName(warranty.maNhanVien)}</List.Item>
-          {warranty.ghiChu && <List.Item title={t('field.ghiChu')}>{warranty.ghiChu}</List.Item>}
-        </List>
-      </MobileCard>
-
-      <MobileCard className="warranty-mobile-card" title={t('field.sanPham')}>
-        <List>
-          <List.Item title={t('field.tenHang')}>{warranty.tenHang || '-'}</List.Item>
-          <List.Item title={t('field.soSeri')}>{warranty.soSeri || '-'}</List.Item>
-          <List.Item title={t('field.cauHinh')}>{warranty.cauHinh || '-'}</List.Item>
-          <List.Item title={t('field.loiLucNhan')}>{warranty.loiLucNhan || '-'}</List.Item>
-          <List.Item title={t('field.phuKien')}>{warranty.phuKien || '-'}</List.Item>
-          <List.Item title={t('field.chiPhi')}>{warranty.chiPhi ? `${warranty.chiPhi.toLocaleString('vi-VN')} đ` : t('return.free', { ns: 'print', defaultValue: 'Miễn phí' })}</List.Item>
-          <List.Item title={t('field.loaiXuLy')}>{LOAI_XU_LY_LABELS[warranty.loaiXuLy] || warranty.loaiXuLy || '-'}</List.Item>
-          <List.Item title={t('field.baoHanh')}>{warranty.baoHanh || '-'}</List.Item>
-          <List.Item title={t('field.ngayMua')}>{formatDate(warranty.ngayMua)}</List.Item>
-        </List>
-      </MobileCard>
-
-      <MobileCard className="warranty-mobile-card" title={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh đính kèm')} (${attachments.length}/10)`}>
-        <div style={{ marginBottom: 10 }}>{uploadAttachmentButton}</div>
-        {attachments.length > 0 ? (
-          renderAttachmentGrid(true)
-        ) : (
-          <Text type="secondary">{t('warrantyDetail.chuaCoAnh')}</Text>
-        )}
-      </MobileCard>
-
-      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.qrTitle')}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '10px 0' }}>
-          <QRCode value={trackingUrl} size={128} />
-          <MobileButton
-            size="small"
-            onClick={async () => {
-              try {
-                await navigator.clipboard.writeText(trackingUrl);
-                message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
-              } catch {
-                const ta = document.createElement('textarea');
-                ta.value = trackingUrl;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
-              }
-            }}
-          >
-            Sao chép liên kết tra cứu
-          </MobileButton>
         </div>
-      </MobileCard>
 
-      <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.thaoTacNhanh')}>
-        <MobileSpace wrap>
-          <MobileButton size="small" onClick={() => setEditing(true)}>{t('button.sua')}</MobileButton>
-          <MobileButton size="small" onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>{t('print:actions.printReceive')}</MobileButton>
-          {warranty.trangThai === 'da_tra' && (
-            <MobileButton size="small" color="primary" onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=return`)}>{t('print:actions.printReturn')}</MobileButton>
+        {/* CUSTOMER CARD — avatar + call + swap */}
+        <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.khachHang')}>
+          <div className="warranty-mobile-customer">
+            <div className="warranty-mobile-customer-avatar" style={{ borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+              {customerInitials}
+            </div>
+            <div className="warranty-mobile-customer-info">
+              <div className="warranty-mobile-customer-name">{warranty.khachHang || '-'}</div>
+              {warranty.soDienThoai && (
+                <div className="warranty-mobile-customer-phone">
+                  <PhoneOutlined /> {warranty.soDienThoai}
+                </div>
+              )}
+            </div>
+            <div className="warranty-mobile-customer-actions">
+              {warranty.soDienThoai && (
+                <a
+                  className="warranty-mobile-customer-call"
+                  href={`tel:${warranty.soDienThoai}`}
+                  aria-label={t('warrantyDetail.goiDien', { defaultValue: 'Gọi điện' })}
+                >
+                  <PhoneOutlined />
+                </a>
+              )}
+              <button
+                type="button"
+                className="warranty-mobile-customer-swap"
+                onClick={() => setCustomerPickerOpen(true)}
+                aria-label={t('warrantyDetail.chuyenKhachTitle')}
+                title={t('warrantyDetail.chuyenKhachTitle')}
+              >
+                <SwapOutlined />
+              </button>
+            </div>
+          </div>
+          {warranty.diaChi && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 10, fontSize: 13, color: '#595959' }}>
+              <EnvironmentOutlined style={{ color: '#8c8c8c', marginTop: 2, flexShrink: 0 }} />
+              <span>{warranty.diaChi}</span>
+            </div>
           )}
-          <MobileButton
-            size="small"
-            onClick={async () => {
-              try {
-                await navigator.clipboard.writeText(trackingUrl);
-                message.success(t('warrantyDetail.toast.daSaoChep'));
-              } catch {
-                const ta = document.createElement('textarea');
-                ta.value = trackingUrl;
-                ta.style.position = 'fixed';
-                ta.style.opacity = '0';
-                document.body.appendChild(ta);
-                ta.focus();
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                message.success(t('warrantyDetail.toast.daSaoChep'));
-              }
-            }}
-          >
-            Copy tra cứu
-          </MobileButton>
-          {warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy' && (
-            <>
-              <MobileButton size="small" color="primary" onClick={() => Dialog.confirm({ content: t('warrantyDetail.danhDauXong'), confirmText: t('print:actions.yes') && 'Xong', cancelText: t('button.huy'), onConfirm: handleTraHang })}>Xong</MobileButton>
-              <MobileButton size="small" color="danger" fill="outline" onClick={() => setCancelModal(true)}>{t('button.huy')}</MobileButton>
-            </>
-          )}
-        </MobileSpace>
-      </MobileCard>
-
-      {editing && (
-        <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.suaThongTin')}>
-          <Form form={form} layout="vertical">
-            <Form.Item label={t('field.khachHang')} name="khachHang"><Input /></Form.Item>
-            <Form.Item label={t('field.soDienThoai')} name="soDienThoai"><Input /></Form.Item>
-            <Form.Item label={t('field.diaChi')} name="diaChi"><TextArea rows={2} /></Form.Item>
-            <Form.Item label={t('field.tenHang')} name="tenHang"><Input /></Form.Item>
-            <Form.Item label={t('field.soSeri')} name="soSeri"><Input /></Form.Item>
-            <Form.Item label={t('field.loiLucNhan')} name="loiLucNhan"><TextArea rows={2} /></Form.Item>
-            <Form.Item label={t('field.phuKien')} name="phuKien"><Input /></Form.Item>
-            <Form.Item label={t('field.ngayNhan')} name="ngayNhan"><DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" /></Form.Item>
-            <Form.Item label={t('field.ngayHenTra')} name="ngayHenTra"><DatePicker allowClear style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
-            <Form.Item label={t('field.ghiChu')} name="ghiChu"><TextArea rows={2} /></Form.Item>
-            <MobileSpace>
-              <MobileButton color="primary" onClick={handleSave}>{t('button.luu')}</MobileButton>
-              <MobileButton onClick={() => setEditing(false)}>{t('button.huy')}</MobileButton>
-            </MobileSpace>
-          </Form>
         </MobileCard>
-      )}
-    </div>
-  );
+
+        {/* THÔNG TIN PHIẾU — info grid 2-col */}
+        <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.thongTinPhieu')}>
+          <div className="warranty-mobile-info-grid">
+            <div className="warranty-mobile-info-field full">
+              <div className="warranty-mobile-info-label">{t('field.soChungTu')}</div>
+              <div className="warranty-mobile-info-value" style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{warranty.soChungTu}</div>
+            </div>
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.ngayNhan')}</div>
+              <div className="warranty-mobile-info-value">{formatDate(warranty.ngayNhan, 'DD-MM-YYYY HH:mm')}</div>
+            </div>
+            {canEdit && (
+              <div className="warranty-mobile-info-field">
+                <div className="warranty-mobile-info-label">{t('field.ngayHenTra')}</div>
+                <div className={`warranty-mobile-info-value ${!warranty.ngayHenTra || warranty.ngayHenTra === 'none' ? 'muted' : ''}`}>
+                  {warranty.ngayHenTra === 'none' || !warranty.ngayHenTra
+                    ? `${t('warrantyDetail.dangCapNhap')}`
+                    : formatDate(warranty.ngayHenTra)}
+                </div>
+              </div>
+            )}
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.ngayTra')}</div>
+              <div className={`warranty-mobile-info-value ${!warranty.ngayTra ? 'muted' : ''}`}>
+                {warranty.ngayTra ? formatDate(warranty.ngayTra) : '-'}
+              </div>
+            </div>
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.nhanVien')}</div>
+              <div className="warranty-mobile-info-value">{getStaffName(warranty.maNhanVien) || '-'}</div>
+            </div>
+            {warranty.ghiChu && (
+              <div className="warranty-mobile-info-field full">
+                <div className="warranty-mobile-info-label">{t('field.ghiChu')}</div>
+                <div className="warranty-mobile-info-value" style={{ fontWeight: 400 }}>{warranty.ghiChu}</div>
+              </div>
+            )}
+          </div>
+        </MobileCard>
+
+        {/* SẢN PHẨM — info grid 2-col */}
+        <MobileCard className="warranty-mobile-card" title={t('field.sanPham')}>
+          <div className="warranty-mobile-info-grid">
+            <div className="warranty-mobile-info-field full">
+              <div className="warranty-mobile-info-label">{t('field.tenHang')}</div>
+              <div className={`warranty-mobile-info-value ${!warranty.tenHang ? 'muted' : ''}`}>{warranty.tenHang || '-'}</div>
+            </div>
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.soSeri')}</div>
+              <div className={`warranty-mobile-info-value ${!warranty.soSeri ? 'muted' : ''}`} style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 12 }}>
+                {warranty.soSeri || '-'}
+              </div>
+            </div>
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.loaiXuLy')}</div>
+              <div className={`warranty-mobile-info-value ${!warranty.loaiXuLy ? 'muted' : ''}`}>
+                {LOAI_XU_LY_LABELS[warranty.loaiXuLy] || warranty.loaiXuLy || '-'}
+              </div>
+            </div>
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.baoHanh')}</div>
+              <div className={`warranty-mobile-info-value ${!warranty.baoHanh ? 'muted' : ''}`}>{warranty.baoHanh || '-'}</div>
+            </div>
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.ngayMua')}</div>
+              <div className={`warranty-mobile-info-value ${!warranty.ngayMua ? 'muted' : ''}`}>{formatDate(warranty.ngayMua)}</div>
+            </div>
+            <div className="warranty-mobile-info-field">
+              <div className="warranty-mobile-info-label">{t('field.chiPhi')}</div>
+              <div className={`warranty-mobile-info-value ${!warranty.chiPhi ? 'muted' : ''}`} style={{ color: warranty.chiPhi ? '#15803d' : undefined }}>
+                {warranty.chiPhi
+                  ? `${warranty.chiPhi.toLocaleString('vi-VN')} đ`
+                  : t('return.free', { ns: 'print', defaultValue: 'Miễn phí' })}
+              </div>
+            </div>
+            {(warranty.loiLucNhan || warranty.phuKien || warranty.cauHinh) && (
+              <>
+                {warranty.loiLucNhan && (
+                  <div className="warranty-mobile-info-field full">
+                    <div className="warranty-mobile-info-label">{t('field.loiLucNhan')}</div>
+                    <div className="warranty-mobile-info-value" style={{ fontWeight: 400 }}>{warranty.loiLucNhan}</div>
+                  </div>
+                )}
+                {warranty.phuKien && (
+                  <div className="warranty-mobile-info-field full">
+                    <div className="warranty-mobile-info-label">{t('field.phuKien')}</div>
+                    <div className="warranty-mobile-info-value" style={{ fontWeight: 400 }}>{warranty.phuKien}</div>
+                  </div>
+                )}
+                {warranty.cauHinh && (
+                  <div className="warranty-mobile-info-field full">
+                    <div className="warranty-mobile-info-label">{t('field.cauHinh')}</div>
+                    <div className="warranty-mobile-info-value" style={{ fontWeight: 400, fontSize: 12 }}>{warranty.cauHinh}</div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </MobileCard>
+
+        {/* QUICK ACTIONS — stacked, large touch targets */}
+        <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.thaoTacNhanh')}>
+          <div className="warranty-mobile-quick-actions">
+            <button type="button" className="warranty-mobile-action-row" onClick={() => setCustomerPickerOpen(true)}>
+              <span className="icon warn"><SwapOutlined /></span>
+              <span className="label">{t('warrantyDetail.chuyenKhachTitle')}</span>
+              <span className="chevron">›</span>
+            </button>
+            <button type="button" className="warranty-mobile-action-row" onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>
+              <span className="icon primary"><PrinterOutlined /></span>
+              <span className="label">{t('print:actions.printReceive', { defaultValue: 'In phiếu nhận' })}</span>
+              <span className="chevron">›</span>
+            </button>
+            {warranty.trangThai === 'da_tra' && (
+              <button type="button" className="warranty-mobile-action-row" onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=return`)}>
+                <span className="icon primary"><PrinterOutlined /></span>
+                <span className="label">{t('print:actions.printReturn', { defaultValue: 'In phiếu trả' })}</span>
+                <span className="chevron">›</span>
+              </button>
+            )}
+            <button
+              type="button"
+              className="warranty-mobile-action-row"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(trackingUrl);
+                  message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
+                } catch {
+                  const ta = document.createElement('textarea');
+                  ta.value = trackingUrl;
+                  document.body.appendChild(ta);
+                  ta.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(ta);
+                  message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
+                }
+              }}
+            >
+              <span className="icon neutral"><CopyOutlined /></span>
+              <span className="label">{t('warrantyDetail.saoChepLink', { defaultValue: 'Sao chép liên kết tra cứu' })}</span>
+              <span className="chevron">›</span>
+            </button>
+            {canEdit && (
+              <>
+                <button
+                  type="button"
+                  className="warranty-mobile-action-row"
+                  onClick={() =>
+                    Dialog.confirm({
+                      content: t('warrantyDetail.danhDauXong'),
+                      confirmText: t('button.xong', { defaultValue: 'Xong' }),
+                      cancelText: t('button.huy', { defaultValue: 'Hủy' }),
+                      onConfirm: handleTraHang,
+                    })
+                  }
+                >
+                  <span className="icon success"><CheckCircleOutlined /></span>
+                  <span className="label">{t('warrantyDetail.danhDauXongBtn', { defaultValue: 'Đánh dấu xong' })}</span>
+                  <span className="chevron">›</span>
+                </button>
+                <button
+                  type="button"
+                  className="warranty-mobile-action-row"
+                  onClick={() => setCancelModal(true)}
+                >
+                  <span className="icon danger"><DeleteOutlined /></span>
+                  <span className="label">{t('warrantyDetail.huyPhieuTitle', { defaultValue: 'Hủy phiếu' })}</span>
+                  <span className="chevron">›</span>
+                </button>
+              </>
+            )}
+          </div>
+        </MobileCard>
+
+        {/* ATTACHMENTS */}
+        <MobileCard className="warranty-mobile-card" title={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh đính kèm')} (${attachments.length}/10)`}>
+          <div style={{ marginBottom: 10 }}>{uploadAttachmentButton}</div>
+          {attachments.length > 0
+            ? renderAttachmentGrid(true)
+            : <div className="warranty-mobile-empty">{t('warrantyDetail.chuaCoAnh')}</div>}
+        </MobileCard>
+
+        {/* QR */}
+        <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.qrTitle')}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '10px 0' }}>
+            <QRCode value={trackingUrl} size={128} />
+            <MobileButton
+              size="small"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(trackingUrl);
+                  message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
+                } catch {
+                  const ta = document.createElement('textarea');
+                  ta.value = trackingUrl;
+                  document.body.appendChild(ta);
+                  ta.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(ta);
+                  message.success(t('warrantyDetail.toast.daSaoChepLienKet'));
+                }
+              }}
+            >
+              {t('warrantyDetail.saoChepLink', { defaultValue: 'Sao chép liên kết tra cứu' })}
+            </MobileButton>
+          </div>
+        </MobileCard>
+
+        {/* EDIT FORM — sticky bottom bar + dirty indicator */}
+        {editing && (
+          <MobileCard className="warranty-mobile-card" title={t('warrantyDetail.suaThongTin')}>
+            <div className="warranty-mobile-edit-section-title">{t('warrantyDetail.thongTinKhachHang', { defaultValue: 'Thông tin khách hàng' })}</div>
+            <Form form={form} layout="vertical">
+              <div className="warranty-mobile-edit-grid">
+                <Form.Item className="full" label={t('field.khachHang')} name="khachHang"><Input /></Form.Item>
+                <Form.Item label={t('field.soDienThoai')} name="soDienThoai"><Input type="tel" /></Form.Item>
+                <Form.Item label={t('field.diaChi')} name="diaChi"><Input /></Form.Item>
+              </div>
+              <div className="warranty-mobile-edit-section-title" style={{ marginTop: 18 }}>{t('warrantyDetail.thongTinSanPham', { defaultValue: 'Thông tin sản phẩm' })}</div>
+              <div className="warranty-mobile-edit-grid">
+                <Form.Item className="full" label={t('field.tenHang')} name="tenHang"><Input /></Form.Item>
+                <Form.Item label={t('field.soSeri')} name="soSeri"><Input /></Form.Item>
+                <Form.Item label={t('field.loiLucNhan')} name="loiLucNhan"><Input /></Form.Item>
+                <Form.Item label={t('field.phuKien')} name="phuKien"><Input /></Form.Item>
+                <Form.Item className="full" label={t('field.cauHinh')} name="cauHinh"><Input /></Form.Item>
+                <Form.Item label={t('field.ngayMua')} name="ngayMua"><DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
+                <Form.Item label={t('field.ngayNhan')} name="ngayNhan"><DatePicker showTime style={{ width: '100%' }} format="DD-MM-YYYY HH:mm" /></Form.Item>
+                <Form.Item label={t('field.ngayHenTra')} name="ngayHenTra"><DatePicker allowClear style={{ width: '100%' }} format="DD-MM-YYYY" /></Form.Item>
+                <Form.Item label={t('field.loaiXuLy')} name="loaiXuLy">
+                  <Select
+                    placeholder={t('warrantyDetail.chonLoaiXuLy', { defaultValue: 'Chọn loại XL' })}
+                    options={LOAI_XU_LY_OPTIONS}
+                    allowClear
+                    style={{ width: '100%' }}
+                  />
+                </Form.Item>
+                <Form.Item label={t('field.baoHanh')} name="baoHanh"><Input /></Form.Item>
+                <Form.Item label={t('field.chiPhi')} name="chiPhi"><Input type="number" addonAfter="đ" /></Form.Item>
+                <Form.Item className="full" label={t('field.ghiChu')} name="ghiChu"><MobileTextArea rows={2} /></Form.Item>
+              </div>
+            </Form>
+            <div className="warranty-mobile-edit-bar">
+              {isDirty && (
+                <span className="warranty-mobile-dirty-tag">
+                  <EditOutlined /> {t('warrantyDetail.chuaLuu', { defaultValue: 'Chưa lưu' })}
+                </span>
+              )}
+              <span className="spacer" />
+              <MobileButton onClick={cancelInlineEdit}>{t('button.huy', { defaultValue: 'Hủy' })}</MobileButton>
+              <MobileButton color="primary" onClick={handleSave} loading={saveLoading}>
+                {t('button.luu', { defaultValue: 'Lưu' })}
+              </MobileButton>
+            </div>
+          </MobileCard>
+        )}
+      </div>
+    );
+  };
 
   const renderMobileExchangeReturn = () => {
     const doiTra = warranty.doiTra;
@@ -2176,9 +2393,46 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
           className="warranty-mobile-detail-popup"
         >
           <div className="warranty-mobile-detail">
-            <NavBar onBack={handleClose} right={<MobileTag color={mobileStatusColor}>{statusConfig?.label || warranty.trangThai}</MobileTag>}>
-              {warranty.soChungTu}
-            </NavBar>
+            <div className="warranty-mobile-hero">
+              <button
+                type="button"
+                className="warranty-mobile-hero-back"
+                onClick={handleClose}
+                aria-label={t('button.dong', { defaultValue: 'Đóng' })}
+              >
+                <CloseOutlined />
+              </button>
+              <div className="warranty-mobile-hero-title">
+                <div className="warranty-mobile-hero-code">{warranty.soChungTu}</div>
+                <div className="warranty-mobile-hero-meta">
+                  <span className={`warranty-mobile-hero-status ${mobileStatusVariant}`}>
+                    <span className="dot" />
+                    {statusConfig?.label || warranty.trangThai}
+                  </span>
+                  {isPriority && (
+                    <span className="warranty-mobile-hero-priority">Ưu tiên</span>
+                  )}
+                </div>
+              </div>
+              <div className="warranty-mobile-hero-actions">
+                <button
+                  type="button"
+                  className="warranty-mobile-hero-action"
+                  onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}
+                  aria-label={t('print:actions.printReceive', { defaultValue: 'In phiếu nhận' })}
+                >
+                  <PrinterOutlined />
+                </button>
+                <button
+                  type="button"
+                  className="warranty-mobile-hero-action primary"
+                  onClick={() => setEditing(true)}
+                  aria-label={t('button.sua', { defaultValue: 'Sửa' })}
+                >
+                  <EditOutlined />
+                </button>
+              </div>
+            </div>
             {renderHeavy ? (
               <MobileTabs>
                 <MobileTabs.Tab title={t('warrantyDetail.tabThongTin')} key="info">
@@ -2199,60 +2453,88 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 <Skeleton active paragraph={{ rows: 10 }} />
               </div>
             )}
-            <Modal
+            <Dialog
+              visible={cancelModal}
               title={t('warrantyDetail.huyPhieuTitle')}
-              open={cancelModal}
-              onOk={handleCancel}
-              onCancel={() => { setCancelModal(false); setCancelReason(''); }}
-              okText={t('warrantyDetail.xacNhanHuy', { defaultValue: 'Xác nhận hủy' })}
-              cancelText={t('button.dong')}
-              okButtonProps={{ danger: true }}
-            >
-              <p>{t('warrantyDetail.nhapLyDoHuy')}</p>
-              <Input.TextArea
-                rows={3}
-                value={cancelReason}
-                onChange={e => setCancelReason(e.target.value)}
-                placeholder={t('warrantyDetail.vdLyDoHuy')}
-              />
-            </Modal>
-            <Modal
+              content={
+                <div style={{ paddingTop: 8 }}>
+                  <p style={{ margin: '0 0 10px', color: '#595959' }}>{t('warrantyDetail.nhapLyDoHuy')}</p>
+                  <Input.TextArea
+                    rows={3}
+                    value={cancelReason}
+                    onChange={e => setCancelReason(e.target.value)}
+                    placeholder={t('warrantyDetail.vdLyDoHuy')}
+                  />
+                </div>
+              }
+              actions={[
+                [
+                  { key: 'cancel', text: t('button.dong', { defaultValue: 'Đóng' }) },
+                  {
+                    key: 'confirm',
+                    text: t('warrantyDetail.xacNhanHuy', { defaultValue: 'Xác nhận hủy' }),
+                    danger: true,
+                    onClick: handleCancel,
+                  },
+                ],
+              ]}
+              onClose={() => { setCancelModal(false); setCancelReason(''); }}
+              closeOnMaskClick
+            />
+            <Dialog
+              visible={supplierLogEditOpen}
               title={t('warrantyDetail.suaNCCTitle')}
-              open={supplierLogEditOpen}
-              onOk={submitSupplierLogNote}
-              onCancel={() => {
+              content={
+                <Space direction="vertical" style={{ width: '100%', paddingTop: 8 }}>
+                  <Select
+                    value={supplierLogSupplierId || undefined}
+                    onChange={setSupplierLogSupplierId}
+                    showSearch
+                    allowClear
+                    optionFilterProp="searchText"
+                    filterOption={(input, option) => String(option?.searchText || '').toLowerCase().includes(input.toLowerCase())}
+                    options={supplierSelectOptions}
+                    placeholder={t('warrantyDetail.timNCC')}
+                    style={{ width: '100%' }}
+                    popupMatchSelectWidth={false}
+                    listHeight={280}
+                  />
+                  <Input.TextArea
+                    rows={4}
+                    value={supplierLogNote}
+                    onChange={(e) => setSupplierLogNote(e.target.value)}
+                    placeholder={t('warrantyDetail.ghiChuGuiNhanNCC')}
+                  />
+                </Space>
+              }
+              actions={[
+                [
+                  {
+                    key: 'cancel',
+                    text: t('button.huy', { defaultValue: 'Hủy' }),
+                    onClick: () => {
+                      setSupplierLogEditOpen(false);
+                      setSupplierLogEditing(null);
+                      setSupplierLogNote('');
+                      setSupplierLogSupplierId('');
+                    },
+                  },
+                  {
+                    key: 'save',
+                    text: t('button.luu', { defaultValue: 'Lưu' }),
+                    primary: true,
+                    onClick: submitSupplierLogNote,
+                  },
+                ],
+              ]}
+              onClose={() => {
                 setSupplierLogEditOpen(false);
                 setSupplierLogEditing(null);
                 setSupplierLogNote('');
                 setSupplierLogSupplierId('');
               }}
-              okText={t('button.luu')}
-              cancelText={t('button.huy')}
-              confirmLoading={supplierLogSaving}
-              width={720}
-            >
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Select
-                  value={supplierLogSupplierId || undefined}
-                  onChange={setSupplierLogSupplierId}
-                  showSearch
-                  allowClear
-                  optionFilterProp="searchText"
-                  filterOption={(input, option) => String(option?.searchText || '').toLowerCase().includes(input.toLowerCase())}
-                  options={supplierSelectOptions}
-                  placeholder={t('warrantyDetail.timNCC')}
-                  style={{ width: '100%' }}
-                  popupMatchSelectWidth={false}
-                  listHeight={280}
-                />
-                <Input.TextArea
-                  rows={4}
-                  value={supplierLogNote}
-                  onChange={(e) => setSupplierLogNote(e.target.value)}
-                  placeholder={t('warrantyDetail.ghiChuGuiNhanNCC')}
-                />
-              </Space>
-            </Modal>
+              closeOnMaskClick
+            />
           </div>
         </Popup>
         <CustomerPickerModal

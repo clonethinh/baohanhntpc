@@ -5190,3 +5190,467 @@ html[data-theme='dark'] .ntpc-customer-picker-preview-empty-icon { color: #30303
     border-bottom-color: #303030;
   }
 }
+
+
+/* =====================================================================
+   WarrantyDetail mobile redesign — v2
+   Per NTPC mobile-service-tracking-ux skill:
+   - Info grid 2-col (label trên, value dưới) thay cho List.Item label-left
+   - Touch targets >= 44px
+   - Semantic status colors (orange = processing, green = success, red = danger, purple = priority)
+   - Dark mode overrides đầy đủ cho mọi class mới
+   ===================================================================== */
+
+/* ----- Compact hero block (thay thế NavBar) ----- */
+.warranty-mobile-hero {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(180deg, #f0f5ff 0%, #ffffff 100%);
+  border-bottom: 1px solid #e8e8e8;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+.warranty-mobile-hero-back {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #262626;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.warranty-mobile-hero-back:active { background: #f5f5f5; }
+.warranty-mobile-hero-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.warranty-mobile-hero-code {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: -0.2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.warranty-mobile-hero-meta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.warranty-mobile-hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 10px;
+  line-height: 1.2;
+}
+.warranty-mobile-hero-status .dot { width: 6px; height: 6px; border-radius: 50%; }
+.warranty-mobile-hero-status.processing { background: #fff4e6; color: #c2410c; }
+.warranty-mobile-hero-status.processing .dot { background: #f59e0b; }
+.warranty-mobile-hero-status.success { background: #ecfdf5; color: #15803d; }
+.warranty-mobile-hero-status.success .dot { background: #22c55e; }
+.warranty-mobile-hero-status.danger { background: #fef2f2; color: #b91c1c; }
+.warranty-mobile-hero-status.danger .dot { background: #ef4444; }
+.warranty-mobile-hero-status.neutral { background: #f0f5ff; color: #1e40af; }
+.warranty-mobile-hero-status.neutral .dot { background: #1677ff; }
+.warranty-mobile-hero-status.muted { background: #f5f5f5; color: #595959; }
+.warranty-mobile-hero-status.muted .dot { background: #8c8c8c; }
+.warranty-mobile-hero-priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 10px;
+  background: #f3e8ff;
+  color: #7e22ce;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.warranty-mobile-hero-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.warranty-mobile-hero-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #595959;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s;
+}
+.warranty-mobile-hero-action:active { background: #f5f5f5; }
+.warranty-mobile-hero-action.primary { background: #1677ff; border-color: #1677ff; color: #fff; }
+.warranty-mobile-hero-action.danger { background: #fff; border-color: #ffccc7; color: #ff4d4f; }
+
+/* ----- Card header (override antd-mobile MobileCard title) ----- */
+.warranty-mobile-card .adm-card-header {
+  padding: 12px 14px 8px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.warranty-mobile-card .adm-card-body { padding: 12px 14px !important; }
+
+/* ----- Info grid 2-col (label trên, value dưới) ----- */
+.warranty-mobile-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+}
+.warranty-mobile-info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.warranty-mobile-info-field.full { grid-column: 1 / -1; }
+.warranty-mobile-info-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #8c8c8c;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  line-height: 1.2;
+}
+.warranty-mobile-info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  word-break: break-word;
+  line-height: 1.4;
+}
+.warranty-mobile-info-value.muted { color: #bfbfbf; font-weight: 400; }
+.warranty-mobile-info-value a { color: #1677ff; text-decoration: none; }
+.warranty-mobile-info-value a:hover { text-decoration: underline; }
+
+/* ----- Customer card ----- */
+.warranty-mobile-customer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+.warranty-mobile-customer-avatar {
+  width: 44px !important;
+  height: 44px !important;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%) !important;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 16px !important;
+  border: none !important;
+}
+.warranty-mobile-customer-info { flex: 1; min-width: 0; }
+.warranty-mobile-customer-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.warranty-mobile-customer-phone {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #595959;
+  margin-top: 2px;
+}
+.warranty-mobile-customer-phone .anticon { color: #8c8c8c; font-size: 12px; }
+.warranty-mobile-customer-call {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f5ff;
+  color: #1677ff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.warranty-mobile-customer-call:hover { background: #d6e4ff; }
+.warranty-mobile-customer-swap {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff7e6;
+  color: #fa8c16;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.warranty-mobile-customer-swap:active { background: #ffe7ba; }
+.warranty-mobile-customer-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ----- Quick action rows (stacked, large touch targets) ----- */
+.warranty-mobile-quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.warranty-mobile-action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 12px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s, border-color 0.12s;
+  text-align: left;
+  width: 100%;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+.warranty-mobile-action-row:active { background: #f0f0f0; }
+.warranty-mobile-action-row .icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.warranty-mobile-action-row .icon.primary { background: #e6f4ff; color: #1677ff; }
+.warranty-mobile-action-row .icon.warn { background: #fff7e6; color: #fa8c16; }
+.warranty-mobile-action-row .icon.danger { background: #fff1f0; color: #ff4d4f; }
+.warranty-mobile-action-row .icon.success { background: #ecfdf5; color: #16a34a; }
+.warranty-mobile-action-row .icon.neutral { background: #f5f5f5; color: #595959; }
+.warranty-mobile-action-row .label { flex: 1; font-weight: 500; }
+.warranty-mobile-action-row .chevron { color: #bfbfbf; font-size: 14px; }
+
+/* ----- Status hero (Đang xử lý, Đã xong, etc.) ----- */
+.warranty-mobile-status-hero {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+}
+.warranty-mobile-status-hero.processing { background: #fff7e6; border-color: #ffd591; }
+.warranty-mobile-status-hero.success { background: #ecfdf5; border-color: #86efac; }
+.warranty-mobile-status-hero.danger { background: #fff1f0; border-color: #ffa39e; }
+.warranty-mobile-status-hero.neutral { background: #f0f5ff; border-color: #91caff; }
+.warranty-mobile-status-hero .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.warranty-mobile-status-hero.processing .dot { background: #f59e0b; box-shadow: 0 0 0 4px rgba(245,158,11,0.18); }
+.warranty-mobile-status-hero.success .dot { background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,0.18); }
+.warranty-mobile-status-hero.danger .dot { background: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.18); }
+.warranty-mobile-status-hero.neutral .dot { background: #1677ff; box-shadow: 0 0 0 4px rgba(22,119,255,0.18); }
+.warranty-mobile-status-hero .status-label { font-weight: 700; font-size: 15px; }
+.warranty-mobile-status-hero.processing .status-label { color: #c2410c; }
+.warranty-mobile-status-hero.success .status-label { color: #15803d; }
+.warranty-mobile-status-hero.danger .status-label { color: #b91c1c; }
+.warranty-mobile-status-hero.neutral .status-label { color: #1e40af; }
+
+/* ----- Edit form: dirty tag + sticky bottom bar ----- */
+.warranty-mobile-edit-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+  margin: 12px -14px -12px;
+}
+.warranty-mobile-dirty-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff7e6;
+  color: #c2410c;
+  border: 1px solid #ffd591;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.warranty-mobile-edit-bar .spacer { flex: 1; }
+.warranty-mobile-edit-bar .adm-button { min-height: 40px; padding: 0 16px; }
+.warranty-mobile-edit-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #595959;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 14px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.warranty-mobile-edit-section-title::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  background: #1677ff;
+  border-radius: 2px;
+  display: inline-block;
+}
+.warranty-mobile-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+}
+.warranty-mobile-edit-grid .full { grid-column: 1 / -1; }
+.warranty-mobile-edit-grid .adm-form-item { margin-bottom: 0 !important; }
+.warranty-mobile-edit-grid .adm-form-item-label { font-size: 12px !important; }
+.warranty-mobile-edit-grid .adm-input { font-size: 14px; }
+
+/* ----- Empty state ----- */
+.warranty-mobile-empty {
+  padding: 20px 12px;
+  text-align: center;
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+/* ----- Attachment gallery compact (existing) — minor touch ----- */
+.warranty-mobile-detail-body .adm-card { margin-bottom: 12px; }
+
+/* =====================================================================
+   Dark mode overrides cho toàn bộ class mobile mới
+   ===================================================================== */
+html[data-theme='dark'] .warranty-mobile-hero {
+  background: linear-gradient(180deg, #1a2a17 0%, #1f1f1f 100%);
+  border-bottom-color: #303030;
+}
+html[data-theme='dark'] .warranty-mobile-hero-back {
+  background: #1f1f1f;
+  border-color: #303030;
+  color: #e6e6e6;
+}
+html[data-theme='dark'] .warranty-mobile-hero-back:active { background: #262626; }
+html[data-theme='dark'] .warranty-mobile-hero-code { color: #f0f0f0; }
+html[data-theme='dark'] .warranty-mobile-hero-status.processing { background: rgba(245,158,11,0.18); color: #fbbf24; }
+html[data-theme='dark'] .warranty-mobile-hero-status.success { background: rgba(34,197,94,0.18); color: #4ade80; }
+html[data-theme='dark'] .warranty-mobile-hero-status.danger { background: rgba(239,68,68,0.18); color: #f87171; }
+html[data-theme='dark'] .warranty-mobile-hero-status.neutral { background: rgba(22,119,255,0.18); color: #60a5fa; }
+html[data-theme='dark'] .warranty-mobile-hero-status.muted { background: #262626; color: #a6a6a6; }
+html[data-theme='dark'] .warranty-mobile-hero-priority { background: rgba(168,85,247,0.18); color: #c084fc; }
+html[data-theme='dark'] .warranty-mobile-hero-action {
+  background: #1f1f1f;
+  border-color: #303030;
+  color: #cbd5e1;
+}
+html[data-theme='dark'] .warranty-mobile-hero-action:active { background: #262626; }
+html[data-theme='dark'] .warranty-mobile-hero-action.primary { background: #1677ff; border-color: #1677ff; color: #fff; }
+html[data-theme='dark'] .warranty-mobile-hero-action.danger { background: #1f1f1f; border-color: #5a2a26; color: #f87171; }
+
+html[data-theme='dark'] .warranty-mobile-card .adm-card-header {
+  color: #f0f0f0 !important;
+  border-bottom-color: #303030;
+}
+html[data-theme='dark'] .warranty-mobile-info-label { color: #a6a6a6; }
+html[data-theme='dark'] .warranty-mobile-info-value { color: #f0f0f0; }
+html[data-theme='dark'] .warranty-mobile-info-value.muted { color: #595959; }
+html[data-theme='dark'] .warranty-mobile-info-value a { color: #60a5fa; }
+
+html[data-theme='dark'] .warranty-mobile-customer-name { color: #f0f0f0; }
+html[data-theme='dark'] .warranty-mobile-customer-phone { color: #a6a6a6; }
+html[data-theme='dark'] .warranty-mobile-customer-phone .anticon { color: #707d68; }
+html[data-theme='dark'] .warranty-mobile-customer-avatar {
+  background: linear-gradient(135deg, #1d4a2a 0%, #2d6b3f 100%) !important;
+  color: #a8e6b5 !important;
+}
+html[data-theme='dark'] .warranty-mobile-customer-call { background: #1e3a5f; color: #60a5fa; }
+html[data-theme='dark'] .warranty-mobile-customer-call:hover { background: #2c4a7a; }
+html[data-theme='dark'] .warranty-mobile-customer-swap { background: #2b2200; color: #fbbf24; }
+html[data-theme='dark'] .warranty-mobile-customer-swap:active { background: #594800; }
+
+html[data-theme='dark'] .warranty-mobile-action-row {
+  background: #1a1a1a;
+  border-color: #303030;
+  color: #e6e6e6;
+}
+html[data-theme='dark'] .warranty-mobile-action-row:active { background: #262626; }
+html[data-theme='dark'] .warranty-mobile-action-row .icon.primary { background: #1e3a5f; color: #60a5fa; }
+html[data-theme='dark'] .warranty-mobile-action-row .icon.warn { background: #2b2200; color: #fbbf24; }
+html[data-theme='dark'] .warranty-mobile-action-row .icon.danger { background: #2a1717; color: #f87171; }
+html[data-theme='dark'] .warranty-mobile-action-row .icon.success { background: #16241a; color: #4ade80; }
+html[data-theme='dark'] .warranty-mobile-action-row .icon.neutral { background: #262626; color: #a6a6a6; }
+html[data-theme='dark'] .warranty-mobile-action-row .chevron { color: #595959; }
+
+html[data-theme='dark'] .warranty-mobile-status-hero { background: #1f1f1f; border-color: #303030; }
+html[data-theme='dark'] .warranty-mobile-status-hero.processing { background: linear-gradient(180deg, #2b2414 0%, #1f1f1f 100%); border-color: #594800; }
+html[data-theme='dark'] .warranty-mobile-status-hero.success { background: linear-gradient(180deg, #16241a 0%, #1f1f1f 100%); border-color: #274d2f; }
+html[data-theme='dark'] .warranty-mobile-status-hero.danger { background: linear-gradient(180deg, #2a1717 0%, #1f1f1f 100%); border-color: #5a2a26; }
+html[data-theme='dark'] .warranty-mobile-status-hero.neutral { background: linear-gradient(180deg, #1a2a3e 0%, #1f1f1f 100%); border-color: #2c4a7a; }
+html[data-theme='dark'] .warranty-mobile-status-hero.processing .status-label { color: #fbbf24; }
+html[data-theme='dark'] .warranty-mobile-status-hero.success .status-label { color: #4ade80; }
+html[data-theme='dark'] .warranty-mobile-status-hero.danger .status-label { color: #f87171; }
+html[data-theme='dark'] .warranty-mobile-status-hero.neutral .status-label { color: #60a5fa; }
+
+html[data-theme='dark'] .warranty-mobile-edit-bar {
+  background: #1f1f1f;
+  border-top-color: #303030;
+}
+html[data-theme='dark'] .warranty-mobile-dirty-tag {
+  background: rgba(245,158,11,0.18);
+  color: #fbbf24;
+  border-color: #594800;
+}
+html[data-theme='dark'] .warranty-mobile-edit-section-title { color: #a6a6a6; }
+html[data-theme='dark'] .warranty-mobile-empty { color: #595959; }
