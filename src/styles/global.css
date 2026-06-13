@@ -5814,3 +5814,112 @@ html[data-theme='dark'] .warranty-mobile-tabbar .tab .badge.warn { background: #
   overflow: visible;
   min-height: 0;
 }
+
+
+/* =====================================================================
+   WarrantyDetail desktop tab bar — custom horizontal strip
+   Per NTPC mobile-service-tracking-ux skill + desktop parity:
+   - Same pattern as mobile (icon + label + badge + semantic active)
+   - Layout horizontal (desktop drawer wider, 4 tabs fit in row)
+   - Touch-friendly, big touch target
+   - Dark mode đầy đủ
+   ===================================================================== */
+.warranty-desktop-tabbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 16px;
+  gap: 2px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+.warranty-desktop-tabbar .tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  min-height: 52px;
+  border: none;
+  background: transparent;
+  color: #595959;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: color 0.15s, background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.warranty-desktop-tabbar .tab:hover { color: #1677ff; background: #fafafa; }
+.warranty-desktop-tabbar .tab:active { background: #f0f0f0; }
+.warranty-desktop-tabbar .tab .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.warranty-desktop-tabbar .tab .label { letter-spacing: 0.1px; }
+.warranty-desktop-tabbar .tab .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: #1677ff;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  margin-left: 2px;
+}
+.warranty-desktop-tabbar .tab .badge.warn { background: #fa8c16; }
+.warranty-desktop-tabbar .tab .badge.muted { background: #8c8c8c; }
+
+.warranty-desktop-tabbar .tab.active {
+  color: #1677ff;
+  font-weight: 600;
+}
+.warranty-desktop-tabbar .tab.active .icon { transform: scale(1.08); }
+.warranty-desktop-tabbar .tab.active::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1677ff 0%, #4096ff 100%);
+  border-radius: 2px 2px 0 0;
+  animation: ntpc-tab-indicator 0.2s ease-out;
+}
+
+.warranty-desktop-tab-content {
+  display: block;
+  padding: 16px;
+}
+
+/* Hide antd Tabs underline artifacts left over from old code (defensive) */
+.ant-drawer-body .ant-tabs-top > .ant-tabs-nav::before { display: none; }
+.ant-drawer-body .ant-tabs-top > .ant-tabs-nav { margin: 0; }
+
+/* Dark mode */
+html[data-theme='dark'] .warranty-desktop-tabbar {
+  background: #1f1f1f;
+  border-bottom-color: #303030;
+  box-shadow: none;
+}
+html[data-theme='dark'] .warranty-desktop-tabbar .tab { color: #a6a6a6; }
+html[data-theme='dark'] .warranty-desktop-tabbar .tab:hover { color: #60a5fa; background: #262626; }
+html[data-theme='dark'] .warranty-desktop-tabbar .tab:active { background: #262626; }
+html[data-theme='dark'] .warranty-desktop-tabbar .tab.active { color: #60a5fa; }
+html[data-theme='dark'] .warranty-desktop-tabbar .tab.active::after {
+  background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 100%);
+}

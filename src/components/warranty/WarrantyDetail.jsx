@@ -146,6 +146,9 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   // Custom mobile tab bar state — replaces <MobileTabs> from antd-mobile for a more
   // polished UX (sticky strip, badge counts, semantic active state).
   const [mobileTab, setMobileTab] = useState('info');
+  // Custom desktop tab bar state — replaces antd <Tabs items={items}/> for a similar
+  // upgraded UX (icon + label + badge counts, semantic primary active).
+  const [desktopTab, setDesktopTab] = useState('info');
   const supplierSelectOptions = suppliers
     .filter((s) => s.isActive !== false)
     .map((s) => {
@@ -2637,7 +2640,45 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       }}
     >
       {renderHeavy ? (
-        <Tabs items={items} />
+        <>
+          <div className="warranty-desktop-tabbar" role="tablist">
+            {items.map((item) => {
+              const tabKey = item.key;
+              const tabIcon = tabKey === 'info' ? <FileTextOutlined />
+                : tabKey === 'exchange-return' ? <SwapOutlined />
+                : tabKey === 'supplier' ? <SendOutlined />
+                : tabKey === 'history' ? <HistoryOutlined />
+                : null;
+              const tabBadge = tabKey === 'exchange-return'
+                ? (warranty.doiTra ? 1 : 0)
+                : tabKey === 'supplier'
+                  ? supplierLogs.length
+                  : tabKey === 'history'
+                    ? visibleHistory.length
+                    : 0;
+              const tabBadgeVariant = tabKey === 'supplier' ? 'warn'
+                : tabKey === 'exchange-return' ? 'muted'
+                  : 'primary';
+              return (
+                <button
+                  key={tabKey}
+                  type="button"
+                  role="tab"
+                  aria-selected={desktopTab === tabKey}
+                  className={`tab ${desktopTab === tabKey ? 'active' : ''}`}
+                  onClick={() => setDesktopTab(tabKey)}
+                >
+                  <span className="icon">{tabIcon}</span>
+                  <span className="label">{item.label}</span>
+                  {tabBadge > 0 && <span className={`badge ${tabBadgeVariant}`}>{tabBadge}</span>}
+                </button>
+              );
+            })}
+          </div>
+          <div className="warranty-desktop-tab-content">
+            {(items.find((i) => i.key === desktopTab) || items[0]).children}
+          </div>
+        </>
       ) : (
         <div style={{ padding: 16 }}>
           <Skeleton active paragraph={{ rows: 12 }} />
