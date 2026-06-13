@@ -5771,3 +5771,46 @@ html[data-theme='dark'] .warranty-mobile-tabbar .tab .badge {
 }
 html[data-theme='dark'] .warranty-mobile-tabbar .tab.active .badge { box-shadow: 0 0 0 2px #1f1f1f, 0 0 0 3px #60a5fa; }
 html[data-theme='dark'] .warranty-mobile-tabbar .tab .badge.warn { background: #d89614; }
+
+
+/* =====================================================================
+   Fix scroll cho mobile drawer Popup
+   - .adm-popup-body có overflow:visible mặc định từ antd-mobile,
+     dù scrollHeight > clientHeight vẫn không scroll được.
+   - Force overflow-y: auto để content bên trong scroll
+   - Touch scrolling cho iOS Safari (-webkit-overflow-scrolling: touch)
+   - QUAN TRỌNG: KHÔNG set flex/column trên popupBody vì:
+     * flex + position:fixed parent tạo conflict với sticky children
+     * children muốn render normal flow rồi popupBody scroll toàn bộ
+     * user touch bất kỳ đâu trong drawer cũng scroll được
+   - Hero + tabbar giữ position:sticky — sẽ stick khi scroll container
+     là popupBody (overflow auto) — đúng MDN spec.
+   ===================================================================== */
+.warranty-mobile-detail-popup.adm-popup .adm-popup-body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+/* Bỏ display:flex / flex-direction trên wrapper — để children flow normal.
+   Nếu trước đó có flex column thì hero/tabbar co lại thay vì scroll cùng. */
+.warranty-mobile-detail {
+  display: block;
+}
+/* Hero + tabbar giữ sticky, sẽ stick khi popupBody scroll. */
+.warranty-mobile-detail .warranty-mobile-hero,
+.warranty-mobile-detail .warranty-mobile-tabbar {
+  position: sticky;
+  z-index: 5;
+}
+.warranty-mobile-detail .warranty-mobile-tab-content {
+  display: block;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* Bỏ overflow + flex cũ trên inner body — children flow normal rồi
+   popupBody scroll, không cần scroll lồng. */
+.warranty-mobile-tab-content > .warranty-mobile-detail-body {
+  display: block;
+  overflow: visible;
+  min-height: 0;
+}
