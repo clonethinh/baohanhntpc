@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Row, Col, Card, Statistic, Table, Typography, Button, Skeleton, Space, Tag, Timeline } from 'antd';
+import { Row, Col, Card, Table, Typography, Button, Skeleton, Space, Tag, Timeline } from 'antd';
 import { Button as MobileButton, Card as MobileCard, Grid as MobileGrid, Tag as MobileTag } from 'antd-mobile';
 import { SyncOutlined, CheckCircleOutlined, ClockCircleOutlined, AlertOutlined, StarOutlined, RightOutlined, HistoryOutlined, EyeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -243,6 +243,55 @@ export default function Dashboard() {
     },
   ];
 
+  const desktopKpis = [
+    {
+      key: 'processing',
+      label: t('adminDashboard.processing'),
+      meta: t('adminDashboard.processingMeta'),
+      value: s.dangXuLy,
+      icon: <SyncOutlined spin={s.dangXuLy > 0} />,
+      className: 'processing',
+      featured: true,
+      onClick: () => navigate('/admin/phieu'),
+    },
+    {
+      key: 'dueToday',
+      label: t('adminDashboard.dueToday'),
+      meta: t('adminDashboard.dueTodayMeta'),
+      value: insights.dueToday.length,
+      icon: <ClockCircleOutlined />,
+      className: 'warn',
+      onClick: () => navigate('/admin/phieu?dueType=today'),
+    },
+    {
+      key: 'overdue',
+      label: t('adminDashboard.overdue'),
+      meta: t('adminDashboard.overdueMeta'),
+      value: insights.overdue.length,
+      icon: <AlertOutlined />,
+      className: 'danger',
+      onClick: () => navigate('/admin/phieu?dueType=overdue'),
+    },
+    {
+      key: 'priorityOpen',
+      label: t('adminDashboard.priorityOpen'),
+      meta: t('adminDashboard.priorityOpenMeta'),
+      value: insights.priorityOpen.length,
+      icon: <StarOutlined />,
+      className: 'priority',
+      onClick: () => navigate('/admin/phieu?uuTien=1'),
+    },
+    {
+      key: 'doneToday',
+      label: t('adminDashboard.doneToday'),
+      meta: t('adminDashboard.doneTodayMeta'),
+      value: s.daTraHomNay,
+      icon: <CheckCircleOutlined />,
+      className: 'success',
+      onClick: () => navigate('/admin/phieu'),
+    },
+  ];
+
   return (
     <>
     {isMobile && <div className="mobile-only admin-mobile-page">
@@ -401,30 +450,25 @@ export default function Dashboard() {
         <Button onClick={() => navigate('/admin/phieu')}>{t('adminDashboard.openTicketList')}</Button>
       </Space>
 
-      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-        <Col xs={24} sm={12} lg={5}>
-          <Card><Statistic title={t('adminDashboard.dueToday')} value={insights.dueToday.length} prefix={<ClockCircleOutlined />} valueStyle={{ color: insights.dueToday.length > 0 ? '#faad14' : undefined }} /></Card>
-        </Col>
-        <Col xs={24} sm={12} lg={5}>
-          <Card><Statistic title={t('adminDashboard.overdue')} value={insights.overdue.length} prefix={<AlertOutlined />} valueStyle={{ color: insights.overdue.length > 0 ? '#ff4d4f' : undefined }} /></Card>
-        </Col>
-        <Col xs={24} sm={12} lg={5}>
-          <Card><Statistic title={t('adminDashboard.priorityOpen')} value={insights.priorityOpen.length} prefix={<StarOutlined />} valueStyle={{ color: insights.priorityOpen.length > 0 ? '#ff4d4f' : undefined }} /></Card>
-        </Col>
-        <Col xs={24} sm={12} lg={5}>
-          <Card><Statistic title={t('adminDashboard.doneToday')} value={s.daTraHomNay} prefix={<CheckCircleOutlined />} valueStyle={{ color: '#52c41a' }} /></Card>
-        </Col>
-        <Col xs={24} sm={12} lg={4}>
-          <Card>
-            <Statistic
-              title={t('adminDashboard.processing')}
-              value={s.dangXuLy}
-              prefix={<SyncOutlined />}
-              valueStyle={{ color: s.dangXuLy > 0 ? '#fa8c16' : undefined }}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <div className="dashboard-kpi-strip">
+        {desktopKpis.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            className={`dashboard-kpi-card ${item.className}${item.featured ? ' featured' : ''}`}
+            onClick={item.onClick}
+            aria-label={`${item.label} - ${item.value}`}
+          >
+            <span className="dashboard-kpi-card-icon">{item.icon}</span>
+            <span className="dashboard-kpi-card-info">
+              <span className="dashboard-kpi-card-label">{item.label}</span>
+              <span className="dashboard-kpi-card-value">{item.value}</span>
+              <span className="dashboard-kpi-card-meta">{item.meta}</span>
+            </span>
+            <RightOutlined className="dashboard-kpi-card-arrow" />
+          </button>
+        ))}
+      </div>
 
 
 

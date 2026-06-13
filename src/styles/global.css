@@ -1896,6 +1896,260 @@ html[data-theme='dark'] .stats-kpi {
 html[data-theme='dark'] .stats-kpi-label { color: #9aa890; }
 html[data-theme='dark'] .stats-kpi-value { color: #eef3e9; }
 
+/* ===== Desktop KPI strip trang Tổng quan vận hành (Dashboard) ===== */
+.dashboard-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.dashboard-kpi-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e3eadb;
+  border-left: 4px solid #bfcab5;
+  border-radius: 14px;
+  background: #fff;
+  min-height: 112px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  font: inherit;
+  color: inherit;
+}
+
+.dashboard-kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(31, 42, 29, 0.08);
+}
+
+.dashboard-kpi-card:focus-visible {
+  outline: 2px solid #5b8def;
+  outline-offset: 2px;
+}
+
+.dashboard-kpi-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 18px;
+  background: #eef2ea;
+  color: #5e6a58;
+}
+
+.dashboard-kpi-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.dashboard-kpi-card-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #6d7a67;
+  line-height: 1.2;
+  white-space: normal;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  letter-spacing: 0.1px;
+  min-height: 28px;
+}
+
+.dashboard-kpi-card-value {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #20301e;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-kpi-card-meta {
+  font-size: 11px;
+  color: #8a9583;
+  line-height: 1.3;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-kpi-card-arrow {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 12px;
+  color: #aab4a3;
+  opacity: 0;
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.dashboard-kpi-card:hover .dashboard-kpi-card-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* Featured card (Đang xử lý) - visual focal point */
+.dashboard-kpi-card.featured {
+  min-height: 124px;
+  padding: 16px 20px;
+  gap: 14px;
+  border-left-width: 5px;
+  box-shadow: 0 6px 18px rgba(31, 42, 29, 0.06);
+}
+
+.dashboard-kpi-card.featured .dashboard-kpi-card-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 22px;
+  border-radius: 14px;
+}
+
+.dashboard-kpi-card.featured .dashboard-kpi-card-label {
+  font-size: 13px;
+}
+
+.dashboard-kpi-card.featured .dashboard-kpi-card-value {
+  font-size: 36px;
+}
+
+.dashboard-kpi-card.featured .dashboard-kpi-card-meta {
+  font-size: 12px;
+}
+
+/* Color variants */
+.dashboard-kpi-card.processing {
+  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+}
+.dashboard-kpi-card.processing .dashboard-kpi-card-icon { background: #fef3c7; color: #b45309; }
+.dashboard-kpi-card.processing .dashboard-kpi-card-value { color: #b45309; }
+.dashboard-kpi-card.processing .dashboard-kpi-card-meta { color: #a16207; }
+
+.dashboard-kpi-card.warn {
+  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+}
+.dashboard-kpi-card.warn .dashboard-kpi-card-icon { background: #fef3c7; color: #b45309; }
+.dashboard-kpi-card.warn .dashboard-kpi-card-value { color: #b45309; }
+.dashboard-kpi-card.warn .dashboard-kpi-card-meta { color: #a16207; }
+
+.dashboard-kpi-card.danger {
+  border-left-color: #ef4444;
+  background: linear-gradient(135deg, #fef2f2 0%, #fff 100%);
+}
+.dashboard-kpi-card.danger .dashboard-kpi-card-icon { background: #fee2e2; color: #dc2626; }
+.dashboard-kpi-card.danger .dashboard-kpi-card-value { color: #dc2626; }
+.dashboard-kpi-card.danger .dashboard-kpi-card-meta { color: #b91c1c; }
+
+.dashboard-kpi-card.priority {
+  border-left-color: #a855f7;
+  background: linear-gradient(135deg, #faf5ff 0%, #fff 100%);
+}
+.dashboard-kpi-card.priority .dashboard-kpi-card-icon { background: #f3e8ff; color: #9333ea; }
+.dashboard-kpi-card.priority .dashboard-kpi-card-value { color: #9333ea; }
+.dashboard-kpi-card.priority .dashboard-kpi-card-meta { color: #7e22ce; }
+
+.dashboard-kpi-card.success {
+  border-left-color: #22c55e;
+  background: linear-gradient(135deg, #f0fdf4 0%, #fff 100%);
+}
+.dashboard-kpi-card.success .dashboard-kpi-card-icon { background: #dcfce7; color: #16a34a; }
+.dashboard-kpi-card.success .dashboard-kpi-card-value { color: #16a34a; }
+.dashboard-kpi-card.success .dashboard-kpi-card-meta { color: #15803d; }
+
+/* Featured card sử dụng variant processing - tăng visual weight */
+.dashboard-kpi-card.featured.processing {
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 60%, #fff 100%);
+}
+
+@media (max-width: 1199px) {
+  .dashboard-kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  .dashboard-kpi-card.featured { grid-column: 1 / -1; }
+}
+@media (max-width: 767px) {
+  .dashboard-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-kpi-card.featured { grid-column: 1 / -1; }
+}
+@media (max-width: 479px) {
+  .dashboard-kpi-strip { grid-template-columns: 1fr; }
+  .dashboard-kpi-card.featured { grid-column: auto; }
+}
+
+/* Dark mode parity */
+html[data-theme='dark'] .dashboard-kpi-card {
+  background: #1f1f1f;
+  border-color: #303030;
+  border-left-color: #404040;
+  box-shadow: none;
+  color: #e6e6e6;
+}
+html[data-theme='dark'] .dashboard-kpi-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  border-color: #4a4a4a;
+}
+html[data-theme='dark'] .dashboard-kpi-card-icon { background: #2a2a2a; color: #c0c0c0; }
+html[data-theme='dark'] .dashboard-kpi-card-label { color: #a6a6a6; }
+html[data-theme='dark'] .dashboard-kpi-card-value { color: #f0f0f0; }
+html[data-theme='dark'] .dashboard-kpi-card-meta { color: #8a8a8a; }
+html[data-theme='dark'] .dashboard-kpi-card-arrow { color: #707070; }
+
+html[data-theme='dark'] .dashboard-kpi-card.processing {
+  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, #2b2414 0%, #1f1f1f 100%);
+}
+html[data-theme='dark'] .dashboard-kpi-card.processing .dashboard-kpi-card-icon { background: rgba(245,158,11,0.18); color: #fbbf24; }
+html[data-theme='dark'] .dashboard-kpi-card.processing .dashboard-kpi-card-value { color: #fbbf24; }
+html[data-theme='dark'] .dashboard-kpi-card.processing .dashboard-kpi-card-meta { color: #f59e0b; }
+
+html[data-theme='dark'] .dashboard-kpi-card.warn {
+  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, #2b2414 0%, #1f1f1f 100%);
+}
+html[data-theme='dark'] .dashboard-kpi-card.warn .dashboard-kpi-card-icon { background: rgba(245,158,11,0.18); color: #fbbf24; }
+html[data-theme='dark'] .dashboard-kpi-card.warn .dashboard-kpi-card-value { color: #fbbf24; }
+html[data-theme='dark'] .dashboard-kpi-card.warn .dashboard-kpi-card-meta { color: #f59e0b; }
+
+html[data-theme='dark'] .dashboard-kpi-card.danger {
+  border-left-color: #ef4444;
+  background: linear-gradient(135deg, #2a1717 0%, #1f1f1f 100%);
+}
+html[data-theme='dark'] .dashboard-kpi-card.danger .dashboard-kpi-card-icon { background: rgba(239,68,68,0.18); color: #f87171; }
+html[data-theme='dark'] .dashboard-kpi-card.danger .dashboard-kpi-card-value { color: #f87171; }
+html[data-theme='dark'] .dashboard-kpi-card.danger .dashboard-kpi-card-meta { color: #ef4444; }
+
+html[data-theme='dark'] .dashboard-kpi-card.priority {
+  border-left-color: #a855f7;
+  background: linear-gradient(135deg, #241a2e 0%, #1f1f1f 100%);
+}
+html[data-theme='dark'] .dashboard-kpi-card.priority .dashboard-kpi-card-icon { background: rgba(168,85,247,0.18); color: #c084fc; }
+html[data-theme='dark'] .dashboard-kpi-card.priority .dashboard-kpi-card-value { color: #c084fc; }
+html[data-theme='dark'] .dashboard-kpi-card.priority .dashboard-kpi-card-meta { color: #a855f7; }
+
+html[data-theme='dark'] .dashboard-kpi-card.success {
+  border-left-color: #22c55e;
+  background: linear-gradient(135deg, #16241a 0%, #1f1f1f 100%);
+}
+html[data-theme='dark'] .dashboard-kpi-card.success .dashboard-kpi-card-icon { background: rgba(34,197,94,0.18); color: #4ade80; }
+html[data-theme='dark'] .dashboard-kpi-card.success .dashboard-kpi-card-value { color: #4ade80; }
+html[data-theme='dark'] .dashboard-kpi-card.success .dashboard-kpi-card-meta { color: #22c55e; }
+
+html[data-theme='dark'] .dashboard-kpi-card.featured.processing {
+  background: linear-gradient(135deg, #2b2414 0%, #251e10 60%, #1f1f1f 100%);
+  box-shadow: none;
+}
+
 /* ===== Trang Quản lý nhân viên ===== */
 .staff-page {
   display: flex;
@@ -5926,109 +6180,158 @@ html[data-theme='dark'] .warranty-desktop-tabbar .tab.active::after {
 
 
 /* =====================================================================
-   WarrantyDetail desktop header hero (parity với mobile)
-   Per NTPC mobile-service-tracking-ux skill + desktop parity:
-   - Compact horizontal: close | code+status | actions
-   - Action buttons rõ ràng, semantic colors
-   - Sticky dưới drawer header, scroll cùng content
-   - Dark mode đầy đủ
+   WarrantyDetail desktop header hero (v3 — single block, clear hierarchy)
+   User feedback v2 (commit 3b56c58): 2 dòng tách rời trông như 2
+   header chồng, status quá nhỏ, Xong nổi quá dễ bấm nhầm.
+
+   v3 design — 1 hero block duy nhất, 3 cols ngang:
+     [back]  line-primary: [code]  [● status]  [Ưu tiên]
+             line-secondary: [name]  ·  [☎ phone]                    [⇄]
+             [In]  [Hủy]  [Xong]
+
+   Visual hierarchy:
+   - line-primary (row 1): code 16px monospace bold 700 + status 13px
+     prominent (peach bg + dark orange text + leading icon)
+   - line-secondary (row 2): customer name 13px medium + phone 13px
+     gray + swap button (all trong 1 group, no border separator)
+   - actions: tất cả outline-style (white bg + colored border + colored
+     text) để user đọc label, không bị visual weight kéo nhầm
    ===================================================================== */
 
 /* Hide antd default close button — custom close in hero */
 .ant-drawer .ant-drawer-close { display: none !important; }
 
-/* Hero block fills the antd drawer title area. Layout 2 rows x 3 cols
-   via CSS grid:
-   [back] [code + status meta            ] [actions...        ]
-   [---- customer compact row full width ----------------------]
-   Grid ensures customer row always wraps to row 2 (full width)
-   regardless of actions width, while code+status keep their own
-   column and don't get squeezed to 0. */
+/* Single grid block: back | info (2 lines) | actions */
 .warranty-desktop-hero {
   display: grid;
-  grid-template-columns: auto minmax(160px, 1fr) auto;
-  grid-template-rows: auto auto;
-  column-gap: 12px;
-  row-gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
+  column-gap: 14px;
   width: 100%;
-  padding: 4px 0;
+  margin: -8px 0 -8px 0;
+  padding: 10px 14px;
   min-width: 0;
+  background: linear-gradient(180deg, #f6f9ff 0%, #ffffff 100%);
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 .warranty-desktop-hero .hero-back {
-  grid-row: 1;
+  grid-row: 1 / span 2;
   grid-column: 1;
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  align-self: center;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #fff;
   border: 1px solid #e8e8e8;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #262626;
-  font-size: 14px;
+  color: #595959;
+  font-size: 13px;
   cursor: pointer;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
-.warranty-desktop-hero .hero-back:hover { background: #f5f5f5; }
+.warranty-desktop-hero .hero-back:hover { background: #f5f5f5; color: #1a1a1a; border-color: #d9d9d9; }
 .warranty-desktop-hero .hero-back:active { background: #e8e8e8; }
-.warranty-desktop-hero .hero-left {
-  grid-row: 1;
+
+/* Info block: 2 lines stacked, both inside grid col 2 */
+.warranty-desktop-hero .hero-info {
+  grid-row: 1 / span 2;
   grid-column: 2;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  overflow: hidden;
-}
-.warranty-desktop-hero .hero-title {
   display: flex;
   flex-direction: column;
   gap: 3px;
   min-width: 0;
-  flex: 1 1 auto;
   overflow: hidden;
 }
+.warranty-desktop-hero .hero-line-primary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.warranty-desktop-hero .hero-line-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+  color: #595959;
+  font-size: 13px;
+}
+
+/* Code (PRIMARY — lớn nhất) */
 .warranty-desktop-hero .hero-code {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: #1a1a1a;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: -0.2px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  letter-spacing: -0.3px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
-.warranty-desktop-hero .hero-meta {
-  display: flex;
+
+/* Status (PROMINENT — pill with colored leading dot) */
+.warranty-desktop-hero .hero-status {
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-/* Reuse mobile status pill style for parity */
-.warranty-desktop-hero .warranty-mobile-hero-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 10px;
+  padding: 3px 10px 3px 8px;
+  border-radius: 11px;
   line-height: 1.2;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
-.warranty-desktop-hero .warranty-mobile-hero-status .dot {
-  width: 6px;
-  height: 6px;
+.warranty-desktop-hero .hero-status-dot {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55);
+  flex-shrink: 0;
 }
-.warranty-desktop-hero .warranty-mobile-hero-priority {
+.warranty-desktop-hero .hero-status-processing {
+  background: #fff4e6;
+  color: #c2410c;
+  border: 1px solid #ffd591;
+}
+.warranty-desktop-hero .hero-status-processing .hero-status-dot { background: #f59e0b; color: #f59e0b; }
+.warranty-desktop-hero .hero-status-success {
+  background: #ecfdf5;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+.warranty-desktop-hero .hero-status-success .hero-status-dot { background: #22c55e; color: #22c55e; }
+.warranty-desktop-hero .hero-status-danger {
+  background: #fff1f0;
+  color: #b91c1c;
+  border: 1px solid #ffa39e;
+}
+.warranty-desktop-hero .hero-status-danger .hero-status-dot { background: #ef4444; color: #ef4444; }
+.warranty-desktop-hero .hero-status-neutral {
+  background: #f0f5ff;
+  color: #1e40af;
+  border: 1px solid #91caff;
+}
+.warranty-desktop-hero .hero-status-neutral .hero-status-dot { background: #1677ff; color: #1677ff; }
+.warranty-desktop-hero .hero-status-muted {
+  background: #f5f5f5;
+  color: #595959;
+  border: 1px solid #d9d9d9;
+}
+.warranty-desktop-hero .hero-status-muted .hero-status-dot { background: #8c8c8c; color: #8c8c8c; }
+
+/* Priority badge */
+.warranty-desktop-hero .hero-priority {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
   font-size: 10px;
   font-weight: 700;
   padding: 3px 7px;
@@ -6037,137 +6340,173 @@ html[data-theme='dark'] .warranty-desktop-tabbar .tab.active::after {
   color: #7e22ce;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+  flex-shrink: 0;
 }
+
+/* Customer avatar — colored circle with initials, mirrors status variant */
+.warranty-desktop-hero .hero-customer-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #fff;
+  background: #8c8c8c;
+  flex-shrink: 0;
+  user-select: none;
+}
+.warranty-desktop-hero .hero-customer-avatar-processing { background: linear-gradient(135deg, #f59e0b 0%, #c2410c 100%); }
+.warranty-desktop-hero .hero-customer-avatar-success    { background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); }
+.warranty-desktop-hero .hero-customer-avatar-danger     { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
+.warranty-desktop-hero .hero-customer-avatar-neutral    { background: linear-gradient(135deg, #1677ff 0%, #1e40af 100%); }
+.warranty-desktop-hero .hero-customer-avatar-muted      { background: linear-gradient(135deg, #8c8c8c 0%, #595959 100%); }
+
+/* Customer name (SECONDARY — 13px) */
+.warranty-desktop-hero .hero-customer-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+  flex-shrink: 0;
+}
+.warranty-desktop-hero .hero-customer-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #1677ff;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #f0f5ff;
+  transition: background 0.12s, color 0.12s;
+}
+.warranty-desktop-hero .hero-customer-phone:hover { background: #d6e4ff; color: #0958d9; }
+.warranty-desktop-hero .hero-customer-phone .anticon {
+  color: #1677ff;
+  font-size: 12px;
+}
+
+/* Actions — outline-style cho cả 3 buttons (giảm weight Xong) */
 .warranty-desktop-hero .hero-actions {
-  grid-row: 1;
+  grid-row: 1 / span 2;
   grid-column: 3;
   display: flex;
   gap: 6px;
   flex-shrink: 0;
   align-items: center;
-  justify-content: flex-end;
   flex-wrap: wrap;
+  justify-content: flex-end;
   max-width: 100%;
 }
 .warranty-desktop-hero .hero-actions .btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
+  min-height: 32px;
   padding: 0 12px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid #e8e8e8;
+  border: 1px solid #d9d9d9;
   background: #fff;
   color: #262626;
-  transition: background 0.12s, border-color 0.12s;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
   -webkit-tap-highlight-color: transparent;
   font-family: inherit;
   white-space: nowrap;
 }
-.warranty-desktop-hero .hero-actions .btn:hover { background: #fafafa; border-color: #d9d9d9; }
+.warranty-desktop-hero .hero-actions .btn:hover { background: #fafafa; border-color: #bfbfbf; }
 .warranty-desktop-hero .hero-actions .btn:active { background: #f0f0f0; }
 .warranty-desktop-hero .hero-actions .btn .anticon { font-size: 14px; }
 .warranty-desktop-hero .hero-actions .btn.primary {
-  background: #1677ff;
-  border-color: #1677ff;
-  color: #fff;
+  background: #f0f5ff;
+  border-color: #91caff;
+  color: #1677ff;
+  font-weight: 600;
 }
-.warranty-desktop-hero .hero-actions .btn.primary:hover { background: #4096ff; border-color: #4096ff; }
+.warranty-desktop-hero .hero-actions .btn.primary:hover {
+  background: #d6e4ff;
+  border-color: #1677ff;
+}
 .warranty-desktop-hero .hero-actions .btn.danger {
   background: #fff;
-  border-color: #ffccc7;
+  border-color: #ffa39e;
   color: #ff4d4f;
-}
-.warranty-desktop-hero .hero-actions .btn.danger:hover { background: #fff1f0; }
-
-/* Sub-row with customer compact info (parity với mobile customer card).
-   Spans full width on grid row 2 (grid-column: 1 / -1) so it always
-   sits below the main row regardless of action button widths. */
-.warranty-desktop-hero .hero-customer {
-  grid-row: 2;
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 0 0;
-  margin-top: 2px;
-  border-top: 1px solid #f0f0f0;
-  min-width: 0;
-}
-.warranty-desktop-hero .hero-customer .avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1677ff 0%, #4096ff 100%);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.warranty-desktop-hero .hero-customer .info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: #595959;
-}
-.warranty-desktop-hero .hero-customer .name {
   font-weight: 600;
-  color: #1a1a1a;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 200px;
 }
-.warranty-desktop-hero .hero-customer .phone {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: #595959;
+.warranty-desktop-hero .hero-actions .btn.danger:hover {
+  background: #fff1f0;
+  border-color: #ff7875;
 }
-.warranty-desktop-hero .hero-customer .phone .anticon { color: #8c8c8c; }
-.warranty-desktop-hero .hero-customer .swap-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #fff7e6;
-  color: #fa8c16;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  border: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  flex-shrink: 0;
-  transition: background 0.12s;
-}
-.warranty-desktop-hero .hero-customer .swap-btn:hover { background: #ffe7ba; }
 
 /* Dark mode */
+html[data-theme='dark'] .warranty-desktop-hero {
+  background: linear-gradient(180deg, rgba(22, 119, 255, 0.10) 0%, #1f1f1f 100%);
+  border-color: #303030;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
+}
 html[data-theme='dark'] .warranty-desktop-hero .hero-back {
   background: #1f1f1f;
   border-color: #303030;
-  color: #e6e6e6;
+  color: #a6a6a6;
 }
-html[data-theme='dark'] .warranty-desktop-hero .hero-back:hover { background: #262626; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-back:hover { background: #262626; color: #e6e6e6; border-color: #404040; }
 html[data-theme='dark'] .warranty-desktop-hero .hero-back:active { background: #2a2a2a; }
 html[data-theme='dark'] .warranty-desktop-hero .hero-code { color: #f0f0f0; }
-html[data-theme='dark'] .warranty-desktop-hero .hero-customer { border-top-color: #303030; }
-html[data-theme='dark'] .warranty-desktop-hero .hero-customer .name { color: #f0f0f0; }
-html[data-theme='dark'] .warranty-desktop-hero .hero-customer .info { color: #a6a6a6; }
-html[data-theme='dark'] .warranty-desktop-hero .hero-customer .avatar {
-  background: linear-gradient(135deg, #1d4a2a 0%, #2d6b3f 100%);
-  color: #a8e6b5;
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-processing {
+  background: rgba(245,158,11,0.18);
+  color: #fbbf24;
+  border-color: #594800;
 }
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-processing .hero-status-dot { background: #fbbf24; color: #fbbf24; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-success {
+  background: rgba(34,197,94,0.18);
+  color: #4ade80;
+  border-color: #274d2f;
+}
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-success .hero-status-dot { background: #4ade80; color: #4ade80; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-danger {
+  background: rgba(239,68,68,0.18);
+  color: #f87171;
+  border-color: #5a2a26;
+}
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-danger .hero-status-dot { background: #f87171; color: #f87171; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-neutral {
+  background: rgba(22,119,255,0.18);
+  color: #60a5fa;
+  border-color: #2c4a7a;
+}
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-neutral .hero-status-dot { background: #60a5fa; color: #60a5fa; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-muted {
+  background: #262626;
+  color: #a6a6a6;
+  border-color: #404040;
+}
+html[data-theme='dark'] .warranty-desktop-hero .hero-status-muted .hero-status-dot { background: #a6a6a6; color: #a6a6a6; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-priority {
+  background: rgba(168,85,247,0.18);
+  color: #c084fc;
+}
+html[data-theme='dark'] .warranty-desktop-hero .hero-customer-avatar-muted { background: linear-gradient(135deg, #595959 0%, #2a2a2a 100%); }
+html[data-theme='dark'] .warranty-desktop-hero .hero-customer-name { color: #f0f0f0; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-customer-phone {
+  color: #60a5fa;
+  background: rgba(22,119,255,0.10);
+}
+html[data-theme='dark'] .warranty-desktop-hero .hero-customer-phone:hover { background: rgba(22,119,255,0.20); color: #93c5fd; }
+html[data-theme='dark'] .warranty-desktop-hero .hero-customer-phone .anticon { color: #60a5fa; }
 html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn {
   background: #1f1f1f;
   border-color: #303030;
@@ -6176,18 +6515,20 @@ html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn {
 html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn:hover { background: #262626; border-color: #404040; }
 html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn:active { background: #2a2a2a; }
 html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn.primary {
-  background: #1677ff;
-  border-color: #1677ff;
-  color: #fff;
+  background: rgba(22,119,255,0.18);
+  border-color: #2c4a7a;
+  color: #60a5fa;
+}
+html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn.primary:hover {
+  background: rgba(22,119,255,0.28);
+  border-color: #60a5fa;
 }
 html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn.danger {
   background: #1f1f1f;
   border-color: #5a2a26;
   color: #f87171;
 }
-html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn.danger:hover { background: #2a1717; }
-html[data-theme='dark'] .warranty-desktop-hero .hero-customer .swap-btn {
-  background: #2b2200;
-  color: #fbbf24;
+html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn.danger:hover {
+  background: #2a1717;
+  border-color: #f87171;
 }
-html[data-theme='dark'] .warranty-desktop-hero .hero-customer .swap-btn:hover { background: #594800; }
