@@ -2261,6 +2261,16 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
           customers={customerList}
           loading={customerListLoading}
           excludedKey={currentCustomerKey}
+          currentCustomer={
+            warranty
+              ? {
+                  key: currentCustomerKey,
+                  khachHang: warranty.khachHang,
+                  soDienThoai: warranty.soDienThoai,
+                  diaChi: warranty.diaChi,
+                }
+              : null
+          }
           onCancel={() => setCustomerPickerOpen(false)}
           onSelect={handleTransferCustomer}
         />
@@ -2372,6 +2382,16 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         customers={customerList}
         loading={customerListLoading}
         excludedKey={currentCustomerKey}
+        currentCustomer={
+          warranty
+            ? {
+                key: currentCustomerKey,
+                khachHang: warranty.khachHang,
+                soDienThoai: warranty.soDienThoai,
+                diaChi: warranty.diaChi,
+              }
+            : null
+        }
         onCancel={() => setCustomerPickerOpen(false)}
         onSelect={handleTransferCustomer}
       />
