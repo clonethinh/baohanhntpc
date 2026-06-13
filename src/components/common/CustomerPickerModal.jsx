@@ -222,7 +222,7 @@ export default function CustomerPickerModal({
       </div>
 
       {/* BODY 2-COL */}
-      <div className="ntpc-customer-picker-body">
+      <div className={`ntpc-customer-picker-body ${selected ? 'has-selected' : ''}`}>
         {/* LIST */}
         <div className="ntpc-customer-picker-list">
           {loading ? (

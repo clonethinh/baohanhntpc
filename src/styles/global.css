@@ -4692,22 +4692,41 @@ html[data-theme='dark'] .notif-quill .ql-editor pre.ql-syntax { background-color
   border-radius: 8px;
 }
 
-/* Body 2-col */
+/* Antd Modal wrapper: flex column để header/toolbar cố định, body scroll nội bộ */
+.ntpc-customer-picker.ant-modal .ant-modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ntpc-customer-picker.ant-modal .ant-modal-body {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Body 2-col — flex:1 để chiếm phần còn lại, min-height:0 để grid item scroll được */
 .ntpc-customer-picker-body {
   display: grid;
   grid-template-columns: 1.45fr 1fr;
-  min-height: 480px;
-  max-height: 60vh;
+  flex: 1;
+  min-height: 0;
 }
 .ntpc-customer-picker-list {
   border-right: 1px solid #f0f0f0;
   overflow-y: auto;
   padding: 6px 8px;
+  min-height: 0;
 }
 .ntpc-customer-picker-preview {
   overflow-y: auto;
   padding: 24px;
   background: #fafbff;
+  min-height: 0;
 }
 
 /* Row */
@@ -5032,3 +5051,142 @@ html[data-theme='dark'] .ntpc-customer-picker-preview-warning {
 }
 html[data-theme='dark'] .ntpc-customer-picker-preview-warning > .anticon { color: #d89614; }
 html[data-theme='dark'] .ntpc-customer-picker-preview-empty-icon { color: #303030; }
+
+
+/* ===== Customer Picker Modal — Mobile responsive ===== */
+@media (max-width: 768px) {
+  /* Full-screen modal trên mobile */
+  .ntpc-customer-picker.ant-modal {
+    max-width: 100vw;
+    width: 100vw !important;
+    margin: 0;
+    padding: 0;
+    top: 0;
+  }
+  .ntpc-customer-picker.ant-modal .ant-modal-content {
+    max-height: 100vh;
+    height: 100vh;
+    border-radius: 0;
+  }
+  .ntpc-customer-picker.ant-modal .ant-modal-close {
+    top: 12px;
+    right: 12px;
+  }
+
+  /* Header: stack dọc, full width */
+  .ntpc-customer-picker-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 16px 12px;
+    gap: 12px;
+  }
+  .ntpc-customer-picker-header-title {
+    flex-direction: row;
+  }
+  .ntpc-customer-picker-header-current {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  /* Toolbar: search full width, filter bên dưới */
+  .ntpc-customer-picker-toolbar {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+  .ntpc-customer-picker-search { width: 100% !important; }
+  .ntpc-customer-picker-filter { width: 100%; }
+  .ntpc-customer-picker-filter .ant-segmented { width: 100%; }
+  .ntpc-customer-picker-count { width: 100%; text-align: right; font-size: 12px; }
+
+  /* Body: stack 1 cột, preview chỉ hiện khi đã chọn */
+  .ntpc-customer-picker-body {
+    grid-template-columns: 1fr;
+  }
+  .ntpc-customer-picker-body:not(.has-selected) .ntpc-customer-picker-preview {
+    display: none;
+  }
+  .ntpc-customer-picker-body.has-selected .ntpc-customer-picker-list {
+    max-height: 38vh;
+  }
+  .ntpc-customer-picker-body.has-selected {
+    grid-template-rows: 38vh 1fr;
+  }
+
+  .ntpc-customer-picker-list {
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 6px;
+  }
+  .ntpc-customer-picker-preview {
+    padding: 16px;
+  }
+
+  /* Row thu gọn trên mobile */
+  .ntpc-customer-picker-row {
+    padding: 8px 10px;
+  }
+  .ntpc-customer-picker-row-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 13px !important;
+  }
+  .ntpc-customer-picker-row-stats {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .ntpc-customer-picker-row-activity {
+    display: none;
+  }
+  .ntpc-customer-picker-row-addr {
+    max-width: 160px;
+  }
+  .ntpc-customer-picker-row-meta {
+    font-size: 11px;
+  }
+
+  /* Preview compact */
+  .ntpc-customer-picker-preview-avatar {
+    width: 56px !important;
+    height: 56px !important;
+    font-size: 20px !important;
+  }
+  .ntpc-customer-picker-preview-card {
+    padding: 16px 12px;
+  }
+  .ntpc-customer-picker-preview-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .ntpc-customer-picker-preview-stat-num {
+    font-size: 18px;
+  }
+  .ntpc-customer-picker-preview-cta {
+    height: 40px;
+    font-size: 14px;
+  }
+  .ntpc-customer-picker-preview-warning {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ntpc-customer-picker-row-info { min-width: 0; }
+  .ntpc-customer-picker-row-name { gap: 4px; }
+  .ntpc-customer-picker-row-code {
+    font-size: 10px !important;
+    padding: 0 4px !important;
+  }
+  .ntpc-customer-picker-row-stats { display: none; }
+}
+
+/* ===== Customer Picker Modal — Dark mode — Mobile ===== */
+@media (max-width: 768px) {
+  html[data-theme='dark'] .ntpc-customer-picker-list {
+    border-bottom-color: #303030;
+  }
+  html[data-theme='dark'] .ntpc-customer-picker-body.has-selected .ntpc-customer-picker-list {
+    border-bottom-color: #303030;
+  }
+}
