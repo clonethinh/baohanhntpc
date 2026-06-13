@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Drawer, Tabs, Descriptions, Form, Input, Select, Button, Timeline, Tag, QRCode, Popconfirm, Space, Typography, App, Card, Modal, DatePicker, Alert, Table, Grid, Upload, Image, Skeleton } from 'antd';
@@ -109,7 +109,7 @@ let isGlobalUploading = false;
 
 export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh }) {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { message, modal } = App.useApp();
   const navigate = useNavigate();
   const screens = Grid.useBreakpoint();
   const [warranty, setWarranty] = useState(null);
@@ -162,6 +162,33 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   // Keep last successful payload mounted to avoid Drawer/Popup layout jumps while refetching.
   const lastWarrantyRef = useRef(null);
   const hasChangedRef = useRef(false);
+  // Snapshot of form values captured at the start of an inline edit session.
+  // Used to detect dirty state (user-typed changes) vs the originally-loaded warranty.
+  const [editSnapshot, setEditSnapshot] = useState(null);
+
+  // Watch all form values. Form.useWatch only returns fields that are currently
+  // mounted (i.e. the section being edited), which is exactly the scope we want
+  // to compare against the snapshot.
+  const watchedValues = Form.useWatch([], form);
+
+  // Dirty = any watched field differs from the snapshot. Dayjs fields are compared
+  // by day; everything else by string equality. Returns false when not editing or
+  // when no snapshot has been captured yet.
+  const isDirty = useMemo(() => {
+    if (!editing || !editSnapshot) return false;
+    const current = watchedValues || {};
+    for (const key of Object.keys(current)) {
+      const a = current[key];
+      const b = editSnapshot[key];
+      if (dayjs.isDayjs(a) && dayjs.isDayjs(b)) {
+        if (!a.isSame(b, 'day')) return true;
+        continue;
+      }
+      if (dayjs.isDayjs(a) || dayjs.isDayjs(b)) return true;
+      if (String(a ?? '') !== String(b ?? '')) return true;
+    }
+    return false;
+  }, [watchedValues, editSnapshot, editing]);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 1199px)');
@@ -252,20 +279,43 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     setWarranty(null);
     lastWarrantyRef.current = null;
     setEditing(false);
+    setEditSection('');
+    setEditSnapshot(null);
+    form.resetFields();
     setCustomerPickerOpen(false);
     setIsClosing(false);
     onClose?.();
     if (shouldRefresh) onRefresh?.();
-  }, [onClose, onRefresh]);
+  }, [onClose, onRefresh, form]);
 
   const handleRequestClose = useCallback(() => {
+    if (editing && isDirty) {
+      modal.confirm({
+        title: 'Có thay đổi chưa lưu',
+        content: 'Bạn đang chỉnh sửa và có thay đổi chưa được lưu. Đóng sẽ mất dữ liệu. Tiếp tục?',
+        okText: 'Đóng và mất dữ liệu',
+        cancelText: 'Tiếp tục chỉnh sửa',
+        okButtonProps: { danger: true },
+        onOk: () => {
+          setIsClosing(true);
+          setRenderHeavy(false);
+          setCancelModal(false);
+          setSupplierLogEditOpen(false);
+          setCustomerPickerOpen(false);
+          setEditSnapshot(null);
+          onClose?.();
+        },
+      });
+      return;
+    }
     setIsClosing(true);
     setRenderHeavy(false);
     setCancelModal(false);
     setSupplierLogEditOpen(false);
     setCustomerPickerOpen(false);
+    setEditSnapshot(null);
     onClose?.();
-  }, [onClose]);
+  }, [editing, isDirty, onClose]);
 
   if (!open || loading || !warranty) {
     const cached = lastWarrantyRef.current;
@@ -477,12 +527,14 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   };
 
   const startInlineEdit = (section) => {
-    form.setFieldsValue({
+    const snapshot = {
       ...warranty,
       ngayNhan: parseFormDate(warranty.ngayNhan),
       ngayMua: parseFormDate(warranty.ngayMua),
       ngayHenTra: parseFormDate(warranty.ngayHenTra),
-    });
+    };
+    form.setFieldsValue(snapshot);
+    setEditSnapshot(snapshot);
     setEditSection(section);
     setEditing(true);
   };
@@ -490,12 +542,15 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   const cancelInlineEdit = () => {
     setEditing(false);
     setEditSection('');
+    setEditSnapshot(null);
+    form.resetFields();
   };
 
   const sectionActions = (section) => {
     if (editing && editSection === section) {
       return (
         <Space>
+          {isDirty && <Tag color="orange" icon={<EditOutlined />}>Chưa lưu</Tag>}
           <Button size="small" type="primary" onClick={handleSave}>{t('button.luu')}</Button>
           <Button size="small" onClick={cancelInlineEdit}>{t('button.huy')}</Button>
         </Space>
@@ -530,6 +585,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
         setWarranty(res.data.data);
         setEditing(false);
         setEditSection('');
+        setEditSnapshot(null);
       }
     } catch {
       message.error(t('messages:error.updateError'));
