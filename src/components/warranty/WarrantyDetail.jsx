@@ -1759,6 +1759,18 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   };
   const mobileStatusVariant = getMobileStatusVariant(warranty.trangThai);
   const isPriority = warranty.uuTien && warranty.uuTien !== 'thuong';
+  // Desktop hero reuses the same semantic variants + priority + customer
+  // initials so mobile and desktop stay visually consistent.
+  const desktopStatusVariant = getMobileStatusVariant(warranty.trangThai);
+  const desktopIsPriority = warranty.uuTien && warranty.uuTien !== 'thuong';
+  const desktopCustomerInitials = String(warranty.khachHang || '?')
+    .trim()
+    .split(/\s+/)
+    .map((w) => w[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase() || '?';
 
   const handleMobileLog = async () => {
     if (!mobileLogNote.trim()) {
@@ -2608,28 +2620,120 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
   return (
     <Drawer
       title={
-        <Space direction="vertical" size={4} style={{ width: '100%' }}>
-          <Space wrap>
-            <Text strong>{warranty.soChungTu}</Text>
-            <StatusTag status={warranty.trangThai} />
-            {renderHeavy && (
-              <>
-                <Button size="small" icon={<PrinterOutlined />} onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}>{t('print:actions.printReceive')}</Button>
-                {warranty.trangThai === 'da_tra' && (
-                  <Button size="small" icon={<PrinterOutlined />} onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=return`)}>{t('print:actions.printReturn')}</Button>
+        renderHeavy ? (
+          <div className="warranty-desktop-hero">
+            <button
+              type="button"
+              className="hero-back"
+              onClick={handleRequestClose}
+              aria-label={t('button.dong', { defaultValue: 'Đóng' })}
+              title={t('button.dong', { defaultValue: 'Đóng' })}
+            >
+              <CloseOutlined />
+            </button>
+            <div className="hero-left">
+              <div className="hero-title">
+                <div className="hero-code">{warranty.soChungTu}</div>
+                <div className="hero-meta">
+                  <span className={`warranty-mobile-hero-status ${desktopStatusVariant}`}>
+                    <span className="dot" />
+                    {statusConfig?.label || warranty.trangThai}
+                  </span>
+                  {desktopIsPriority && (
+                    <span className="warranty-mobile-hero-priority">Ưu tiên</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="hero-actions">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => navigate(`/admin/phieu/${warranty.id}/in`)}
+                title={t('print:actions.printReceive', { defaultValue: 'In phiếu nhận' })}
+              >
+                <PrinterOutlined />
+                <span>{t('print:actions.printReceive', { defaultValue: 'In phiếu nhận' })}</span>
+              </button>
+              {warranty.trangThai === 'da_tra' && (
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => navigate(`/admin/phieu/${warranty.id}/in?type=return`)}
+                  title={t('print:actions.printReturn', { defaultValue: 'In phiếu trả' })}
+                >
+                  <PrinterOutlined />
+                  <span>{t('print:actions.printReturn', { defaultValue: 'In phiếu trả' })}</span>
+                </button>
+              )}
+              {warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy' && (
+                <>
+                  <Popconfirm
+                    title={t('warrantyDetail.danhDauXong')}
+                    onConfirm={handleTraHang}
+                    okText={t('button.xong', { defaultValue: 'Xong' })}
+                    cancelText={t('button.huy', { defaultValue: 'Hủy' })}
+                  >
+                    <button
+                      type="button"
+                      className="btn primary"
+                      title={t('warrantyDetail.danhDauXongBtn', { defaultValue: 'Đánh dấu xong' })}
+                    >
+                      <CheckCircleOutlined />
+                      <span>Xong</span>
+                    </button>
+                  </Popconfirm>
+                  <button
+                    type="button"
+                    className="btn danger"
+                    onClick={() => setCancelModal(true)}
+                    title={t('warrantyDetail.huyPhieuTitle', { defaultValue: 'Hủy phiếu' })}
+                  >
+                    <DeleteOutlined />
+                    <span>{t('button.huy', { defaultValue: 'Hủy' })}</span>
+                  </button>
+                </>
+              )}
+            </div>
+            {/* Customer compact row — parity với mobile customer card */}
+            <div className="hero-customer">
+              <span className="avatar">{desktopCustomerInitials}</span>
+              <div className="info">
+                <span className="name">{warranty.khachHang || '—'}</span>
+                {warranty.soDienThoai && (
+                  <span className="phone">
+                    <PhoneOutlined /> {warranty.soDienThoai}
+                  </span>
                 )}
-                {warranty.trangThai !== 'da_tra' && warranty.trangThai !== 'huy' && (
-                  <Space>
-                    <Popconfirm title={t('warrantyDetail.danhDauXong')} onConfirm={handleTraHang}>
-                      <Button size="small" type="primary" icon={<CheckCircleOutlined />}>Xong</Button>
-                    </Popconfirm>
-                    <Button size="small" danger icon={<DeleteOutlined />} onClick={() => setCancelModal(true)}>{t('button.huy')}</Button>
-                  </Space>
-                )}
-              </>
-            )}
-          </Space>
-        </Space>
+              </div>
+              <button
+                type="button"
+                className="swap-btn"
+                onClick={() => setCustomerPickerOpen(true)}
+                aria-label={t('warrantyDetail.chuyenKhachTitle')}
+                title={t('warrantyDetail.chuyenKhachTitle')}
+              >
+                <SwapOutlined />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="warranty-desktop-hero">
+            <button
+              type="button"
+              className="hero-back"
+              onClick={handleRequestClose}
+              aria-label={t('button.dong', { defaultValue: 'Đóng' })}
+            >
+              <CloseOutlined />
+            </button>
+            <div className="hero-left">
+              <div className="hero-title">
+                <div className="hero-code">{warranty.soChungTu}</div>
+              </div>
+            </div>
+          </div>
+        )
       }
       open={open}
       onClose={handleRequestClose}
