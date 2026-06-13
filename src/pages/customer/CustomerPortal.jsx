@@ -240,7 +240,7 @@ export default function CustomerPortal() {
             <a href="tel:0937632000" style={{ color: '#1677ff', fontWeight: 700, textDecoration: 'none' }}>0937 63 2000</a>
           </List.Item>
           <List.Item prefix={<PhoneOutlined style={{ fontSize: 15, color: '#52c41a' }} />} title="Hotline">
-            <a href="tel:0903602240" style={{ color: '#52c41a', fontWeight: 700, textDecoration: 'none' }}>0903 602 240</a>
+            <a href="tel:0937632000" style={{ color: '#52c41a', fontWeight: 700, textDecoration: 'none' }}>0937 63 2000</a>
           </List.Item>
           <List.Item prefix={<span style={{ fontSize: 15 }}>🪪</span>} title="MST">3603797285</List.Item>
           <List.Item prefix={<EnvironmentOutlined style={{ fontSize: 15, color: '#ff7a00' }} />} title={t('tracking.addressTitle')}>
@@ -262,7 +262,7 @@ export default function CustomerPortal() {
             block
             color="success"
             fill="outline"
-            onClick={() => { window.location.href = 'tel:0903602240'; }}
+            onClick={() => { window.location.href = 'tel:0937632000'; }}
             style={{ borderRadius: 10 }}
           >
             <PhoneOutlined style={{ marginRight: 4 }} />{t('tracking.callHotline')}

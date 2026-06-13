@@ -310,7 +310,7 @@ export default function TrackingResult() {
         subTitle={t('trackingResult.notFoundSubtitle')}
         extra={[
           <Button type="primary" key="search" onClick={() => navigate('/tra-cuu')}>{t('trackingResult.searchAgain')}</Button>,
-          <Button key="hotline" href="tel:0903602240">{t('trackingResult.hotline')}</Button>,
+          <Button key="hotline" href="tel:0937632000">{t('trackingResult.hotline')}</Button>,
         ]}
       />
     );
@@ -936,10 +936,10 @@ export default function TrackingResult() {
                 <button
                   type="button"
                   className={styles.mobileSupportSecondaryAction}
-                  onClick={() => window.open('tel:0903602240')}
+                  onClick={() => window.open('tel:0937632000')}
                 >
                   Hotline
-                  <span className={styles.mobileSupportActionSub}>0903 602 240</span>
+                  <span className={styles.mobileSupportActionSub}>0937 63 2000</span>
                 </button>
                 <button
                   type="button"
@@ -1135,8 +1135,8 @@ export default function TrackingResult() {
                   </Button>
                 </Col>
                 <Col xs={24} sm={12}>
-                  <Button block icon={<PhoneOutlined />} href={`tel:${(support.hotline || '0903602240').replace(/\s/g, '')}`}>
-                    Hotline: {support.hotline || '0903 602 240'}
+                  <Button block icon={<PhoneOutlined />} href={`tel:${(support.hotline || '0937632000').replace(/\s/g, '')}`}>
+                    Hotline: {support.hotline || '0937 63 2000'}
                   </Button>
                 </Col>
               </Row>

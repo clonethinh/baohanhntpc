@@ -283,7 +283,7 @@ export default function AiAssistant() {
             <div className="ntpc-ai-answer-title">{t('aiAssistant.answer.contactTitle')}</div>
             <div className="ntpc-ai-contact">
               <div><strong>{t('aiAssistant.answer.warrantyDepartment')}</strong> <a href="tel:0937632000">0937 63 2000</a></div>
-              <div><strong>{t('aiAssistant.answer.feedbackHotline')}</strong> <a href="tel:0903602240">0903 602 240</a></div>
+              <div><strong>{t('aiAssistant.answer.feedbackHotline')}</strong> <a href="tel:0937632000">0937 63 2000</a></div>
               <div><strong>{t('aiAssistant.answer.addressLabel')}</strong> {t('aiAssistant.answer.address')}</div>
             </div>
           </div>

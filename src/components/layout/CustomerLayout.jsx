@@ -65,7 +65,7 @@ export default function CustomerLayout({ children }) {
                 type="text"
                 shape="circle"
                 icon={<PhoneOutlined style={{ fontSize: 17, color: isDark ? '#fff' : '#1f2a1d' }} />}
-                href="tel:0903602240"
+                href="tel:0937632000"
                 aria-label={t('common.hotline')}
               />
               <Button
@@ -148,7 +148,7 @@ export default function CustomerLayout({ children }) {
               type="text"
               className="mobile-call"
               icon={<PhoneOutlined />}
-              href="tel:0903602240"
+              href="tel:0937632000"
               aria-label={t('common.hotline')}
             />
           </Tooltip>

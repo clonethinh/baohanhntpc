@@ -4,7 +4,7 @@
     "brandShort": "BẢO HÀNH",
     "brandCompany": "NGUYỄN TÂN PC",
     "customerBrand": "BẢO HÀNH - NGUYỄN TÂN PC",
-    "companyFooter": "CÔNG TY TNHH MÁY TÍNH NGUYỄN TÂN | Hotline: 0903 602 240 | BẢO HÀNH - KỸ THUẬT : 0937 63 2000"
+    "companyFooter": "CÔNG TY TNHH MÁY TÍNH NGUYỄN TÂN | Hotline: 0937 63 2000 | BẢO HÀNH - KỸ THUẬT : 0937 63 2000"
   },
   "button": {
     "luu": "Lưu",
@@ -38,7 +38,7 @@
     "chuaChonMa": "Chưa chọn mã",
     "cheDoSang": "Chế độ sáng",
     "cheDoToi": "Chế độ tối",
-    "hotline": "Hotline: 0903 602 240",
+    "hotline": "Hotline: 0937 63 2000",
     "nhanVienDangNhap": "Bạn là nhân viên? Đăng nhập →",
     "hienThiTong": "Hiển thị {{shown}}/{{total}}"
   },
@@ -156,7 +156,7 @@
     "policyCardTitle": "Quy định & lưu ý bảo hành",
     "policyDetail": "Quy định bảo hành chi tiết",
     "desktopWarrantyPhone": "BẢO HÀNH - KỸ THUẬT : 0937 63 2000 (08h30 - 18h)",
-    "desktopHotline": "HOTLINE: 0903 602 240",
+    "desktopHotline": "HOTLINE: 0937 63 2000",
     "desktopPolicyLink": "• Quy định bảo hành chi tiết tại:",
     "desktopStorageNote": "• Đối với các thiết bị lưu trữ như HDD, SSD, USB: quý khách vui lòng sao lưu dữ liệu trước khi gửi bảo hành. Chúng tôi không chịu trách nhiệm về mất mát dữ liệu trong quá trình kiểm tra hoặc bảo hành."
   },
@@ -166,7 +166,7 @@
     "notFoundTitle": "Không tìm thấy mã bảo hành",
     "notFoundSubtitle": "Vui lòng kiểm tra lại mã hoặc liên hệ Nguyễn Tân PC",
     "searchAgain": "Tra cứu lại",
-    "hotline": "Hotline: 0903 602 240",
+    "hotline": "Hotline: 0937 63 2000",
     "summaryExchange": "Phiếu đã hoàn tất bằng đổi hàng.",
     "summaryReturn": "Phiếu đã hoàn tất bằng trả hàng.",
     "summaryDone": "Phiếu đã hoàn tất xử lý.",

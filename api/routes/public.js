@@ -258,7 +258,7 @@ router.get('/track/:soChungTu', async (req, res) => {
       supportInfo: {
         company: 'CÔNG TY TNHH MÁY TÍNH NGUYỄN TÂN',
         warrantyPhone: '0937 63 2000',
-        hotline: '0903 602 240',
+        hotline: '0937 63 2000',
         workingHours: '08h30 - 18h',
         website: 'https://nguyentanpc.com/',
         fanpage: 'https://www.facebook.com/vitinhnguyentan.vn',
