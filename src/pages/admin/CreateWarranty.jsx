@@ -398,7 +398,7 @@ export default function CreateWarranty() {
                     options={(
                       watchLoaiPhieu === 'bien_nhan'
                         ? LOAI_XU_LY_OPTIONS.filter(o => o.value === 'sua_dv' || o.value === 'khac')
-                        : LOAI_XU_LY_OPTIONS
+                        : LOAI_XU_LY_OPTIONS.filter(o => o.value !== 'doi_hang')
                     )}
                   />
                 )} />

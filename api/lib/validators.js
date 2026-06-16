@@ -13,7 +13,7 @@ const warrantySchema = z.object({
   baoGiaSau: z.boolean().default(false),
   loaiPhieu: z.enum(['nhan_bao_hanh', 'bien_nhan']).default('nhan_bao_hanh'),
   baoHanh: z.string().min(1, 'Thời hạn bảo hành không được để trống'),
-  loaiXuLy: z.enum(['bao_hanh', 'sua_dv', 'doi_moi', 'khac']).default('bao_hanh'),
+  loaiXuLy: z.enum(['bao_hanh', 'sua_dv', 'doi_hang', 'khac']).default('bao_hanh'),
   loaiXuLyKhac: z.string().optional().default(''),
   ghiChu: z.string().optional().default(''),
   ngayMua: z.string().optional().default(''),

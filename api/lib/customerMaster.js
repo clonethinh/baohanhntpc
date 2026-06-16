@@ -6,7 +6,7 @@ function makeCustomerKey(khachHang = '', soDienThoai = '') {
 
 function buildCustomerMasterFromWarranties(warranties = [], existing = []) {
   const map = new Map((existing || []).map((c) => [c.key, c]));
-  
+
   // Tìm mã số lớn nhất trong danh sách khách hàng hiện tại
   let maxNum = 0;
   map.forEach((c) => {
@@ -16,6 +16,47 @@ function buildCustomerMasterFromWarranties(warranties = [], existing = []) {
     }
   });
 
+  // 3C-2 sanity check: phát hiện mã KH trùng giữa 2 KH khác nhau (vi phạm khoaMa)
+  const codeToKey = new Map();
+  for (const c of map.values()) {
+    if (c.maKhachHang && c.khoaMa) {
+      const existingKey = codeToKey.get(c.maKhachHang);
+      if (existingKey && existingKey !== c.key) {
+        console.warn(
+          `[CUSTOMER-MASTER] Phát hiện mã KH "${c.maKhachHang}" bị gán cho 2 KH khác nhau: "${existingKey}" và "${c.key}". Cần review thủ công.`
+        );
+      } else {
+        codeToKey.set(c.maKhachHang, c.key);
+      }
+    }
+  }
+
+  // Bonus 2 (3C-2 enforce): helper sinh mã KH mới, skip nếu đã bị chiếm bởi KH khác với khoaMa
+  // Map được key theo customer key (name|phone), KHÔNG phải maKhachHang
+  // → cần iterate values() để tìm entry có maKhachHang trùng với candidate
+  function isCodeTakenByDifferentKey(currentMap, candidate, ownerKey) {
+    for (const c of currentMap.values()) {
+      if (c.maKhachHang === candidate && c.key !== ownerKey) return c;
+    }
+    return null;
+  }
+  function nextUniqueCode(currentMap, usedMaxNum, ownerKey) {
+    let n = usedMaxNum + 1;
+    while (n < 100000) { // safety cap 100k
+      const candidate = `KH${String(n).padStart(5, '0')}`;
+      const holder = isCodeTakenByDifferentKey(currentMap, candidate, ownerKey);
+      if (!holder) {
+        return { code: candidate, num: n };
+      }
+      console.warn(
+        `[CUSTOMER-MASTER] Mã "${candidate}" bị chiếm bởi KH khác (key="${holder.key}"), skip sang mã tiếp theo.`
+      );
+      n++;
+    }
+    // fallback: không nên xảy ra
+    throw new Error(`Không thể sinh mã KH mới (đã thử tới ${n})`);
+  }
+
   for (const w of warranties || []) {
     const name = String(w.khachHang || '').trim();
     const phone = String(w.soDienThoai || '').trim();
@@ -23,10 +64,10 @@ function buildCustomerMasterFromWarranties(warranties = [], existing = []) {
     const key = makeCustomerKey(name, phone);
     const nowAt = w.updatedAt || w.ngayNhan || w.createdAt || dayjs().format('YYYY-MM-DDTHH:mm:ss');
     const prev = map.get(key);
-    
+
     if (!prev) {
-      maxNum += 1;
-      const nextCode = `KH${String(maxNum).padStart(5, '0')}`;
+      const { code: nextCode, num: usedNum } = nextUniqueCode(map, maxNum, key);
+      maxNum = usedNum;
       map.set(key, {
         key,
         maKhachHang: nextCode,
@@ -37,28 +78,32 @@ function buildCustomerMasterFromWarranties(warranties = [], existing = []) {
         updatedAt: nowAt,
         lastSeenAt: nowAt,
         isActive: true,
+        khoaMa: true, // KHÓA mã KH vĩnh viễn sau khi được cấp (không reuse khi xoá)
       });
       continue;
     }
-    
+
     const prevSeen = new Date(prev.lastSeenAt || 0).getTime();
     const nextSeen = new Date(nowAt).getTime();
-    
+
+    // Nếu KH đã có mã nhưng chưa khoá (legacy data), khoá luôn để đồng bộ
     let existingCode = prev.maKhachHang;
     if (!existingCode) {
-      maxNum += 1;
-      existingCode = `KH${String(maxNum).padStart(5, '0')}`;
+      const { code: newCode, num: usedNum } = nextUniqueCode(map, maxNum, key);
+      maxNum = usedNum;
+      existingCode = newCode;
     }
 
     map.set(key, {
       ...prev,
       maKhachHang: existingCode,
+      khoaMa: true, // đảm bảo legacy data đã có mã cũng được khoá khi rebuild master
       khachHang: name || prev.khachHang,
       soDienThoai: phone,
       diaChi: String(w.diaChi || '').trim() || prev.diaChi,
       updatedAt: nowAt,
       lastSeenAt: Number.isFinite(nextSeen) && nextSeen >= prevSeen ? nowAt : prev.lastSeenAt,
-      isActive: true,
+      isActive: prev.isActive !== false, // Bonus 4: preserve isActive từ prev (không force true)
     });
   }
   return Array.from(map.values()).sort((a, b) => new Date(b.lastSeenAt || 0) - new Date(a.lastSeenAt || 0));
@@ -93,6 +138,7 @@ function upsertCustomer(customers = [], payload = {}) {
       updatedAt: now,
       lastSeenAt: now,
       isActive: true,
+      khoaMa: true, // KHÓA mã KH vĩnh viễn
     }];
   }
   
@@ -105,6 +151,7 @@ function upsertCustomer(customers = [], payload = {}) {
   next[idx] = {
     ...next[idx],
     maKhachHang: existingCode,
+    khoaMa: true, // đảm bảo legacy data cũng được khoá
     khachHang: name,
     soDienThoai: phone,
     diaChi: String(payload.diaChi || '').trim() || next[idx].diaChi,

@@ -16,7 +16,7 @@ export const warrantyFormSchema = z.object({
   phuKien: z.string().optional().default(''),
   chiPhi: z.coerce.number().min(0, t('chiPhiKhongAm')).default(0),
   baoHanh: z.string().min(1, t('baoHanhBatBuoc')),
-  loaiXuLy: z.enum(['bao_hanh', 'sua_dv', 'doi_moi', 'khac']).default('bao_hanh'),
+  loaiXuLy: z.enum(['bao_hanh', 'sua_dv', 'doi_hang', 'khac']).default('bao_hanh'),
   ghiChu: z.string().optional().default(''),
   ngayMua: z.string().optional().default(''),
   ngayHenTra: z.string().optional().default(''),

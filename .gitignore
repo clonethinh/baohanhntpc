@@ -8,6 +8,9 @@ api/uploads
 api/db.json
 api/*.bak*
 api/*.prev
+# Backup files (turn-based snapshots, giữ trong working tree để rollback, KHÔNG commit)
+*.backup-*
+*.bak-*
 
 backup4
 vibackup

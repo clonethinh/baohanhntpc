@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
-import { DB_PATH, readDb, atomicWriteJsonFile } from './db.js';
+import { DB_PATH, readDb, atomicWriteJsonFile, prisma } from './db.js';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -554,9 +554,65 @@ export async function restoreBackup(relativePath, confirm) {
     const checksum = verifyChecksum(full);
     const data = normalizeBackupPayload(readJsonFile(full));
     const safety = await createBackup('restore-safety');
+
+    // 3C-3 (FIXED): So sánh customer master trong BACKUP vs REBUILD từ PG (authoritative)
+    // Trước đây so sánh data.customers (backup) với db.json.customers (post-write) → LUÔN giống nhau, warning không bao giờ fire.
+    // Cách đúng: đếm customer master SAU KHI rebuild từ PG (đây là nguồn chuẩn).
+    const customersBefore = Array.isArray(data.customers) ? data.customers.length : 0;
+    const customersBeforeCodes = new Set(
+      (data.customers || []).map((c) => c.maKhachHang).filter(Boolean)
+    );
+
     await atomicWriteJsonFile(DB_PATH, data);
     const assets = extractAssetBundle(assetFullPathForBackup(full));
-    const result = { restoredFrom: safePath, safetyBackup: safety.relativePath, sha256: checksum || sha256File(full), assets, restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format() };
+
+    // Rebuild customer master từ PG để so sánh với backup
+    const { buildCustomerMasterFromWarranties } = await import('./customerMaster.js');
+    const { getCollection } = await import('./db.js');
+    const allWarranties = await prisma.warranty.findMany();
+    const currentCustomers = await getCollection('customers');
+    const rebuiltCustomers = buildCustomerMasterFromWarranties(allWarranties, currentCustomers);
+    const customersAfter = rebuiltCustomers.length;
+    const customersAfterCodes = rebuiltCustomers.filter((c) => c.maKhachHang).length;
+    // Phát hiện mã KH từ backup bị mất sau khi rebuild từ PG
+    const codesLostInRebuild = [];
+    for (const code of customersBeforeCodes) {
+      const stillExists = rebuiltCustomers.some((c) => c.maKhachHang === code);
+      if (!stillExists) codesLostInRebuild.push(code);
+    }
+    // Phát hiện mã KH mới sinh ra (có thể do PG có KH mới chưa có trong backup)
+    const rebuiltCodes = new Set(rebuiltCustomers.map((c) => c.maKhachHang).filter(Boolean));
+    const codesAddedInRebuild = [];
+    for (const code of rebuiltCodes) {
+      if (!customersBeforeCodes.has(code)) codesAddedInRebuild.push(code);
+    }
+
+    const customerMasterDelta = customersAfter - customersBefore;
+    let customerMasterWarning = null;
+    if (customerMasterDelta !== 0 || codesLostInRebuild.length > 0) {
+      customerMasterWarning =
+        `Customer master rebuild từ PG khác backup: ` +
+        `backup=${customersBefore} (${customersBeforeCodes.size} có mã), ` +
+        `rebuild=${customersAfter} (${customersAfterCodes} có mã), ` +
+        `delta=${customerMasterDelta}. ` +
+        `Mất ${codesLostInRebuild.length} mã: [${codesLostInRebuild.slice(0, 5).join(', ')}${codesLostInRebuild.length > 5 ? '...' : ''}]. ` +
+        `Thêm ${codesAddedInRebuild.length} mã mới từ PG. ` +
+        `Có thể do PG có KH mới (không có trong backup) hoặc backup có KH đã bị xoá khỏi PG.`;
+    }
+
+    const result = {
+      restoredFrom: safePath,
+      safetyBackup: safety.relativePath,
+      sha256: checksum || sha256File(full),
+      assets,
+      restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format(),
+      customerMasterBefore: customersBefore,
+      customerMasterAfter: customersAfter,
+      customerMasterDelta,
+      customerMasterCodesLost: codesLostInRebuild,
+      customerMasterCodesAdded: codesAddedInRebuild,
+      customerMasterWarning,
+    };
     await appendHistory({
       action: 'restore',
       type: 'existing',
@@ -565,7 +621,14 @@ export async function restoreBackup(relativePath, confirm) {
       safetyBackupPath: safety.relativePath,
       assetCount: assets.count || 0,
       message: assets.restored ? 'Khoi phuc du lieu va anh thanh cong' : 'Khoi phuc du lieu thanh cong, backup khong co goi anh',
+      customerMasterBefore: customersBefore,
+      customerMasterAfter: customersAfter,
+      customerMasterDelta,
+      customerMasterWarning,
     });
+    if (customerMasterWarning) {
+      console.warn(`[RESTORE] ${customerMasterWarning}`);
+    }
     backupsCache = null;
     return result;
   } catch (err) {
@@ -586,9 +649,42 @@ export async function restoreUploadedBackup(data, confirm, originalName = 'uploa
     const sha = sha256File(full);
     fs.writeFileSync(`${full}.sha256`, `${sha}  ${filename}\n`, 'utf-8');
     const safety = await createBackup('restore-safety');
+
+    // 3C-3: capture customer master trước/sau restore
+    const customersBefore = Array.isArray(normalized.customers) ? normalized.customers.length : 0;
     await atomicWriteJsonFile(DB_PATH, normalized);
-    const result = { restoredFrom: `uploaded/${filename}`, safetyBackup: safety.relativePath, sha256: sha, restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format() };
-    await appendHistory({ action: 'upload_restore', type: 'uploaded', status: 'success', sourcePath: result.restoredFrom, safetyBackupPath: safety.relativePath, message: 'Upload và khôi phục dữ liệu thành công' });
+    let customersAfter = 0;
+    let customerMasterWarning = null;
+    try {
+      const currentDb = readJsonFile(DB_PATH);
+      customersAfter = Array.isArray(currentDb.customers) ? currentDb.customers.length : 0;
+      const delta = customersAfter - customersBefore;
+      if (delta !== 0) {
+        customerMasterWarning = `Số KH master chênh lệch: upload=${customersBefore}, sau-restore=${customersAfter} (delta ${delta}).`;
+      }
+    } catch {}
+
+    const result = {
+      restoredFrom: `uploaded/${filename}`,
+      safetyBackup: safety.relativePath,
+      sha256: sha,
+      restoredAt: dayjs().tz('Asia/Ho_Chi_Minh').format(),
+      customerMasterBefore: customersBefore,
+      customerMasterAfter: customersAfter,
+      customerMasterWarning,
+    };
+    await appendHistory({
+      action: 'upload_restore',
+      type: 'uploaded',
+      status: 'success',
+      sourcePath: result.restoredFrom,
+      safetyBackupPath: safety.relativePath,
+      message: 'Upload và khôi phục dữ liệu thành công',
+      customerMasterBefore: customersBefore,
+      customerMasterAfter: customersAfter,
+      customerMasterWarning,
+    });
+    if (customerMasterWarning) console.warn(`[RESTORE] ${customerMasterWarning}`);
     backupsCache = null;
     return result;
   } catch (err) {

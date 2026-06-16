@@ -10,7 +10,7 @@ export const BAO_HANH_OPTIONS = [
   { label: i18n.t('status:baoHanh.khac'), value: 'khac' },
 ];
 
-export const LOAI_XU_LY_OPTIONS = ['bao_hanh', 'sua_dv', 'doi_moi', 'khac'].map((value) => ({
+export const LOAI_XU_LY_OPTIONS = ['bao_hanh', 'sua_dv', 'doi_hang', 'khac'].map((value) => ({
   label: i18n.t(`status:loaiXuLy.${value}`),
   value,
 }));
@@ -18,6 +18,6 @@ export const LOAI_XU_LY_OPTIONS = ['bao_hanh', 'sua_dv', 'doi_moi', 'khac'].map(
 export const LOAI_XU_LY_LABELS = {
   bao_hanh: i18n.t('status:loaiXuLy.bao_hanh'),
   sua_dv: i18n.t('status:loaiXuLy.sua_dv'),
-  doi_moi: i18n.t('status:loaiXuLy.doi_moi'),
+  doi_hang: i18n.t('status:loaiXuLy.doi_hang'),
   khac: i18n.t('status:loaiXuLy.khac'),
 };

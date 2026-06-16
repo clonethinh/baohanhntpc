@@ -6,8 +6,7 @@ export function normalizeHistoryNote(text) {
     .replaceAll('bao_hanh', 'Bảo hành')
     .replaceAll('sua_dv', 'Sửa dịch vụ')
     .replaceAll('Sửa DV', 'Sửa dịch vụ')
-    .replaceAll('tra_bao_hanh', 'Trả bảo hành')
-    .replaceAll('doi_moi', 'Đổi mới');
+    .replaceAll('tra_bao_hanh', 'Trả bảo hành');
 }
 
 export function mapLoaiXuLyValue(raw) {
@@ -16,7 +15,6 @@ export function mapLoaiXuLyValue(raw) {
     bao_hanh: 'Bảo hành',
     sua_dv: 'Sửa dịch vụ',
     tra_bao_hanh: 'Trả bảo hành',
-    doi_moi: 'Đổi mới',
   };
   return map[key] || key;
 }

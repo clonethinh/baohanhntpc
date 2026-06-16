@@ -184,8 +184,7 @@ export function toHistoryTimelineItem(entry, warranty = {}, { publicMode = false
     .replaceAll('loaiXuLy:', 'Loại xử lý:')
     .replaceAll('bao_hanh', 'Bảo hành')
     .replaceAll('sua_dv', 'Sửa dịch vụ')
-    .replaceAll('tra_bao_hanh', 'Trả bảo hành')
-    .replaceAll('doi_moi', 'Đổi mới');
+    .replaceAll('tra_bao_hanh', 'Trả bảo hành');
 
   let title = '';
   let detail = '';

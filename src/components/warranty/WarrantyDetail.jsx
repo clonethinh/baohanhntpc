@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Drawer, Tabs, Descriptions, Form, Input, Select, Button, Timeline, Tag, QRCode, Popconfirm, Space, Typography, App, Card, Modal, DatePicker, Alert, Table, Grid, Upload, Image, Skeleton } from 'antd';
-import { EditOutlined, PrinterOutlined, CheckCircleOutlined, DeleteOutlined, CopyOutlined, SendOutlined, ClockCircleOutlined, UploadOutlined, CloseOutlined, SwapOutlined, PhoneOutlined, EnvironmentOutlined, FileTextOutlined, HistoryOutlined } from '@ant-design/icons';
+import { Drawer, Tabs, Descriptions, Form, Input, Select, Button, Timeline, Tag, QRCode, Popconfirm, Space, Typography, App, Card, Modal, DatePicker, Alert, Table, Grid, Image, Skeleton, Segmented } from 'antd';
+import { EditOutlined, PrinterOutlined, CheckCircleOutlined, DeleteOutlined, CopyOutlined, SendOutlined, ClockCircleOutlined, UploadOutlined, CloseOutlined, SwapOutlined, PhoneOutlined, EnvironmentOutlined, FileTextOutlined, HistoryOutlined, RollbackOutlined, ArrowRightOutlined, InboxOutlined, GiftOutlined, WarningOutlined } from '@ant-design/icons';
 import {
   Button as MobileButton,
   Card as MobileCard,
@@ -1202,61 +1202,182 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     }
 
     return (
-      <Card title={t('warrantyDetail.xacNhanDoiTra')}>
+      <Card
+        className="warranty-exchange-card"
+        title={
+          <div className="warranty-exchange-card-title">
+            <SwapOutlined className="warranty-exchange-card-title-icon" />
+            <span>{t('warrantyDetail.xacNhanDoiTra')}</span>
+          </div>
+        }
+        extra={<Text type="secondary" className="warranty-exchange-card-subtitle">{t('warrantyDetail.xacNhanDoiTraSubtitle', { defaultValue: 'Đóng phiếu + ghi nhận xử lý cuối' })}</Text>}
+      >
         <Form
           form={exchangeForm}
           layout="vertical"
           initialValues={{ type: 'doi_hang' }}
           onFinish={handleExchangeReturn}
         >
-          <Form.Item label={t('field.loaiXuLy')} name="type">
-            <Select
-              onChange={value => setExchangeType(value)}
+          {/* Bước 1: Chọn loại xử lý */}
+          <div className="warranty-exchange-section">
+            <div className="warranty-exchange-section-label">
+              <span className="warranty-exchange-step">1</span>
+              <span>{t('warrantyDetail.chonLoaiXuLy', { defaultValue: 'Chọn loại xử lý' })}</span>
+            </div>
+            <Segmented
+              block
+              size="large"
+              value={exchangeType}
+              onChange={(v) => setExchangeType(v)}
               options={[
-                { label: t('warrantyDetail.doiHang'), value: 'doi_hang' },
-                { label: t('warrantyDetail.traHang'), value: 'tra_hang' },
+                {
+                  value: 'doi_hang',
+                  label: (
+                    <div className={`warranty-exchange-type-card ${exchangeType === 'doi_hang' ? 'is-active' : ''}`}>
+                      <SwapOutlined className="warranty-exchange-type-card-icon" />
+                      <div className="warranty-exchange-type-card-text">
+                        <div className="warranty-exchange-type-card-title">{t('warrantyDetail.doiHang')}</div>
+                        <div className="warranty-exchange-type-card-desc">{t('warrantyDetail.doiHangDesc', { defaultValue: 'Khách nhận SP mới / thay thế' })}</div>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  value: 'tra_hang',
+                  label: (
+                    <div className={`warranty-exchange-type-card ${exchangeType === 'tra_hang' ? 'is-active' : ''}`}>
+                      <RollbackOutlined className="warranty-exchange-type-card-icon" />
+                      <div className="warranty-exchange-type-card-text">
+                        <div className="warranty-exchange-type-card-title">{t('warrantyDetail.traHang')}</div>
+                        <div className="warranty-exchange-type-card-desc">{t('warrantyDetail.traHangDesc', { defaultValue: 'Hoàn trả cho khách' })}</div>
+                      </div>
+                    </div>
+                  ),
+                },
               ]}
             />
-          </Form.Item>
+          </div>
 
-          {exchangeType === 'doi_hang' ? (
-            <>
-              <Form.Item label={t('warrantyDetail.tenSanPhamDoiSang')} name="tenHangMoi" rules={[{ required: true, message: t('warrantyDetail.nhapTenSPDoiSang') }]}>
-                <Input placeholder="VD: SSD Kingston NV2 500GB" />
-              </Form.Item>
-              <Form.Item label={t('warrantyDetail.soSerialMoi')} name="soSeriMoi" rules={[{ required: true, message: t('warrantyDetail.nhapSoSerialMoi') }]}>
-                <Input placeholder="VD: SN123456" />
-              </Form.Item>
-            </>
-          ) : (
-            <Form.Item label={t('warrantyDetail.lyDoTraHang')} name="reason" rules={[{ required: true, message: t('warrantyDetail.nhapLyDoTraHang') }]}>
-              <TextArea rows={3} placeholder={t('warrantyDetail.vdDoiTra')} />
+          {/* Bước 2: Nội dung xử lý */}
+          <div className="warranty-exchange-section">
+            <div className="warranty-exchange-section-label">
+              <span className="warranty-exchange-step">2</span>
+              <span>
+                {exchangeType === 'doi_hang'
+                  ? t('warrantyDetail.sanPhamCuVaDoiSang', { defaultValue: 'Sản phẩm nhận vào ↔ Sản phẩm đổi sang' })
+                  : t('warrantyDetail.lyDoTraHangSection', { defaultValue: 'Lý do trả hàng' })}
+              </span>
+            </div>
+
+            {exchangeType === 'doi_hang' ? (
+              <div className="warranty-exchange-compare">
+                <div className="warranty-exchange-compare-col warranty-exchange-compare-col--old">
+                  <div className="warranty-exchange-compare-header">
+                    <InboxOutlined />
+                    <span>{t('warrantyDetail.sanPhamNhanVao', { defaultValue: 'Sản phẩm nhận vào' })}</span>
+                    <Tag color="default" className="warranty-exchange-compare-tag">{t('warrantyDetail.readonly', { defaultValue: 'Chỉ xem' })}</Tag>
+                  </div>
+                  <div className="warranty-exchange-compare-field">
+                    <div className="warranty-exchange-compare-label">{t('field.tenHang')}</div>
+                    <div className="warranty-exchange-compare-value">{warranty.tenHang || '-'}</div>
+                  </div>
+                  <div className="warranty-exchange-compare-field">
+                    <div className="warranty-exchange-compare-label">{t('field.soSeri')}</div>
+                    <div className="warranty-exchange-compare-value warranty-exchange-compare-value--mono">{warranty.soSeri || '-'}</div>
+                  </div>
+                  <div className="warranty-exchange-compare-field">
+                    <div className="warranty-exchange-compare-label">{t('field.ngayNhan')}</div>
+                    <div className="warranty-exchange-compare-value">{formatDate(warranty.ngayNhan, 'DD-MM-YYYY')}</div>
+                  </div>
+                </div>
+
+                <div className="warranty-exchange-compare-arrow">
+                  <ArrowRightOutlined />
+                </div>
+
+                <div className="warranty-exchange-compare-col warranty-exchange-compare-col--new">
+                  <div className="warranty-exchange-compare-header">
+                    <GiftOutlined />
+                    <span>{t('warrantyDetail.sanPhamDoiSang', { defaultValue: 'Sản phẩm đổi sang' })}</span>
+                    <Tag color="blue" className="warranty-exchange-compare-tag">{t('warrantyDetail.canNhap', { defaultValue: 'Cần nhập' })}</Tag>
+                  </div>
+                  <Form.Item
+                    label={t('warrantyDetail.tenSanPhamDoiSang')}
+                    name="tenHangMoi"
+                    rules={[{ required: true, message: t('warrantyDetail.nhapTenSPDoiSang') }]}
+                    style={{ marginBottom: 12 }}
+                  >
+                    <Input placeholder="VD: SSD Kingston NV2 500GB" size="large" />
+                  </Form.Item>
+                  <Form.Item
+                    label={t('warrantyDetail.soSerialMoi')}
+                    name="soSeriMoi"
+                    rules={[{ required: true, message: t('warrantyDetail.nhapSoSerialMoi') }]}
+                    style={{ marginBottom: 0 }}
+                  >
+                    <Input placeholder="VD: SN123456" size="large" style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }} />
+                  </Form.Item>
+                </div>
+              </div>
+            ) : (
+              <div className="warranty-exchange-return">
+                <div className="warranty-exchange-return-context">
+                  <InboxOutlined />
+                  <span className="warranty-exchange-return-context-label">{t('warrantyDetail.sanPhamNhanVao', { defaultValue: 'Sản phẩm nhận vào' })}:</span>
+                  <span className="warranty-exchange-return-context-name">{warranty.tenHang || '-'}</span>
+                  <span className="warranty-exchange-return-context-serial">{warranty.soSeri || '-'}</span>
+                </div>
+                <Form.Item
+                  label={t('warrantyDetail.lyDoTraHang')}
+                  name="reason"
+                  rules={[{ required: true, message: t('warrantyDetail.nhapLyDoTraHang') }]}
+                  style={{ marginBottom: 0 }}
+                >
+                  <TextArea rows={4} placeholder={t('warrantyDetail.vdDoiTra')} />
+                </Form.Item>
+              </div>
+            )}
+          </div>
+
+          {/* Bước 3: Chi tiết bổ sung */}
+          <div className="warranty-exchange-section">
+            <div className="warranty-exchange-section-label">
+              <span className="warranty-exchange-step">3</span>
+              <span>{t('warrantyDetail.chiTietBoSung', { defaultValue: 'Chi tiết bổ sung' })}</span>
+              <Text type="secondary" className="warranty-exchange-section-optional">({t('common.tuyChon', { defaultValue: 'tùy chọn' })})</Text>
+            </div>
+
+            <Form.Item label={t('field.ghiChu')} name="note" style={{ marginBottom: 12 }}>
+              <Input placeholder={t('warrantyDetail.ghiChuThemNeuCo')} />
             </Form.Item>
-          )}
 
-          <Form.Item label={t('field.ghiChu')} name="note">
-            <TextArea rows={2} placeholder={t('warrantyDetail.ghiChuThemNeuCo')} />
-          </Form.Item>
+            <Form.Item label={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh đính kèm')} (${exchangeAttachments.length}/10)`} style={{ marginBottom: 0 }}>
+              <Space direction="vertical" size={10} style={{ display: 'flex' }}>
+                {exchangeAttachmentUpload}
+                {exchangeAttachments.length > 0
+                  ? renderExchangeAttachmentGrid(exchangeAttachments, { removable: true })
+                  : <Text type="secondary">{t('warrantyDetail.coTheDinhKemDoiTra')}</Text>}
+              </Space>
+            </Form.Item>
+          </div>
 
-          <Form.Item label={`${t('field.attachments').replace('Ảnh đính kèm', 'Hình ảnh đính kèm')} (${exchangeAttachments.length}/10)`}>
-            <Space direction="vertical" size={10} style={{ display: 'flex' }}>
-              {exchangeAttachmentUpload}
-              {exchangeAttachments.length > 0
-                ? renderExchangeAttachmentGrid(exchangeAttachments, { removable: true })
-                : <Text type="secondary">{t('warrantyDetail.coTheDinhKemDoiTra')}</Text>}
-            </Space>
-          </Form.Item>
-
-          <Alert
-            type="warning"
-            showIcon
-            style={{ marginBottom: 16 }}
-            message={t('warrantyDetail.sauXacNhanDoiTra')}
-          />
-
-          <Button type="primary" htmlType="submit" loading={exchangeSubmitting}>
-            {exchangeType === 'doi_hang' ? t('warrantyDetail.xacNhanDoiHangBtn', { defaultValue: 'Xác nhận đổi hàng' }) : t('warrantyDetail.xacNhanTraHangBtn', { defaultValue: 'Xác nhận trả hàng' })}
-          </Button>
+          {/* Sticky footer với warning + submit */}
+          <div className="warranty-exchange-footer">
+            <div className="warranty-exchange-footer-warning">
+              <WarningOutlined className="warranty-exchange-footer-warning-icon" />
+              <span>{t('warrantyDetail.sauXacNhanDoiTra')}</span>
+            </div>
+            <Button
+              type="primary"
+              size="large"
+              htmlType="submit"
+              loading={exchangeSubmitting}
+              icon={exchangeType === 'doi_hang' ? <SwapOutlined /> : <RollbackOutlined />}
+              className={`warranty-exchange-footer-submit ${exchangeType === 'tra_hang' ? 'is-return' : ''}`}
+            >
+              {exchangeType === 'doi_hang' ? t('warrantyDetail.xacNhanDoiHangBtn', { defaultValue: 'Xác nhận đổi hàng' }) : t('warrantyDetail.xacNhanTraHangBtn', { defaultValue: 'Xác nhận trả hàng' })}
+            </Button>
+          </div>
         </Form>
       </Card>
     );
@@ -2631,18 +2752,34 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             >
               <CloseOutlined />
             </button>
-            <div className="hero-left">
-              <div className="hero-title">
-                <div className="hero-code">{warranty.soChungTu}</div>
-                <div className="hero-meta">
-                  <span className={`warranty-mobile-hero-status ${desktopStatusVariant}`}>
-                    <span className="dot" />
-                    {statusConfig?.label || warranty.trangThai}
-                  </span>
-                  {desktopIsPriority && (
-                    <span className="warranty-mobile-hero-priority">Ưu tiên</span>
-                  )}
-                </div>
+            <div className="hero-info">
+              <div className="hero-line-primary">
+                <span className="hero-code">{warranty.soChungTu}</span>
+                <span className={`hero-status hero-status-${desktopStatusVariant}`}>
+                  <span className="hero-status-dot" />
+                  {statusConfig?.label || warranty.trangThai}
+                </span>
+                {desktopIsPriority && (
+                  <span className="hero-priority">Ưu tiên</span>
+                )}
+              </div>
+              <div className="hero-line-secondary">
+                <span
+                  className={`hero-customer-avatar hero-customer-avatar-${desktopStatusVariant}`}
+                  aria-hidden="true"
+                >
+                  {desktopCustomerInitials}
+                </span>
+                <span className="hero-customer-name">{warranty.khachHang || '—'}</span>
+                {warranty.soDienThoai && (
+                  <a
+                    className="hero-customer-phone"
+                    href={`tel:${warranty.soDienThoai.replace(/\s+/g, '')}`}
+                    title={t('warrantyDetail.goiDien', { defaultValue: 'Gọi điện' })}
+                  >
+                    <PhoneOutlined /> {warranty.soDienThoai}
+                  </a>
+                )}
               </div>
             </div>
             <div className="hero-actions">
@@ -2695,27 +2832,6 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 </>
               )}
             </div>
-            {/* Customer compact row — parity với mobile customer card */}
-            <div className="hero-customer">
-              <span className="avatar">{desktopCustomerInitials}</span>
-              <div className="info">
-                <span className="name">{warranty.khachHang || '—'}</span>
-                {warranty.soDienThoai && (
-                  <span className="phone">
-                    <PhoneOutlined /> {warranty.soDienThoai}
-                  </span>
-                )}
-              </div>
-              <button
-                type="button"
-                className="swap-btn"
-                onClick={() => setCustomerPickerOpen(true)}
-                aria-label={t('warrantyDetail.chuyenKhachTitle')}
-                title={t('warrantyDetail.chuyenKhachTitle')}
-              >
-                <SwapOutlined />
-              </button>
-            </div>
           </div>
         ) : (
           <div className="warranty-desktop-hero">
@@ -2727,9 +2843,9 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
             >
               <CloseOutlined />
             </button>
-            <div className="hero-left">
-              <div className="hero-title">
-                <div className="hero-code">{warranty.soChungTu}</div>
+            <div className="hero-info">
+              <div className="hero-line-primary">
+                <span className="hero-code">{warranty.soChungTu}</span>
               </div>
             </div>
           </div>
@@ -2739,6 +2855,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
       onClose={handleRequestClose}
       width={screens.xl ? 900 : 680}
       loading={loading}
+      classNames={{ body: 'warranty-desktop-drawer-body' }}
       afterOpenChange={(visible) => {
         if (!visible) handleClose();
       }}

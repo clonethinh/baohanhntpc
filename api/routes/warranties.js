@@ -318,11 +318,21 @@ router.get('/', async (req, res) => {
 
 router.get('/next-code', async (req, res) => {
   try {
-    const warranties = await prisma.warranty.findMany({ where: { deletedAt: '' } });
     const today = dayjs().tz('Asia/Ho_Chi_Minh').format('DDMMYYYY');
-    const todayCodes = warranties.filter(w => w.soChungTu && w.soChungTu.startsWith(today));
-    const n = todayCodes.length + 1;
-    const code = `${today}NTPC${n}`;
+    const todayPrefix = `${today}NTPC`;
+    // Tìm max number trong ngày (không phải count) để tránh collision khi có gap
+    // do phiếu bị xoá mềm hoặc nhập tay với số không liên tiếp
+    const codes = await prisma.warranty.findMany({
+      where: { soChungTu: { startsWith: todayPrefix } },
+      select: { soChungTu: true },
+    });
+    let maxN = 0;
+    for (const w of codes) {
+      const m = String(w.soChungTu || '').match(/^(\d{8})NTPC(\d+)$/);
+      const n = m && m[1] === today ? parseInt(m[2], 10) : 0;
+      if (Number.isFinite(n) && n > maxN) maxN = n;
+    }
+    const code = `${todayPrefix}${maxN + 1}`;
     res.json({ success: true, data: { code } });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
@@ -418,17 +428,28 @@ router.post('/', async (req, res) => {
     }
 
     const today = dayjs().tz('Asia/Ho_Chi_Minh').format('DDMMYYYY');
-    const countToday = await prisma.warranty.count({
-      where: { soChungTu: { startsWith: today } }
+    const todayPrefix = `${today}NTPC`;
+    // Tìm max number trong ngày (không phải count) để tránh collision khi có gap
+    // do phiếu bị xoá mềm hoặc nhập tay với số không liên tiếp
+    const todayCodes = await prisma.warranty.findMany({
+      where: { soChungTu: { startsWith: todayPrefix } },
+      select: { soChungTu: true },
     });
-    let n = countToday + 1;
-    let soChungTu = `${today}NTPC${n}`;
+    let maxN = 0;
+    for (const w of todayCodes) {
+      const m = String(w.soChungTu || '').match(/^(\d{8})NTPC(\d+)$/);
+      const n = m && m[1] === today ? parseInt(m[2], 10) : 0;
+      if (Number.isFinite(n) && n > maxN) maxN = n;
+    }
+    let n = maxN + 1;
+    let soChungTu = `${todayPrefix}${n}`;
 
+    // Retry vẫn giữ phòng trường hợp race condition (2 request cùng lúc)
     for (let retry = 0; retry < 5; retry++) {
       const exists = await prisma.warranty.findUnique({ where: { soChungTu } });
       if (!exists) break;
       n++;
-      soChungTu = `${today}NTPC${n}`;
+      soChungTu = `${todayPrefix}${n}`;
     }
 
     const maxAggregate = await prisma.warranty.aggregate({
@@ -820,10 +841,12 @@ router.patch('/:id/exchange-return', async (req, res) => {
           ngayTra,
           updatedAt: now,
           history,
-          ...(isExchange ? {
-            tenHang: body.tenHangMoi,
-            soSeri: body.soSeriMoi,
-          } : {})
+          // Khi đổi qua sản phẩm khác, cập nhật loaiXuLy để dropdown filter ra được.
+          // Lưu ý: KHÔNG ghi đè top-level tenHang/soSeri khi đổi hàng.
+          // tenHang/soSeri là sản phẩm NHẬN VÀO (immutable sau create).
+          // Sản phẩm đổi sang phải đọc từ doiTra.tenHangMoi/soSeriMoi.
+          // Nếu cần truy vết, xem history[].changes.tenHang/soSeri.
+          ...(isExchange ? { loaiXuLy: 'doi_hang' } : {})
         }
       });
 
@@ -1025,6 +1048,8 @@ router.delete('/:id/history/:historyIndex', async (req, res) => {
       return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy dòng lịch sử.' } });
     }
 
+    // Capture entry sắp bị xoá TRƯỚC khi filter để audit có thể truy vết nội dung
+    const deletedEntry = history[historyIndex];
     const now = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss');
     const updated = await prisma.warranty.update({
       where: { id: old.id },
@@ -1034,7 +1059,16 @@ router.delete('/:id/history/:historyIndex', async (req, res) => {
       }
     });
 
-    await writeAuditLog(req, { action: 'delete_history', entity: 'warranty', entityId: updated.id, summary: `Xóa dòng lịch sử phiếu ${updated.soChungTu}`, before: old, after: updated });
+    // Lưu snapshot của entry bị xoá trong audit.after với key __deletedHistoryEntry
+    // (retro-compatible: vẫn là JSON, thêm key có prefix __ để tránh xung đột với field warranty)
+    await writeAuditLog(req, {
+      action: 'delete_history',
+      entity: 'warranty',
+      entityId: updated.id,
+      summary: `Xóa dòng lịch sử phiếu ${updated.soChungTu} (index ${historyIndex})`,
+      before: old,
+      after: { ...updated, __deletedHistoryEntry: deletedEntry },
+    });
     syncLocalBackup();
 
     res.json({ success: true, data: withDefaultDueDate(updated) });
@@ -1480,6 +1514,27 @@ router.post('/import', async (req, res) => {
         const row = rows[i];
         try {
           if (!row.soChungTu) { errors.push({ row: i + 1, reason: 'Thiếu số chứng từ' }); continue; }
+          // Bonus 1: validate format DDMMYYYYNTPC<n> (8 số + NTPC + 1+ số)
+          if (!/^\d{8}NTPC\d+$/.test(String(row.soChungTu))) {
+            errors.push({
+              row: i + 1,
+              reason: `Số chứng từ "${row.soChungTu}" không đúng format DDMMYYYYNTPC<n> (vd: 15062026NTPC1)`,
+            });
+            continue;
+          }
+          // Bonus 1b: validate năm trong soChungTu phải khớp với ngayNhan (audit-friendly)
+          if (row.ngayNhan) {
+            const codeDate = String(row.soChungTu).substring(0, 8); // DDMMYYYY
+            const codeDateIso = `${codeDate.substring(4, 8)}-${codeDate.substring(2, 4)}-${codeDate.substring(0, 2)}`;
+            const nhDate = String(row.ngayNhan).substring(0, 10); // YYYY-MM-DD
+            if (codeDateIso !== nhDate) {
+              errors.push({
+                row: i + 1,
+                reason: `Ngày trong số chứng từ (${codeDateIso}) khác ngày nhận (${nhDate})`,
+              });
+              continue;
+            }
+          }
           if (existingCodes.has(row.soChungTu)) { skipped.push({ row: i + 1, soChungTu: row.soChungTu }); continue; }
           if (!row.khachHang) { errors.push({ row: i + 1, reason: 'Thiếu khách hàng' }); continue; }
 

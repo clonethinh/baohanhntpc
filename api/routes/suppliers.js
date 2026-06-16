@@ -84,11 +84,29 @@ router.post('/', async (req, res) => {
         err.code = 'DUPLICATE_CODE';
         throw err;
       }
+      // Check trùng tên (case-insensitive, đã trim) — tránh tạo 2 NCC cùng tên khác hoa/thường
+      const nameNormalized = String(parsed.data.name || '').trim().replace(/\s+/g, ' ');
+      if (nameNormalized) {
+        const nameExists = await tx.supplier.findFirst({
+          where: {
+            isActive: true,
+            name: { equals: nameNormalized, mode: 'insensitive' },
+          },
+          select: { id: true, code: true, name: true },
+        });
+        if (nameExists) {
+          const err = new Error(`Tên nhà cung cấp "${nameExists.name}" (mã ${nameExists.code}) đã tồn tại. Vui lòng dùng NCC đó hoặc chọn tên khác.`);
+          err.status = 400;
+          err.code = 'DUPLICATE_NAME';
+          err.existing = { id: nameExists.id, code: nameExists.code, name: nameExists.name };
+          throw err;
+        }
+      }
       const created = await tx.supplier.create({
         data: {
           id: uuidv4(),
           code,
-          name: parsed.data.name,
+          name: nameNormalized || parsed.data.name, // 4A-2: lưu dạng đã chuẩn hoá (trim + collapse space)
           phone: parsed.data.phone || '',
           email: parsed.data.email || '',
           address: parsed.data.address || '',
@@ -102,7 +120,15 @@ router.post('/', async (req, res) => {
     });
     res.status(201).json({ success: true, data: normalizeSupplier(item) });
   } catch (err) {
-    res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Loi may chu' } });
+    // 4A-1: pass existing field (for DUPLICATE_NAME) + any other structured details
+    res.status(err.status || 500).json({
+      success: false,
+      error: {
+        code: err.code || 'SERVER_ERROR',
+        message: err.message || 'Loi may chu',
+        existing: err.existing || null,
+      },
+    });
   }
 });
 
@@ -126,11 +152,30 @@ router.put('/:id', async (req, res) => {
         err.code = 'DUPLICATE_CODE';
         throw err;
       }
+      // Check trùng tên khi UPDATE (case-insensitive, loại trừ chính nó)
+      const nameNormalized = String(parsed.data.name || '').trim().replace(/\s+/g, ' ');
+      if (nameNormalized) {
+        const nameExists = await tx.supplier.findFirst({
+          where: {
+            id: { not: req.params.id },
+            isActive: true,
+            name: { equals: nameNormalized, mode: 'insensitive' },
+          },
+          select: { id: true, code: true, name: true },
+        });
+        if (nameExists) {
+          const err = new Error(`Tên nhà cung cấp "${nameExists.name}" (mã ${nameExists.code}) đã tồn tại. Vui lòng dùng NCC đó hoặc chọn tên khác.`);
+          err.status = 400;
+          err.code = 'DUPLICATE_NAME';
+          err.existing = { id: nameExists.id, code: nameExists.code, name: nameExists.name };
+          throw err;
+        }
+      }
       const updated = await tx.supplier.update({
         where: { id: req.params.id },
         data: {
           code: nextCode,
-          name: parsed.data.name,
+          name: nameNormalized || parsed.data.name, // 4A-2: lưu dạng đã chuẩn hoá
           phone: parsed.data.phone || '',
           email: parsed.data.email || '',
           address: parsed.data.address || '',
@@ -144,7 +189,15 @@ router.put('/:id', async (req, res) => {
     });
     res.json({ success: true, data: normalizeSupplier(item) });
   } catch (err) {
-    res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Loi may chu' } });
+    // 4A-1: pass existing field (for DUPLICATE_NAME) + any other structured details
+    res.status(err.status || 500).json({
+      success: false,
+      error: {
+        code: err.code || 'SERVER_ERROR',
+        message: err.message || 'Loi may chu',
+        existing: err.existing || null,
+      },
+    });
   }
 });
 
@@ -164,7 +217,15 @@ router.patch('/:id/status', async (req, res) => {
     });
     res.json({ success: true, data: normalizeSupplier(item) });
   } catch (err) {
-    res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Loi may chu' } });
+    // 4A-1: pass existing field (for DUPLICATE_NAME) + any other structured details
+    res.status(err.status || 500).json({
+      success: false,
+      error: {
+        code: err.code || 'SERVER_ERROR',
+        message: err.message || 'Loi may chu',
+        existing: err.existing || null,
+      },
+    });
   }
 });
 

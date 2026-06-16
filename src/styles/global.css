@@ -6157,7 +6157,13 @@ html[data-theme='dark'] .warranty-mobile-tabbar .tab .badge.warn { background: #
 
 .warranty-desktop-tab-content {
   display: block;
-  padding: 16px;
+  padding: 24px 24px;
+}
+
+/* Drawer body padding moved into the tab content so the sticky tab bar
+   pins flush to the top of the scroll container (no 24px gap above it). */
+.warranty-desktop-drawer-body {
+  padding: 0 !important;
 }
 
 /* Hide antd Tabs underline artifacts left over from old code (defensive) */
@@ -6531,4 +6537,364 @@ html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn.danger {
 html[data-theme='dark'] .warranty-desktop-hero .hero-actions .btn.danger:hover {
   background: #2a1717;
   border-color: #f87171;
+}
+
+/* ====================================================================
+   Warranty Exchange Form Redesign (visual comparison layout)
+   Desktop only — applies to .warranty-exchange-card inside drawer
+   ==================================================================== */
+
+.warranty-exchange-card .ant-card-body {
+  padding: 20px 24px 16px;
+}
+
+.warranty-exchange-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.warranty-exchange-card-title-icon {
+  color: #1677ff;
+  font-size: 16px;
+}
+
+.warranty-exchange-card-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* Step section wrapper */
+.warranty-exchange-section {
+  margin-bottom: 22px;
+}
+
+.warranty-exchange-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #1f1f1f;
+}
+
+.warranty-exchange-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #1677ff;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.warranty-exchange-section-optional {
+  font-weight: 400;
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+/* Segmented type cards (Đổi hàng / Trả hàng) */
+.warranty-exchange-type-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.warranty-exchange-type-card.is-active {
+  color: #1677ff;
+}
+
+.warranty-exchange-type-card-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.warranty-exchange-type-card-text {
+  text-align: left;
+  line-height: 1.2;
+}
+
+.warranty-exchange-type-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 1px;
+}
+
+.warranty-exchange-type-card-desc {
+  font-size: 11px;
+  font-weight: 400;
+  color: #8c8c8c;
+}
+
+.warranty-exchange-type-card.is-active .warranty-exchange-type-card-desc {
+  color: #69b1ff;
+}
+
+/* Comparison layout (Đổi hàng): old product ↔ new product */
+.warranty-exchange-compare {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.warranty-exchange-compare-col {
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.warranty-exchange-compare-col--old {
+  background: #fafafa;
+  border-color: #e5e7eb;
+}
+
+.warranty-exchange-compare-col--new {
+  background: #e6f4ff;
+  border-color: #91caff;
+}
+
+.warranty-exchange-compare-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #1f1f1f;
+  margin-bottom: 2px;
+}
+
+.warranty-exchange-compare-col--old .warranty-exchange-compare-header {
+  color: #595959;
+}
+
+.warranty-exchange-compare-col--new .warranty-exchange-compare-header {
+  color: #1677ff;
+}
+
+.warranty-exchange-compare-tag {
+  margin-left: auto !important;
+  font-size: 10px !important;
+  padding: 0 6px !important;
+  line-height: 18px !important;
+  border-radius: 4px !important;
+}
+
+.warranty-exchange-compare-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.warranty-exchange-compare-label {
+  font-size: 11px;
+  color: #8c8c8c;
+  font-weight: 500;
+}
+
+.warranty-exchange-compare-value {
+  font-size: 13px;
+  color: #1f1f1f;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.warranty-exchange-compare-value--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.warranty-exchange-compare-col--new .warranty-exchange-compare-value--mono {
+  background: rgba(22, 119, 255, 0.08);
+}
+
+.warranty-exchange-compare-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #1677ff;
+  font-weight: 700;
+}
+
+/* Return context (Trả hàng): show received product as one-liner */
+.warranty-exchange-return {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.warranty-exchange-return-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #595959;
+}
+
+.warranty-exchange-return-context-label {
+  color: #8c8c8c;
+}
+
+.warranty-exchange-return-context-name {
+  color: #1f1f1f;
+  font-weight: 600;
+}
+
+.warranty-exchange-return-context-serial {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #1f1f1f;
+}
+
+/* Sticky footer with warning + submit */
+.warranty-exchange-footer {
+  position: sticky;
+  bottom: -16px;
+  margin: 0 -24px -16px;
+  padding: 12px 24px;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  z-index: 5;
+  border-radius: 0 0 8px 8px;
+}
+
+.warranty-exchange-footer-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #d48806;
+  font-size: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.warranty-exchange-footer-warning-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.warranty-exchange-footer-submit {
+  flex-shrink: 0;
+  min-width: 180px;
+  height: 40px !important;
+  font-weight: 600;
+}
+
+.warranty-exchange-footer-submit.is-return {
+  background: #fa8c16;
+  border-color: #fa8c16;
+}
+
+.warranty-exchange-footer-submit.is-return:hover {
+  background: #d46b08;
+  border-color: #d46b08;
+}
+
+/* Dark mode */
+html[data-theme='dark'] .warranty-exchange-card .ant-card-body {
+  background: transparent;
+}
+
+html[data-theme='dark'] .warranty-exchange-section-label {
+  color: #e5e7eb;
+}
+
+html[data-theme='dark'] .warranty-exchange-type-card-desc {
+  color: #8c8c8c;
+}
+
+html[data-theme='dark'] .warranty-exchange-type-card.is-active .warranty-exchange-type-card-desc {
+  color: #60a5fa;
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-col {
+  border-color: #303030;
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-col--old {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-col--new {
+  background: rgba(22, 119, 255, 0.08);
+  border-color: #1f3a5f;
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-col--old .warranty-exchange-compare-header {
+  color: #a6a6a6;
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-label {
+  color: #8c8c8c;
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-value {
+  color: #e5e7eb;
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-value--mono {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme='dark'] .warranty-exchange-compare-col--new .warranty-exchange-compare-value--mono {
+  background: rgba(22, 119, 255, 0.12);
+}
+
+html[data-theme='dark'] .warranty-exchange-return-context {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: #303030;
+  color: #a6a6a6;
+}
+
+html[data-theme='dark'] .warranty-exchange-return-context-name {
+  color: #e5e7eb;
+}
+
+html[data-theme='dark'] .warranty-exchange-return-context-serial {
+  background: rgba(255, 255, 255, 0.06);
+  color: #e5e7eb;
+}
+
+html[data-theme='dark'] .warranty-exchange-footer {
+  background: #1f1f1f;
+  border-top-color: #303030;
+}
+
+html[data-theme='dark'] .warranty-exchange-footer-warning {
+  color: #ffa940;
 }

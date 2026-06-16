@@ -64,6 +64,8 @@ function getCustomerRows(warranties = [], customers = []) {
       khachHang: c.khachHang || '',
       soDienThoai: c.soDienThoai || '',
       diaChi: c.diaChi || '',
+      khoaMa: c.khoaMa === true, // expose khoaMa flag cho frontend
+      isActive: c.isActive !== false, // Bonus 3: expose isActive (frontend hiển thị "(inactive)" nếu false)
       lastNgayNhan: stat?.lastNgayNhan || c.lastSeenAt || c.updatedAt || c.createdAt || '',
       totalWarranties: stat?.totalWarranties || 0,
       dangXuLyCount: stat?.dangXuLyCount || 0,
@@ -73,7 +75,9 @@ function getCustomerRows(warranties = [], customers = []) {
   });
 
   statsMap.forEach((stat, key) => {
-    if (!rows.some((r) => r.key === key)) rows.push(stat);
+    if (!rows.some((r) => r.key === key)) {
+      rows.push({ ...stat, khoaMa: false, isActive: true }); // KH mới từ aggregate (chưa được cấp mã) — mặc định active
+    }
   });
 
   // Tìm mã khách hàng số lớn nhất hiện tại
@@ -88,10 +92,14 @@ function getCustomerRows(warranties = [], customers = []) {
   });
 
   // Gán mã tuần tự tăng dần ổn định cho những khách hàng chưa có mã
+  // Đồng thời khoá luôn (khoaMa=true) vì mã đã được cấp — không reuse nếu sau này bị xoá
   rows.forEach((r) => {
     if (!r.maKhachHang) {
       maxNum += 1;
       r.maKhachHang = `KH${String(maxNum).padStart(5, '0')}`;
+    }
+    if (r.maKhachHang) {
+      r.khoaMa = true; // mọi KH có mã đều khoá (khoaMa = true)
     }
   });
 

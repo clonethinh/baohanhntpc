@@ -93,7 +93,7 @@ model Warranty {
   baoGiaSau                Boolean  @default(false) @map("bao_gia_sau")
   loaiPhieu                String   @default("nhan_bao_hanh") @map("loai_phieu") // 'nhan_bao_hanh' hoặc 'bien_nhan'
   baoHanh                  String   @map("bao_hanh") // Thời gian BH
-  loaiXuLy                 String   @default("bao_hanh") @map("loai_xu_ly") // 'bao_hanh', 'sua_dv', 'doi_moi', 'khac'
+  loaiXuLy                 String   @default("bao_hanh") @map("loai_xu_ly") // 'bao_hanh', 'sua_dv', 'doi_hang', 'khac'
   loaiXuLyKhac             String   @default("") @map("loai_xu_ly_khac")
   ghiChu                   String   @default("") @map("ghi_chu")
   ngayMua                  String   @default("") @map("ngay_mua")
