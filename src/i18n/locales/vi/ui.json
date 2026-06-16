@@ -116,6 +116,7 @@
     "ngayTraThucTe": "Ngày trả thực tế",
     "maNhanVien": "Nhân viên",
     "nhanVien": "Nhân viên",
+    "nhaCungCap": "Nhà cung cấp",
     "trangThai": "Trạng thái",
     "uuTien": "Ưu tiên",
     "attachments": "Ảnh đính kèm",
@@ -610,7 +611,8 @@
     "uploadAssetsBtn": "Upload gói ảnh",
     "backupList": "Danh sách backup",
     "historyList": "Lịch sử backup/restore",
-    "totalBackup": "Tổng {{total}} backup"
+    "totalBackup": "Tổng {{total}} backup",
+    "previewCaption": "Đang xem {{shown}}/{{total}} bản ghi mới nhất. Toàn bộ {{total}} bản ghi đều nằm trong file backup."
   },
   "customerPortal": {
     "notFoundByPhone": "Không tìm thấy chứng từ theo số điện thoại này",
@@ -689,6 +691,8 @@
     "roleStaff": "Nhân viên",
     "resetPassword": "Đặt lại mật khẩu",
     "rolePlaceholder": "Chọn phân quyền",
+    "searchPlaceholder": "Tìm theo tên hoặc mã nhân viên...",
+    "roleFilterPlaceholder": "Lọc phân quyền",
     "emptyStaff": "Chưa có nhân viên nào"
   },
   "adminStatistics": {
@@ -874,6 +878,7 @@
     "supplierCode": "Mã NCC",
     "supplierName": "Tên NCC",
     "editAria": "Sửa nhà cung cấp",
+    "delete": "Xóa",
     "enableAria": "Kích hoạt nhà cung cấp",
     "disableAria": "Ngưng nhà cung cấp",
     "emptySuppliers": "Chưa có nhà cung cấp nào",

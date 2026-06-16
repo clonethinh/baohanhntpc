@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { App, Card, Typography, Form, Input, Button, Space, Table, Popconfirm, Skeleton, Tag, Modal, Select, Avatar } from 'antd';
 import {
   TeamOutlined,
@@ -8,6 +8,7 @@ import {
   KeyOutlined,
   DeleteOutlined,
   LockOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { authService, nhanVienService } from '../../services/warrantyService';
@@ -20,6 +21,8 @@ export default function StaffManagement() {
   const [staffs, setStaffs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [resetTarget, setResetTarget] = useState(null);
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
   const [addForm] = Form.useForm();
   const [pwdForm] = Form.useForm();
   const [resetForm] = Form.useForm();
@@ -128,6 +131,16 @@ export default function StaffManagement() {
   const adminCount = staffs.filter((s) => s.role === 'admin').length;
   const staffCount = totalStaff - adminCount;
 
+  // Lọc client-side: text contains theo mã + tên NV, kèm lọc theo vai trò.
+  const filteredStaffs = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return staffs.filter((s) => {
+      if (roleFilter && s.role !== roleFilter) return false;
+      if (!q) return true;
+      return [s.maNV, s.tenNV].some((v) => String(v || '').toLowerCase().includes(q));
+    });
+  }, [staffs, search, roleFilter]);
+
   const roleTag = (role) => (
     role === 'admin'
       ? <Tag color="geekblue" icon={<SafetyCertificateOutlined />}>{t('adminStaff.roleAdmin')}</Tag>
@@ -199,11 +212,29 @@ export default function StaffManagement() {
       </Card>
 
       <Card className="staff-card" title={<Space><TeamOutlined />{t('adminStaff.staffList')}</Space>}>
+        <div className="staff-list-toolbar" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+          <Input
+            allowClear
+            prefix={<SearchOutlined />}
+            placeholder={t('adminStaff.searchPlaceholder')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ flex: 1, minWidth: 200 }}
+          />
+          <Select
+            allowClear
+            value={roleFilter || undefined}
+            onChange={(v) => setRoleFilter(v || '')}
+            placeholder={t('adminStaff.roleFilterPlaceholder')}
+            options={roleOptions}
+            style={{ width: 160 }}
+          />
+        </div>
         <div className="desktop-only">
           <Table
             rowKey="maNV"
             loading={loading}
-            dataSource={staffs}
+            dataSource={filteredStaffs}
             pagination={false}
             locale={{ emptyText: t('adminStaff.emptyStaff') }}
             columns={[
@@ -227,9 +258,9 @@ export default function StaffManagement() {
         </div>
 
         <div className="mobile-only staff-mobile-list">
-          {staffs.length === 0 ? (
+          {filteredStaffs.length === 0 ? (
             <div className="staff-mobile-empty">{t('adminStaff.emptyStaff')}</div>
-          ) : staffs.map((row) => (
+          ) : filteredStaffs.map((row) => (
             <div key={row.maNV} className="staff-mobile-card">
               <div className="staff-mobile-top">
                 <Avatar size={40} style={{ backgroundColor: row.role === 'admin' ? '#3b5bdb' : '#2f9e44' }} icon={<UserOutlined />} />

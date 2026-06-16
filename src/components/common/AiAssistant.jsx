@@ -361,7 +361,7 @@ export default function AiAssistant() {
         size="large"
         onClose={() => setOpen(false)}
         open={open}
-        extra={<Button type="text" icon={<CloseOutlined />} onClick={() => setOpen(false)} />}
+        extra={<Button type="text" aria-label={t('button.dong', { defaultValue: 'Đóng' })} icon={<CloseOutlined />} onClick={() => setOpen(false)} />}
         closable={false}
         styles={{
           body: {

@@ -147,12 +147,18 @@ export default function BackupRestorePanel() {
 
   const viewBackup = async (relativePath) => {
     try {
-      const res = await backupService.view(relativePath, 20);
+      const res = await backupService.view(relativePath, 200);
       const data = res.data.data;
+      const s = data.summary || {};
+      const caption = (shown, total) => (total > shown
+        ? <small style={{ color: 'var(--ant-color-text-secondary, #888)' }}>{t('backup.previewCaption', { shown, total })}</small>
+        : null);
       modal.info({
         title: t('backup.viewTitle', { path: relativePath }),
         width: 900,
-        content: <Space direction="vertical" style={{ width: '100%' }}>
+        centered: false,
+        style: { top: 24, paddingBottom: 0 },
+        content: <Space direction="vertical" style={{ width: '100%', maxHeight: 'calc(100vh - 200px)', overflowY: 'auto', paddingRight: 4 }}>
           <Descriptions size="small" bordered column={2}>
             <Descriptions.Item label={t('backup.warranties')}>{data.summary.warranties}</Descriptions.Item>
             <Descriptions.Item label={t('field.khachHang')}>{data.summary.customers}</Descriptions.Item>
@@ -161,7 +167,8 @@ export default function BackupRestorePanel() {
             <Descriptions.Item label={t('backup.assets')}>{data.summary.assets?.exists ? `${data.summary.assets.count ?? '-'} file - ${fmtSize(data.summary.assets.size)}` : t('backup.none')}</Descriptions.Item>
           </Descriptions>
           <b>{t('backup.latestWarranties')}</b>
-          <Table size="small" rowKey={(r) => r.id || r.soChungTu || `${r.khachHang || ''}-${r.soSeri || ''}`} dataSource={data.preview.warranties} pagination={false} scroll={{ x: 800, y: 220 }} columns={[
+          {caption(data.preview.warranties.length, s.warranties)}
+          <Table size="small" rowKey={(r) => r.id || r.soChungTu || `${r.khachHang || ''}-${r.soSeri || ''}`} dataSource={data.preview.warranties} pagination={{ pageSize: 10, size: 'small', showSizeChanger: false }} scroll={{ x: 800, y: 220 }} columns={[
             { title: t('field.soChungTu'), dataIndex: 'soChungTu', width: 140 },
             { title: t('field.khachHang'), dataIndex: 'khachHang', width: 160 },
             { title: t('field.tenHang'), dataIndex: 'tenHang', width: 220, ellipsis: true },
@@ -169,7 +176,8 @@ export default function BackupRestorePanel() {
             { title: t('field.trangThai'), dataIndex: 'trangThai', width: 130, render: renderWarrantyStatus },
           ]} />
           <b>{t('field.khachHang')}</b>
-          <Table size="small" rowKey={(r) => r.key || r.id || r.maKhachHang || `${r.khachHang || ''}-${r.soDienThoai || ''}`} dataSource={data.preview.customers} pagination={false} scroll={{ x: 780, y: 180 }} columns={[
+          {caption(data.preview.customers.length, s.customers)}
+          <Table size="small" rowKey={(r) => r.key || r.id || r.maKhachHang || `${r.khachHang || ''}-${r.soDienThoai || ''}`} dataSource={data.preview.customers} pagination={{ pageSize: 10, size: 'small', showSizeChanger: false }} scroll={{ x: 780, y: 220 }} columns={[
             { title: t('backup.maKH'), dataIndex: 'maKhachHang', width: 100 },
             { title: t('field.khachHang'), dataIndex: 'khachHang', width: 180 },
             { title: t('field.sdt'), dataIndex: 'soDienThoai', width: 140 },
@@ -177,14 +185,16 @@ export default function BackupRestorePanel() {
             { title: t('backup.soPhieu'), dataIndex: 'totalWarranties', width: 100 },
           ]} />
           <b>{t('field.nhaCungCap')}</b>
-          <Table size="small" rowKey={(r) => r.id || r.code || r.name} dataSource={data.preview.suppliers} pagination={false} scroll={{ x: 700, y: 180 }} columns={[
+          {caption(data.preview.suppliers.length, s.suppliers)}
+          <Table size="small" rowKey={(r) => r.id || r.code || r.name} dataSource={data.preview.suppliers} pagination={{ pageSize: 10, size: 'small', showSizeChanger: false }} scroll={{ x: 700, y: 220 }} columns={[
             { title: t('backup.ma'), dataIndex: 'code', width: 120 },
             { title: t('backup.tenNCC'), dataIndex: 'name', width: 220 },
             { title: t('field.sdt'), dataIndex: 'phone', width: 140 },
             { title: t('field.trangThai'), dataIndex: 'isActive', width: 110, render: v => v === false ? <Tag color="red">{t('backup.tat')}</Tag> : <Tag color="green">{t('backup.hoatDong')}</Tag> },
           ]} />
           <b>{t('field.nhanVien')}</b>
-          <Table size="small" rowKey={(r) => r.id || r.maNV || r.tenNV} dataSource={data.preview.nhanVien} pagination={false} scroll={{ x: 500, y: 180 }} columns={[
+          {caption(data.preview.nhanVien.length, s.nhanVien)}
+          <Table size="small" rowKey={(r) => r.id || r.maNV || r.tenNV} dataSource={data.preview.nhanVien} pagination={{ pageSize: 10, size: 'small', showSizeChanger: false }} scroll={{ x: 500, y: 220 }} columns={[
             { title: t('backup.maNV'), dataIndex: 'maNV', width: 120 },
             { title: t('backup.tenNV'), dataIndex: 'tenNV', width: 220 },
             { title: t('backup.vaiTro'), dataIndex: 'role', width: 120 },
@@ -226,12 +236,12 @@ export default function BackupRestorePanel() {
     { title: t('backup.colImage'), width: 130, render: (_, r) => r.assets?.exists ? <Tag color="cyan">{r.assets.count ?? '?'} file · {fmtSize(r.assets.size)}</Tag> : <Tag>{t('backup.none')}</Tag> },
     { title: t('backup.colSha'), dataIndex: 'sha256', ellipsis: true, render: v => v ? <span title={v}>{v.slice(0, 12)}...</span> : '-' },
     { title: t('backup.colAction'), width: 230, render: (_, r) => <Space size={6}>
-      <Tooltip title={t('backup.viewBackup')}><Button size="small" shape="circle" icon={<EyeOutlined />} onClick={() => viewBackup(r.relativePath)} /></Tooltip>
-      <Tooltip title={t('backup.downloadBackup')}><Button size="small" shape="circle" href={backupService.downloadUrl(r.relativePath)} icon={<CloudDownloadOutlined />} /></Tooltip>
-      {r.assets?.exists && <Tooltip title={t('backup.downloadAssets')}><Button size="small" shape="circle" href={backupService.downloadAssetsUrl(r.relativePath)} icon={<FileImageOutlined />} /></Tooltip>}
-      <Tooltip title={t('backup.pinNote')}><Button size="small" shape="circle" icon={<PushpinOutlined />} onClick={() => editMetadata(r)} /></Tooltip>
-      <Tooltip title={t('backup.restoreBackup')}><Button size="small" shape="circle" danger icon={<RollbackOutlined />} onClick={() => confirmRestore(r.relativePath)} /></Tooltip>
-      {r.type !== 'restore-safety' && !r.pinned && <Tooltip title={t('backup.deleteBackup')}><Button size="small" shape="circle" danger icon={<DeleteOutlined />} onClick={() => deleteBackup(r.relativePath)} /></Tooltip>}
+      <Tooltip title={t('backup.viewBackup')}><Button size="small" shape="circle" aria-label={t('backup.viewBackup')} icon={<EyeOutlined />} onClick={() => viewBackup(r.relativePath)} /></Tooltip>
+      <Tooltip title={t('backup.downloadBackup')}><Button size="small" shape="circle" aria-label={t('backup.downloadBackup')} href={backupService.downloadUrl(r.relativePath)} icon={<CloudDownloadOutlined />} /></Tooltip>
+      {r.assets?.exists && <Tooltip title={t('backup.downloadAssets')}><Button size="small" shape="circle" aria-label={t('backup.downloadAssets')} href={backupService.downloadAssetsUrl(r.relativePath)} icon={<FileImageOutlined />} /></Tooltip>}
+      <Tooltip title={t('backup.pinNote')}><Button size="small" shape="circle" aria-label={t('backup.pinNote')} icon={<PushpinOutlined />} onClick={() => editMetadata(r)} /></Tooltip>
+      <Tooltip title={t('backup.restoreBackup')}><Button size="small" shape="circle" danger aria-label={t('backup.restoreBackup')} icon={<RollbackOutlined />} onClick={() => confirmRestore(r.relativePath)} /></Tooltip>
+      {r.type !== 'restore-safety' && !r.pinned && <Tooltip title={t('backup.deleteBackup')}><Button size="small" shape="circle" danger aria-label={t('backup.deleteBackup')} icon={<DeleteOutlined />} onClick={() => deleteBackup(r.relativePath)} /></Tooltip>}
     </Space> },
   ];
 

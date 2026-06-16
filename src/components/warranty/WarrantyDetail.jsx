@@ -107,6 +107,39 @@ function escapeHtml(value) {
 
 let isGlobalUploading = false;
 
+// Thứ tự tab dùng cho keyboard navigation (WAI-ARIA tabs pattern).
+const TAB_KEYS_ORDER = ['info', 'exchange-return', 'supplier', 'history'];
+
+// Điều hướng tab bằng phím mũi tên / Home / End theo chuẩn WAI-ARIA.
+// Focus đi theo tab mới (roving tabindex) bằng cách focus button anh em cùng cấp trong tablist.
+function navigateTabByKey(e, current, setTab) {
+  let idx = TAB_KEYS_ORDER.indexOf(current);
+  if (idx < 0) idx = 0;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    idx = (idx + 1) % TAB_KEYS_ORDER.length;
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    idx = (idx - 1 + TAB_KEYS_ORDER.length) % TAB_KEYS_ORDER.length;
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    idx = 0;
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    idx = TAB_KEYS_ORDER.length - 1;
+  } else {
+    return;
+  }
+  setTab(TAB_KEYS_ORDER[idx]);
+  // Di chuyển focus sang nút tab mới trong cùng tablist (button anh em theo thứ tự DOM).
+  const tablist = e.currentTarget?.parentElement;
+  const buttons = tablist ? tablist.querySelectorAll('[role="tab"]') : null;
+  if (buttons && buttons[idx]) {
+    // Đợi React cập nhật tabIndex (roving) rồi mới focus để tránh bị nhả focus.
+    requestAnimationFrame(() => buttons[idx].focus());
+  }
+}
+
 export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh }) {
   const { t } = useTranslation();
   const { message, modal } = App.useApp();
@@ -323,6 +356,21 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
     setEditSnapshot(null);
     onClose?.();
   }, [editing, isDirty, onClose]);
+
+  // Ctrl/Cmd+S hoặc Ctrl/Cmd+Enter để lưu nhanh khi đang chỉnh sửa inline.
+  // Chỉ chạy khi drawer mở + đang edit, tránh nuốt phím save của trình duyệt ở ngữ cảnh khác.
+  useEffect(() => {
+    if (!open || !editing) return undefined;
+    function onKeyDownSave(e) {
+      const isCtrl = e.ctrlKey || e.metaKey;
+      if (isCtrl && (e.key === 's' || e.key === 'Enter')) {
+        e.preventDefault();
+        if (!saveLoading) handleSave();
+      }
+    }
+    window.addEventListener('keydown', onKeyDownSave);
+    return () => window.removeEventListener('keydown', onKeyDownSave);
+  }, [open, editing, saveLoading]);
 
   if (!open || loading || !warranty) {
     const cached = lastWarrantyRef.current;
@@ -774,6 +822,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                   size="small"
                   danger
                   type="primary"
+                  aria-label={t('warrantyDetail.xoaAnh')}
                   icon={<DeleteOutlined />}
                   style={{ position: 'absolute', top: 6, right: 6, zIndex: 2 }}
                   onClick={() => setExchangeAttachments((prev) => prev.filter((_, itemIndex) => itemIndex !== index))}
@@ -1144,6 +1193,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                 size="small"
                 danger
                 type="primary"
+                aria-label={t('warrantyDetail.xoaAnh')}
                 icon={<DeleteOutlined />}
                 style={{ position: 'absolute', top: 6, right: 6, zIndex: 2 }}
               />
@@ -1848,6 +1898,7 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                           type="text"
                           danger
                           size="small"
+                          aria-label={t('warrantyDetail.xoaLichSu')}
                           icon={<DeleteOutlined style={{ fontSize: 13 }} />}
                           style={{ height: 'auto', padding: '2px 4px', marginTop: -2 }}
                         />
@@ -2579,8 +2630,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     type="button"
                     role="tab"
                     aria-selected={mobileTab === 'info'}
+                    tabIndex={mobileTab === 'info' ? 0 : -1}
                     className={`tab ${mobileTab === 'info' ? 'active' : ''}`}
                     onClick={() => setMobileTab('info')}
+                    onKeyDown={(e) => navigateTabByKey(e, mobileTab, setMobileTab)}
                   >
                     <span className="icon"><FileTextOutlined /></span>
                     <span className="label">{t('warrantyDetail.tabThongTin')}</span>
@@ -2589,8 +2642,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     type="button"
                     role="tab"
                     aria-selected={mobileTab === 'exchange-return'}
+                    tabIndex={mobileTab === 'exchange-return' ? 0 : -1}
                     className={`tab ${mobileTab === 'exchange-return' ? 'active' : ''}`}
                     onClick={() => setMobileTab('exchange-return')}
+                    onKeyDown={(e) => navigateTabByKey(e, mobileTab, setMobileTab)}
                   >
                     <span className="icon"><SwapOutlined /></span>
                     <span className="label">{t('warrantyDetail.tabDoiTraNgan')}</span>
@@ -2600,8 +2655,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     type="button"
                     role="tab"
                     aria-selected={mobileTab === 'supplier'}
+                    tabIndex={mobileTab === 'supplier' ? 0 : -1}
                     className={`tab ${mobileTab === 'supplier' ? 'active' : ''}`}
                     onClick={() => setMobileTab('supplier')}
+                    onKeyDown={(e) => navigateTabByKey(e, mobileTab, setMobileTab)}
                   >
                     <span className="icon"><SendOutlined /></span>
                     <span className="label">{t('warrantyDetail.tabGuiNCC')}</span>
@@ -2611,8 +2668,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                     type="button"
                     role="tab"
                     aria-selected={mobileTab === 'history'}
+                    tabIndex={mobileTab === 'history' ? 0 : -1}
                     className={`tab ${mobileTab === 'history' ? 'active' : ''}`}
                     onClick={() => setMobileTab('history')}
+                    onKeyDown={(e) => navigateTabByKey(e, mobileTab, setMobileTab)}
                   >
                     <span className="icon"><HistoryOutlined /></span>
                     <span className="label">{t('warrantyDetail.lichSu', { defaultValue: 'Lịch sử' })}</span>
@@ -2886,8 +2945,10 @@ export default function WarrantyDetail({ open, onClose, warrantyId, onRefresh })
                   type="button"
                   role="tab"
                   aria-selected={desktopTab === tabKey}
+                  tabIndex={desktopTab === tabKey ? 0 : -1}
                   className={`tab ${desktopTab === tabKey ? 'active' : ''}`}
                   onClick={() => setDesktopTab(tabKey)}
+                  onKeyDown={(e) => navigateTabByKey(e, desktopTab, setDesktopTab)}
                 >
                   <span className="icon">{tabIcon}</span>
                   <span className="label">{item.label}</span>

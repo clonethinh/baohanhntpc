@@ -327,12 +327,12 @@ export default function WarrantyList() {
       width: 130,
       render: (_, r) => (
         <Space size="small" style={{ whiteSpace: 'nowrap' }}>
-          <Tooltip title={t('adminWarrantyList.viewDetail')}><Button size="small" icon={<EyeOutlined />} onClick={(event) => { event.stopPropagation(); handleOpenDetail(r.id); }} /></Tooltip>
-          <Tooltip title={t('adminWarrantyList.printTicket')}><Button size="small" icon={<PrinterOutlined />} onClick={(event) => { event.stopPropagation(); navigate(`/admin/phieu/${r.id}/in`); }} /></Tooltip>
+          <Tooltip title={t('adminWarrantyList.viewDetail')}><Button size="small" aria-label={t('adminWarrantyList.viewDetail')} icon={<EyeOutlined />} onClick={(event) => { event.stopPropagation(); handleOpenDetail(r.id); }} /></Tooltip>
+          <Tooltip title={t('adminWarrantyList.printTicket')}><Button size="small" aria-label={t('adminWarrantyList.printTicket')} icon={<PrinterOutlined />} onClick={(event) => { event.stopPropagation(); navigate(`/admin/phieu/${r.id}/in`); }} /></Tooltip>
                     {r.trangThai !== 'da_tra' && r.trangThai !== 'huy' && (
             <span onClick={(event) => event.stopPropagation()}>
               <Popconfirm title={t('adminWarrantyList.markWarrantyDoneConfirm')} onConfirm={() => handleTraHang(r.id)}>
-                <Tooltip title={t('adminWarrantyList.markDone')}><Button size="small" icon={<CheckCircleOutlined />} type="primary" /></Tooltip>
+                <Tooltip title={t('adminWarrantyList.markDone')}><Button size="small" aria-label={t('adminWarrantyList.markDone')} icon={<CheckCircleOutlined />} type="primary" /></Tooltip>
               </Popconfirm>
             </span>
           )}
@@ -340,6 +340,7 @@ export default function WarrantyList() {
             <Tooltip title={r.uuTien ? t('adminWarrantyList.unmarkPriority') : t('adminDashboard.priority')}>
               <Button
                 size="small"
+                aria-label={r.uuTien ? t('adminWarrantyList.unmarkPriority') : t('adminDashboard.priority')}
                 icon={<StarOutlined />}
                 type={r.uuTien ? 'primary' : 'default'}
                 danger={Boolean(r.uuTien)}
@@ -349,7 +350,7 @@ export default function WarrantyList() {
           )}
                     <span onClick={(event) => event.stopPropagation()}>
             <Popconfirm title={t('adminWarrantyList.deleteConfirm')} onConfirm={() => handleDelete(r.id)}>
-              <Tooltip title={t('adminWarrantyList.deleteTicket')}><Button size="small" danger icon={<DeleteOutlined />} /></Tooltip>
+              <Tooltip title={t('adminWarrantyList.deleteTicket')}><Button size="small" danger aria-label={t('adminWarrantyList.deleteTicket')} icon={<DeleteOutlined />} /></Tooltip>
             </Popconfirm>
           </span>
         </Space>
