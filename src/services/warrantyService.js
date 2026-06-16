@@ -64,10 +64,13 @@ export const customerNotificationService = {
 
 export const supplierService = {
   getList: (params) => api.get('/suppliers', { params }),
+  getById: (id) => api.get(`/suppliers/${id}`),
+  getWarranties: (id, params) => api.get(`/suppliers/${id}/warranties`, { params }),
   create: (data) => api.post('/suppliers', data),
   update: (id, data) => api.put(`/suppliers/${id}`, data),
   setStatus: (id, isActive) => api.patch(`/suppliers/${id}/status`, { isActive }),
-  getWarranties: (id, params) => api.get(`/suppliers/${id}/warranties`, { params }),
+  remove: (id) => api.delete(`/suppliers/${id}`),
+  restore: (undoToken) => api.post('/suppliers/restore', { undoToken }),
 };
 
 export const nhanVienService = {

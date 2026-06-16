@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { App, Button, Card, DatePicker, Empty, Form, Input, Modal, Popconfirm, Select, Skeleton, Space, Switch, Table, Tag, Typography, Grid, Row, Col, theme } from 'antd';
-import { SearchOutlined, EditOutlined, StopOutlined, CheckOutlined, HistoryOutlined, FormOutlined } from '@ant-design/icons';
+import { SearchOutlined, EditOutlined, StopOutlined, CheckOutlined, DeleteOutlined, HistoryOutlined, FormOutlined } from '@ant-design/icons';
 import { Button as MobileButton, Card as MobileCard, DatePicker as MobileDatePicker, Dialog, Empty as MobileEmpty, Input as MobileInput, List, Popup, Space as MobileSpace, Switch as MobileSwitch, Tag as MobileTag, TextArea as MobileTextArea } from 'antd-mobile';
 import { EditSOutline } from 'antd-mobile-icons';
 import dayjs from 'dayjs';
@@ -9,6 +9,7 @@ import StatusTag from '../../components/warranty/StatusTag';
 import WarrantyDetail from '../../components/warranty/WarrantyDetail';
 import { getStatusBadgeColor } from '../../constants/badgeConfig';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../contexts/AuthContext';
 
 const { Title, Text, Link } = Typography;
 
@@ -29,6 +30,7 @@ function getTicketStatusColor(status) {
 export default function Suppliers() {
   const { t } = useTranslation();
   const { message } = App.useApp();
+  const { isAdmin } = useAuth();
   const { token } = theme.useToken();
   const screens = Grid.useBreakpoint();
   const isMobile = !screens.xl;
@@ -219,6 +221,58 @@ export default function Suppliers() {
       refreshTracking();
     } catch (err) {
       message.error(err?.response?.data?.error?.message || t('adminSuppliers.receiveError'));
+    }
+  };
+
+  const deleteSupplier = async (row) => {
+    try {
+      const res = await supplierService.remove(row.id);
+      const detached = res.data?.data?.detachedWarranties || 0;
+      const undoToken = res.data?.data?.undoToken;
+      const baseMsg = detached > 0
+        ? t('adminSuppliers.deleteWithWarrantiesSuccess', { count: detached })
+        : t('adminSuppliers.deleteSuccess');
+      if (undoToken) {
+        const key = `delete-supplier-${row.id}-${Date.now()}`;
+        message.success({
+          content: (
+            <span>
+              {baseMsg}{' '}
+              <Button
+                type="link"
+                size="small"
+                style={{ padding: 0, height: 'auto', fontWeight: 600 }}
+                onClick={async () => {
+                  message.destroy(key);
+                  try {
+                    const r = await supplierService.restore(undoToken);
+                    const reattached = r.data?.data?.reattachedWarranties || 0;
+                    message.success(
+                      reattached > 0
+                        ? t('adminSuppliers.restoreWithWarrantiesSuccess', { count: reattached })
+                        : t('adminSuppliers.restoreSuccess')
+                    );
+                    fetchData();
+                  } catch (err) {
+                    const code = err?.response?.data?.error?.code;
+                    if (code === 'NOT_FOUND') message.warning(t('adminSuppliers.undoExpired'));
+                    else message.error(err?.response?.data?.error?.message || t('adminSuppliers.restoreError'));
+                  }
+                }}
+              >
+                {t('adminCustomer.undo')}
+              </Button>
+            </span>
+          ),
+          duration: 6,
+          key,
+        });
+      } else {
+        message.success(baseMsg);
+      }
+      fetchData();
+    } catch (err) {
+      message.error(err?.response?.data?.error?.message || t('adminSuppliers.deleteError'));
     }
   };
 
@@ -575,6 +629,18 @@ export default function Suppliers() {
                         <Popconfirm title={row.isActive ? t('adminSuppliers.disableConfirm') : t('adminSuppliers.enableConfirm')} onConfirm={async () => { await supplierService.setStatus(row.id, !row.isActive); fetchData(); }}>
                           <Button size="small" shape="circle" icon={row.isActive ? <StopOutlined /> : <CheckOutlined />} aria-label={row.isActive ? t('adminSuppliers.disableAria') : t('adminSuppliers.enableAria')} danger={row.isActive} onClick={(e) => e.stopPropagation()} />
                         </Popconfirm>
+                        {isAdmin ? (
+                          <Popconfirm
+                            title={t('adminSuppliers.deleteConfirmTitle')}
+                            description={t('adminSuppliers.deleteConfirmDesc')}
+                            okText={t('button.xoa')}
+                            okButtonProps={{ danger: true }}
+                            cancelText={t('button.huy')}
+                            onConfirm={() => deleteSupplier(row)}
+                          >
+                            <Button size="small" shape="circle" danger icon={<DeleteOutlined />} aria-label={t('adminSuppliers.deleteAria')} onClick={(e) => e.stopPropagation()} />
+                          </Popconfirm>
+                        ) : null}
                       </div>
                     </div>
 

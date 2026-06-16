@@ -40,6 +40,7 @@ model Supplier {
   contactPerson String   @default("") @map("contact_person")
   note          String   @default("") @map("note")
   isActive      Boolean  @default(true) @map("is_active")
+  deletedAt     DateTime? @map("deleted_at")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
@@ -50,6 +51,7 @@ model Supplier {
   @@index([code])
   @@index([name])
   @@index([isActive])
+  @@index([deletedAt])
 }
 
 // 3. Bảng quản lý Nhật ký gửi/nhận bảo hành Nhà Cung Cấp
