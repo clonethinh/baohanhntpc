@@ -54,7 +54,33 @@ export default function StaffManagement() {
     try {
       const res = await nhanVienService.remove(maNV);
       if (res.data.success) {
-        message.success(t('adminStaff.deleteSuccess'));
+        const key = `delete-staff-${maNV}-${Date.now()}`;
+        message.success({
+          content: (
+            <span>
+              {t('adminStaff.deleteSuccess')}{' '}
+              <Button
+                type="link"
+                size="small"
+                style={{ padding: 0, height: 'auto', fontWeight: 600 }}
+                onClick={async () => {
+                  message.destroy(key);
+                  try {
+                    await nhanVienService.restore(maNV);
+                    message.success(t('adminStaff.restoreSuccess'));
+                    loadStaff();
+                  } catch (err) {
+                    message.error(err?.response?.data?.error?.message || t('adminStaff.restoreError'));
+                  }
+                }}
+              >
+                {t('adminCustomer.undo')}
+              </Button>
+            </span>
+          ),
+          duration: 6,
+          key,
+        });
         loadStaff();
       }
     } catch (err) {

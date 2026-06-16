@@ -73,6 +73,7 @@ async function readDb() {
     let adminConfig = null;
     let customers = [];
     let fallbackCustomerNotifications = [];
+    let deletedCustomers = [];
     if (fs.existsSync(DB_PATH)) {
       try {
         const raw = fs.readFileSync(DB_PATH, 'utf-8');
@@ -80,6 +81,7 @@ async function readDb() {
         adminConfig = parsed.adminConfig || null;
         customers = parsed.customers || [];
         fallbackCustomerNotifications = parsed.customerNotifications || [];
+        deletedCustomers = parsed._deletedCustomers || [];
       } catch { /* ignore */ }
     }
 
@@ -91,7 +93,8 @@ async function readDb() {
       supplierLogs: normalizeSupplierLogs(supplierLogs),
       customerNotifications: customerNotifications.length ? customerNotifications : fallbackCustomerNotifications,
       adminConfig,
-      customers
+      customers,
+      _deletedCustomers: deletedCustomers,
     };
   } catch (err) {
     console.error('[DB] Lỗi khi truy vấn dữ liệu từ PostgreSQL:', err.message);

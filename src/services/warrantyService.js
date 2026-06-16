@@ -13,6 +13,7 @@ export const warrantyService = {
   logProgress: (id, note) => api.patch(`/warranties/${id}/log`, { note }),
   setPriority: (id, uuTien) => api.patch(`/warranties/${id}/priority`, { uuTien }),
   delete: (id) => api.delete(`/warranties/${id}`),
+  restore: (id) => api.post(`/warranties/${id}/restore`),
   importWarranties: (rows) => api.post('/warranties/import', { rows }),
   exportWarranties: (params) => api.get('/warranties/export', { params, responseType: 'blob' }),
   downloadTemplate: () => api.get('/warranties/template', { responseType: 'blob' }),
@@ -27,13 +28,14 @@ export const warrantyService = {
 };
 
 export const customerService = {
-  list: () => api.get('/customers/list'),
+  list: (params) => api.get('/customers/list', { params }),
   unassigned: () => api.get('/customers/unassigned'),
   suggest: (q) => api.get('/customers/suggest', { params: { q } }),
   lookup: (q) => api.get('/customers/lookup', { params: { q } }),
   lookupByKey: (key) => api.get('/customers/lookup', { params: { key } }),
   update: (data) => api.put('/customers/update', data),
   deleteCustomer: (key) => api.post('/customers/delete', { key }),
+  restore: (undoToken) => api.post('/customers/restore', { undoToken }),
 };
 
 export const statsService = {
@@ -72,6 +74,7 @@ export const nhanVienService = {
   create: (data) => api.post('/nhan-vien', data),
   resetPassword: (maNV, newPassword) => api.patch(`/nhan-vien/${maNV}/password`, { newPassword }),
   remove: (maNV) => api.delete(`/nhan-vien/${maNV}`),
+  restore: (maNV) => api.post(`/nhan-vien/${maNV}/restore`),
   verifyPassword: (maNV, matKhau) => api.post('/auth/login', { maNV, matKhau }),
 };
 

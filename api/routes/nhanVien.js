@@ -142,7 +142,40 @@ router.delete('/:maNV', requireRole('admin'), async (req, res) => {
 
     return res.json({ success: true });
   } catch (err) {
-    return res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Lỗi máy chủ.' } });
+    return res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Lỗi máy chủ, thử lại sau.' } });
+  }
+});
+
+// Khôi phục nhân viên đã bị vô hiệu hóa (POST /api/nhan-vien/:maNV/restore)
+router.post('/:maNV/restore', requireRole('admin'), async (req, res) => {
+  try {
+    const target = String(req.params.maNV || '').trim();
+    if (!target) {
+      return res.status(400).json({ success: false, error: { code: 'BAD_REQUEST', message: 'Thiếu mã nhân viên.' } });
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const current = await tx.nhanVien.findFirst({ where: { maNV: { equals: target, mode: 'insensitive' } } });
+      if (!current) {
+        const err = new Error('Không tìm thấy nhân viên.');
+        err.status = 404;
+        err.code = 'NOT_FOUND';
+        throw err;
+      }
+      if (current.active) {
+        const err = new Error('Nhân viên đang hoạt động, không cần khôi phục.');
+        err.status = 409;
+        err.code = 'CONFLICT';
+        throw err;
+      }
+      const updated = await tx.nhanVien.update({ where: { maNV: current.maNV }, data: { active: true } });
+      await writeAuditLog(req, { action: 'restore', entity: 'staff', entityId: updated.maNV, summary: `Khôi phục nhân viên ${updated.maNV}`, before: sanitizeStaff(rowToStaff(current)), after: sanitizeStaff(rowToStaff(updated)) }, tx);
+      return updated;
+    });
+
+    return res.json({ success: true, data: sanitizeStaff(rowToStaff(result)) });
+  } catch (err) {
+    return res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Lỗi máy chủ, thử lại sau.' } });
   }
 });
 

@@ -3,6 +3,7 @@ import { readDb, writeDb } from '../lib/db.js';
 import { customerLabel, getCustomerRows, getWarrantyCustomerKey, hasCustomer, buildCustomerNameSuggestions, findCustomerByQuery, findCustomerByKey } from '../lib/customers.js';
 import { buildCustomerMasterFromWarranties } from '../lib/customerMaster.js';
 import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 import { requireRole } from '../lib/auth.js';
 
 const router = express.Router();
@@ -12,17 +13,36 @@ function ensureCustomers(db) {
   if (!Array.isArray(db.customers)) db.customers = [];
 }
 
+// Snapshot TTL cho undo xóa khách hàng (mặc định 7 ngày)
+const CUSTOMER_DELETE_UNDO_TTL_DAYS = 7;
+
+function cleanupExpiredCustomerSnapshots(db, nowStr) {
+  if (!Array.isArray(db._deletedCustomers)) return;
+  db._deletedCustomers = db._deletedCustomers.filter(
+    (s) => s && s.expiresAt && s.expiresAt > nowStr
+  );
+}
+
 router.get('/list', async (req, res) => {
   try {
     const db = await readDb();
     ensureCustomers(db);
-    
+
+    // Phân trang: mặc định 25/trang; client có thể truyền page/limit
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 25));
+    const search = String(req.query.search || '').trim().toLowerCase();
+    const sortBy = ['lastNgayNhan', 'maKhachHang', 'khachHang', 'soDienThoai', 'totalWarranties'].includes(String(req.query.sortBy))
+      ? String(req.query.sortBy)
+      : 'lastNgayNhan';
+    const sortOrder = String(req.query.sortOrder) === 'asc' ? 'asc' : 'desc';
+
     // Lấy danh sách khách hàng được tổng hợp từ dữ liệu hiện tại
     const rows = getCustomerRows(db.warranties || [], db.customers || []);
-    
+
     let needsSave = false;
     let maxNum = 0;
-    
+
     // Tìm mã khách hàng số lớn nhất đã được lưu trong DB
     (db.customers || []).forEach(c => {
       if (c.maKhachHang && c.maKhachHang.startsWith('KH')) {
@@ -32,7 +52,7 @@ router.get('/list', async (req, res) => {
     });
 
     const updatedCustomers = [...(db.customers || [])];
-    
+
     // Quét qua toàn bộ danh sách để đảm bảo tất cả khách hàng đều có mã cố định trong DB
     rows.forEach(r => {
       let c = updatedCustomers.find(x => x.key === r.key);
@@ -62,12 +82,64 @@ router.get('/list', async (req, res) => {
       db.customers = updatedCustomers;
       await writeDb(db);
     }
-    
+
     // Trả về danh sách đã được cập nhật mã cố định
     const finalRows = getCustomerRows(db.warranties || [], updatedCustomers);
-    res.json({ success: true, data: finalRows });
+
+    // Lọc theo search (text contains trên 4 trường — đồng bộ với filter cũ ở frontend)
+    let filtered = finalRows;
+    if (search) {
+      filtered = filtered.filter((r) => (
+        String(r.maKhachHang || '').toLowerCase().includes(search) ||
+        String(r.khachHang || '').toLowerCase().includes(search) ||
+        String(r.soDienThoai || '').toLowerCase().includes(search) ||
+        String(r.diaChi || '').toLowerCase().includes(search)
+      ));
+    }
+
+    // Sắp xếp
+    const dir = sortOrder === 'asc' ? 1 : -1;
+    filtered.sort((a, b) => {
+      let av = a[sortBy];
+      let bv = b[sortBy];
+      if (sortBy === 'lastNgayNhan') {
+        av = av ? new Date(av).getTime() : 0;
+        bv = bv ? new Date(bv).getTime() : 0;
+      } else if (sortBy === 'totalWarranties') {
+        av = Number(av) || 0;
+        bv = Number(bv) || 0;
+      } else {
+        av = String(av || '').toLowerCase();
+        bv = String(bv || '').toLowerCase();
+      }
+      if (av < bv) return -1 * dir;
+      if (av > bv) return 1 * dir;
+      return 0;
+    });
+
+    const total = filtered.length;
+    const start = (page - 1) * limit;
+    const pagedRows = filtered.slice(start, start + limit);
+
+    // Tổng hợp trên TOÀN BỘ filtered set (không chỉ trang hiện tại) để hiển thị ở header
+    const aggregate = filtered.reduce(
+      (acc, row) => {
+        acc.warrantyCount += Number(row.totalWarranties) || 0;
+        acc.activeCount += Number(row.dangXuLyCount) || 0;
+        acc.doneCount += Number(row.daTraCount) || 0;
+        return acc;
+      },
+      { warrantyCount: 0, activeCount: 0, doneCount: 0 }
+    );
+
+    return res.json({
+      success: true,
+      data: pagedRows,
+      pagination: { page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) },
+      summary: { total, ...aggregate }
+    });
   } catch (err) {
-    res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
+    return res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
   }
 });
 
@@ -165,10 +237,20 @@ router.post('/delete', requireAdmin, async (req, res) => {
     const by = req.headers['x-nhan-vien'] || 'admin';
     let changed = 0;
 
+    // Snapshot toàn bộ khách hàng trước khi xóa (để undo khôi phục)
+    const customerSnapshot = (db.customers || []).find((c) => c.key === targetKey);
+    const detachedSnapshots = [];
     db.warranties = (db.warranties || []).map((w) => {
       if (w.deletedAt || getWarrantyCustomerKey(w) !== targetKey) return w;
       changed += 1;
       const oldCustomer = { key: targetKey, khachHang: w.khachHang || '', soDienThoai: w.soDienThoai || '', diaChi: w.diaChi || '' };
+      detachedSnapshots.push({
+        warrantyId: w.id,
+        soChungTu: w.soChungTu || '',
+        khachHang: w.khachHang || '',
+        soDienThoai: w.soDienThoai || '',
+        diaChi: w.diaChi || '',
+      });
       return {
         ...w,
         khachHang: '', soDienThoai: '', diaChi: '', updatedAt: now,
@@ -183,8 +265,106 @@ router.post('/delete', requireAdmin, async (req, res) => {
       return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy khách hàng để xóa.' } });
     }
 
+    // Lưu snapshot cho undo (nếu đã xóa customer record hoặc có phiếu bị tách)
+    let undoToken = null;
+    if (customerSnapshot && (removedCustomer || changed > 0)) {
+      if (!Array.isArray(db._deletedCustomers)) db._deletedCustomers = [];
+      undoToken = uuidv4();
+      db._deletedCustomers.push({
+        undoToken,
+        customer: { ...customerSnapshot },
+        detachedWarranties: detachedSnapshots,
+        deletedAt: now,
+        deletedBy: by,
+        expiresAt: dayjs().add(CUSTOMER_DELETE_UNDO_TTL_DAYS, 'day').format('YYYY-MM-DDTHH:mm:ss'),
+      });
+      cleanupExpiredCustomerSnapshots(db, now);
+    }
+
     await writeDb(db);
-    return res.json({ success: true, data: { detached: changed, removed: removedCustomer } });
+    return res.json({
+      success: true,
+      data: {
+        detached: changed,
+        removed: removedCustomer,
+        undoToken,
+        undoExpiresAt: undoToken
+          ? dayjs().add(CUSTOMER_DELETE_UNDO_TTL_DAYS, 'day').format('YYYY-MM-DDTHH:mm:ss')
+          : null,
+      }
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
+  }
+});
+
+router.post('/restore', requireAdmin, async (req, res) => {
+  try {
+    const { undoToken } = req.body || {};
+    if (!undoToken || !String(undoToken).trim()) {
+      return res.status(400).json({ success: false, error: { code: 'VALIDATION_ERROR', message: 'Thiếu mã khôi phục.' } });
+    }
+    const token = String(undoToken).trim();
+
+    const db = await readDb();
+    ensureCustomers(db);
+    const now = dayjs().format('YYYY-MM-DDTHH:mm:ss');
+    const by = req.headers['x-nhan-vien'] || 'admin';
+    cleanupExpiredCustomerSnapshots(db, now);
+
+    if (!Array.isArray(db._deletedCustomers)) {
+      return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy bản sao khách hàng để khôi phục.' } });
+    }
+    const snapshotIndex = db._deletedCustomers.findIndex((s) => s && s.undoToken === token);
+    if (snapshotIndex < 0) {
+      return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Mã khôi phục đã hết hạn hoặc không tồn tại.' } });
+    }
+    const snapshot = db._deletedCustomers[snapshotIndex];
+
+    // Tránh trùng key (ví dụ: người dùng đã tạo lại KH mới trùng key trong lúc chờ undo)
+    if ((db.customers || []).some((c) => c.key === snapshot.customer.key)) {
+      return res.status(409).json({ success: false, error: { code: 'CONFLICT', message: 'Khách hàng với khóa này đã tồn tại trong hệ thống.' } });
+    }
+
+    // Khôi phục record khách hàng
+    db.customers = [...(db.customers || []), { ...snapshot.customer, isActive: true, updatedAt: now }];
+
+    // Gắn lại thông tin khách hàng vào các phiếu đã bị tách
+    let reattached = 0;
+    const detachedIndex = new Map((snapshot.detachedWarranties || []).map((d) => [d.warrantyId, d]));
+    db.warranties = (db.warranties || []).map((w) => {
+      const det = detachedIndex.get(w.id);
+      if (!det) return w;
+      reattached += 1;
+      return {
+        ...w,
+        khachHang: det.khachHang,
+        soDienThoai: det.soDienThoai,
+        diaChi: det.diaChi,
+        updatedAt: now,
+        history: [
+          ...(w.history || []),
+          {
+            at: now, by, action: 'customer_restored', changes: {
+              khachHang: { from: '', to: det.khachHang },
+              soDienThoai: { from: '', to: det.soDienThoai },
+              diaChi: { from: '', to: det.diaChi },
+            },
+            customer: { from: null, to: { key: snapshot.customer.key, khachHang: det.khachHang, soDienThoai: det.soDienThoai, diaChi: det.diaChi } },
+            note: `Khôi phục khách hàng ${det.khachHang || snapshot.customer.maKhachHang || snapshot.customer.key}`,
+          }
+        ],
+      };
+    });
+
+    // Xóa snapshot đã dùng (chỉ dùng được 1 lần)
+    db._deletedCustomers.splice(snapshotIndex, 1);
+
+    await writeDb(db);
+    return res.json({
+      success: true,
+      data: { restoredCustomer: 1, reattachedWarranties: reattached }
+    });
   } catch (err) {
     return res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
   }

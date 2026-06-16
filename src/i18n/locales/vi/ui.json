@@ -477,7 +477,14 @@
     "chuaCoKhachCount": "Chưa có khách hàng ({{count}})",
     "khongCoCTChuaCoKhach": "Không có CT chưa có khách hàng",
     "ganKhachChoCT": "Gán khách hàng cho CT",
-    "deleteCustomer": "Xóa khách hàng"
+    "deleteCustomer": "Xóa khách hàng",
+    "undo": "Hoàn tác",
+    "undoneCustomer": "Đã khôi phục khách hàng",
+    "undoneCustomerWithWarranties": "Đã khôi phục khách hàng và {{count}} phiếu liên quan",
+    "undoExpired": "Đã quá thời hạn khôi phục (7 ngày)",
+    "undoError": "Khôi phục khách hàng thất bại",
+    "totalCount": "{{count}} khách hàng",
+    "pageInfo": "Trang {{page}}/{{total}}"
   },
   "adminWarrantyList": {
     "loadError": "Không thể tải danh sách phiếu.",
@@ -485,6 +492,7 @@
     "returnError": "Không thể trả hàng.",
     "deleteSuccess": "Đã xóa phiếu",
     "deleteError": "Không thể xóa.",
+    "undoneSuccess": "Đã khôi phục phiếu",
     "priorityMarked": "Đã đánh dấu ưu tiên",
     "priorityUnmarked": "Đã bỏ ưu tiên",
     "unmarkPriority": "Bỏ ưu tiên",
@@ -642,6 +650,8 @@
     "addError": "Không thể thêm nhân viên.",
     "deleteSuccess": "Đã xóa nhân viên.",
     "deleteError": "Không thể xóa nhân viên.",
+    "restoreSuccess": "Đã khôi phục nhân viên.",
+    "restoreError": "Khôi phục nhân viên thất bại.",
     "passwordMismatch": "Mật khẩu xác nhận không khớp.",
     "passwordSuccess": "Đổi mật khẩu thành công.",
     "passwordError": "Không thể đổi mật khẩu.",

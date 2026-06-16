@@ -144,7 +144,34 @@ export default function WarrantyList() {
   const handleDelete = async (id) => {
     try {
       await warrantyService.delete(id);
-      message.success(t('adminWarrantyList.deleteSuccess'));
+      // Hiển thị message với nút "Hoàn tác" trong 6 giây
+      const key = `delete-warranty-${id}-${Date.now()}`;
+      message.success({
+        content: (
+          <span>
+            {t('adminWarrantyList.deleteSuccess')}{' '}
+            <Button
+              type="link"
+              size="small"
+              style={{ padding: 0, height: 'auto', fontWeight: 600 }}
+              onClick={async () => {
+                message.destroy(key);
+                try {
+                  await warrantyService.restore(id);
+                  message.success(t('adminWarrantyList.undoneSuccess'));
+                  fetchData();
+                } catch (err) {
+                  message.error(t('adminWarrantyList.deleteError'));
+                }
+              }}
+            >
+              {t('adminCustomer.undo')}
+            </Button>
+          </span>
+        ),
+        duration: 6,
+        key,
+      });
       fetchData();
     } catch {
       notification.error({ message: t('errorBoundary.title'), description: t('adminWarrantyList.deleteError') });

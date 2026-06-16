@@ -1,4 +1,4 @@
-import uiVi from '../i18n/locales/vi/ui.json' assert { type: 'json' };
+import uiVi from '../i18n/locales/vi/ui.json' with { type: 'json' };
 
 const FIELD_LABELS = uiVi.field || {};
 

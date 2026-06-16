@@ -1495,6 +1495,39 @@ router.delete('/:id', requireAdmin, async (req, res) => {
   }
 });
 
+// Khôi phục phiếu đã xóa mềm (POST /api/warranties/:id/restore)
+router.post('/:id/restore', requireAdmin, async (req, res) => {
+  try {
+    const old = await prisma.warranty.findFirst({
+      where: { id: req.params.id, NOT: { deletedAt: '' } },
+    });
+    if (!old) {
+      return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Không tìm thấy phiếu đã xóa để khôi phục.' } });
+    }
+
+    const now = dayjs().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DDTHH:mm:ss');
+    const by = req.headers['x-nhan-vien'] || old.maNhanVien || 'admin';
+    const updated = await prisma.warranty.update({
+      where: { id: old.id },
+      data: {
+        deletedAt: '',
+        updatedAt: now,
+        history: [
+          ...(Array.isArray(old.history) ? old.history : []),
+          { at: now, by, action: 'restore', changes: {}, note: 'Khôi phục phiếu đã xóa' },
+        ],
+      },
+    });
+
+    await writeAuditLog(req, { action: 'restore', entity: 'warranty', entityId: updated.id, summary: `Khôi phục phiếu ${updated.soChungTu}` });
+    syncLocalBackup();
+
+    return res.json({ success: true, data: withDefaultDueDate(updated) });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Lỗi máy chủ, thử lại sau.' } });
+  }
+});
+
 router.post('/import', async (req, res) => {
   try {
     const { rows } = req.body;

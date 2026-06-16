@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Card, Row, Col, Input, AutoComplete, Tag, Typography, Space, Table, DatePicker, Button, Select, Modal, Form, App, theme, Popconfirm } from 'antd';
+import { Card, Row, Col, Input, AutoComplete, Tag, Typography, Space, Table, DatePicker, Button, Select, Modal, Form, App, theme, Popconfirm, Pagination } from 'antd';
 import { SearchOutlined, HistoryOutlined, EditOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons';
 import {
   Button as MobileButton,
@@ -39,6 +39,12 @@ export default function CustomerInfo() {
   const [loading, setLoading] = useState(false);
   const [customerList, setCustomerList] = useState([]);
   const [listLoading, setListLoading] = useState(false);
+  const [customerPage, setCustomerPage] = useState(1);
+  const [customerLimit, setCustomerLimit] = useState(25);
+  const [customerTotal, setCustomerTotal] = useState(0);
+  const [customerSortBy, setCustomerSortBy] = useState('lastNgayNhan');
+  const [customerSortOrder, setCustomerSortOrder] = useState('desc');
+  const [customerSummaryAgg, setCustomerSummaryAgg] = useState({ warrantyCount: 0, activeCount: 0, doneCount: 0 });
   const [unassignedList, setUnassignedList] = useState([]);
   const [unassignedLoading, setUnassignedLoading] = useState(false);
   const [dateRange, setDateRange] = useState(null);
@@ -91,10 +97,21 @@ export default function CustomerInfo() {
 
   useEffect(() => {
     setListLoading(true);
-    customerService.list().then((res) => {
-      if (res.data?.success) setCustomerList(res.data.data || []);
+    customerService.list({
+      page: customerPage,
+      limit: customerLimit,
+      search,
+      sortBy: customerSortBy,
+      sortOrder: customerSortOrder,
+    }).then((res) => {
+      if (res.data?.success) {
+        setCustomerList(res.data.data || []);
+        setCustomerTotal(res.data.pagination?.total || 0);
+        if (res.data.summary) setCustomerSummaryAgg(res.data.summary);
+      }
     }).finally(() => setListLoading(false));
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customerPage, customerLimit, customerSortBy, customerSortOrder]);
 
   useEffect(() => {
     setUnassignedLoading(true);
@@ -131,11 +148,20 @@ export default function CustomerInfo() {
     setDetailOpen(true);
   };
 
-  const refreshCustomerList = async () => {
+  const refreshCustomerList = async (override = {}) => {
     setListLoading(true);
     try {
-      const res = await customerService.list();
-      if (res.data?.success) setCustomerList(res.data.data || []);
+      const page = override.page ?? customerPage;
+      const limit = override.limit ?? customerLimit;
+      const sortBy = override.sortBy ?? customerSortBy;
+      const sortOrder = override.sortOrder ?? customerSortOrder;
+      const searchValue = override.search ?? search;
+      const res = await customerService.list({ page, limit, search: searchValue, sortBy, sortOrder });
+      if (res.data?.success) {
+        setCustomerList(res.data.data || []);
+        setCustomerTotal(res.data.pagination?.total || 0);
+        if (res.data.summary) setCustomerSummaryAgg(res.data.summary);
+      }
     } finally {
       setListLoading(false);
     }
@@ -159,7 +185,53 @@ export default function CustomerInfo() {
     try {
       const res = await customerService.deleteCustomer(row.key);
       const count = res.data?.data?.detached || 0;
-      message.success(t('adminCustomer.deletedDetached', { count }));
+      const undoToken = res.data?.data?.undoToken;
+      const baseMsg = t('adminCustomer.deletedDetached', { count });
+      if (undoToken) {
+        // Hiển thị message với nút "Hoàn tác" trong 6 giây
+        const key = `delete-customer-${row.key}-${Date.now()}`;
+        message.success({
+          content: (
+            <span>
+              {baseMsg}{' '}
+              <Button
+                type="link"
+                size="small"
+                style={{ padding: 0, height: 'auto', fontWeight: 600 }}
+                onClick={async () => {
+                  message.destroy(key);
+                  try {
+                    const r = await customerService.restore(undoToken);
+                    const reattached = r.data?.data?.reattachedWarranties || 0;
+                    message.success(
+                      reattached > 0
+                        ? t('adminCustomer.undoneCustomerWithWarranties', { count: reattached })
+                        : t('adminCustomer.undoneCustomer')
+                    );
+                    if (selectedCustomerKey === row.key) {
+                      setSelectedCustomerKey('');
+                      setCustomerInfo(null);
+                      setFilterStatus('');
+                      setDateRange(null);
+                    }
+                    await refreshCustomerData();
+                  } catch (err) {
+                    const code = err?.response?.data?.error?.code;
+                    if (code === 'NOT_FOUND') message.warning(t('adminCustomer.undoExpired'));
+                    else message.error(err?.response?.data?.error?.message || t('adminCustomer.undoError'));
+                  }
+                }}
+              >
+                {t('adminCustomer.undo')}
+              </Button>
+            </span>
+          ),
+          duration: 6,
+          key,
+        });
+      } else {
+        message.success(baseMsg);
+      }
       if (selectedCustomerKey === row.key) {
         setSelectedCustomerKey('');
         setCustomerInfo(null);
@@ -243,21 +315,12 @@ export default function CustomerInfo() {
     return true;
   }) || [];
 
-  const customerRows = customerList.filter((row) => {
-    const q = String(search || '').trim().toLowerCase();
-    if (!q || selectedCustomerKey) return true;
-    return (
-      String(row.maKhachHang || '').toLowerCase().includes(q) ||
-      String(row.khachHang || '').toLowerCase().includes(q) ||
-      String(row.soDienThoai || '').toLowerCase().includes(q) ||
-      String(row.diaChi || '').toLowerCase().includes(q)
-    );
-  });
+  const customerRows = customerList;
 
   const customerSummary = {
-    total: customerRows.length,
-    warrantyCount: customerRows.reduce((sum, row) => sum + (Number(row.totalWarranties) || 0), 0),
-    activeCount: customerRows.reduce((sum, row) => sum + (Number(row.dangXuLyCount) || 0), 0),
+    total: customerTotal,
+    warrantyCount: customerSummaryAgg.warrantyCount,
+    activeCount: customerSummaryAgg.activeCount,
   };
 
   const historyColumns = [
@@ -326,10 +389,37 @@ export default function CustomerInfo() {
 
         <MobileCard className="admin-mobile-card customer-mobile-section" title={t('adminCustomer.title')} style={cardStyle}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10, padding: '0 4px' }}>
-            <MobileTag color="primary">{t('adminCustomer.customerCount', { count: customerSummary.total })}</MobileTag>
+            <MobileTag color="primary">{t('adminCustomer.totalCount', { count: customerSummary.total })}</MobileTag>
             <MobileTag color="success">{t('adminCustomer.ticketCount', { count: customerSummary.warrantyCount })}</MobileTag>
             <MobileTag color="warning">{t('adminCustomer.activeCount', { count: customerSummary.activeCount })}</MobileTag>
           </div>
+          {customerTotal > 0 ? (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap' }}>
+              <small style={{ color: colorTextSecondary }}>
+                {t('adminCustomer.pageInfo', { page: customerPage, total: Math.max(1, Math.ceil(customerTotal / customerLimit)) })}
+              </small>
+              <Select
+                size="small"
+                value={`${customerSortBy}:${customerSortOrder}`}
+                style={{ minWidth: 160 }}
+                onChange={(v) => {
+                  const [sb, so] = String(v).split(':');
+                  setCustomerSortBy(sb);
+                  setCustomerSortOrder(so);
+                  setCustomerPage(1);
+                }}
+                options={[
+                  { value: 'lastNgayNhan:desc', label: 'Mới nhất' },
+                  { value: 'lastNgayNhan:asc', label: 'Cũ nhất' },
+                  { value: 'khachHang:asc', label: 'Tên A→Z' },
+                  { value: 'khachHang:desc', label: 'Tên Z→A' },
+                  { value: 'maKhachHang:asc', label: 'Mã KH tăng' },
+                  { value: 'maKhachHang:desc', label: 'Mã KH giảm' },
+                  { value: 'totalWarranties:desc', label: 'Nhiều phiếu nhất' },
+                ]}
+              />
+            </div>
+          ) : null}
           {listLoading ? (
             <div className="admin-mobile-empty">{t('adminCustomer.loading')}</div>
           ) : customerRows.length === 0 ? (
@@ -403,6 +493,19 @@ export default function CustomerInfo() {
               })}
             </div>
           )}
+          {customerTotal > customerLimit ? (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+              <Pagination
+                size="small"
+                simple
+                current={customerPage}
+                pageSize={customerLimit}
+                total={customerTotal}
+                showSizeChanger={false}
+                onChange={(p) => setCustomerPage(p)}
+              />
+            </div>
+          ) : null}
         </MobileCard>
 
         <MobileCard className="admin-mobile-card customer-mobile-section" title={t('adminCustomer.chuaCoKhachCount', { count: unassignedList.length })} style={cardStyle}>
@@ -471,7 +574,37 @@ export default function CustomerInfo() {
           </Row>
         </Card>
 
-        <Card className="customer-page-card customer-list-card" style={cardStyle} extra={<Space className="customer-stats-row" size={8}><Tag color="blue">{t('adminCustomer.customerCount', { count: customerSummary.total })}</Tag><Tag color="purple">{t('adminCustomer.ticketCount', { count: customerSummary.warrantyCount })}</Tag><Tag color="orange">{t('adminCustomer.activeCount', { count: customerSummary.activeCount })}</Tag></Space>} styles={{ body: { padding: 12 } }}>
+        <Card className="customer-page-card customer-list-card" style={cardStyle} extra={<Space className="customer-stats-row" size={8}><Tag color="blue">{t('adminCustomer.totalCount', { count: customerSummary.total })}</Tag><Tag color="purple">{t('adminCustomer.ticketCount', { count: customerSummary.warrantyCount })}</Tag><Tag color="orange">{t('adminCustomer.activeCount', { count: customerSummary.activeCount })}</Tag></Space>} styles={{ body: { padding: 12 } }}>
+          {customerTotal > 0 ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 10, flexWrap: 'wrap' }}>
+              <span style={{ color: colorTextSecondary, fontSize: 13 }}>
+                {t('adminCustomer.pageInfo', { page: customerPage, total: Math.max(1, Math.ceil(customerTotal / customerLimit)) })} · {t('adminCustomer.totalCount', { count: customerTotal })}
+              </span>
+              <Space>
+                <span style={{ fontSize: 12, color: colorTextSecondary }}>Sắp xếp:</span>
+                <Select
+                  size="small"
+                  value={`${customerSortBy}:${customerSortOrder}`}
+                  style={{ minWidth: 180 }}
+                  onChange={(v) => {
+                    const [sb, so] = String(v).split(':');
+                    setCustomerSortBy(sb);
+                    setCustomerSortOrder(so);
+                    setCustomerPage(1);
+                  }}
+                  options={[
+                    { value: 'lastNgayNhan:desc', label: 'Mới nhất' },
+                    { value: 'lastNgayNhan:asc', label: 'Cũ nhất' },
+                    { value: 'khachHang:asc', label: 'Tên A→Z' },
+                    { value: 'khachHang:desc', label: 'Tên Z→A' },
+                    { value: 'maKhachHang:asc', label: 'Mã KH tăng' },
+                    { value: 'maKhachHang:desc', label: 'Mã KH giảm' },
+                    { value: 'totalWarranties:desc', label: 'Nhiều phiếu nhất' },
+                  ]}
+                />
+              </Space>
+            </div>
+          ) : null}
           {listLoading ? (
             <div style={{ padding: 24, textAlign: 'center', color: colorTextSecondary }}>{t('adminCustomer.loading')}</div>
           ) : customerRows.length === 0 ? (
@@ -536,6 +669,18 @@ export default function CustomerInfo() {
               })}
             </div>
           )}
+          {customerTotal > customerLimit ? (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+              <Pagination
+                size="small"
+                current={customerPage}
+                pageSize={customerLimit}
+                total={customerTotal}
+                showSizeChanger={false}
+                onChange={(p) => setCustomerPage(p)}
+              />
+            </div>
+          ) : null}
         </Card>
 
         <Card
