@@ -260,13 +260,22 @@ router.get('/:id/warranties', async (req, res) => {
       const warrantyLogs = logs.filter(l => l.warrantyId === w.id);
       const latest = warrantyLogs[0];
       const sentLogs = warrantyLogs.filter(l => l.action === 'sent');
+      // supplierStatus phải tính TƯƠNG ĐỐI theo NCC này, không lấy trạng thái toàn cục của phiếu.
+      // Nếu không, phiếu đã nhận lại từ NCC này rồi gửi sang NCC khác (supplierStatus toàn cục='sent')
+      // sẽ "ăn ké" trạng thái 'sent' → hiện nhầm nút "Đã nhận" ở NCC cũ và cho phép nhận lại nhầm NCC.
+      // 'sent' (kèm nút nhận lại) CHỈ xuất hiện khi phiếu thực sự còn đang ở NCC này.
+      const isCurrentSupplier = !!w.supplierIdCurrent && w.supplierIdCurrent === req.params.id;
+      const hasReturnedLog = warrantyLogs.some((l) => l.action === 'returned');
+      const supplierStatusForThis = isCurrentSupplier
+        ? (w.supplierStatus || 'none')
+        : (hasReturnedLog ? 'returned' : 'none');
       return {
         id: w.id,
         soChungTu: w.soChungTu,
         khachHang: w.khachHang,
         tenHang: w.tenHang,
         trangThai: w.trangThai,
-        supplierStatus: w.supplierStatus || 'none',
+        supplierStatus: supplierStatusForThis,
         latestSupplierAction: latest?.action || '',
         latestSupplierAt: latest?.createdAt ? dayjs(latest.createdAt).format('YYYY-MM-DDTHH:mm:ss') : '',
         sentCount: sentLogs.length,
@@ -314,11 +323,13 @@ router.delete('/:id', requireAdmin, async (req, res) => {
     // Tìm tất cả phiếu đang link tới NCC này (chưa xóa mềm) để detach + snapshot
     const linkedWarranties = await prisma.warranty.findMany({
       where: { supplierIdCurrent: targetId, deletedAt: '' },
-      select: { id: true, soChungTu: true, khachHang: true, trangThai: true, history: true },
+      select: { id: true, soChungTu: true, khachHang: true, trangThai: true, supplierStatus: true, history: true },
     });
 
-    // Detach từng phiếu: set supplierIdCurrent=null, ghi history 'supplier_detached' kèm tên NCC cũ
+    // Detach từng phiếu: set supplierIdCurrent=null, supplierStatus='none', ghi history 'supplier_detached' kèm tên NCC cũ
     for (const w of linkedWarranties) {
+      // BUG-2 fix: snapshot trạng thái GỐC trước khi mutate, vì sẽ dùng để restore
+      w._originalSupplierStatus = w.supplierStatus;
       const oldHistory = Array.isArray(w.history) ? w.history : [];
       const newHistory = [
         ...oldHistory,
@@ -333,10 +344,12 @@ router.delete('/:id', requireAdmin, async (req, res) => {
         where: { id: w.id },
         data: {
           supplierIdCurrent: null,
+          supplierStatus: 'none',
           history: newHistory,
         },
       });
       w.supplierIdCurrent = null;
+      w.supplierStatus = 'none';
       w.history = newHistory;
     }
 
@@ -367,6 +380,8 @@ router.delete('/:id', requireAdmin, async (req, res) => {
         soChungTu: w.soChungTu || '',
         khachHang: w.khachHang || '',
         trangThai: w.trangThai || '',
+        // BUG-2 fix: dùng trạng thái GỐC trước khi detach (không phải w.supplierStatus đã bị ghi đè thành 'none' trong vòng for phía trên)
+        originalSupplierStatus: w._originalSupplierStatus ?? w.supplierStatus ?? 'none',
         supplierNameSnapshot,
         supplierCodeSnapshot,
       })),
@@ -438,6 +453,8 @@ router.post('/restore', requireAdmin, async (req, res) => {
     for (const det of snapshot.detachedWarranties || []) {
       const w = await prisma.warranty.findUnique({ where: { id: det.warrantyId } });
       if (!w) continue;
+      // BUG-2 fix: khôi phục supplierStatus theo snapshot (giữ nguyên trạng: 'sent' hoặc 'returned')
+      const originalStatus = ['sent', 'returned'].includes(det.originalSupplierStatus) ? det.originalSupplierStatus : 'sent';
       const oldHistory = Array.isArray(w.history) ? w.history : [];
       const newHistory = [
         ...oldHistory,
@@ -452,13 +469,14 @@ router.post('/restore', requireAdmin, async (req, res) => {
         where: { id: det.warrantyId },
         data: {
           supplierIdCurrent: snapshot.supplier.id,
+          supplierStatus: originalStatus,
           history: newHistory,
         },
       });
       // Đồng bộ in-memory db.warranties để writeDb không overwrite
       const wIdx = (db.warranties || []).findIndex((x) => x.id === det.warrantyId);
       if (wIdx >= 0) {
-        db.warranties[wIdx] = { ...db.warranties[wIdx], supplierIdCurrent: snapshot.supplier.id, history: newHistory };
+        db.warranties[wIdx] = { ...db.warranties[wIdx], supplierIdCurrent: snapshot.supplier.id, supplierStatus: originalStatus, history: newHistory };
       }
       reattached += 1;
     }
