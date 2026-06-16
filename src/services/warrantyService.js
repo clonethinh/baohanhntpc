@@ -59,6 +59,7 @@ export const customerNotificationService = {
   update: (id, data) => api.put(`/customer-notifications/${id}`, data),
   setStatus: (id, isActive) => api.patch(`/customer-notifications/${id}/status`, { isActive }),
   remove: (id) => api.delete(`/customer-notifications/${id}`),
+  restore: (id) => api.post(`/customer-notifications/${id}/restore`),
 };
 
 export const supplierService = {

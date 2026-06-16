@@ -90,6 +90,7 @@ export default function NotificationDesktopTable({
                   type="text"
                   size="small"
                   icon={<EditOutlined />}
+                  aria-label={t('adminCustomerNotifications.editAria')}
                   onClick={() => openEdit(row)}
                   disabled={submitting || rowActionId === `toggle:${row.id}` || rowActionId === `delete:${row.id}`}
                 />
@@ -103,6 +104,7 @@ export default function NotificationDesktopTable({
                     type="text"
                     size="small"
                     icon={row.isActive ? <PauseCircleOutlined /> : <CheckOutlined />}
+                    aria-label={row.isActive ? t('adminCustomerNotifications.pauseAria') : t('adminCustomerNotifications.activateAria')}
                     style={{ color: row.isActive ? '#faad14' : '#52c41a' }}
                     loading={rowActionId === `toggle:${row.id}`}
                     disabled={submitting || rowActionId === `delete:${row.id}`}
@@ -116,6 +118,7 @@ export default function NotificationDesktopTable({
                     size="small"
                     danger
                     icon={<DeleteOutlined />}
+                    aria-label={t('adminCustomerNotifications.deleteAria')}
                     loading={rowActionId === `delete:${row.id}`}
                     disabled={submitting || rowActionId === `toggle:${row.id}`}
                   />

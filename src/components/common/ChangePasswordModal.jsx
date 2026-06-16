@@ -1,10 +1,11 @@
-import { Button, Form, Input, Modal, message } from 'antd';
+import { App, Button, Form, Input, Modal } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../services/warrantyService';
 
 export default function ChangePasswordModal({ open, onClose }) {
   const { t } = useTranslation();
+  const { message } = App.useApp();
   const [form] = Form.useForm();
 
   const handleFinish = async (values) => {

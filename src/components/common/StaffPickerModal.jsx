@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Modal, Button, Typography, Input, Form, message } from 'antd';
+import { App, Modal, Button, Typography, Input, Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -10,6 +10,7 @@ export default function StaffPickerModal({
   onPicked,
 }) {
   const { t } = useTranslation();
+  const { message } = App.useApp();
   const { currentStaff, login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();

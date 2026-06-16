@@ -6898,3 +6898,204 @@ html[data-theme='dark'] .warranty-exchange-footer {
 html[data-theme='dark'] .warranty-exchange-footer-warning {
   color: #ffa940;
 }
+
+
+/* =============================================================
+   P1 BATCH A — Dark mode override cho 45 admin-mobile-* class
+   Color tokens: bg #1f1f1f, border #303030, text #e6e6e6,
+                 secondary text #9aa890, accent border-left #2a3326
+   ============================================================= */
+
+/* Hero / Eyebrow */
+html[data-theme='dark'] .admin-mobile-hero {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(34, 50, 28, 0.5), transparent 34%),
+    linear-gradient(135deg, #1a2417 0%, #14201f 58%, #0f1814 100%);
+  border-color: #2a3326;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+html[data-theme='dark'] .admin-mobile-hero h1,
+html[data-theme='dark'] .admin-mobile-eyebrow { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-hero p { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-hero-summary,
+html[data-theme='dark'] .admin-mobile-hero-meta { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-hero-link { color: #9ad89f; }
+html[data-theme='dark'] .admin-mobile-hero-top { color: #9aa890; }
+
+/* Section header */
+html[data-theme='dark'] .admin-mobile-section-head h2 { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-section-head p { color: #9aa890; }
+
+/* KPI cards (featured, grid, primary, secondary, kpi-card-*) */
+html[data-theme='dark'] .admin-mobile-kpi-card {
+  background: #1f1f1f;
+  border-color: #303030;
+  border-left-color: #2a3326;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card-icon {
+  background: #2a2a2a;
+  color: #c0c0c0;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card-info { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-kpi-card-label { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-kpi-card-value { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-kpi-card.featured {
+  background: #1a2417;
+  border-left-color: #9ad89f;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.featured .admin-mobile-kpi-card-label { color: #c0c0c0; }
+html[data-theme='dark'] .admin-mobile-kpi-card.featured .admin-mobile-kpi-card-value { color: #9ad89f; }
+html[data-theme='dark'] .admin-mobile-kpi-card.processing {
+  background: rgba(245, 158, 11, 0.12);
+  border-left-color: #f59e0b;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.processing .admin-mobile-kpi-card-icon {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.processing .admin-mobile-kpi-card-value { color: #fbbf24; }
+html[data-theme='dark'] .admin-mobile-kpi-card.warn {
+  background: rgba(245, 158, 11, 0.1);
+  border-left-color: #d97706;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.warn .admin-mobile-kpi-card-icon {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.warn .admin-mobile-kpi-card-value { color: #fbbf24; }
+html[data-theme='dark'] .admin-mobile-kpi-card.danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-left-color: #b91c1c;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.danger .admin-mobile-kpi-card-icon {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.danger .admin-mobile-kpi-card-value { color: #f87171; }
+html[data-theme='dark'] .admin-mobile-kpi-card.priority {
+  background: rgba(168, 85, 247, 0.1);
+  border-left-color: #7c3aed;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.priority .admin-mobile-kpi-card-icon {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.priority .admin-mobile-kpi-card-value { color: #c084fc; }
+html[data-theme='dark'] .admin-mobile-kpi-card.success {
+  background: rgba(34, 197, 94, 0.1);
+  border-left-color: #15803d;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.success .admin-mobile-kpi-card-icon {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+html[data-theme='dark'] .admin-mobile-kpi-card.success .admin-mobile-kpi-card-value { color: #4ade80; }
+html[data-theme='dark'] .admin-mobile-kpi-grid { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-kpi-content small { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-kpi-content strong { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-kpi-icon {
+  background: #2a2a2a;
+  color: #c0c0c0;
+}
+html[data-theme='dark'] .admin-mobile-kpi-primary { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-kpi-primary.processing strong { color: #fbbf24; }
+html[data-theme='dark'] .admin-mobile-kpi-secondary { color: #9aa890; }
+
+/* Ticket list / row */
+html[data-theme='dark'] .admin-mobile-ticket-list {
+  color: #9aa890;
+}
+html[data-theme='dark'] .admin-mobile-ticket-actions { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-ticket-head { color: #9aa890; }
+
+/* Urgent cards */
+html[data-theme='dark'] .admin-mobile-urgent-card {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+html[data-theme='dark'] .admin-mobile-urgent-card.priority {
+  background: rgba(168, 85, 247, 0.1);
+  border-left-color: #7c3aed;
+}
+html[data-theme='dark'] .admin-mobile-urgent-card.overdue {
+  background: rgba(239, 68, 68, 0.1);
+  border-left-color: #b91c1c;
+}
+html[data-theme='dark'] .admin-mobile-urgent-card.near {
+  background: rgba(245, 158, 11, 0.1);
+  border-left-color: #d97706;
+}
+html[data-theme='dark'] .admin-mobile-urgent-head p { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-urgent-meta small,
+html[data-theme='dark'] .admin-mobile-urgent-meta strong { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-urgent-footer { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-urgent-open { color: #9ad89f; }
+html[data-theme='dark'] .admin-mobile-urgent-list { color: #9aa890; }
+
+/* Activity list */
+html[data-theme='dark'] .admin-mobile-activity-list { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-activity-item {
+  background: #1f1f1f;
+  border-color: #303030;
+  border-left-color: #2a3326;
+}
+html[data-theme='dark'] .admin-mobile-activity-dot {
+  background: #2a3326;
+  border-color: #303030;
+}
+html[data-theme='dark'] .admin-mobile-activity-body { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-activity-top b { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-activity-top .anticon { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-activity-code { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-activity-body small,
+html[data-theme='dark'] .admin-mobile-activity-body em { color: #9aa890; }
+
+/* Action list */
+html[data-theme='dark'] .admin-mobile-action-list { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-action-item {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+html[data-theme='dark'] .admin-mobile-action-item.warn {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+html[data-theme='dark'] .admin-mobile-action-item.danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+html[data-theme='dark'] .admin-mobile-action-item.priority {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+html[data-theme='dark'] .admin-mobile-action-icon {
+  background: #2a2a2a;
+  color: #c0c0c0;
+}
+html[data-theme='dark'] .admin-mobile-action-copy b { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-action-copy small { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-action-arrow { color: #9aa890; }
+
+/* Misc */
+html[data-theme='dark'] .admin-mobile-empty { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-more button { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-more button:active { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-staff {
+  background: #1f1f1f;
+  border-color: #303030;
+  color: #e6e6e6;
+}
+html[data-theme='dark'] .admin-mobile-sider-actions {
+  background: #1f1f1f;
+  border-top-color: #303030;
+}
+html[data-theme='dark'] .admin-mobile-brand-mark {
+  background: #1f1f1f;
+  border-color: #303030;
+  color: #9ad89f;
+}
+
+/* Final 3 — padding/margin-only classes thường không cần dark override, nhưng đảm bảo */
+html[data-theme='dark'] .admin-mobile-page { color: #e6e6e6; background: transparent; }
+html[data-theme='dark'] .admin-mobile-section { color: inherit; }
+html[data-theme='dark'] .admin-mobile-actions-card .adm-card-body { background: transparent; }

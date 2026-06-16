@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Typography, Form, Input, Button, Space, Table, Popconfirm, message, Tag, Modal, Select, Avatar } from 'antd';
+import { App, Card, Typography, Form, Input, Button, Space, Table, Popconfirm, Skeleton, Tag, Modal, Select, Avatar } from 'antd';
 import {
   TeamOutlined,
   UserOutlined,
@@ -16,6 +16,7 @@ const { Title } = Typography;
 
 export default function StaffManagement() {
   const { t } = useTranslation();
+  const { message } = App.useApp();
   const [staffs, setStaffs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [resetTarget, setResetTarget] = useState(null);

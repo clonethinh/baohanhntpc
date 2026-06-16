@@ -291,7 +291,9 @@ router.patch('/:id/status', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    await prisma.$transaction(async (tx) => {
+    // Soft delete: set isActive=false (giữ record để có thể undo/restore).
+    // Dùng isActive=false (thay vì hard delete) để tránh mất dữ liệu + hỗ trợ undo 6s.
+    const result = await prisma.$transaction(async (tx) => {
       const current = await tx.customerNotification.findUnique({ where: { id: req.params.id } });
       if (!current) {
         const err = new Error('Không tìm thấy thông báo');
@@ -299,11 +301,48 @@ router.delete('/:id', async (req, res) => {
         err.code = 'NOT_FOUND';
         throw err;
       }
-      await tx.customerNotification.delete({ where: { id: req.params.id } });
-      await writeAuditLog(req, { action: 'delete', entity: 'customer_notification', entityId: current.id, summary: `Xóa thông báo khách hàng ${current.title}`, before: current }, tx);
+      if (current.isActive === false) {
+        // Đã xóa mềm rồi, không xóa lại
+        return current;
+      }
+      const updated = await tx.customerNotification.update({
+        where: { id: req.params.id },
+        data: { isActive: false },
+      });
+      await writeAuditLog(req, { action: 'delete', entity: 'customer_notification', entityId: current.id, summary: `Xóa thông báo khách hàng ${current.title}`, before: current, after: updated }, tx);
+      return updated;
     });
 
-    res.json({ success: true });
+    res.json({ success: true, data: { id: result.id, isActive: result.isActive } });
+  } catch (err) {
+    res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Lỗi máy chủ' } });
+  }
+});
+
+// Khôi phục thông báo đã xóa mềm (POST /:id/restore)
+router.post('/:id/restore', async (req, res) => {
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      const current = await tx.customerNotification.findUnique({ where: { id: req.params.id } });
+      if (!current) {
+        const err = new Error('Không tìm thấy thông báo');
+        err.status = 404;
+        err.code = 'NOT_FOUND';
+        throw err;
+      }
+      if (current.isActive !== false) {
+        // Chưa xóa hoặc đã active — không cần khôi phục
+        return current;
+      }
+      const updated = await tx.customerNotification.update({
+        where: { id: req.params.id },
+        data: { isActive: true },
+      });
+      await writeAuditLog(req, { action: 'restore', entity: 'customer_notification', entityId: current.id, summary: `Khôi phục thông báo khách hàng ${current.title}`, before: current, after: updated }, tx);
+      return updated;
+    });
+
+    res.json({ success: true, data: result });
   } catch (err) {
     res.status(err.status || 500).json({ success: false, error: { code: err.code || 'SERVER_ERROR', message: err.message || 'Lỗi máy chủ' } });
   }

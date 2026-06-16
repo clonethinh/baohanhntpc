@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { createElement, Fragment } from 'react';
+import { Button } from 'antd';
 import { buildDefaultForm, buildEmptyData } from './defaults';
 import {
   buildFormValuesFromRow,
@@ -183,13 +185,37 @@ export default function useCustomerNotificationsAdmin({
     setRowActionId(`delete:${row.id}`);
     try {
       await customerNotificationService.remove(row.id);
-      message.success(t('adminCustomerNotifications.deleteSuccess'));
+      // Hiển thị message có nút "Hoàn tác" trong 6 giây
+      const key = `delete-notif-${row.id}-${Date.now()}`;
+      message.success({
+        content: createElement(Fragment, null,
+          t('adminCustomerNotifications.deleteSuccess'),
+          ' ',
+          createElement(Button, {
+            type: 'link',
+            size: 'small',
+            style: { padding: 0, height: 'auto', fontWeight: 600 },
+            onClick: async () => {
+              message.destroy(key);
+              try {
+                await customerNotificationService.restore(row.id);
+                message.success(t('adminCustomerNotifications.restoreSuccess'));
+                await fetchRows();
+              } catch (err) {
+                message.error(t('adminCustomerNotifications.restoreError'));
+              }
+            },
+          }, t('adminCustomer.undo')),
+        ),
+        duration: 6,
+        key,
+      });
       await fetchRows();
     } catch (err) {
       const errorMessage = err?.response?.data?.error?.message || t('adminCustomerNotifications.deleteError');
       message.error(errorMessage);
     } finally {
-      setRowActionId('');
+      setRowActionId(null);
     }
   };
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { App, Button, Card, DatePicker, Form, Input, Modal, Popconfirm, Select, Space, Switch, Table, Tag, Typography, Grid, Row, Col, theme } from 'antd';
+import { App, Button, Card, DatePicker, Empty, Form, Input, Modal, Popconfirm, Select, Skeleton, Space, Switch, Table, Tag, Typography, Grid, Row, Col, theme } from 'antd';
 import { SearchOutlined, EditOutlined, StopOutlined, CheckOutlined, HistoryOutlined, FormOutlined } from '@ant-design/icons';
-import { Button as MobileButton, Card as MobileCard, DatePicker as MobileDatePicker, Dialog, Input as MobileInput, List, Popup, Space as MobileSpace, Switch as MobileSwitch, Tag as MobileTag, TextArea as MobileTextArea, Toast } from 'antd-mobile';
+import { Button as MobileButton, Card as MobileCard, DatePicker as MobileDatePicker, Dialog, Empty as MobileEmpty, Input as MobileInput, List, Popup, Space as MobileSpace, Switch as MobileSwitch, Tag as MobileTag, TextArea as MobileTextArea } from 'antd-mobile';
 import { EditSOutline } from 'antd-mobile-icons';
 import dayjs from 'dayjs';
 import { nhanVienService, supplierService, warrantyService } from '../../services/warrantyService';
@@ -149,7 +149,7 @@ export default function Suppliers() {
   };
 
   const submitMobileForm = async () => {
-    if (!mobileForm.name?.trim()) return Toast.show({ content: t('adminSuppliers.nameRequired') });
+    if (!mobileForm.name?.trim()) return message.warning(t('adminSuppliers.nameRequired'));
     const payload = {
       name: mobileForm.name.trim(),
       phone: mobileForm.phone || '',
@@ -160,11 +160,15 @@ export default function Suppliers() {
       isActive: Boolean(mobileForm.isActive),
       ...(editing ? { code: mobileForm.code || '' } : {}),
     };
-    if (editing) await supplierService.update(editing.id, payload);
-    else await supplierService.create(payload);
-    Toast.show({ content: editing ? t('adminSuppliers.updateSuccess') : t('adminSuppliers.createSuccess') });
-    setMobileFormOpen(false);
-    fetchData();
+    try {
+      if (editing) await supplierService.update(editing.id, payload);
+      else await supplierService.create(payload);
+      message.success(editing ? t('adminSuppliers.updateSuccess') : t('adminSuppliers.createSuccess'));
+      setMobileFormOpen(false);
+      fetchData();
+    } catch (err) {
+      message.error(err?.response?.data?.error?.message || t('adminSuppliers.saveError'));
+    }
   };
 
   const openTracking = async (row) => {
@@ -208,16 +212,53 @@ export default function Suppliers() {
   };
 
   const submitMobileReceive = async () => {
-    await warrantyService.returnFromSupplier(selectedWarranty.id, { returnedAt: dayjs(mobileReturnedAt).format('YYYY-MM-DDTHH:mm:ss'), note: mobileReceiveNote || '' });
-    Toast.show({ content: t('adminSuppliers.receivedSuccess') });
-    setMobileReceiveOpen(false);
-    refreshTracking();
+    try {
+      await warrantyService.returnFromSupplier(selectedWarranty.id, { returnedAt: dayjs(mobileReturnedAt).format('YYYY-MM-DDTHH:mm:ss'), note: mobileReceiveNote || '' });
+      message.success(t('adminSuppliers.receivedSuccess'));
+      setMobileReceiveOpen(false);
+      refreshTracking();
+    } catch (err) {
+      message.error(err?.response?.data?.error?.message || t('adminSuppliers.receiveError'));
+    }
   };
 
   const toggleSupplierStatus = async (row) => {
-    await supplierService.setStatus(row.id, !row.isActive);
-    if (isMobile) Toast.show({ content: row.isActive ? t('adminSuppliers.inactive') : t('adminSuppliers.active') });
-    fetchData();
+    try {
+      const oldValue = !!row.isActive;
+      await supplierService.setStatus(row.id, !oldValue);
+      // Hiển thị message với nút "Hoàn tác" trong 6 giây
+      const key = `toggle-supplier-${row.id}-${Date.now()}`;
+      message.success({
+        content: (
+          <span>
+            {oldValue ? t('adminSuppliers.inactive') : t('adminSuppliers.active')}
+            {' '}
+            <Button
+              type="link"
+              size="small"
+              style={{ padding: 0, height: 'auto', fontWeight: 600 }}
+              onClick={async () => {
+                message.destroy(key);
+                try {
+                  await supplierService.setStatus(row.id, oldValue);
+                  message.success(oldValue ? t('adminSuppliers.active') : t('adminSuppliers.inactive'));
+                  fetchData();
+                } catch (err) {
+                  message.error(t('adminSuppliers.noteUpdateError'));
+                }
+              }}
+            >
+              {t('adminCustomer.undo')}
+            </Button>
+          </span>
+        ),
+        duration: 6,
+        key,
+      });
+      fetchData();
+    } catch (err) {
+      message.error(err?.response?.data?.error?.message || t('adminSuppliers.saveError'));
+    }
   };
 
   const openEditNote = (warrantyRecord, historyRecord) => {
@@ -363,10 +404,24 @@ export default function Suppliers() {
           </MobileSpace>
         </MobileCard>
 
-        {loading ? <MobileCard className="admin-mobile-card">{t('adminCustomer.loading')}</MobileCard> : null}
-
-        <div className="admin-mobile-supplier-list">
-          {filteredRows.map((row) => {
+        {loading ? (
+          <MobileCard className="admin-mobile-card">
+            <Skeleton active paragraph={{ rows: 4 }} title={false} />
+          </MobileCard>
+        ) : filteredRows.length === 0 ? (
+          <MobileCard className="admin-mobile-card">
+            <MobileEmpty
+              description={t('adminSuppliers.emptySuppliers')}
+              style={{ padding: '20px 0' }}
+            >
+              <MobileButton size="small" color="primary" onClick={openCreate}>
+                + {t('adminSuppliers.addSupplier')}
+              </MobileButton>
+            </MobileEmpty>
+          </MobileCard>
+        ) : (
+          <div className="admin-mobile-supplier-list">
+            {filteredRows.map((row) => {
             const isExpanded = expandedSupplierId === row.id;
             return (
               <div key={row.id}>
@@ -404,7 +459,8 @@ export default function Suppliers() {
               </div>
             );
           })}
-        </div>
+          </div>
+        )}
 
         <Popup visible={mobileFormOpen} onMaskClick={() => setMobileFormOpen(false)} bodyStyle={{ borderTopLeftRadius: 12, borderTopRightRadius: 12, padding: 12 }}>
           <h3>{editing ? t('adminSuppliers.editSupplier') : t('adminSuppliers.addSupplier')}</h3>
@@ -481,7 +537,18 @@ export default function Suppliers() {
         </Card>
 
         <Card style={{ marginTop: 8 }} extra={<Space><Tag color="blue">{t('adminSuppliers.summaryTotal', { count: summary.total })}</Tag><Tag color="green">{t('adminSuppliers.summaryActive', { count: summary.active })}</Tag><Tag>{t('adminSuppliers.summaryInactive', { count: summary.inactive })}</Tag></Space>} styles={{ body: { padding: 12 } }}>
-          {loading ? <div style={{ padding: 24, color: token.colorTextSecondary }}>{t('adminCustomer.loading')}</div> : (
+          {loading ? (
+            <div style={{ padding: 24 }}><Skeleton active paragraph={{ rows: 5 }} /></div>
+          ) : filteredRows.length === 0 ? (
+            <Empty
+              description={t('adminSuppliers.emptySuppliers')}
+              style={{ padding: '32px 0' }}
+            >
+              <Button type="primary" onClick={openCreate}>
+                + {t('adminSuppliers.addSupplier')}
+              </Button>
+            </Empty>
+          ) : (
             <div style={{ display: 'grid', gap: 10 }}>
               <div style={{ display: 'grid', gridTemplateColumns: '130px minmax(190px,300px) 140px minmax(150px,1fr) 130px 110px 110px', gap: 12, alignItems: 'center', padding: '10px 12px', borderRadius: 10, background: token.colorFillTertiary, color: token.colorTextSecondary, fontSize: 12, fontWeight: 600, textTransform: 'uppercase' }}>
                 <div>{t('adminSuppliers.supplierCode')}</div><div>{t('adminSuppliers.supplierName')}</div><div>{t('trackingResult.phone')}</div><div>{t('adminSuppliers.contact')}</div><div>{t('adminSuppliers.pendingColumn')}</div><div>{t('table.trangThai')}</div><div style={{ textAlign: 'right' }}>{t('adminStaff.action')}</div>
@@ -504,9 +571,9 @@ export default function Suppliers() {
                       </div>
                       <div><Tag color={row.isActive ? 'green' : 'default'}>{row.isActive ? t('adminSuppliers.active') : t('adminSuppliers.inactive')}</Tag></div>
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-                        <Button size="small" shape="circle" icon={<EditOutlined />} onClick={(e) => { e.stopPropagation(); openEdit(row); }} />
+                        <Button size="small" shape="circle" icon={<EditOutlined />} aria-label={t('adminSuppliers.editAria')} onClick={(e) => { e.stopPropagation(); openEdit(row); }} />
                         <Popconfirm title={row.isActive ? t('adminSuppliers.disableConfirm') : t('adminSuppliers.enableConfirm')} onConfirm={async () => { await supplierService.setStatus(row.id, !row.isActive); fetchData(); }}>
-                          <Button size="small" shape="circle" icon={row.isActive ? <StopOutlined /> : <CheckOutlined />} danger={row.isActive} onClick={(e) => e.stopPropagation()} />
+                          <Button size="small" shape="circle" icon={row.isActive ? <StopOutlined /> : <CheckOutlined />} aria-label={row.isActive ? t('adminSuppliers.disableAria') : t('adminSuppliers.enableAria')} danger={row.isActive} onClick={(e) => e.stopPropagation()} />
                         </Popconfirm>
                       </div>
                     </div>

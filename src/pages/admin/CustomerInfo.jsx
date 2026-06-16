@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Card, Row, Col, Input, AutoComplete, Tag, Typography, Space, Table, DatePicker, Button, Select, Modal, Form, App, theme, Popconfirm, Pagination } from 'antd';
+import { Card, Row, Col, Input, AutoComplete, Tag, Typography, Space, Table, DatePicker, Button, Select, Modal, Form, App, theme, Popconfirm, Pagination, Skeleton } from 'antd';
 import { SearchOutlined, HistoryOutlined, EditOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons';
 import {
   Button as MobileButton,
@@ -421,7 +421,9 @@ export default function CustomerInfo() {
             </div>
           ) : null}
           {listLoading ? (
-            <div className="admin-mobile-empty">{t('adminCustomer.loading')}</div>
+            <div style={{ padding: 12 }}>
+              <Skeleton active paragraph={{ rows: 6 }} />
+            </div>
           ) : customerRows.length === 0 ? (
             <div className="admin-mobile-empty">{t('adminCustomer.emptyCustomers')}</div>
           ) : (
@@ -606,7 +608,9 @@ export default function CustomerInfo() {
             </div>
           ) : null}
           {listLoading ? (
-            <div style={{ padding: 24, textAlign: 'center', color: colorTextSecondary }}>{t('adminCustomer.loading')}</div>
+            <div style={{ padding: 24 }}>
+              <Skeleton active paragraph={{ rows: 8 }} />
+            </div>
           ) : customerRows.length === 0 ? (
             <div style={{ padding: 24, textAlign: 'center', color: colorTextSecondary }}>{t('adminCustomer.emptyCustomers')}</div>
           ) : (
