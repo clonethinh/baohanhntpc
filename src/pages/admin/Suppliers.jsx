@@ -507,6 +507,25 @@ export default function Suppliers() {
                     >
                       {row.isActive ? t('adminSuppliers.disable') : t('adminSuppliers.enable')}
                     </MobileButton>
+                    {isAdmin ? (
+                      <MobileButton
+                        size="mini"
+                        color="danger"
+                        fill="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          Dialog.confirm({
+                            title: t('adminSuppliers.deleteConfirmTitle'),
+                            content: t('adminSuppliers.deleteConfirmDesc'),
+                            confirmText: t('button.xoa'),
+                            cancelText: t('button.huy'),
+                            onConfirm: () => deleteSupplier(row),
+                          });
+                        }}
+                      >
+                        {t('adminSuppliers.delete')}
+                      </MobileButton>
+                    ) : null}
                   </MobileSpace>
                 </MobileCard>
                 {isExpanded ? <MobileCard className="admin-mobile-card" title={t('adminSuppliers.trackingShort', { code: row.code })}>{renderMobileTracking(row)}</MobileCard> : null}
