@@ -3305,6 +3305,17 @@ html[data-theme='dark'] .warranty-mobile-card {
   box-shadow: none;
 }
 
+/* antd-mobile <Card> render phần con .adm-card/.adm-card-header/.adm-card-body
+   có nền sáng riêng. Nếu không phủ dark cho các phần này, body thẻ "Cảnh báo" /
+   "Lịch sử mới nhất" trên Dashboard mobile giữ nền trắng → ô sáng giữa dark mode.
+   (Riêng .admin-mobile-actions-card .adm-card-body để transparent ở cuối file.) */
+html[data-theme='dark'] .admin-mobile-card .adm-card,
+html[data-theme='dark'] .admin-mobile-card .adm-card-header,
+html[data-theme='dark'] .admin-mobile-card .adm-card-body {
+  background: #1f1f1f;
+  color: #e6e6e6;
+}
+
 html[data-theme='dark'] .warranty-mobile-supplier-form-card,
 html[data-theme='dark'] .warranty-mobile-supplier-log {
   border-color: #303030;
