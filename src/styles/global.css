@@ -712,6 +712,11 @@ html[data-theme='dark'] .tracuu-mobile-related-page-button {
   color: #f2f2f2;
 }
 
+html[data-theme='dark'] .tracuu-mobile-support-row-primary {
+  background: linear-gradient(135deg, rgba(64, 150, 255, 0.18), rgba(64, 150, 255, 0.06));
+  border-color: rgba(64, 150, 255, 0.28);
+}
+
 html[data-theme='dark'] .tracuu-mobile-recent-chip small,
 html[data-theme='dark'] .tracuu-mobile-related-code,
 html[data-theme='dark'] .tracuu-mobile-related-product {
@@ -2245,6 +2250,9 @@ html[data-theme='dark'] .staff-kpi-value,
 html[data-theme='dark'] .staff-mobile-info b { color: #eef3e9; }
 html[data-theme='dark'] .staff-mobile-info span { color: #8a948a; }
 html[data-theme='dark'] .staff-mobile-actions { border-top-color: #2a3326; }
+html[data-theme='dark'] .staff-kpi-icon.total { background: #162a4d; color: #9ab8ff; }
+html[data-theme='dark'] .staff-kpi-icon.admin { background: #1c2150; color: #a3adf5; }
+html[data-theme='dark'] .staff-kpi-icon.staff { background: #14301f; color: #7fce97; }
 
 /* ===== Trang Nhà cung cấp ===== */
 .supplier-kpi-strip {
@@ -3225,6 +3233,33 @@ html[data-theme='dark'] .admin-header-icon-button {
 html[data-theme='dark'] .staff-picker-modal .ant-modal-content {
   background: #1f1f1f;
 }
+
+/* Đồng bộ antd Modal/popup/dropdown về #1f1f1f (bằng container) thay vì
+   colorBgElevated mặc định #2a2a2a — tránh cảm giác 2 tầng tối lệch nhau
+   khi modal nổi lên trên nền page/table. Mask tăng opacity để cùng tông. */
+html[data-theme='dark'] .ant-modal-content,
+html[data-theme='dark'] .ant-modal-header,
+html[data-theme='dark'] .ant-modal-footer {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+html[data-theme='dark'] .ant-modal-mask { background: rgba(0, 0, 0, 0.65); }
+html[data-theme='dark'] .ant-modal-close { color: rgba(230, 230, 230, 0.65); transition: color 0.15s; }
+/* Hover: chỉ làm sáng icon lên (không đổi bg để tránh "ô vuông sáng" 2 lớp) */
+html[data-theme='dark'] .ant-modal-close:hover { color: #ffffff; }
+html[data-theme='dark'] .ant-modal-close-x { color: rgba(230, 230, 230, 0.65); transition: color 0.15s; }
+html[data-theme='dark'] .ant-modal-close-x:hover { color: #ffffff; }
+html[data-theme='dark'] .ant-popover-inner,
+html[data-theme='dark'] .ant-dropdown-menu,
+html[data-theme='dark'] .ant-select-dropdown {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+html[data-theme='dark'] .ant-popover-arrow::before,
+html[data-theme='dark'] .ant-popover-arrow::after { background: #1f1f1f; }
+
+/* antd-mobile Popup dùng .adm-popup-body nổi trên nền page */
+html[data-theme='dark'] .adm-popup-body { background: #1f1f1f; }
 
 html[data-theme='dark'] .staff-picker-item {
   border-color: transparent;
@@ -4896,6 +4931,21 @@ html[data-theme='dark'] .notif-quill .ql-editor.ql-blank::before { color: #6b728
 html[data-theme='dark'] .notif-quill .ql-editor a { color: #60a5fa; }
 html[data-theme='dark'] .notif-quill .ql-editor pre.ql-syntax { background-color: #0f0f0f; color: #e6e6e6; }
 
+/* antd <Tag color="...">: light default bg chói trong dark. Tinted bg + bright text. */
+html[data-theme='dark'] .ant-tag-blue { background: rgba(22, 119, 255, 0.18); border-color: rgba(22, 119, 255, 0.4); color: #91caff; }
+html[data-theme='dark'] .ant-tag-cyan { background: rgba(8, 145, 178, 0.18); border-color: rgba(8, 145, 178, 0.4); color: #67e8f9; }
+html[data-theme='dark'] .ant-tag-geekblue { background: rgba(47, 84, 235, 0.18); border-color: rgba(47, 84, 235, 0.4); color: #a5b4fc; }
+html[data-theme='dark'] .ant-tag-gold { background: rgba(212, 136, 6, 0.2); border-color: rgba(212, 136, 6, 0.45); color: #fbbf24; }
+html[data-theme='dark'] .ant-tag-green { background: rgba(56, 158, 13, 0.2); border-color: rgba(56, 158, 13, 0.45); color: #86efac; }
+html[data-theme='dark'] .ant-tag-orange { background: rgba(245, 122, 0, 0.2); border-color: rgba(245, 122, 0, 0.45); color: #fdba74; }
+html[data-theme='dark'] .ant-tag-purple { background: rgba(114, 46, 209, 0.2); border-color: rgba(114, 46, 209, 0.45); color: #d8b4fe; }
+html[data-theme='dark'] .ant-tag-red { background: rgba(217, 48, 48, 0.2); border-color: rgba(217, 48, 48, 0.45); color: #fca5a5; }
+html[data-theme='dark'] .ant-tag-volcano { background: rgba(232, 96, 36, 0.2); border-color: rgba(232, 96, 36, 0.45); color: #fdba74; }
+html[data-theme='dark'] .ant-tag-magenta { background: rgba(207, 62, 142, 0.2); border-color: rgba(207, 62, 142, 0.45); color: #f9a8d4; }
+html[data-theme='dark'] .ant-tag-warning { background: rgba(212, 136, 6, 0.2); border-color: rgba(212, 136, 6, 0.45); color: #fbbf24; }
+html[data-theme='dark'] .ant-tag-success { background: rgba(56, 158, 13, 0.2); border-color: rgba(56, 158, 13, 0.45); color: #86efac; }
+html[data-theme='dark'] .ant-tag-error { background: rgba(217, 48, 48, 0.2); border-color: rgba(217, 48, 48, 0.45); color: #fca5a5; }
+html[data-theme='dark'] .ant-tag-processing { background: rgba(22, 119, 255, 0.18); border-color: rgba(22, 119, 255, 0.4); color: #91caff; }
 
 
 /* ===== Customer Picker Modal (Chuyển khách hàng) ===== */
@@ -6930,6 +6980,7 @@ html[data-theme='dark'] .admin-mobile-eyebrow { color: #e6e6e6; }
 html[data-theme='dark'] .admin-mobile-hero p { color: #9aa890; }
 html[data-theme='dark'] .admin-mobile-hero-summary,
 html[data-theme='dark'] .admin-mobile-hero-meta { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-hero-meta > div { background: rgba(255, 255, 255, 0.06); }
 html[data-theme='dark'] .admin-mobile-hero-link {
   color: #9ad89f;
   background: #1a2417;
@@ -7012,7 +7063,7 @@ html[data-theme='dark'] .admin-mobile-kpi-icon {
   background: #2a2a2a;
   color: #c0c0c0;
 }
-html[data-theme='dark'] .admin-mobile-kpi-primary { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-kpi-primary { color: #e6e6e6; background: rgba(255, 255, 255, 0.06); }
 html[data-theme='dark'] .admin-mobile-kpi-primary.processing strong { color: #fbbf24; }
 html[data-theme='dark'] .admin-mobile-kpi-secondary { color: #9aa890; }
 
