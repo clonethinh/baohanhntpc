@@ -49,9 +49,13 @@ services:
       postgres-db:
         condition: service_healthy
     # Ánh xạ các thư mục ảnh uploads và file backups để lưu trữ bền vững vật lý
+    # db.json bind-mount: bảng `customers` + adminConfig CHỈ sống trong file này
+    # (không có trong PostgreSQL). Không mount → file ephemeral trong image, mọi
+    # thao tác xóa/sửa khách hàng bị reset về bản COPY lúc build mỗi lần rebuild.
     volumes:
       - ./api/uploads:/app/api/uploads
       - ./api/backups:/app/api/backups
+      - ./api/db.json:/app/api/db.json
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3003/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 15s
