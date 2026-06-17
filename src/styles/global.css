@@ -6930,7 +6930,11 @@ html[data-theme='dark'] .admin-mobile-eyebrow { color: #e6e6e6; }
 html[data-theme='dark'] .admin-mobile-hero p { color: #9aa890; }
 html[data-theme='dark'] .admin-mobile-hero-summary,
 html[data-theme='dark'] .admin-mobile-hero-meta { color: #9aa890; }
-html[data-theme='dark'] .admin-mobile-hero-link { color: #9ad89f; }
+html[data-theme='dark'] .admin-mobile-hero-link {
+  color: #9ad89f;
+  background: #1a2417;
+  border-color: #2a3326;
+}
 html[data-theme='dark'] .admin-mobile-hero-top { color: #9aa890; }
 
 /* Section header */
@@ -7037,6 +7041,9 @@ html[data-theme='dark'] .admin-mobile-urgent-card.near {
   border-left-color: #d97706;
 }
 html[data-theme='dark'] .admin-mobile-urgent-head p { color: #9aa890; }
+html[data-theme='dark'] .admin-mobile-urgent-meta > div {
+  background: rgba(255, 255, 255, 0.04);
+}
 html[data-theme='dark'] .admin-mobile-urgent-meta small,
 html[data-theme='dark'] .admin-mobile-urgent-meta strong { color: #e6e6e6; }
 html[data-theme='dark'] .admin-mobile-urgent-footer { color: #9aa890; }
@@ -7054,7 +7061,12 @@ html[data-theme='dark'] .admin-mobile-activity-dot {
   background: #2a3326;
   border-color: #303030;
 }
-html[data-theme='dark'] .admin-mobile-activity-body { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-activity-body {
+  color: #e6e6e6;
+  background: #1f1f1f;
+  border-color: #303030;
+  box-shadow: none;
+}
 html[data-theme='dark'] .admin-mobile-activity-top b { color: #e6e6e6; }
 html[data-theme='dark'] .admin-mobile-activity-top .anticon { color: #9aa890; }
 html[data-theme='dark'] .admin-mobile-activity-code { color: #9aa890; }
@@ -7089,8 +7101,12 @@ html[data-theme='dark'] .admin-mobile-action-arrow { color: #9aa890; }
 
 /* Misc */
 html[data-theme='dark'] .admin-mobile-empty { color: #9aa890; }
-html[data-theme='dark'] .admin-mobile-more button { color: #9aa890; }
-html[data-theme='dark'] .admin-mobile-more button:active { color: #e6e6e6; }
+html[data-theme='dark'] .admin-mobile-more button {
+  color: #9aa890;
+  background: #1f1f1f;
+  border-color: #303030;
+}
+html[data-theme='dark'] .admin-mobile-more button:active { color: #e6e6e6; background: #2a3326; }
 html[data-theme='dark'] .admin-mobile-staff {
   background: #1f1f1f;
   border-color: #303030;
