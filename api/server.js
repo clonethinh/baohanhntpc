@@ -172,8 +172,18 @@ async function seedIfEmpty() {
     db.nhanVien = seedNhanVien;
   }
 
-  ensureAuthState(db);
-  await writeDb(db);
+  // ensureAuthState trả về `changed` nếu nó thực sự mutate db
+  // (bootstrap password, role/quyen chuẩn hoá, etc). Chỉ persist khi có thay đổi.
+  const authChanged = ensureAuthState(db);
+
+  // FIX (2026-06-17): trước đây writeDb() chạy UNCONDITIONALLY mỗi lần api start
+  // → DELETE+INSERT toàn bộ 4 bảng PG (warranties/suppliers/nhanVien/supplierLogs)
+  // → reset updatedAt timestamps, tốn I/O vô ích, race window lớn.
+  // Giờ chỉ ghi khi: (1) vừa seed data mới, hoặc (2) ensureAuthState thực sự đổi gì.
+  if (seeded || authChanged) {
+    await writeDb(db);
+  }
+
   if (process.env.NODE_ENV !== 'production' && seeded) {
     console.log(`[SEED] Da tao ${seedWarranties.length} phieu bao hanh va ${seedNhanVien.length} nhan vien.`);
   }
