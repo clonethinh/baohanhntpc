@@ -21,6 +21,10 @@ jobs:
         run: npm ci
 
       - name: Validate Prisma schema
+        # DATABASE_URL chỉ cần tồn tại để prisma validate resolve env("DATABASE_URL")
+        # Không cần kết nối DB thật. Dùng placeholder là đủ.
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder?schema=public
         run: npx prisma validate
 
       - name: Generate Prisma client
